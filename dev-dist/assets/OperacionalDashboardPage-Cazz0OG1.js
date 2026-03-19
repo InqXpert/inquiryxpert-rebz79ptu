@@ -1,5 +1,5 @@
 import { i as __toESM, n as require_react, t as require_jsx_runtime } from "./jsx-runtime-huLxtCwt.js";
-import { A as useControllableState, B as X, C as Presence, D as useCallbackRef, E as DismissableLayer, F as Primitive$1, H as createLucideIcon, I as Input, L as Button, M as useLayoutEffect2, N as createContextScope, O as Primitive, P as composeEventHandlers, R as cn, S as useFocusGuards, T as FocusScope, U as require_react_dom, V as Search, _ as Root$2, a as VISUALLY_HIDDEN_STYLES, b as hideOthers, c as Content$1, d as Skeleton, f as Close, g as Portal$2, h as Overlay, i as createContextScope$1, j as useId, k as createSlot, l as Root2$2, m as Description, n as pb, o as Anchor, p as Content$2, r as ClientResponseError, s as Arrow, t as useAuth, u as createPopperScope, v as Title, w as Portal$1, x as ReactRemoveScroll, z as useComposedRefs } from "./index-DbpGfiut.js";
+import { A as useControllableState, B as X, C as Presence, D as useCallbackRef, E as DismissableLayer, F as Primitive$1, H as createLucideIcon, I as Input, L as Button, M as useLayoutEffect2, N as createContextScope, O as Primitive, P as composeEventHandlers, R as cn, S as useFocusGuards, T as FocusScope, U as require_react_dom, V as Search, _ as Root$2, a as VISUALLY_HIDDEN_STYLES, b as hideOthers, c as Content$1, d as Skeleton, f as Close, g as Portal$2, h as Overlay, i as createContextScope$1, j as useId, k as createSlot, l as Root2$2, m as Description, n as pb, o as Anchor, p as Content$2, r as ClientResponseError, s as Arrow, t as useAuth, u as createPopperScope, v as Title, w as Portal$1, x as ReactRemoveScroll, z as useComposedRefs } from "./index-DoML4jvj.js";
 var ArrowDown = createLucideIcon("arrow-down", [["path", {
 	d: "M12 5v14",
 	key: "s699le"
@@ -3911,7 +3911,7 @@ function parse_isodur(s) {
 var good_pd_date_1 = /* @__PURE__ */ new Date("2017-02-19T19:06:09.000Z");
 var good_pd_date = /* @__PURE__ */ isNaN(/* @__PURE__ */ good_pd_date_1.getFullYear()) ? /* @__PURE__ */ new Date("2/19/17") : good_pd_date_1;
 var good_pd = /* @__PURE__ */ good_pd_date.getFullYear() == 2017;
-function parseDate(str, fixdate) {
+function parseDate$1(str, fixdate) {
 	var d = new Date(str);
 	if (good_pd) {
 		if (fixdate > 0) d.setTime(d.getTime() + d.getTimezoneOffset() * 60 * 1e3);
@@ -6394,7 +6394,7 @@ function parse_core_props(data) {
 	for (var i = 0; i < CORE_PROPS.length; ++i) {
 		var f = CORE_PROPS[i], cur = data.match(CORE_PROPS_REGEX[i]);
 		if (cur != null && cur.length > 0) p[f[1]] = unescapexml(cur[1]);
-		if (f[2] === "date" && p[f[1]]) p[f[1]] = parseDate(p[f[1]]);
+		if (f[2] === "date" && p[f[1]]) p[f[1]] = parseDate$1(p[f[1]]);
 	}
 	return p;
 }
@@ -6647,7 +6647,7 @@ function parse_cust_props(data, opts) {
 						break;
 					case "filetime":
 					case "date":
-						p[name] = parseDate(text);
+						p[name] = parseDate$1(text);
 						break;
 					case "cy":
 					case "error":
@@ -7044,7 +7044,7 @@ function parse_PropertySet(blob, PIDSI) {
 					break;
 				case 64:
 					blob.l += 4;
-					val = parseDate(parse_FILETIME(blob));
+					val = parseDate$1(parse_FILETIME(blob));
 					break;
 				default: throw new Error("unparsed value: " + blob[blob.l]);
 			}
@@ -9175,7 +9175,7 @@ var SYLK = /* @__PURE__ */ (function() {
 							else if (!isNaN(fuzzynum(val))) {
 								val = fuzzynum(val);
 								if (next_cell_format !== null && fmt_is_date(next_cell_format)) val = numdate(val);
-							} else if (!isNaN(fuzzydate(val).getDate())) val = parseDate(val);
+							} else if (!isNaN(fuzzydate(val).getDate())) val = parseDate$1(val);
 							if (typeof $cptable !== "undefined" && typeof val == "string" && (opts || {}).type != "string" && (opts || {}).codepage) val = $cptable.utils.decode(opts.codepage, val);
 							C_seen_K = true;
 							break;
@@ -9396,7 +9396,7 @@ var DIF = /* @__PURE__ */ (function() {
 					if (data === "TRUE") arr[R][C] = true;
 					else if (data === "FALSE") arr[R][C] = false;
 					else if (!isNaN(fuzzynum(value))) arr[R][C] = fuzzynum(value);
-					else if (!isNaN(fuzzydate(value).getDate())) arr[R][C] = parseDate(value);
+					else if (!isNaN(fuzzydate(value).getDate())) arr[R][C] = parseDate$1(value);
 					else arr[R][C] = value;
 					++C;
 					break;
@@ -9466,7 +9466,7 @@ var DIF = /* @__PURE__ */ (function() {
 								push_value(o, 1, 0, !DIF_XL || isNaN(cell.v) ? cell.v : "=\"" + cell.v + "\"");
 								break;
 							case "d":
-								if (!cell.w) cell.w = SSF_format(cell.z || table_fmt[14], datenum(parseDate(cell.v)));
+								if (!cell.w) cell.w = SSF_format(cell.z || table_fmt[14], datenum(parseDate$1(cell.v)));
 								if (DIF_XL) push_value(o, 0, cell.w, "V");
 								else push_value(o, 1, 0, cell.w);
 								break;
@@ -9575,7 +9575,7 @@ var ETH = /* @__PURE__ */ (function() {
 					oo[5] = encode(cell.f || (cell.v ? "TRUE" : "FALSE"));
 					break;
 				case "d":
-					var t = datenum(parseDate(cell.v));
+					var t = datenum(parseDate$1(cell.v));
 					oo[2] = "vtc";
 					oo[3] = "nd";
 					oo[4] = "" + t;
@@ -9611,7 +9611,7 @@ var PRN = /* @__PURE__ */ (function() {
 		else if (data === "") {} else if (data === "TRUE") arr[R][C] = true;
 		else if (data === "FALSE") arr[R][C] = false;
 		else if (!isNaN(fuzzynum(data))) arr[R][C] = fuzzynum(data);
-		else if (!isNaN(fuzzydate(data).getDate())) arr[R][C] = parseDate(data);
+		else if (!isNaN(fuzzydate(data).getDate())) arr[R][C] = parseDate$1(data);
 		else arr[R][C] = data;
 	}
 	function prn_to_aoa_str(f, opts) {
@@ -9733,10 +9733,10 @@ var PRN = /* @__PURE__ */ (function() {
 				}
 				if (o.cellDates) {
 					cell.t = "d";
-					cell.v = parseDate(s, k);
+					cell.v = parseDate$1(s, k);
 				} else {
 					cell.t = "n";
-					cell.v = datenum(parseDate(s, k));
+					cell.v = datenum(parseDate$1(s, k));
 				}
 				if (o.cellText !== false) cell.w = SSF_format(cell.z, cell.v instanceof Date ? datenum(cell.v) : cell.v);
 				if (!o.cellNF) delete cell.z;
@@ -16441,7 +16441,7 @@ function safe_format(p, fmtid, fillid, opts, themes, styles) {
 		if (opts.WTF) throw e;
 	}
 	if (p.t === "z" && !opts.cellStyles) return;
-	if (p.t === "d" && typeof p.v === "string") p.v = parseDate(p.v);
+	if (p.t === "d" && typeof p.v === "string") p.v = parseDate$1(p.v);
 	if ((!opts || opts.cellText !== false) && p.t !== "z") try {
 		if (table_fmt[fmtid] == null) SSF_load(SSFImplicit[fmtid] || "General", fmtid);
 		if (p.t === "e") p.w = p.w || BErr[p.v];
@@ -16770,11 +16770,11 @@ function write_ws_xml_cell(cell, ref, ws, opts) {
 			vv = BErr[cell.v];
 			break;
 		case "d":
-			if (opts && opts.cellDates) vv = parseDate(cell.v, -1).toISOString();
+			if (opts && opts.cellDates) vv = parseDate$1(cell.v, -1).toISOString();
 			else {
 				cell = dup(cell);
 				cell.t = "n";
-				vv = "" + (cell.v = datenum(parseDate(cell.v)));
+				vv = "" + (cell.v = datenum(parseDate$1(cell.v)));
 			}
 			if (typeof cell.z === "undefined") cell.z = table_fmt[14];
 			break;
@@ -17005,9 +17005,9 @@ var parse_ws_xml_data = /* @__PURE__ */ (function() {
 						p.v = parsexmlbool(p.v);
 						break;
 					case "d":
-						if (opts.cellDates) p.v = parseDate(p.v, 1);
+						if (opts.cellDates) p.v = parseDate$1(p.v, 1);
 						else {
-							p.v = datenum(parseDate(p.v, 1));
+							p.v = datenum(parseDate$1(p.v, 1));
 							p.t = "n";
 						}
 						break;
@@ -18000,7 +18000,7 @@ function write_ws_bin_cell(ba, cell, R, C, opts, ws, last_seen) {
 		case "d":
 			cell = dup(cell);
 			cell.z = cell.z || table_fmt[14];
-			cell.v = datenum(parseDate(cell.v));
+			cell.v = datenum(parseDate$1(cell.v));
 			cell.t = "n";
 			break;
 		case "n":
@@ -19109,7 +19109,7 @@ function xlml_set_custprop(Custprops, key, cp, val) {
 			break;
 		case "date":
 		case "dateTime.tz":
-			oval = parseDate(val);
+			oval = parseDate$1(val);
 			break;
 		case "i8":
 		case "string":
@@ -19179,7 +19179,7 @@ function parse_xlml_data(xml, ss, data, cell, base, styles, csty, row, arrayf, o
 			break;
 		case "DateTime":
 			if (xml.slice(-1) != "Z") xml += "Z";
-			cell.v = (parseDate(xml) - new Date(Date.UTC(1899, 11, 30))) / (1440 * 60 * 1e3);
+			cell.v = (parseDate$1(xml) - new Date(Date.UTC(1899, 11, 30))) / (1440 * 60 * 1e3);
 			if (cell.v !== cell.v) cell.v = unescapexml(xml);
 			else if (cell.v < 60) cell.v = cell.v - 1;
 			if (!nf || nf == "General") nf = "yyyy-mm-dd";
@@ -22585,7 +22585,7 @@ function write_ws_biff2_cell(ba, cell, R, C) {
 	if (cell.v != null) switch (cell.t) {
 		case "d":
 		case "n":
-			var v = cell.t == "d" ? datenum(parseDate(cell.v)) : cell.v;
+			var v = cell.t == "d" ? datenum(parseDate$1(cell.v)) : cell.v;
 			if (v == (v | 0) && v >= 0 && v < 65536) write_biff_rec(ba, 2, write_BIFF2INT(R, C, v));
 			else write_biff_rec(ba, 3, write_BIFF2NUM(R, C, v));
 			return;
@@ -22709,7 +22709,7 @@ function write_ws_biff8_cell(ba, cell, R, C, opts) {
 	else switch (cell.t) {
 		case "d":
 		case "n":
-			write_biff_rec(ba, 515, write_Number(R, C, cell.t == "d" ? datenum(parseDate(cell.v)) : cell.v, os, opts));
+			write_biff_rec(ba, 515, write_Number(R, C, cell.t == "d" ? datenum(parseDate$1(cell.v)) : cell.v, os, opts));
 			break;
 		case "b":
 		case "e":
@@ -22972,7 +22972,7 @@ function html_to_sheet(str, _opts) {
 			else if (!isNaN(fuzzydate(m).getDate())) {
 				o = {
 					t: "d",
-					v: parseDate(m)
+					v: parseDate$1(m)
 				};
 				if (!opts.cellDates) o = {
 					t: "n",
@@ -23145,7 +23145,7 @@ function sheet_add_dom(ws, table, _opts) {
 				else if (!isNaN(fuzzydate(v).getDate())) {
 					o = {
 						t: "d",
-						v: parseDate(v)
+						v: parseDate$1(v)
 					};
 					if (!opts.cellDates) o = {
 						t: "n",
@@ -23415,7 +23415,7 @@ function parse_content_xml(d, _opts) {
 						break;
 					case "date":
 						q.t = "d";
-						q.v = parseDate(ctag["date-value"]);
+						q.v = parseDate$1(ctag["date-value"]);
 						if (!opts.cellDates) {
 							q.t = "n";
 							q.v = datenum(q.v);
@@ -23907,9 +23907,9 @@ var write_content_ods = /* @__PURE__ */ (function() {
 						ct["office:value-type"] = "string";
 						break;
 					case "d":
-						textp = cell.w || parseDate(cell.v).toISOString();
+						textp = cell.w || parseDate$1(cell.v).toISOString();
 						ct["office:value-type"] = "date";
-						ct["office:date-value"] = parseDate(cell.v).toISOString();
+						ct["office:date-value"] = parseDate$1(cell.v).toISOString();
 						ct["table:style-name"] = "ce1";
 						break;
 					default:
@@ -26572,14 +26572,22 @@ XLSX.version;
 //#region src/services/procesosOperacionais.ts
 var fetchProcessos = async (filters) => {
 	const filterArr = [];
-	if (filters.status && filters.status !== "Todos") filterArr.push(`status = '${filters.status}'`);
+	if (filters.status && filters.status !== "Todos") {
+		let s = filters.status;
+		if (s === "em_execucao") s = "execu";
+		else if (s === "em_elaboracao") s = "elabora";
+		else if (s === "analise_inicial") s = "analis";
+		else if (s === "finalizado") s = "finaliz";
+		else if (s === "cancelado") s = "cancel";
+		filterArr.push(`status ~ '${s}'`);
+	}
 	if (filters.cia && filters.cia !== "Todas") filterArr.push(`cia = '${filters.cia}'`);
 	if (filters.agente_prestador && filters.agente_prestador !== "Todos") filterArr.push(`agente_prestador = '${filters.agente_prestador}'`);
 	if (filters.data_entrada_from) filterArr.push(`data_entrada >= '${filters.data_entrada_from}'`);
 	if (filters.data_entrada_to) filterArr.push(`data_entrada <= '${filters.data_entrada_to}'`);
 	if (filters.search) {
 		const s = filters.search.replace(/'/g, "\\'");
-		filterArr.push(`(numero_controle ~ '${s}' || nome_segurado ~ '${s}' || placas_veiculos ~ '${s}')`);
+		filterArr.push(`(numero_controle ~ '${s}' || nome_segurado ~ '${s}' || placas_veiculos ~ '${s}' || cia ~ '${s}' || agente_prestador ~ '${s}')`);
 	}
 	const filterStr = filterArr.join(" && ");
 	const options = { sort: "-created" };
@@ -28176,6 +28184,10 @@ function DashboardKPIs({ processos, loading }) {
 			className: "h-[120px] rounded-[8px] bg-muted animate-pulse"
 		}, i))
 	});
+	const normalizedProcessos = processos.map((p) => ({
+		...p,
+		normalizedStatus: String(p.status || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim()
+	}));
 	const kpis = [
 		{
 			title: "Total de Processos",
@@ -28184,26 +28196,26 @@ function DashboardKPIs({ processos, loading }) {
 		},
 		{
 			title: "Em Execução",
-			value: processos.filter((p) => p.status === "em_execucao").length,
+			value: normalizedProcessos.filter((p) => p.normalizedStatus.includes("execucao")).length,
 			subtitle: "Acompanhamento ativo"
 		},
 		{
 			title: "Finalizados",
-			value: processos.filter((p) => p.status === "finalizado").length,
+			value: normalizedProcessos.filter((p) => p.normalizedStatus.includes("finalizad") || p.normalizedStatus.includes("concluid")).length,
 			subtitle: "Concluídos"
 		},
 		{
 			title: "Pendências",
-			value: processos.filter((p) => ["em_elaboracao", "analise_inicial"].includes(p.status)).length,
+			value: normalizedProcessos.filter((p) => p.normalizedStatus.includes("elaboracao") || p.normalizedStatus.includes("analise")).length,
 			subtitle: "Requer atenção"
 		}
 	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/components/operacional/DashboardKPIs.tsx:41:5",
+		"data-uid": "src/components/operacional/DashboardKPIs.tsx:58:5",
 		"data-prohibitions": "[editContent]",
 		className: "grid grid-cols-2 lg:grid-cols-4 gap-[16px] mb-[24px]",
 		children: kpis.map((kpi, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/operacional/DashboardKPIs.tsx:43:9",
+			"data-uid": "src/components/operacional/DashboardKPIs.tsx:60:9",
 			"data-prohibitions": "[editContent]",
 			className: "relative overflow-hidden rounded-[8px] p-[20px] min-h-[120px] flex flex-col justify-center animate-in slide-in-from-bottom-4 fade-in duration-400 ease-out fill-mode-both",
 			style: {
@@ -28212,29 +28224,29 @@ function DashboardKPIs({ processos, loading }) {
 			},
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:51:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:68:11",
 					"data-prohibitions": "[editContent]",
 					className: "absolute -bottom-[20px] -right-[20px] w-[80px] h-[80px] bg-white/10 rounded-full"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TrendingUp, {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:52:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:69:11",
 					"data-prohibitions": "[editContent]",
 					className: "w-[16px] h-[16px] text-white/70 absolute top-[16px] right-[16px]"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:53:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:70:11",
 					"data-prohibitions": "[editContent]",
 					className: "text-[13px] font-medium text-white/85 mb-[8px] relative z-10",
 					children: kpi.title
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:56:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:73:11",
 					"data-prohibitions": "[editContent]",
 					className: "text-[36px] font-bold text-white leading-[1] relative z-10",
 					children: kpi.value
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:59:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:76:11",
 					"data-prohibitions": "[editContent]",
 					className: "text-[12px] text-white/70 mt-[4px] relative z-10",
 					children: kpi.subtitle
@@ -28751,6 +28763,13 @@ function ProcessosOperacionaisTable({ processos, loading, onViewDetail, paginati
 	});
 }
 function StatusBadge({ status }) {
+	const s = String(status || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+	let key = s;
+	if (s.includes("execucao")) key = "em_execucao";
+	else if (s.includes("elaboracao")) key = "em_elaboracao";
+	else if (s.includes("finalizad") || s.includes("concluid")) key = "finalizado";
+	else if (s.includes("cancelad")) key = "cancelado";
+	else if (s.includes("analise")) key = "analise_inicial";
 	const colors = {
 		em_elaboracao: "bg-yellow-100 text-yellow-700 border border-yellow-200",
 		em_execucao: "bg-blue-100 text-blue-700 border border-blue-200",
@@ -28766,21 +28785,27 @@ function StatusBadge({ status }) {
 		analise_inicial: "Análise Inicial"
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:318:5",
+		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:333:5",
 		"data-prohibitions": "[editContent]",
 		role: "status",
-		"aria-label": `Status: ${labels[status] || status}`,
-		className: `inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold whitespace-nowrap ${colors[status] || "bg-muted text-muted-foreground border border-border"}`,
-		children: labels[status] || status
+		"aria-label": `Status: ${labels[key] || status}`,
+		className: `inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold whitespace-nowrap ${colors[key] || "bg-muted text-muted-foreground border border-border"}`,
+		children: labels[key] || status || "Indefinido"
 	});
 }
 function ResultadoBadge({ resultado }) {
 	if (!resultado) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:329:26",
+		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:344:26",
 		"data-prohibitions": "[]",
 		className: "text-[11px] text-muted-foreground",
 		children: "-"
 	});
+	const r = String(resultado || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+	let key = r;
+	if (r.includes("regular") && !r.includes("irregular")) key = "regular";
+	else if (r.includes("irregular")) key = "irregular";
+	else if (r.includes("analise")) key = "analise";
+	else if (r.includes("cancelad")) key = "cancelado";
 	const colors = {
 		regular: "bg-green-100 text-green-700 border border-green-200",
 		irregular: "bg-orange-100 text-orange-700 border border-orange-200",
@@ -28788,11 +28813,11 @@ function ResultadoBadge({ resultado }) {
 		cancelado: "bg-red-100 text-red-700 border border-red-200"
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:337:5",
+		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:365:5",
 		"data-prohibitions": "[editContent]",
 		role: "status",
-		className: `inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold capitalize whitespace-nowrap ${colors[resultado] || "bg-muted text-muted-foreground border border-border"}`,
-		children: resultado
+		className: `inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold capitalize whitespace-nowrap ${colors[key] || "bg-muted text-muted-foreground border border-border"}`,
+		children: key || resultado
 	});
 }
 //#endregion
@@ -30243,108 +30268,155 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 var normalizeHeader = (header) => {
 	return header.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]/g, "").trim();
 };
+var normalizeStatus = (val) => {
+	if (!val) return "em_elaboracao";
+	const s = String(val).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+	if (s.includes("execucao")) return "em_execucao";
+	if (s.includes("elaboracao")) return "em_elaboracao";
+	if (s.includes("finalizad") || s.includes("concluid")) return "finalizado";
+	if (s.includes("cancelad")) return "cancelado";
+	if (s.includes("analise")) return "analise_inicial";
+	return "em_elaboracao";
+};
+var normalizeResultado = (val) => {
+	if (!val) return "";
+	const r = String(val).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+	if (r.includes("regular") && !r.includes("irregular")) return "regular";
+	if (r.includes("irregular")) return "irregular";
+	if (r.includes("analise")) return "analise";
+	if (r.includes("cancelad")) return "cancelado";
+	return "";
+};
+var parseDate = (val) => {
+	if (!val) return "";
+	const strVal = String(val).trim();
+	const match = strVal.match(/^(\d{2})[/-](\d{2})[/-](\d{4})/);
+	if (match) return `${match[3]}-${match[2]}-${match[1]} 12:00:00.000Z`;
+	return strVal;
+};
 var mappings = {
 	numero_controle: [
 		"numero",
 		"ncontrole",
 		"id",
 		"controle",
-		"numerocontrole"
+		"numerocontrole",
+		"sinistro",
+		"protocolo"
 	],
 	status: [
 		"status",
 		"situacao",
-		"estado"
-	],
-	observacoes: [
-		"observacoes",
-		"obs",
-		"notas",
-		"comentarios",
-		"notes"
-	],
-	revisor: [
-		"revisor",
-		"responsavel",
-		"reviewer"
+		"estado",
+		"andamento",
+		"fase"
 	],
 	cia: [
 		"cia",
 		"seguradora",
 		"companhia",
 		"insurance",
-		"company"
+		"company",
+		"cliente",
+		"empresa"
+	],
+	nome_segurado: [
+		"segurado",
+		"nomesegurado",
+		"cliente",
+		"customer",
+		"insured",
+		"nome"
 	],
 	tipo_servico: [
 		"tipo",
 		"tiposervico",
 		"servico",
 		"service",
-		"ramo"
+		"ramo",
+		"produto",
+		"atendimento"
 	],
 	local_sinistro: [
 		"local",
 		"localizacao",
 		"regiao",
 		"location",
-		"region"
+		"region",
+		"cidade",
+		"uf",
+		"estado"
 	],
 	agente_prestador: [
 		"agente",
 		"prestador",
 		"sindicante",
 		"agent",
-		"provider"
+		"provider",
+		"parceiro",
+		"oficina"
 	],
 	data_entrada: [
 		"entrada",
 		"dataentrada",
 		"inicio",
 		"startdate",
-		"data_entrada"
+		"abertura",
+		"data",
+		"dataabertura",
+		"recebimento"
 	],
 	dias_uteis: [
 		"dias",
 		"diasuteis",
 		"diastrabalho",
 		"workingdays",
-		"dias_uteis"
+		"prazo",
+		"sla"
 	],
 	posicao_1: [
 		"posicao1",
 		"pos1",
 		"position1",
-		"posicao_1"
+		"posicao_1",
+		"primeiraposicao"
 	],
 	posicao_2: [
 		"posicao2",
 		"pos2",
 		"position2",
-		"posicao_2"
+		"posicao_2",
+		"segundaposicao"
 	],
 	posicao_3: [
 		"posicao3",
 		"pos3",
 		"position3",
-		"posicao_3"
+		"posicao_3",
+		"terceiraposicao"
 	],
 	data_retorno: [
 		"retorno",
 		"dataretorno",
 		"returndate",
-		"data_retorno"
+		"data_retorno",
+		"previsao"
 	],
 	data_saida: [
 		"saida",
 		"datasaida",
 		"conclusao",
 		"enddate",
-		"data_saida"
+		"data_saida",
+		"fechamento",
+		"finalizacao"
 	],
 	resultado: [
 		"resultado",
 		"resultadofinal",
-		"result"
+		"result",
+		"parecer",
+		"conclusao"
 	],
 	dias_totais: [
 		"diastotais",
@@ -30357,15 +30429,8 @@ var mappings = {
 		"controlecia",
 		"numerocia",
 		"cianumber",
-		"controle_cia"
-	],
-	nome_segurado: [
-		"segurado",
-		"nomesegurado",
-		"cliente",
-		"customer",
-		"insured",
-		"nome_segurado"
+		"controle_cia",
+		"sinistrocia"
 	],
 	placas_veiculos: [
 		"placa",
@@ -30379,7 +30444,22 @@ var mappings = {
 		"analista",
 		"solicitante",
 		"analyst",
-		"requester"
+		"requester",
+		"responsavel"
+	],
+	revisor: [
+		"revisor",
+		"responsavel",
+		"reviewer",
+		"auditor"
+	],
+	observacoes: [
+		"observacoes",
+		"obs",
+		"notas",
+		"comentarios",
+		"notes",
+		"historico"
 	]
 };
 function useImportOperacionalData() {
@@ -30389,12 +30469,6 @@ function useImportOperacionalData() {
 	const [errorMsg, setErrorMsg] = (0, import_react.useState)("");
 	const [parsedData, setParsedData] = (0, import_react.useState)(null);
 	const [progress, setProgress] = (0, import_react.useState)(0);
-	const parseDate = (val) => {
-		if (!val) return "";
-		const match = String(val).match(/^(\d{2})\/(\d{2})\/(\d{4})/);
-		if (match) return `${match[3]}-${match[2]}-${match[1]}`;
-		return String(val);
-	};
 	const parseCSV = async (file) => {
 		const lines = (await file.text()).split(/\r?\n/).filter((l) => l.trim() !== "");
 		if (lines.length <= 1) throw new Error("Planilha vazia. Adicione ao menos uma linha de dados.");
@@ -30413,7 +30487,10 @@ function useImportOperacionalData() {
 	const parseExcel = async (file) => {
 		const workbook = readSync(await file.arrayBuffer(), { type: "array" });
 		const sheetName = workbook.SheetNames[0];
-		const data = utils.sheet_to_json(workbook.Sheets[sheetName], { defval: "" });
+		const data = utils.sheet_to_json(workbook.Sheets[sheetName], {
+			defval: "",
+			raw: false
+		});
 		if (data.length === 0) throw new Error("Planilha vazia. Adicione ao menos uma linha de dados.");
 		return data;
 	};
@@ -30432,7 +30509,7 @@ function useImportOperacionalData() {
 			headers.forEach((header) => {
 				const norm = normalizeHeader(header);
 				let foundField = "";
-				for (const [field, aliases] of Object.entries(mappings)) if (aliases.includes(norm) || norm.includes(aliases[0])) {
+				for (const [field, aliases] of Object.entries(mappings)) if (aliases.some((alias) => norm === alias || norm.includes(alias))) {
 					foundField = field;
 					break;
 				}
@@ -30450,10 +30527,15 @@ function useImportOperacionalData() {
 					for (const h of matchedFields) {
 						let val = row[h];
 						const field = headerMap[h];
-						if (field.startsWith("data_")) val = parseDate(val);
-						if (field.startsWith("dias_")) val = parseInt(val, 10) || 0;
+						if (val === void 0 || val === null) val = "";
+						val = String(val).trim();
+						if (field === "status") val = normalizeStatus(val);
+						else if (field === "resultado") val = normalizeResultado(val);
+						else if (field.startsWith("data_")) val = parseDate(val);
+						else if (field.startsWith("dias_")) val = parseInt(val, 10) || 0;
 						newRow[field] = val;
 					}
+					if (!newRow.status) newRow.status = "em_elaboracao";
 					return newRow;
 				})
 			});
@@ -31092,4 +31174,4 @@ function OperacionalDashboardPage() {
 //#endregion
 export { OperacionalDashboardPage as default };
 
-//# sourceMappingURL=OperacionalDashboardPage-Dd3eGxBz.js.map
+//# sourceMappingURL=OperacionalDashboardPage-Cazz0OG1.js.map

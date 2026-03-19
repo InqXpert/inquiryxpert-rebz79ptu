@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/OperacionalDashboardPage-Dd3eGxBz.js","assets/jsx-runtime-huLxtCwt.js","assets/Processos-B4XYN9h5.js","assets/Relatorios-ud8Hv5Gk.js","assets/Configuracoes-D-ZZOkoB.js","assets/Ajuda-CAKBiVPB.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/OperacionalDashboardPage-Cazz0OG1.js","assets/jsx-runtime-huLxtCwt.js","assets/Processos-B4XYN9h5.js","assets/Relatorios-ud8Hv5Gk.js","assets/Configuracoes-D-ZZOkoB.js","assets/Ajuda-CAKBiVPB.js"])))=>i.map(i=>d[i]);
 import { i as __toESM, n as require_react, r as __commonJSMin, t as require_jsx_runtime } from "./jsx-runtime-huLxtCwt.js";
 //#region \0vite/modulepreload-polyfill.js
 (function polyfill() {
@@ -25309,7 +25309,7 @@ var AuthProvider = ({ children }) => {
 };
 //#endregion
 //#region src/App.tsx
-var OperacionalDashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./OperacionalDashboardPage-Dd3eGxBz.js"), __vite__mapDeps([0,1])));
+var OperacionalDashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./OperacionalDashboardPage-Cazz0OG1.js"), __vite__mapDeps([0,1])));
 var Processos = (0, import_react.lazy)(() => __vitePreload(() => import("./Processos-B4XYN9h5.js"), __vite__mapDeps([2,1])));
 var Relatorios = (0, import_react.lazy)(() => __vitePreload(() => import("./Relatorios-ud8Hv5Gk.js"), __vite__mapDeps([3,1])));
 var Configuracoes = (0, import_react.lazy)(() => __vitePreload(() => import("./Configuracoes-D-ZZOkoB.js"), __vite__mapDeps([4,1])));
@@ -25428,4 +25428,4 @@ function App() {
 //#endregion
 export { useControllableState as A, X as B, Presence as C, useCallbackRef$1 as D, DismissableLayer as E, Primitive$1 as F, createLucideIcon as H, Input as I, Button as L, useLayoutEffect2 as M, createContextScope$1 as N, Primitive as O, composeEventHandlers as P, cn as R, useFocusGuards as S, FocusScope as T, require_react_dom as U, Search as V, Root$3 as _, VISUALLY_HIDDEN_STYLES as a, hideOthers as b, Content as c, Skeleton as d, Close as f, Portal as g, Overlay as h, createContextScope as i, useId as j, createSlot as k, Root2 as l, Description as m, pb as n, Anchor as o, Content$1 as p, ClientResponseError as r, Arrow as s, useAuth as t, createPopperScope as u, Title as v, Portal$1 as w, ReactRemoveScroll as x, Trigger$1 as y, useComposedRefs as z };
 
-//# sourceMappingURL=index-DbpGfiut.js.map
+//# sourceMappingURL=index-DoML4jvj.js.map

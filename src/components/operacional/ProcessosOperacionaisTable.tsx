@@ -300,6 +300,19 @@ export function ProcessosOperacionaisTable({
 }
 
 function StatusBadge({ status }: { status: string }) {
+  // Gracefully handle un-normalized data visually
+  const s = String(status || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+  let key = s
+  if (s.includes('execucao')) key = 'em_execucao'
+  else if (s.includes('elaboracao')) key = 'em_elaboracao'
+  else if (s.includes('finalizad') || s.includes('concluid')) key = 'finalizado'
+  else if (s.includes('cancelad')) key = 'cancelado'
+  else if (s.includes('analise')) key = 'analise_inicial'
+
   const colors: Record<string, string> = {
     em_elaboracao: 'bg-yellow-100 text-yellow-700 border border-yellow-200',
     em_execucao: 'bg-blue-100 text-blue-700 border border-blue-200',
@@ -307,6 +320,7 @@ function StatusBadge({ status }: { status: string }) {
     cancelado: 'bg-red-100 text-red-700 border border-red-200',
     analise_inicial: 'bg-gray-100 text-gray-700 border border-gray-200',
   }
+
   const labels: Record<string, string> = {
     em_elaboracao: 'Em Elaboração',
     em_execucao: 'Em Execução',
@@ -314,31 +328,45 @@ function StatusBadge({ status }: { status: string }) {
     cancelado: 'Cancelado',
     analise_inicial: 'Análise Inicial',
   }
+
   return (
     <span
       role="status"
-      aria-label={`Status: ${labels[status] || status}`}
-      className={`inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold whitespace-nowrap ${colors[status] || 'bg-muted text-muted-foreground border border-border'}`}
+      aria-label={`Status: ${labels[key] || status}`}
+      className={`inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold whitespace-nowrap ${colors[key] || 'bg-muted text-muted-foreground border border-border'}`}
     >
-      {labels[status] || status}
+      {labels[key] || status || 'Indefinido'}
     </span>
   )
 }
 
 function ResultadoBadge({ resultado }: { resultado: string }) {
   if (!resultado) return <span className="text-[11px] text-muted-foreground">-</span>
+
+  const r = String(resultado || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+  let key = r
+  if (r.includes('regular') && !r.includes('irregular')) key = 'regular'
+  else if (r.includes('irregular')) key = 'irregular'
+  else if (r.includes('analise')) key = 'analise'
+  else if (r.includes('cancelad')) key = 'cancelado'
+
   const colors: Record<string, string> = {
     regular: 'bg-green-100 text-green-700 border border-green-200',
     irregular: 'bg-orange-100 text-orange-700 border border-orange-200',
     analise: 'bg-blue-100 text-blue-700 border border-blue-200',
     cancelado: 'bg-red-100 text-red-700 border border-red-200',
   }
+
   return (
     <span
       role="status"
-      className={`inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold capitalize whitespace-nowrap ${colors[resultado] || 'bg-muted text-muted-foreground border border-border'}`}
+      className={`inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold capitalize whitespace-nowrap ${colors[key] || 'bg-muted text-muted-foreground border border-border'}`}
     >
-      {resultado}
+      {key || resultado}
     </span>
   )
 }

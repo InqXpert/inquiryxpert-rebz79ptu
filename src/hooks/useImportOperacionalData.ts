@@ -21,28 +21,107 @@ const normalizeHeader = (header: string) => {
     .trim()
 }
 
+const normalizeStatus = (val: string) => {
+  if (!val) return 'em_elaboracao'
+  const s = String(val)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+  if (s.includes('execucao')) return 'em_execucao'
+  if (s.includes('elaboracao')) return 'em_elaboracao'
+  if (s.includes('finalizad') || s.includes('concluid')) return 'finalizado'
+  if (s.includes('cancelad')) return 'cancelado'
+  if (s.includes('analise')) return 'analise_inicial'
+  return 'em_elaboracao'
+}
+
+const normalizeResultado = (val: string) => {
+  if (!val) return ''
+  const r = String(val)
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+  if (r.includes('regular') && !r.includes('irregular')) return 'regular'
+  if (r.includes('irregular')) return 'irregular'
+  if (r.includes('analise')) return 'analise'
+  if (r.includes('cancelad')) return 'cancelado'
+  return ''
+}
+
+const parseDate = (val: string) => {
+  if (!val) return ''
+  const strVal = String(val).trim()
+  const match = strVal.match(/^(\d{2})[/-](\d{2})[/-](\d{4})/)
+  if (match) return `${match[3]}-${match[2]}-${match[1]} 12:00:00.000Z`
+  return strVal
+}
+
 const mappings: Record<string, string[]> = {
-  numero_controle: ['numero', 'ncontrole', 'id', 'controle', 'numerocontrole'],
-  status: ['status', 'situacao', 'estado'],
-  observacoes: ['observacoes', 'obs', 'notas', 'comentarios', 'notes'],
-  revisor: ['revisor', 'responsavel', 'reviewer'],
-  cia: ['cia', 'seguradora', 'companhia', 'insurance', 'company'],
-  tipo_servico: ['tipo', 'tiposervico', 'servico', 'service', 'ramo'],
-  local_sinistro: ['local', 'localizacao', 'regiao', 'location', 'region'],
-  agente_prestador: ['agente', 'prestador', 'sindicante', 'agent', 'provider'],
-  data_entrada: ['entrada', 'dataentrada', 'inicio', 'startdate', 'data_entrada'],
-  dias_uteis: ['dias', 'diasuteis', 'diastrabalho', 'workingdays', 'dias_uteis'],
-  posicao_1: ['posicao1', 'pos1', 'position1', 'posicao_1'],
-  posicao_2: ['posicao2', 'pos2', 'position2', 'posicao_2'],
-  posicao_3: ['posicao3', 'pos3', 'position3', 'posicao_3'],
-  data_retorno: ['retorno', 'dataretorno', 'returndate', 'data_retorno'],
-  data_saida: ['saida', 'datasaida', 'conclusao', 'enddate', 'data_saida'],
-  resultado: ['resultado', 'resultadofinal', 'result'],
+  numero_controle: [
+    'numero',
+    'ncontrole',
+    'id',
+    'controle',
+    'numerocontrole',
+    'sinistro',
+    'protocolo',
+  ],
+  status: ['status', 'situacao', 'estado', 'andamento', 'fase'],
+  cia: ['cia', 'seguradora', 'companhia', 'insurance', 'company', 'cliente', 'empresa'],
+  nome_segurado: ['segurado', 'nomesegurado', 'cliente', 'customer', 'insured', 'nome'],
+  tipo_servico: ['tipo', 'tiposervico', 'servico', 'service', 'ramo', 'produto', 'atendimento'],
+  local_sinistro: [
+    'local',
+    'localizacao',
+    'regiao',
+    'location',
+    'region',
+    'cidade',
+    'uf',
+    'estado',
+  ],
+  agente_prestador: [
+    'agente',
+    'prestador',
+    'sindicante',
+    'agent',
+    'provider',
+    'parceiro',
+    'oficina',
+  ],
+  data_entrada: [
+    'entrada',
+    'dataentrada',
+    'inicio',
+    'startdate',
+    'abertura',
+    'data',
+    'dataabertura',
+    'recebimento',
+  ],
+  dias_uteis: ['dias', 'diasuteis', 'diastrabalho', 'workingdays', 'prazo', 'sla'],
+  posicao_1: ['posicao1', 'pos1', 'position1', 'posicao_1', 'primeiraposicao'],
+  posicao_2: ['posicao2', 'pos2', 'position2', 'posicao_2', 'segundaposicao'],
+  posicao_3: ['posicao3', 'pos3', 'position3', 'posicao_3', 'terceiraposicao'],
+  data_retorno: ['retorno', 'dataretorno', 'returndate', 'data_retorno', 'previsao'],
+  data_saida: [
+    'saida',
+    'datasaida',
+    'conclusao',
+    'enddate',
+    'data_saida',
+    'fechamento',
+    'finalizacao',
+  ],
+  resultado: ['resultado', 'resultadofinal', 'result', 'parecer', 'conclusao'],
   dias_totais: ['diastotais', 'diastotal', 'totaldias', 'totaldays', 'dias_totais'],
-  controle_cia: ['controlecia', 'numerocia', 'cianumber', 'controle_cia'],
-  nome_segurado: ['segurado', 'nomesegurado', 'cliente', 'customer', 'insured', 'nome_segurado'],
+  controle_cia: ['controlecia', 'numerocia', 'cianumber', 'controle_cia', 'sinistrocia'],
   placas_veiculos: ['placa', 'placas', 'veiculo', 'vehicle', 'plate', 'placas_veiculos'],
-  analista_solicitante: ['analista', 'solicitante', 'analyst', 'requester'],
+  analista_solicitante: ['analista', 'solicitante', 'analyst', 'requester', 'responsavel'],
+  revisor: ['revisor', 'responsavel', 'reviewer', 'auditor'],
+  observacoes: ['observacoes', 'obs', 'notas', 'comentarios', 'notes', 'historico'],
 }
 
 export function useImportOperacionalData() {
@@ -52,13 +131,6 @@ export function useImportOperacionalData() {
   const [errorMsg, setErrorMsg] = useState('')
   const [parsedData, setParsedData] = useState<ParsedData | null>(null)
   const [progress, setProgress] = useState(0)
-
-  const parseDate = (val: string) => {
-    if (!val) return ''
-    const match = String(val).match(/^(\d{2})\/(\d{2})\/(\d{4})/)
-    if (match) return `${match[3]}-${match[2]}-${match[1]}`
-    return String(val)
-  }
 
   const parseCSV = async (file: File) => {
     const text = await file.text()
@@ -83,7 +155,8 @@ export function useImportOperacionalData() {
     const buffer = await file.arrayBuffer()
     const workbook = XLSX.read(buffer, { type: 'array' })
     const sheetName = workbook.SheetNames[0]
-    const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' })
+    // raw: false ensures cells formatted as dates are read as date strings (e.g. DD/MM/YYYY)
+    const data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '', raw: false })
     if (data.length === 0) throw new Error('Planilha vazia. Adicione ao menos uma linha de dados.')
     return data
   }
@@ -111,7 +184,7 @@ export function useImportOperacionalData() {
         const norm = normalizeHeader(header)
         let foundField = ''
         for (const [field, aliases] of Object.entries(mappings)) {
-          if (aliases.includes(norm) || norm.includes(aliases[0])) {
+          if (aliases.some((alias) => norm === alias || norm.includes(alias))) {
             foundField = field
             break
           }
@@ -133,10 +206,25 @@ export function useImportOperacionalData() {
         for (const h of matchedFields) {
           let val = row[h]
           const field = headerMap[h]
-          if (field.startsWith('data_')) val = parseDate(val)
-          if (field.startsWith('dias_')) val = parseInt(val, 10) || 0
+
+          if (val === undefined || val === null) val = ''
+          val = String(val).trim()
+
+          if (field === 'status') {
+            val = normalizeStatus(val)
+          } else if (field === 'resultado') {
+            val = normalizeResultado(val)
+          } else if (field.startsWith('data_')) {
+            val = parseDate(val)
+          } else if (field.startsWith('dias_')) {
+            val = parseInt(val, 10) || 0
+          }
+
           newRow[field] = val
         }
+
+        if (!newRow.status) newRow.status = 'em_elaboracao'
+
         return newRow
       })
 
@@ -168,11 +256,11 @@ export function useImportOperacionalData() {
         while (!success && retries < 8) {
           try {
             if (retries > 0) {
-              await sleep(2000 * Math.pow(2, retries - 1)) // Exponential backoff
+              await sleep(2000 * Math.pow(2, retries - 1))
             }
 
             const record = await pb.collection('processos_operacionais').create(rowData)
-            await sleep(300) // Delay explicitly between operations for the same record
+            await sleep(300)
             await pb.collection('processos_historico').create({
               processo_id: record.id,
               tipo_evento: 'criado',
@@ -196,8 +284,6 @@ export function useImportOperacionalData() {
         }
 
         setProgress(Math.round(((i + 1) / total) * 100))
-
-        // Mais conservador: sempre aguarda 600ms entre iterações para não causar 429.
         await sleep(600)
       }
       setState('success')

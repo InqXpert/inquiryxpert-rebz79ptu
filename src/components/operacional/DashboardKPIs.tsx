@@ -17,22 +17,39 @@ export function DashboardKPIs({ processos, loading }: Props) {
     )
   }
 
+  // Normalize status internally so KPIs work even with legacy un-normalized data in DB
+  const normalizedProcessos = processos.map((p) => ({
+    ...p,
+    normalizedStatus: String(p.status || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim(),
+  }))
+
   const kpis = [
-    { title: 'Total de Processos', value: processos.length, subtitle: 'Todos os registros' },
+    {
+      title: 'Total de Processos',
+      value: processos.length,
+      subtitle: 'Todos os registros',
+    },
     {
       title: 'Em Execução',
-      value: processos.filter((p) => p.status === 'em_execucao').length,
+      value: normalizedProcessos.filter((p) => p.normalizedStatus.includes('execucao')).length,
       subtitle: 'Acompanhamento ativo',
     },
     {
       title: 'Finalizados',
-      value: processos.filter((p) => p.status === 'finalizado').length,
+      value: normalizedProcessos.filter(
+        (p) => p.normalizedStatus.includes('finalizad') || p.normalizedStatus.includes('concluid'),
+      ).length,
       subtitle: 'Concluídos',
     },
     {
       title: 'Pendências',
-      value: processos.filter((p) => ['em_elaboracao', 'analise_inicial'].includes(p.status))
-        .length,
+      value: normalizedProcessos.filter(
+        (p) => p.normalizedStatus.includes('elaboracao') || p.normalizedStatus.includes('analise'),
+      ).length,
       subtitle: 'Requer atenção',
     },
   ]

@@ -6,7 +6,14 @@ export const fetchProcessos = async (filters: any): Promise<ProcessoOperacional[
   const filterArr: string[] = []
 
   if (filters.status && filters.status !== 'Todos') {
-    filterArr.push(`status = '${filters.status}'`)
+    // Make filter resilient to un-normalized legacy data in database using LIKE operator (~).
+    let s = filters.status
+    if (s === 'em_execucao') s = 'execu'
+    else if (s === 'em_elaboracao') s = 'elabora'
+    else if (s === 'analise_inicial') s = 'analis'
+    else if (s === 'finalizado') s = 'finaliz'
+    else if (s === 'cancelado') s = 'cancel'
+    filterArr.push(`status ~ '${s}'`)
   }
 
   if (filters.cia && filters.cia !== 'Todas') {
@@ -28,7 +35,7 @@ export const fetchProcessos = async (filters: any): Promise<ProcessoOperacional[
   if (filters.search) {
     const s = filters.search.replace(/'/g, "\\'")
     filterArr.push(
-      `(numero_controle ~ '${s}' || nome_segurado ~ '${s}' || placas_veiculos ~ '${s}')`,
+      `(numero_controle ~ '${s}' || nome_segurado ~ '${s}' || placas_veiculos ~ '${s}' || cia ~ '${s}' || agente_prestador ~ '${s}')`,
     )
   }
 
