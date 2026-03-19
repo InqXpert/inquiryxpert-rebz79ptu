@@ -1,5 +1,5 @@
 import { i as __toESM, n as require_react, t as require_jsx_runtime } from "./jsx-runtime-huLxtCwt.js";
-import { A as useId, B as Search, C as Portal$1, D as Primitive, E as useCallbackRef, F as Input, H as require_react_dom, I as Button, L as cn, M as createContextScope, N as composeEventHandlers, O as createSlot, P as Primitive$1, R as useComposedRefs, S as Presence, T as DismissableLayer, V as createLucideIcon, _ as Title, a as Anchor, b as ReactRemoveScroll, c as Root2$2, d as Close, f as Content$2, g as Root$2, h as Portal$2, i as VISUALLY_HIDDEN_STYLES, j as useLayoutEffect2, k as useControllableState, l as createPopperScope, m as Overlay, n as pb, o as Arrow, p as Description, r as createContextScope$1, s as Content$1, t as useAuth, u as Skeleton, w as FocusScope, x as useFocusGuards, y as hideOthers, z as X } from "./index-CP3I8Np7.js";
+import { A as useControllableState, B as X, C as Presence, D as useCallbackRef, E as DismissableLayer, F as Primitive$1, H as createLucideIcon, I as Input, L as Button, M as useLayoutEffect2, N as createContextScope, O as Primitive, P as composeEventHandlers, R as cn, S as useFocusGuards, T as FocusScope, U as require_react_dom, V as Search, _ as Root$2, a as VISUALLY_HIDDEN_STYLES, b as hideOthers, c as Content$1, d as Skeleton, f as Close, g as Portal$2, h as Overlay, i as createContextScope$1, j as useId, k as createSlot, l as Root2$2, m as Description, n as pb, o as Anchor, p as Content$2, r as ClientResponseError, s as Arrow, t as useAuth, u as createPopperScope, v as Title, w as Portal$1, x as ReactRemoveScroll, z as useComposedRefs } from "./index-DbpGfiut.js";
 var ArrowDown = createLucideIcon("arrow-down", [["path", {
 	d: "M12 5v14",
 	key: "s699le"
@@ -275,117 +275,6 @@ function useToast() {
 		})
 	};
 }
-//#endregion
-//#region src/services/mockOperacional.ts
-var mockProcessos = [
-	{
-		id: "p1",
-		numero_controle: "PRC-2023-001",
-		status: "em_execucao",
-		cia: "Seguradora Alfa",
-		tipo_servico: "Vistoria Prévia",
-		local_sinistro: "São Paulo - SP",
-		agente_prestador: "João Silva",
-		data_entrada: "2023-10-01",
-		dias_uteis: 3,
-		data_retorno: "2023-10-05",
-		data_saida: "",
-		resultado: "analise",
-		dias_totais: 4,
-		controle_cia: "ALFA-992",
-		nome_segurado: "Carlos Oliveira",
-		placas_veiculos: "ABC-1234",
-		analista_solicitante: "Maria Souza",
-		revisor: "Pedro Costa",
-		observacoes: "Aguardando envio de documentação complementar pelo segurado.",
-		posicao_1: "Contato realizado com sucesso em 02/10.",
-		posicao_2: "",
-		posicao_3: "",
-		user_id: "u1",
-		created: "2023-10-01T10:00:00.000Z",
-		updated: "2023-10-02T15:30:00.000Z"
-	},
-	{
-		id: "p2",
-		numero_controle: "PRC-2023-002",
-		status: "finalizado",
-		cia: "Seguradora Beta",
-		tipo_servico: "Sindicância",
-		local_sinistro: "Rio de Janeiro - RJ",
-		agente_prestador: "Ana Santos",
-		data_entrada: "2023-09-25",
-		dias_uteis: 7,
-		data_retorno: "2023-10-02",
-		data_saida: "2023-10-04",
-		resultado: "regular",
-		dias_totais: 9,
-		controle_cia: "BETA-445",
-		nome_segurado: "Fernanda Lima",
-		placas_veiculos: "XYZ-9876",
-		analista_solicitante: "Maria Souza",
-		revisor: "Roberto Almeida",
-		observacoes: "Processo concluído sem ressalvas.",
-		posicao_1: "Visita ao local em 26/09.",
-		posicao_2: "Entrevista com vizinhos em 28/09.",
-		posicao_3: "Relatório entregue em 02/10.",
-		user_id: "u2",
-		created: "2023-09-25T09:00:00.000Z",
-		updated: "2023-10-04T18:00:00.000Z"
-	},
-	{
-		id: "p3",
-		numero_controle: "PRC-2023-003",
-		status: "em_elaboracao",
-		cia: "Seguradora Alfa",
-		tipo_servico: "Regulação",
-		local_sinistro: "Campinas - SP",
-		agente_prestador: "Lucas Mendes",
-		data_entrada: "2023-10-10",
-		dias_uteis: 1,
-		data_retorno: "",
-		data_saida: "",
-		resultado: "",
-		dias_totais: 1,
-		controle_cia: "ALFA-1002",
-		nome_segurado: "Empresa XYZ",
-		placas_veiculos: "DEF-5555",
-		analista_solicitante: "Ricardo Nunes",
-		revisor: "",
-		observacoes: "",
-		posicao_1: "",
-		posicao_2: "",
-		posicao_3: "",
-		user_id: "u1",
-		created: "2023-10-10T11:20:00.000Z",
-		updated: "2023-10-10T11:20:00.000Z"
-	}
-];
-var mockHistorico = [{
-	id: "h1",
-	processo_id: "p1",
-	tipo_evento: "criado",
-	descricao: "Processo criado no sistema.",
-	user_name: "Maria Souza",
-	created: "2023-10-01T10:00:00.000Z"
-}, {
-	id: "h2",
-	processo_id: "p1",
-	tipo_evento: "status_alterado",
-	descricao: "Status alterado para Em Execução.",
-	user_name: "Maria Souza",
-	data_anteriores: "em_elaboracao",
-	data_novos: "em_execucao",
-	created: "2023-10-02T15:30:00.000Z"
-}];
-var mockDocumentos = [{
-	id: "d1",
-	processo_id: "p1",
-	arquivo: "doc_123.pdf",
-	name: "Boletim_Ocorrencia.pdf",
-	size: 1024500,
-	created: "2023-10-02T14:00:00.000Z",
-	url: "#"
-}];
 //#endregion
 //#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/xlsx@0.18.5/node_modules/xlsx/xlsx.mjs
 /*! xlsx.js (C) 2013-present SheetJS -- http://sheetjs.com */
@@ -26682,130 +26571,63 @@ XLSX.version;
 //#endregion
 //#region src/services/procesosOperacionais.ts
 var fetchProcessos = async (filters) => {
-	try {
-		const filterArr = [];
-		if (filters.status && filters.status !== "Todos") filterArr.push(`status = '${filters.status}'`);
-		if (filters.cia && filters.cia !== "Todas") filterArr.push(`cia = '${filters.cia}'`);
-		if (filters.agente_prestador && filters.agente_prestador !== "Todos") filterArr.push(`agente_prestador = '${filters.agente_prestador}'`);
-		if (filters.data_entrada_from) filterArr.push(`data_entrada >= '${filters.data_entrada_from}'`);
-		if (filters.data_entrada_to) filterArr.push(`data_entrada <= '${filters.data_entrada_to}'`);
-		if (filters.search) filterArr.push(`(numero_controle ~ '${filters.search}' || nome_segurado ~ '${filters.search}' || placas_veiculos ~ '${filters.search}')`);
-		const filterStr = filterArr.join(" && ");
-		return await pb.collection("processos_operacionais").getFullList({
-			filter: filterStr,
-			sort: "-created"
-		});
-	} catch (err) {
-		console.warn("Fallback to mock processos", err);
-		let filtered = [...mockProcessos];
-		if (filters.status && filters.status !== "Todos") filtered = filtered.filter((p) => p.status === filters.status);
-		if (filters.cia && filters.cia !== "Todas") filtered = filtered.filter((p) => p.cia === filters.cia);
-		if (filters.search) {
-			const q = filters.search.toLowerCase();
-			filtered = filtered.filter((p) => p.numero_controle.toLowerCase().includes(q) || p.nome_segurado.toLowerCase().includes(q));
-		}
-		return filtered;
+	const filterArr = [];
+	if (filters.status && filters.status !== "Todos") filterArr.push(`status = '${filters.status}'`);
+	if (filters.cia && filters.cia !== "Todas") filterArr.push(`cia = '${filters.cia}'`);
+	if (filters.agente_prestador && filters.agente_prestador !== "Todos") filterArr.push(`agente_prestador = '${filters.agente_prestador}'`);
+	if (filters.data_entrada_from) filterArr.push(`data_entrada >= '${filters.data_entrada_from}'`);
+	if (filters.data_entrada_to) filterArr.push(`data_entrada <= '${filters.data_entrada_to}'`);
+	if (filters.search) {
+		const s = filters.search.replace(/'/g, "\\'");
+		filterArr.push(`(numero_controle ~ '${s}' || nome_segurado ~ '${s}' || placas_veiculos ~ '${s}')`);
 	}
+	const filterStr = filterArr.join(" && ");
+	const options = { sort: "-created" };
+	if (filterStr) options.filter = filterStr;
+	return await pb.collection("processos_operacionais").getFullList(options);
 };
 var fetchProcessoById = async (id) => {
-	try {
-		return await pb.collection("processos_operacionais").getOne(id);
-	} catch (err) {
-		console.warn("Fallback to mock processo detail");
-		return mockProcessos.find((p) => p.id === id) || null;
-	}
+	return await pb.collection("processos_operacionais").getOne(id);
 };
 var updateProcesso = async (id, data) => {
-	try {
-		return await pb.collection("processos_operacionais").update(id, data);
-	} catch (err) {
-		console.warn("Fallback to mock update processo");
-		const proc = mockProcessos.find((p) => p.id === id);
-		if (!proc) throw new Error("Processo not found");
-		Object.assign(proc, data);
-		return proc;
-	}
+	return await pb.collection("processos_operacionais").update(id, data);
 };
 var deleteProcesso = async (id) => {
-	try {
-		await pb.collection("processos_operacionais").delete(id);
-		return true;
-	} catch (err) {
-		console.warn("Fallback to mock delete processo");
-		return true;
-	}
+	await pb.collection("processos_operacionais").delete(id);
+	return true;
 };
 var addObservacao = async (processoId, observacao, userName) => {
-	try {
-		const proc = await pb.collection("processos_operacionais").getOne(processoId);
-		const newObs = `${proc.observacoes ? proc.observacoes + "\n\n" : ""}[${(/* @__PURE__ */ new Date()).toLocaleString()}] ${userName}:\n${observacao}`;
-		return await pb.collection("processos_operacionais").update(processoId, { observacoes: newObs });
-	} catch (err) {
-		console.warn("Fallback to mock add observacao");
-		const proc = mockProcessos.find((p) => p.id === processoId);
-		if (proc) proc.observacoes = `${proc.observacoes ? proc.observacoes + "\n\n" : ""}[${(/* @__PURE__ */ new Date()).toLocaleString()}] ${userName}:\n${observacao}`;
-		return proc;
-	}
+	const proc = await pb.collection("processos_operacionais").getOne(processoId);
+	const newObs = `${proc.observacoes ? proc.observacoes + "\n\n" : ""}[${(/* @__PURE__ */ new Date()).toLocaleString()}] ${userName}:\n${observacao}`;
+	return await pb.collection("processos_operacionais").update(processoId, { observacoes: newObs });
 };
 var addPosicao = async (processoId, posicaoNumber, text) => {
-	try {
-		const field = `posicao_${posicaoNumber}`;
-		return await pb.collection("processos_operacionais").update(processoId, { [field]: text });
-	} catch (err) {
-		const proc = mockProcessos.find((p) => p.id === processoId);
-		if (proc) proc[`posicao_${posicaoNumber}`] = text;
-		return proc;
-	}
+	const field = `posicao_${posicaoNumber}`;
+	return await pb.collection("processos_operacionais").update(processoId, { [field]: text });
 };
 var fetchHistorico = async (processoId) => {
-	try {
-		return await pb.collection("processos_historico").getFullList({
-			filter: `processo_id = '${processoId}'`,
-			sort: "-created"
-		});
-	} catch (err) {
-		return mockHistorico.filter((h) => h.processo_id === processoId);
-	}
+	return await pb.collection("processos_historico").getFullList({
+		filter: `processo_id = '${processoId}'`,
+		sort: "-created"
+	});
 };
 var fetchDocumentos = async (processoId) => {
-	try {
-		return await pb.collection("processos_documentos").getFullList({
-			filter: `processo_id = '${processoId}'`,
-			sort: "-created"
-		});
-	} catch (err) {
-		return mockDocumentos.filter((d) => d.processo_id === processoId);
-	}
+	return await pb.collection("processos_documentos").getFullList({
+		filter: `processo_id = '${processoId}'`,
+		sort: "-created"
+	});
 };
 var uploadDocumento = async (processoId, file) => {
-	try {
-		const formData = new FormData();
-		formData.append("processo_id", processoId);
-		formData.append("arquivo", file);
-		formData.append("name", file.name);
-		formData.append("size", file.size.toString());
-		return await pb.collection("processos_documentos").create(formData);
-	} catch (err) {
-		const newDoc = {
-			id: Math.random().toString(),
-			processo_id: processoId,
-			arquivo: file.name,
-			name: file.name,
-			size: file.size,
-			created: (/* @__PURE__ */ new Date()).toISOString(),
-			url: "#"
-		};
-		mockDocumentos.push(newDoc);
-		return newDoc;
-	}
+	const formData = new FormData();
+	formData.append("processo_id", processoId);
+	formData.append("arquivo", file);
+	formData.append("name", file.name);
+	formData.append("size", file.size.toString());
+	return await pb.collection("processos_documentos").create(formData);
 };
 var deleteDocumento = async (documentoId) => {
-	try {
-		await pb.collection("processos_documentos").delete(documentoId);
-		return true;
-	} catch (err) {
-		return true;
-	}
+	await pb.collection("processos_documentos").delete(documentoId);
+	return true;
 };
 var exportToExcel = async (processos) => {
 	try {
@@ -26860,6 +26682,21 @@ var downloadTemplate = () => {
 	writeFileSync(workbook, "modelo-importacao-operacional.xlsx");
 };
 //#endregion
+//#region src/lib/pocketbase/errors.ts
+function extractFieldErrors(error) {
+	if (!(error instanceof ClientResponseError)) return {};
+	const data = error.response?.data;
+	if (!data || typeof data !== "object") return {};
+	const errors = {};
+	for (const [field, detail] of Object.entries(data)) if (detail && typeof detail === "object" && "message" in detail) errors[field] = detail.message;
+	return errors;
+}
+function getErrorMessage(error) {
+	if (!(error instanceof ClientResponseError)) return error instanceof Error ? error.message : "An unexpected error occurred.";
+	const msgs = Object.values(extractFieldErrors(error));
+	return msgs.length > 0 ? msgs.join(" ") : error.message || "An unexpected error occurred.";
+}
+//#endregion
 //#region src/hooks/useOperacionalDashboard.ts
 function useOperacionalDashboard() {
 	const { user } = useAuth();
@@ -26895,14 +26732,27 @@ function useOperacionalDashboard() {
 				totalCount: data.length
 			}));
 		} catch (err) {
-			setError("Erro ao carregar processos. Tente novamente.");
+			console.error(err);
+			const msg = getErrorMessage(err);
+			setError(msg);
+			toast({
+				title: "Erro de Conexão",
+				description: msg || "Não foi possível carregar os processos da base de dados.",
+				variant: "destructive"
+			});
+			setProcessos([]);
+			setPagination((p) => ({
+				...p,
+				totalCount: 0
+			}));
 		} finally {
 			setLoading(false);
 		}
 	}, [
 		filters,
 		userRole,
-		userId
+		userId,
+		toast
 	]);
 	(0, import_react.useEffect)(() => {
 		fetchProcessos$1();
@@ -26946,7 +26796,7 @@ function useOperacionalDashboard() {
 		} catch (err) {
 			toast({
 				title: "Erro",
-				description: "Erro ao atualizar processo.",
+				description: getErrorMessage(err),
 				variant: "destructive"
 			});
 		}
@@ -26970,7 +26820,7 @@ function useOperacionalDashboard() {
 		} catch (err) {
 			toast({
 				title: "Erro",
-				description: "Erro ao deletar processo.",
+				description: getErrorMessage(err),
 				variant: "destructive"
 			});
 		}
@@ -31242,4 +31092,4 @@ function OperacionalDashboardPage() {
 //#endregion
 export { OperacionalDashboardPage as default };
 
-//# sourceMappingURL=OperacionalDashboardPage-Augxt6yg.js.map
+//# sourceMappingURL=OperacionalDashboardPage-Dd3eGxBz.js.map

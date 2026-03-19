@@ -1,80 +1,60 @@
 import pb from '@/lib/pocketbase/client'
 import { ProcessoOperacional, ProcessoHistorico, ProcessoDocumento } from '@/types'
-import { mockProcessos, mockHistorico, mockDocumentos } from './mockOperacional'
 import * as XLSX from 'xlsx'
 
 export const fetchProcessos = async (filters: any): Promise<ProcessoOperacional[]> => {
-  try {
-    const filterArr: string[] = []
-    if (filters.status && filters.status !== 'Todos') filterArr.push(`status = '${filters.status}'`)
-    if (filters.cia && filters.cia !== 'Todas') filterArr.push(`cia = '${filters.cia}'`)
-    if (filters.agente_prestador && filters.agente_prestador !== 'Todos')
-      filterArr.push(`agente_prestador = '${filters.agente_prestador}'`)
+  const filterArr: string[] = []
 
-    if (filters.data_entrada_from) filterArr.push(`data_entrada >= '${filters.data_entrada_from}'`)
-    if (filters.data_entrada_to) filterArr.push(`data_entrada <= '${filters.data_entrada_to}'`)
-
-    if (filters.search) {
-      filterArr.push(
-        `(numero_controle ~ '${filters.search}' || nome_segurado ~ '${filters.search}' || placas_veiculos ~ '${filters.search}')`,
-      )
-    }
-
-    const filterStr = filterArr.join(' && ')
-    const result = await pb
-      .collection('processos_operacionais')
-      .getFullList<ProcessoOperacional>({ filter: filterStr, sort: '-created' })
-    return result
-  } catch (err) {
-    console.warn('Fallback to mock processos', err)
-    let filtered = [...mockProcessos]
-    if (filters.status && filters.status !== 'Todos')
-      filtered = filtered.filter((p) => p.status === filters.status)
-    if (filters.cia && filters.cia !== 'Todas')
-      filtered = filtered.filter((p) => p.cia === filters.cia)
-    if (filters.search) {
-      const q = filters.search.toLowerCase()
-      filtered = filtered.filter(
-        (p) =>
-          p.numero_controle.toLowerCase().includes(q) || p.nome_segurado.toLowerCase().includes(q),
-      )
-    }
-    return filtered
+  if (filters.status && filters.status !== 'Todos') {
+    filterArr.push(`status = '${filters.status}'`)
   }
+
+  if (filters.cia && filters.cia !== 'Todas') {
+    filterArr.push(`cia = '${filters.cia}'`)
+  }
+
+  if (filters.agente_prestador && filters.agente_prestador !== 'Todos') {
+    filterArr.push(`agente_prestador = '${filters.agente_prestador}'`)
+  }
+
+  if (filters.data_entrada_from) {
+    filterArr.push(`data_entrada >= '${filters.data_entrada_from}'`)
+  }
+
+  if (filters.data_entrada_to) {
+    filterArr.push(`data_entrada <= '${filters.data_entrada_to}'`)
+  }
+
+  if (filters.search) {
+    const s = filters.search.replace(/'/g, "\\'")
+    filterArr.push(
+      `(numero_controle ~ '${s}' || nome_segurado ~ '${s}' || placas_veiculos ~ '${s}')`,
+    )
+  }
+
+  const filterStr = filterArr.join(' && ')
+  const options: Record<string, any> = { sort: '-created' }
+  if (filterStr) {
+    options.filter = filterStr
+  }
+
+  return await pb.collection('processos_operacionais').getFullList<ProcessoOperacional>(options)
 }
 
 export const fetchProcessoById = async (id: string): Promise<ProcessoOperacional | null> => {
-  try {
-    return await pb.collection('processos_operacionais').getOne<ProcessoOperacional>(id)
-  } catch (err) {
-    console.warn('Fallback to mock processo detail')
-    return mockProcessos.find((p) => p.id === id) || null
-  }
+  return await pb.collection('processos_operacionais').getOne<ProcessoOperacional>(id)
 }
 
 export const updateProcesso = async (
   id: string,
   data: Partial<ProcessoOperacional>,
 ): Promise<ProcessoOperacional> => {
-  try {
-    return await pb.collection('processos_operacionais').update<ProcessoOperacional>(id, data)
-  } catch (err) {
-    console.warn('Fallback to mock update processo')
-    const proc = mockProcessos.find((p) => p.id === id)
-    if (!proc) throw new Error('Processo not found')
-    Object.assign(proc, data)
-    return proc
-  }
+  return await pb.collection('processos_operacionais').update<ProcessoOperacional>(id, data)
 }
 
 export const deleteProcesso = async (id: string): Promise<boolean> => {
-  try {
-    await pb.collection('processos_operacionais').delete(id)
-    return true
-  } catch (err) {
-    console.warn('Fallback to mock delete processo')
-    return true
-  }
+  await pb.collection('processos_operacionais').delete(id)
+  return true
 }
 
 export const addObservacao = async (
@@ -82,22 +62,12 @@ export const addObservacao = async (
   observacao: string,
   userName: string,
 ): Promise<ProcessoOperacional> => {
-  try {
-    const proc = await pb
-      .collection('processos_operacionais')
-      .getOne<ProcessoOperacional>(processoId)
-    const newObs = `${proc.observacoes ? proc.observacoes + '\n\n' : ''}[${new Date().toLocaleString()}] ${userName}:\n${observacao}`
-    return await pb
-      .collection('processos_operacionais')
-      .update<ProcessoOperacional>(processoId, { observacoes: newObs })
-  } catch (err) {
-    console.warn('Fallback to mock add observacao')
-    const proc = mockProcessos.find((p) => p.id === processoId)
-    if (proc) {
-      proc.observacoes = `${proc.observacoes ? proc.observacoes + '\n\n' : ''}[${new Date().toLocaleString()}] ${userName}:\n${observacao}`
-    }
-    return proc as ProcessoOperacional
-  }
+  const proc = await pb.collection('processos_operacionais').getOne<ProcessoOperacional>(processoId)
+
+  const newObs = `${proc.observacoes ? proc.observacoes + '\n\n' : ''}[${new Date().toLocaleString()}] ${userName}:\n${observacao}`
+  return await pb
+    .collection('processos_operacionais')
+    .update<ProcessoOperacional>(processoId, { observacoes: newObs })
 }
 
 export const addPosicao = async (
@@ -105,71 +75,40 @@ export const addPosicao = async (
   posicaoNumber: number,
   text: string,
 ): Promise<ProcessoOperacional> => {
-  try {
-    const field = `posicao_${posicaoNumber}`
-    return await pb
-      .collection('processos_operacionais')
-      .update<ProcessoOperacional>(processoId, { [field]: text })
-  } catch (err) {
-    const proc = mockProcessos.find((p) => p.id === processoId)
-    if (proc) (proc as any)[`posicao_${posicaoNumber}`] = text
-    return proc as ProcessoOperacional
-  }
+  const field = `posicao_${posicaoNumber}`
+  return await pb
+    .collection('processos_operacionais')
+    .update<ProcessoOperacional>(processoId, { [field]: text })
 }
 
 export const fetchHistorico = async (processoId: string): Promise<ProcessoHistorico[]> => {
-  try {
-    return await pb
-      .collection('processos_historico')
-      .getFullList<ProcessoHistorico>({ filter: `processo_id = '${processoId}'`, sort: '-created' })
-  } catch (err) {
-    return mockHistorico.filter((h) => h.processo_id === processoId)
-  }
+  return await pb
+    .collection('processos_historico')
+    .getFullList<ProcessoHistorico>({ filter: `processo_id = '${processoId}'`, sort: '-created' })
 }
 
 export const fetchDocumentos = async (processoId: string): Promise<ProcessoDocumento[]> => {
-  try {
-    return await pb
-      .collection('processos_documentos')
-      .getFullList<ProcessoDocumento>({ filter: `processo_id = '${processoId}'`, sort: '-created' })
-  } catch (err) {
-    return mockDocumentos.filter((d) => d.processo_id === processoId)
-  }
+  return await pb
+    .collection('processos_documentos')
+    .getFullList<ProcessoDocumento>({ filter: `processo_id = '${processoId}'`, sort: '-created' })
 }
 
 export const uploadDocumento = async (
   processoId: string,
   file: File,
 ): Promise<ProcessoDocumento> => {
-  try {
-    const formData = new FormData()
-    formData.append('processo_id', processoId)
-    formData.append('arquivo', file)
-    formData.append('name', file.name)
-    formData.append('size', file.size.toString())
-    return await pb.collection('processos_documentos').create<ProcessoDocumento>(formData)
-  } catch (err) {
-    const newDoc = {
-      id: Math.random().toString(),
-      processo_id: processoId,
-      arquivo: file.name,
-      name: file.name,
-      size: file.size,
-      created: new Date().toISOString(),
-      url: '#',
-    }
-    mockDocumentos.push(newDoc)
-    return newDoc
-  }
+  const formData = new FormData()
+  formData.append('processo_id', processoId)
+  formData.append('arquivo', file)
+  formData.append('name', file.name)
+  formData.append('size', file.size.toString())
+
+  return await pb.collection('processos_documentos').create<ProcessoDocumento>(formData)
 }
 
 export const deleteDocumento = async (documentoId: string): Promise<boolean> => {
-  try {
-    await pb.collection('processos_documentos').delete(documentoId)
-    return true
-  } catch (err) {
-    return true
-  }
+  await pb.collection('processos_documentos').delete(documentoId)
+  return true
 }
 
 export const exportToExcel = async (processos: ProcessoOperacional[]): Promise<boolean> => {

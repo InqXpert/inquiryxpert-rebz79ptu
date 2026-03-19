@@ -3,6 +3,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
 import * as service from '@/services/procesosOperacionais'
 import { ProcessoOperacional } from '@/types'
+import { getErrorMessage } from '@/lib/pocketbase/errors'
 
 export function useOperacionalDashboard() {
   const { user } = useAuth()
@@ -23,6 +24,7 @@ export function useOperacionalDashboard() {
     data_entrada_to: '',
     search: '',
   }
+
   const [filters, setFiltersState] = useState(defaultFilters)
   const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 25, totalCount: 0 })
 
@@ -31,17 +33,28 @@ export function useOperacionalDashboard() {
     setError(null)
     try {
       let data = await service.fetchProcessos(filters)
+
       if (userRole === 'analista') {
         data = data.filter((p) => p.user_id === userId)
       }
+
       setProcessos(data)
       setPagination((p) => ({ ...p, totalCount: data.length }))
-    } catch (err) {
-      setError('Erro ao carregar processos. Tente novamente.')
+    } catch (err: any) {
+      console.error(err)
+      const msg = getErrorMessage(err)
+      setError(msg)
+      toast({
+        title: 'Erro de Conexão',
+        description: msg || 'Não foi possível carregar os processos da base de dados.',
+        variant: 'destructive',
+      })
+      setProcessos([])
+      setPagination((p) => ({ ...p, totalCount: 0 }))
     } finally {
       setLoading(false)
     }
-  }, [filters, userRole, userId])
+  }, [filters, userRole, userId, toast])
 
   useEffect(() => {
     fetchProcessos()
@@ -62,6 +75,7 @@ export function useOperacionalDashboard() {
       userRole === 'admin' ||
       userRole === 'supervisor' ||
       processos.find((p) => p.id === id)?.user_id === userId
+
     if (!canEdit) {
       toast({
         title: 'Acesso Negado',
@@ -75,7 +89,7 @@ export function useOperacionalDashboard() {
       setProcessos((prev) => prev.map((p) => (p.id === id ? { ...p, ...updated } : p)))
       toast({ title: 'Sucesso', description: 'Processo atualizado com sucesso!' })
     } catch (err) {
-      toast({ title: 'Erro', description: 'Erro ao atualizar processo.', variant: 'destructive' })
+      toast({ title: 'Erro', description: getErrorMessage(err), variant: 'destructive' })
     }
   }
 
@@ -93,7 +107,7 @@ export function useOperacionalDashboard() {
       setProcessos((prev) => prev.filter((p) => p.id !== id))
       toast({ title: 'Sucesso', description: 'Processo deletado com sucesso!' })
     } catch (err) {
-      toast({ title: 'Erro', description: 'Erro ao deletar processo.', variant: 'destructive' })
+      toast({ title: 'Erro', description: getErrorMessage(err), variant: 'destructive' })
     }
   }
 
