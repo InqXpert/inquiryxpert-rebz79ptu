@@ -1,12 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Plus } from 'lucide-react'
 import { useOperacionalDashboard } from '@/hooks/useOperacionalDashboard'
 import { ProcessosOperacionaisTable } from '@/components/operacional/ProcessosOperacionaisTable'
 import { DashboardFilters } from '@/components/operacional/DashboardFilters'
 import { ProcessoDetailModal } from '@/components/operacional/ProcessoDetailModal'
 import { ImportOperacionalDataModal } from '@/components/operacional/ImportOperacionalDataModal'
+import { NewProcessoModal } from '@/components/operacional/NewProcessoModal'
 import { exportToCSV } from '@/services/procesosOperacionais'
 import { useToast } from '@/hooks/use-toast'
 import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 export default function Processos() {
   const {
@@ -22,9 +26,23 @@ export default function Processos() {
     fetchProcessos,
   } = useOperacionalDashboard()
 
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const [selectedProcessoId, setSelectedProcessoId] = useState<string | null>(null)
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
+  const [isNewModalOpen, setIsNewModalOpen] = useState(false)
+  const [defaultProvider, setDefaultProvider] = useState('')
   const { toast } = useToast()
+
+  useEffect(() => {
+    if (location.state?.openNewProcess) {
+      setDefaultProvider(location.state.providerName || '')
+      setIsNewModalOpen(true)
+      // Clean up state so refresh doesn't reopen modal
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location, navigate])
 
   const handleExport = async () => {
     try {
@@ -44,6 +62,15 @@ export default function Processos() {
             Gerenciamento operacional de solicitações e andamentos.
           </p>
         </div>
+        <Button
+          className="rounded-xl shadow-sm px-6 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold h-12"
+          onClick={() => {
+            setDefaultProvider('')
+            setIsNewModalOpen(true)
+          }}
+        >
+          <Plus className="w-5 h-5 mr-2" /> NOVO PROCESSO
+        </Button>
       </div>
 
       <Card className="p-4 shadow-sm border-none rounded-2xl">
@@ -79,6 +106,13 @@ export default function Processos() {
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
         onComplete={fetchProcessos}
+      />
+
+      <NewProcessoModal
+        isOpen={isNewModalOpen}
+        onClose={() => setIsNewModalOpen(false)}
+        defaultProvider={defaultProvider}
+        onCreated={fetchProcessos}
       />
     </div>
   )

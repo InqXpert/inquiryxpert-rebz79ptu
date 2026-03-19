@@ -6,7 +6,6 @@ export const fetchProcessos = async (filters: any): Promise<ProcessoOperacional[
   const filterArr: string[] = []
 
   if (filters.status && filters.status !== 'Todos') {
-    // Make filter resilient to un-normalized legacy data in database using LIKE operator (~).
     let s = filters.status
     if (s === 'em_execucao') s = 'execu'
     else if (s === 'em_elaboracao') s = 'elabora'
@@ -57,6 +56,12 @@ export const updateProcesso = async (
   data: Partial<ProcessoOperacional>,
 ): Promise<ProcessoOperacional> => {
   return await pb.collection('processos_operacionais').update<ProcessoOperacional>(id, data)
+}
+
+export const createProcesso = async (
+  data: Partial<ProcessoOperacional>,
+): Promise<ProcessoOperacional> => {
+  return await pb.collection('processos_operacionais').create<ProcessoOperacional>(data)
 }
 
 export const deleteProcesso = async (id: string): Promise<boolean> => {
@@ -116,6 +121,27 @@ export const uploadDocumento = async (
 export const deleteDocumento = async (documentoId: string): Promise<boolean> => {
   await pb.collection('processos_documentos').delete(documentoId)
   return true
+}
+
+export const getNextNumeroControle = async (): Promise<string> => {
+  try {
+    const result = await pb.collection('processos_operacionais').getList(1, 1, {
+      sort: '-numero_controle',
+      filter: `numero_controle != ''`,
+    })
+    if (result.items.length > 0 && result.items[0].numero_controle) {
+      const match = result.items[0].numero_controle.match(/\d+$/)
+      if (match) {
+        const lastNum = parseInt(match[0], 10)
+        if (!isNaN(lastNum)) {
+          return String(lastNum + 1).padStart(5, '0')
+        }
+      }
+    }
+    return '00001'
+  } catch (err) {
+    return '00001'
+  }
 }
 
 export const exportToCSV = async (processos: ProcessoOperacional[]): Promise<boolean> => {

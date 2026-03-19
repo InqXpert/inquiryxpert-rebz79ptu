@@ -116,12 +116,14 @@ export default function ProfilePrestador() {
           </Button>
           <Button
             className="bg-secondary text-white rounded-xl h-10 px-4 gap-2 hover:bg-secondary/90 font-semibold shadow-sm"
-            asChild
+            onClick={() =>
+              navigate('/processos', {
+                state: { openNewProcess: true, providerId: p.id, providerName: p.nomeCompleto },
+              })
+            }
           >
-            <Link to={`/prestadores/${p.id}/processos/novo`}>
-              <Plus className="w-4 h-4" />
-              Novo Processo
-            </Link>
+            <Plus className="w-4 h-4" />
+            Encaminhar sindicância
           </Button>
         </div>
       </div>
@@ -281,9 +283,13 @@ export default function ProfilePrestador() {
               variant="outline"
               size="sm"
               className="font-semibold rounded-xl text-primary"
-              asChild
+              onClick={() =>
+                navigate('/processos', {
+                  state: { openNewProcess: true, providerId: p.id, providerName: p.nomeCompleto },
+                })
+              }
             >
-              <Link to={`/prestadores/${p.id}/processos/novo`}>Novo Processo</Link>
+              Encaminhar sindicância
             </Button>
           </div>
           <div className="flex flex-col divide-y divide-border/50">

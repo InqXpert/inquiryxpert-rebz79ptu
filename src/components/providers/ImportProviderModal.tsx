@@ -266,7 +266,7 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
           >
             Cancelar
           </Button>
-          <Button onClick={handleImport} disabled={!file || status !== 'success'}>
+          <Button onClick={handleImport} disabled={!file || status === 'loading'}>
             {status === 'loading' && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             Importar e Preencher
           </Button>
