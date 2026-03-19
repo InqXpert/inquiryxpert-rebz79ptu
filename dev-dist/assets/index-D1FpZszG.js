@@ -1,26 +1,5 @@
-//#region \0rolldown/runtime.js
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __commonJSMin = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
-var __copyProps = (to, from, except, desc) => {
-	if (from && typeof from === "object" || typeof from === "function") for (var keys = __getOwnPropNames(from), i = 0, n = keys.length, key; i < n; i++) {
-		key = keys[i];
-		if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
-			get: ((k) => from[k]).bind(null, key),
-			enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
-		});
-	}
-	return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
-	value: mod,
-	enumerable: true
-}) : target, mod));
-//#endregion
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/OperacionalDashboardPage-DrT8IOwN.js","assets/jsx-runtime-huLxtCwt.js","assets/Processos-B4XYN9h5.js","assets/Relatorios-ud8Hv5Gk.js","assets/Configuracoes-D-ZZOkoB.js","assets/Ajuda-CAKBiVPB.js"])))=>i.map(i=>d[i]);
+import { i as __toESM, n as require_react, r as __commonJSMin, t as require_jsx_runtime } from "./jsx-runtime-huLxtCwt.js";
 //#region \0vite/modulepreload-polyfill.js
 (function polyfill() {
 	const relList = document.createElement("link").relList;
@@ -298,770 +277,6 @@ var require_scheduler_development = /* @__PURE__ */ __commonJSMin(((exports) => 
 //#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/scheduler@0.27.0/node_modules/scheduler/index.js
 var require_scheduler = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = require_scheduler_development();
-}));
-//#endregion
-//#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/react@19.2.4/node_modules/react/cjs/react.development.js
-/**
-* @license React
-* react.development.js
-*
-* Copyright (c) Meta Platforms, Inc. and affiliates.
-*
-* This source code is licensed under the MIT license found in the
-* LICENSE file in the root directory of this source tree.
-*/
-var require_react_development = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	(function() {
-		function defineDeprecationWarning(methodName, info) {
-			Object.defineProperty(Component.prototype, methodName, { get: function() {
-				console.warn("%s(...) is deprecated in plain JavaScript React classes. %s", info[0], info[1]);
-			} });
-		}
-		function getIteratorFn(maybeIterable) {
-			if (null === maybeIterable || "object" !== typeof maybeIterable) return null;
-			maybeIterable = MAYBE_ITERATOR_SYMBOL && maybeIterable[MAYBE_ITERATOR_SYMBOL] || maybeIterable["@@iterator"];
-			return "function" === typeof maybeIterable ? maybeIterable : null;
-		}
-		function warnNoop(publicInstance, callerName) {
-			publicInstance = (publicInstance = publicInstance.constructor) && (publicInstance.displayName || publicInstance.name) || "ReactClass";
-			var warningKey = publicInstance + "." + callerName;
-			didWarnStateUpdateForUnmountedComponent[warningKey] || (console.error("Can't call %s on a component that is not yet mounted. This is a no-op, but it might indicate a bug in your application. Instead, assign to `this.state` directly or define a `state = {};` class property with the desired state in the %s component.", callerName, publicInstance), didWarnStateUpdateForUnmountedComponent[warningKey] = !0);
-		}
-		function Component(props, context, updater) {
-			this.props = props;
-			this.context = context;
-			this.refs = emptyObject;
-			this.updater = updater || ReactNoopUpdateQueue;
-		}
-		function ComponentDummy() {}
-		function PureComponent(props, context, updater) {
-			this.props = props;
-			this.context = context;
-			this.refs = emptyObject;
-			this.updater = updater || ReactNoopUpdateQueue;
-		}
-		function noop() {}
-		function testStringCoercion(value) {
-			return "" + value;
-		}
-		function checkKeyStringCoercion(value) {
-			try {
-				testStringCoercion(value);
-				var JSCompiler_inline_result = !1;
-			} catch (e) {
-				JSCompiler_inline_result = !0;
-			}
-			if (JSCompiler_inline_result) {
-				JSCompiler_inline_result = console;
-				var JSCompiler_temp_const = JSCompiler_inline_result.error;
-				var JSCompiler_inline_result$jscomp$0 = "function" === typeof Symbol && Symbol.toStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
-				JSCompiler_temp_const.call(JSCompiler_inline_result, "The provided key is an unsupported type %s. This value must be coerced to a string before using it here.", JSCompiler_inline_result$jscomp$0);
-				return testStringCoercion(value);
-			}
-		}
-		function getComponentNameFromType(type) {
-			if (null == type) return null;
-			if ("function" === typeof type) return type.$$typeof === REACT_CLIENT_REFERENCE ? null : type.displayName || type.name || null;
-			if ("string" === typeof type) return type;
-			switch (type) {
-				case REACT_FRAGMENT_TYPE: return "Fragment";
-				case REACT_PROFILER_TYPE: return "Profiler";
-				case REACT_STRICT_MODE_TYPE: return "StrictMode";
-				case REACT_SUSPENSE_TYPE: return "Suspense";
-				case REACT_SUSPENSE_LIST_TYPE: return "SuspenseList";
-				case REACT_ACTIVITY_TYPE: return "Activity";
-			}
-			if ("object" === typeof type) switch ("number" === typeof type.tag && console.error("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), type.$$typeof) {
-				case REACT_PORTAL_TYPE: return "Portal";
-				case REACT_CONTEXT_TYPE: return type.displayName || "Context";
-				case REACT_CONSUMER_TYPE: return (type._context.displayName || "Context") + ".Consumer";
-				case REACT_FORWARD_REF_TYPE:
-					var innerType = type.render;
-					type = type.displayName;
-					type || (type = innerType.displayName || innerType.name || "", type = "" !== type ? "ForwardRef(" + type + ")" : "ForwardRef");
-					return type;
-				case REACT_MEMO_TYPE: return innerType = type.displayName || null, null !== innerType ? innerType : getComponentNameFromType(type.type) || "Memo";
-				case REACT_LAZY_TYPE:
-					innerType = type._payload;
-					type = type._init;
-					try {
-						return getComponentNameFromType(type(innerType));
-					} catch (x) {}
-			}
-			return null;
-		}
-		function getTaskName(type) {
-			if (type === REACT_FRAGMENT_TYPE) return "<>";
-			if ("object" === typeof type && null !== type && type.$$typeof === REACT_LAZY_TYPE) return "<...>";
-			try {
-				var name = getComponentNameFromType(type);
-				return name ? "<" + name + ">" : "<...>";
-			} catch (x) {
-				return "<...>";
-			}
-		}
-		function getOwner() {
-			var dispatcher = ReactSharedInternals.A;
-			return null === dispatcher ? null : dispatcher.getOwner();
-		}
-		function UnknownOwner() {
-			return Error("react-stack-top-frame");
-		}
-		function hasValidKey(config) {
-			if (hasOwnProperty.call(config, "key")) {
-				var getter = Object.getOwnPropertyDescriptor(config, "key").get;
-				if (getter && getter.isReactWarning) return !1;
-			}
-			return void 0 !== config.key;
-		}
-		function defineKeyPropWarningGetter(props, displayName) {
-			function warnAboutAccessingKey() {
-				specialPropKeyWarningShown || (specialPropKeyWarningShown = !0, console.error("%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)", displayName));
-			}
-			warnAboutAccessingKey.isReactWarning = !0;
-			Object.defineProperty(props, "key", {
-				get: warnAboutAccessingKey,
-				configurable: !0
-			});
-		}
-		function elementRefGetterWithDeprecationWarning() {
-			var componentName = getComponentNameFromType(this.type);
-			didWarnAboutElementRef[componentName] || (didWarnAboutElementRef[componentName] = !0, console.error("Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release."));
-			componentName = this.props.ref;
-			return void 0 !== componentName ? componentName : null;
-		}
-		function ReactElement(type, key, props, owner, debugStack, debugTask) {
-			var refProp = props.ref;
-			type = {
-				$$typeof: REACT_ELEMENT_TYPE,
-				type,
-				key,
-				props,
-				_owner: owner
-			};
-			null !== (void 0 !== refProp ? refProp : null) ? Object.defineProperty(type, "ref", {
-				enumerable: !1,
-				get: elementRefGetterWithDeprecationWarning
-			}) : Object.defineProperty(type, "ref", {
-				enumerable: !1,
-				value: null
-			});
-			type._store = {};
-			Object.defineProperty(type._store, "validated", {
-				configurable: !1,
-				enumerable: !1,
-				writable: !0,
-				value: 0
-			});
-			Object.defineProperty(type, "_debugInfo", {
-				configurable: !1,
-				enumerable: !1,
-				writable: !0,
-				value: null
-			});
-			Object.defineProperty(type, "_debugStack", {
-				configurable: !1,
-				enumerable: !1,
-				writable: !0,
-				value: debugStack
-			});
-			Object.defineProperty(type, "_debugTask", {
-				configurable: !1,
-				enumerable: !1,
-				writable: !0,
-				value: debugTask
-			});
-			Object.freeze && (Object.freeze(type.props), Object.freeze(type));
-			return type;
-		}
-		function cloneAndReplaceKey(oldElement, newKey) {
-			newKey = ReactElement(oldElement.type, newKey, oldElement.props, oldElement._owner, oldElement._debugStack, oldElement._debugTask);
-			oldElement._store && (newKey._store.validated = oldElement._store.validated);
-			return newKey;
-		}
-		function validateChildKeys(node) {
-			isValidElement(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
-		}
-		function isValidElement(object) {
-			return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
-		}
-		function escape(key) {
-			var escaperLookup = {
-				"=": "=0",
-				":": "=2"
-			};
-			return "$" + key.replace(/[=:]/g, function(match) {
-				return escaperLookup[match];
-			});
-		}
-		function getElementKey(element, index) {
-			return "object" === typeof element && null !== element && null != element.key ? (checkKeyStringCoercion(element.key), escape("" + element.key)) : index.toString(36);
-		}
-		function resolveThenable(thenable) {
-			switch (thenable.status) {
-				case "fulfilled": return thenable.value;
-				case "rejected": throw thenable.reason;
-				default: switch ("string" === typeof thenable.status ? thenable.then(noop, noop) : (thenable.status = "pending", thenable.then(function(fulfilledValue) {
-					"pending" === thenable.status && (thenable.status = "fulfilled", thenable.value = fulfilledValue);
-				}, function(error) {
-					"pending" === thenable.status && (thenable.status = "rejected", thenable.reason = error);
-				})), thenable.status) {
-					case "fulfilled": return thenable.value;
-					case "rejected": throw thenable.reason;
-				}
-			}
-			throw thenable;
-		}
-		function mapIntoArray(children, array, escapedPrefix, nameSoFar, callback) {
-			var type = typeof children;
-			if ("undefined" === type || "boolean" === type) children = null;
-			var invokeCallback = !1;
-			if (null === children) invokeCallback = !0;
-			else switch (type) {
-				case "bigint":
-				case "string":
-				case "number":
-					invokeCallback = !0;
-					break;
-				case "object": switch (children.$$typeof) {
-					case REACT_ELEMENT_TYPE:
-					case REACT_PORTAL_TYPE:
-						invokeCallback = !0;
-						break;
-					case REACT_LAZY_TYPE: return invokeCallback = children._init, mapIntoArray(invokeCallback(children._payload), array, escapedPrefix, nameSoFar, callback);
-				}
-			}
-			if (invokeCallback) {
-				invokeCallback = children;
-				callback = callback(invokeCallback);
-				var childKey = "" === nameSoFar ? "." + getElementKey(invokeCallback, 0) : nameSoFar;
-				isArrayImpl(callback) ? (escapedPrefix = "", null != childKey && (escapedPrefix = childKey.replace(userProvidedKeyEscapeRegex, "$&/") + "/"), mapIntoArray(callback, array, escapedPrefix, "", function(c) {
-					return c;
-				})) : null != callback && (isValidElement(callback) && (null != callback.key && (invokeCallback && invokeCallback.key === callback.key || checkKeyStringCoercion(callback.key)), escapedPrefix = cloneAndReplaceKey(callback, escapedPrefix + (null == callback.key || invokeCallback && invokeCallback.key === callback.key ? "" : ("" + callback.key).replace(userProvidedKeyEscapeRegex, "$&/") + "/") + childKey), "" !== nameSoFar && null != invokeCallback && isValidElement(invokeCallback) && null == invokeCallback.key && invokeCallback._store && !invokeCallback._store.validated && (escapedPrefix._store.validated = 2), callback = escapedPrefix), array.push(callback));
-				return 1;
-			}
-			invokeCallback = 0;
-			childKey = "" === nameSoFar ? "." : nameSoFar + ":";
-			if (isArrayImpl(children)) for (var i = 0; i < children.length; i++) nameSoFar = children[i], type = childKey + getElementKey(nameSoFar, i), invokeCallback += mapIntoArray(nameSoFar, array, escapedPrefix, type, callback);
-			else if (i = getIteratorFn(children), "function" === typeof i) for (i === children.entries && (didWarnAboutMaps || console.warn("Using Maps as children is not supported. Use an array of keyed ReactElements instead."), didWarnAboutMaps = !0), children = i.call(children), i = 0; !(nameSoFar = children.next()).done;) nameSoFar = nameSoFar.value, type = childKey + getElementKey(nameSoFar, i++), invokeCallback += mapIntoArray(nameSoFar, array, escapedPrefix, type, callback);
-			else if ("object" === type) {
-				if ("function" === typeof children.then) return mapIntoArray(resolveThenable(children), array, escapedPrefix, nameSoFar, callback);
-				array = String(children);
-				throw Error("Objects are not valid as a React child (found: " + ("[object Object]" === array ? "object with keys {" + Object.keys(children).join(", ") + "}" : array) + "). If you meant to render a collection of children, use an array instead.");
-			}
-			return invokeCallback;
-		}
-		function mapChildren(children, func, context) {
-			if (null == children) return children;
-			var result = [], count = 0;
-			mapIntoArray(children, result, "", "", function(child) {
-				return func.call(context, child, count++);
-			});
-			return result;
-		}
-		function lazyInitializer(payload) {
-			if (-1 === payload._status) {
-				var ioInfo = payload._ioInfo;
-				null != ioInfo && (ioInfo.start = ioInfo.end = performance.now());
-				ioInfo = payload._result;
-				var thenable = ioInfo();
-				thenable.then(function(moduleObject) {
-					if (0 === payload._status || -1 === payload._status) {
-						payload._status = 1;
-						payload._result = moduleObject;
-						var _ioInfo = payload._ioInfo;
-						null != _ioInfo && (_ioInfo.end = performance.now());
-						void 0 === thenable.status && (thenable.status = "fulfilled", thenable.value = moduleObject);
-					}
-				}, function(error) {
-					if (0 === payload._status || -1 === payload._status) {
-						payload._status = 2;
-						payload._result = error;
-						var _ioInfo2 = payload._ioInfo;
-						null != _ioInfo2 && (_ioInfo2.end = performance.now());
-						void 0 === thenable.status && (thenable.status = "rejected", thenable.reason = error);
-					}
-				});
-				ioInfo = payload._ioInfo;
-				if (null != ioInfo) {
-					ioInfo.value = thenable;
-					var displayName = thenable.displayName;
-					"string" === typeof displayName && (ioInfo.name = displayName);
-				}
-				-1 === payload._status && (payload._status = 0, payload._result = thenable);
-			}
-			if (1 === payload._status) return ioInfo = payload._result, void 0 === ioInfo && console.error("lazy: Expected the result of a dynamic import() call. Instead received: %s\n\nYour code should look like: \n  const MyComponent = lazy(() => import('./MyComponent'))\n\nDid you accidentally put curly braces around the import?", ioInfo), "default" in ioInfo || console.error("lazy: Expected the result of a dynamic import() call. Instead received: %s\n\nYour code should look like: \n  const MyComponent = lazy(() => import('./MyComponent'))", ioInfo), ioInfo.default;
-			throw payload._result;
-		}
-		function resolveDispatcher() {
-			var dispatcher = ReactSharedInternals.H;
-			null === dispatcher && console.error("Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:\n1. You might have mismatching versions of React and the renderer (such as React DOM)\n2. You might be breaking the Rules of Hooks\n3. You might have more than one copy of React in the same app\nSee https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.");
-			return dispatcher;
-		}
-		function releaseAsyncTransition() {
-			ReactSharedInternals.asyncTransitions--;
-		}
-		function enqueueTask(task) {
-			if (null === enqueueTaskImpl) try {
-				var requireString = ("require" + Math.random()).slice(0, 7);
-				enqueueTaskImpl = (module && module[requireString]).call(module, "timers").setImmediate;
-			} catch (_err) {
-				enqueueTaskImpl = function(callback) {
-					!1 === didWarnAboutMessageChannel && (didWarnAboutMessageChannel = !0, "undefined" === typeof MessageChannel && console.error("This browser does not have a MessageChannel implementation, so enqueuing tasks via await act(async () => ...) will fail. Please file an issue at https://github.com/facebook/react/issues if you encounter this warning."));
-					var channel = new MessageChannel();
-					channel.port1.onmessage = callback;
-					channel.port2.postMessage(void 0);
-				};
-			}
-			return enqueueTaskImpl(task);
-		}
-		function aggregateErrors(errors) {
-			return 1 < errors.length && "function" === typeof AggregateError ? new AggregateError(errors) : errors[0];
-		}
-		function popActScope(prevActQueue, prevActScopeDepth) {
-			prevActScopeDepth !== actScopeDepth - 1 && console.error("You seem to have overlapping act() calls, this is not supported. Be sure to await previous act() calls before making a new one. ");
-			actScopeDepth = prevActScopeDepth;
-		}
-		function recursivelyFlushAsyncActWork(returnValue, resolve, reject) {
-			var queue = ReactSharedInternals.actQueue;
-			if (null !== queue) if (0 !== queue.length) try {
-				flushActQueue(queue);
-				enqueueTask(function() {
-					return recursivelyFlushAsyncActWork(returnValue, resolve, reject);
-				});
-				return;
-			} catch (error) {
-				ReactSharedInternals.thrownErrors.push(error);
-			}
-			else ReactSharedInternals.actQueue = null;
-			0 < ReactSharedInternals.thrownErrors.length ? (queue = aggregateErrors(ReactSharedInternals.thrownErrors), ReactSharedInternals.thrownErrors.length = 0, reject(queue)) : resolve(returnValue);
-		}
-		function flushActQueue(queue) {
-			if (!isFlushing) {
-				isFlushing = !0;
-				var i = 0;
-				try {
-					for (; i < queue.length; i++) {
-						var callback = queue[i];
-						do {
-							ReactSharedInternals.didUsePromise = !1;
-							var continuation = callback(!1);
-							if (null !== continuation) {
-								if (ReactSharedInternals.didUsePromise) {
-									queue[i] = callback;
-									queue.splice(0, i);
-									return;
-								}
-								callback = continuation;
-							} else break;
-						} while (1);
-					}
-					queue.length = 0;
-				} catch (error) {
-					queue.splice(0, i + 1), ReactSharedInternals.thrownErrors.push(error);
-				} finally {
-					isFlushing = !1;
-				}
-			}
-		}
-		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-		var REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = Symbol.for("react.activity"), MAYBE_ITERATOR_SYMBOL = Symbol.iterator, didWarnStateUpdateForUnmountedComponent = {}, ReactNoopUpdateQueue = {
-			isMounted: function() {
-				return !1;
-			},
-			enqueueForceUpdate: function(publicInstance) {
-				warnNoop(publicInstance, "forceUpdate");
-			},
-			enqueueReplaceState: function(publicInstance) {
-				warnNoop(publicInstance, "replaceState");
-			},
-			enqueueSetState: function(publicInstance) {
-				warnNoop(publicInstance, "setState");
-			}
-		}, assign = Object.assign, emptyObject = {};
-		Object.freeze(emptyObject);
-		Component.prototype.isReactComponent = {};
-		Component.prototype.setState = function(partialState, callback) {
-			if ("object" !== typeof partialState && "function" !== typeof partialState && null != partialState) throw Error("takes an object of state variables to update or a function which returns an object of state variables.");
-			this.updater.enqueueSetState(this, partialState, callback, "setState");
-		};
-		Component.prototype.forceUpdate = function(callback) {
-			this.updater.enqueueForceUpdate(this, callback, "forceUpdate");
-		};
-		var deprecatedAPIs = {
-			isMounted: ["isMounted", "Instead, make sure to clean up subscriptions and pending requests in componentWillUnmount to prevent memory leaks."],
-			replaceState: ["replaceState", "Refactor your code to use setState instead (see https://github.com/facebook/react/issues/3236)."]
-		};
-		for (fnName in deprecatedAPIs) deprecatedAPIs.hasOwnProperty(fnName) && defineDeprecationWarning(fnName, deprecatedAPIs[fnName]);
-		ComponentDummy.prototype = Component.prototype;
-		deprecatedAPIs = PureComponent.prototype = new ComponentDummy();
-		deprecatedAPIs.constructor = PureComponent;
-		assign(deprecatedAPIs, Component.prototype);
-		deprecatedAPIs.isPureReactComponent = !0;
-		var isArrayImpl = Array.isArray, REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), ReactSharedInternals = {
-			H: null,
-			A: null,
-			T: null,
-			S: null,
-			actQueue: null,
-			asyncTransitions: 0,
-			isBatchingLegacy: !1,
-			didScheduleLegacyUpdate: !1,
-			didUsePromise: !1,
-			thrownErrors: [],
-			getCurrentStack: null,
-			recentlyCreatedOwnerStacks: 0
-		}, hasOwnProperty = Object.prototype.hasOwnProperty, createTask = console.createTask ? console.createTask : function() {
-			return null;
-		};
-		deprecatedAPIs = { react_stack_bottom_frame: function(callStackForError) {
-			return callStackForError();
-		} };
-		var specialPropKeyWarningShown, didWarnAboutOldJSXRuntime;
-		var didWarnAboutElementRef = {};
-		var unknownOwnerDebugStack = deprecatedAPIs.react_stack_bottom_frame.bind(deprecatedAPIs, UnknownOwner)();
-		var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
-		var didWarnAboutMaps = !1, userProvidedKeyEscapeRegex = /\/+/g, reportGlobalError = "function" === typeof reportError ? reportError : function(error) {
-			if ("object" === typeof window && "function" === typeof window.ErrorEvent) {
-				var event = new window.ErrorEvent("error", {
-					bubbles: !0,
-					cancelable: !0,
-					message: "object" === typeof error && null !== error && "string" === typeof error.message ? String(error.message) : String(error),
-					error
-				});
-				if (!window.dispatchEvent(event)) return;
-			} else if ("object" === typeof process && "function" === typeof process.emit) {
-				process.emit("uncaughtException", error);
-				return;
-			}
-			console.error(error);
-		}, didWarnAboutMessageChannel = !1, enqueueTaskImpl = null, actScopeDepth = 0, didWarnNoAwaitAct = !1, isFlushing = !1, queueSeveralMicrotasks = "function" === typeof queueMicrotask ? function(callback) {
-			queueMicrotask(function() {
-				return queueMicrotask(callback);
-			});
-		} : enqueueTask;
-		deprecatedAPIs = Object.freeze({
-			__proto__: null,
-			c: function(size) {
-				return resolveDispatcher().useMemoCache(size);
-			}
-		});
-		var fnName = {
-			map: mapChildren,
-			forEach: function(children, forEachFunc, forEachContext) {
-				mapChildren(children, function() {
-					forEachFunc.apply(this, arguments);
-				}, forEachContext);
-			},
-			count: function(children) {
-				var n = 0;
-				mapChildren(children, function() {
-					n++;
-				});
-				return n;
-			},
-			toArray: function(children) {
-				return mapChildren(children, function(child) {
-					return child;
-				}) || [];
-			},
-			only: function(children) {
-				if (!isValidElement(children)) throw Error("React.Children.only expected to receive a single React element child.");
-				return children;
-			}
-		};
-		exports.Activity = REACT_ACTIVITY_TYPE;
-		exports.Children = fnName;
-		exports.Component = Component;
-		exports.Fragment = REACT_FRAGMENT_TYPE;
-		exports.Profiler = REACT_PROFILER_TYPE;
-		exports.PureComponent = PureComponent;
-		exports.StrictMode = REACT_STRICT_MODE_TYPE;
-		exports.Suspense = REACT_SUSPENSE_TYPE;
-		exports.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = ReactSharedInternals;
-		exports.__COMPILER_RUNTIME = deprecatedAPIs;
-		exports.act = function(callback) {
-			var prevActQueue = ReactSharedInternals.actQueue, prevActScopeDepth = actScopeDepth;
-			actScopeDepth++;
-			var queue = ReactSharedInternals.actQueue = null !== prevActQueue ? prevActQueue : [], didAwaitActCall = !1;
-			try {
-				var result = callback();
-			} catch (error) {
-				ReactSharedInternals.thrownErrors.push(error);
-			}
-			if (0 < ReactSharedInternals.thrownErrors.length) throw popActScope(prevActQueue, prevActScopeDepth), callback = aggregateErrors(ReactSharedInternals.thrownErrors), ReactSharedInternals.thrownErrors.length = 0, callback;
-			if (null !== result && "object" === typeof result && "function" === typeof result.then) {
-				var thenable = result;
-				queueSeveralMicrotasks(function() {
-					didAwaitActCall || didWarnNoAwaitAct || (didWarnNoAwaitAct = !0, console.error("You called act(async () => ...) without await. This could lead to unexpected testing behaviour, interleaving multiple act calls and mixing their scopes. You should - await act(async () => ...);"));
-				});
-				return { then: function(resolve, reject) {
-					didAwaitActCall = !0;
-					thenable.then(function(returnValue) {
-						popActScope(prevActQueue, prevActScopeDepth);
-						if (0 === prevActScopeDepth) {
-							try {
-								flushActQueue(queue), enqueueTask(function() {
-									return recursivelyFlushAsyncActWork(returnValue, resolve, reject);
-								});
-							} catch (error$0) {
-								ReactSharedInternals.thrownErrors.push(error$0);
-							}
-							if (0 < ReactSharedInternals.thrownErrors.length) {
-								var _thrownError = aggregateErrors(ReactSharedInternals.thrownErrors);
-								ReactSharedInternals.thrownErrors.length = 0;
-								reject(_thrownError);
-							}
-						} else resolve(returnValue);
-					}, function(error) {
-						popActScope(prevActQueue, prevActScopeDepth);
-						0 < ReactSharedInternals.thrownErrors.length ? (error = aggregateErrors(ReactSharedInternals.thrownErrors), ReactSharedInternals.thrownErrors.length = 0, reject(error)) : reject(error);
-					});
-				} };
-			}
-			var returnValue$jscomp$0 = result;
-			popActScope(prevActQueue, prevActScopeDepth);
-			0 === prevActScopeDepth && (flushActQueue(queue), 0 !== queue.length && queueSeveralMicrotasks(function() {
-				didAwaitActCall || didWarnNoAwaitAct || (didWarnNoAwaitAct = !0, console.error("A component suspended inside an `act` scope, but the `act` call was not awaited. When testing React components that depend on asynchronous data, you must await the result:\n\nawait act(() => ...)"));
-			}), ReactSharedInternals.actQueue = null);
-			if (0 < ReactSharedInternals.thrownErrors.length) throw callback = aggregateErrors(ReactSharedInternals.thrownErrors), ReactSharedInternals.thrownErrors.length = 0, callback;
-			return { then: function(resolve, reject) {
-				didAwaitActCall = !0;
-				0 === prevActScopeDepth ? (ReactSharedInternals.actQueue = queue, enqueueTask(function() {
-					return recursivelyFlushAsyncActWork(returnValue$jscomp$0, resolve, reject);
-				})) : resolve(returnValue$jscomp$0);
-			} };
-		};
-		exports.cache = function(fn) {
-			return function() {
-				return fn.apply(null, arguments);
-			};
-		};
-		exports.cacheSignal = function() {
-			return null;
-		};
-		exports.captureOwnerStack = function() {
-			var getCurrentStack = ReactSharedInternals.getCurrentStack;
-			return null === getCurrentStack ? null : getCurrentStack();
-		};
-		exports.cloneElement = function(element, config, children) {
-			if (null === element || void 0 === element) throw Error("The argument must be a React element, but you passed " + element + ".");
-			var props = assign({}, element.props), key = element.key, owner = element._owner;
-			if (null != config) {
-				var JSCompiler_inline_result;
-				a: {
-					if (hasOwnProperty.call(config, "ref") && (JSCompiler_inline_result = Object.getOwnPropertyDescriptor(config, "ref").get) && JSCompiler_inline_result.isReactWarning) {
-						JSCompiler_inline_result = !1;
-						break a;
-					}
-					JSCompiler_inline_result = void 0 !== config.ref;
-				}
-				JSCompiler_inline_result && (owner = getOwner());
-				hasValidKey(config) && (checkKeyStringCoercion(config.key), key = "" + config.key);
-				for (propName in config) !hasOwnProperty.call(config, propName) || "key" === propName || "__self" === propName || "__source" === propName || "ref" === propName && void 0 === config.ref || (props[propName] = config[propName]);
-			}
-			var propName = arguments.length - 2;
-			if (1 === propName) props.children = children;
-			else if (1 < propName) {
-				JSCompiler_inline_result = Array(propName);
-				for (var i = 0; i < propName; i++) JSCompiler_inline_result[i] = arguments[i + 2];
-				props.children = JSCompiler_inline_result;
-			}
-			props = ReactElement(element.type, key, props, owner, element._debugStack, element._debugTask);
-			for (key = 2; key < arguments.length; key++) validateChildKeys(arguments[key]);
-			return props;
-		};
-		exports.createContext = function(defaultValue) {
-			defaultValue = {
-				$$typeof: REACT_CONTEXT_TYPE,
-				_currentValue: defaultValue,
-				_currentValue2: defaultValue,
-				_threadCount: 0,
-				Provider: null,
-				Consumer: null
-			};
-			defaultValue.Provider = defaultValue;
-			defaultValue.Consumer = {
-				$$typeof: REACT_CONSUMER_TYPE,
-				_context: defaultValue
-			};
-			defaultValue._currentRenderer = null;
-			defaultValue._currentRenderer2 = null;
-			return defaultValue;
-		};
-		exports.createElement = function(type, config, children) {
-			for (var i = 2; i < arguments.length; i++) validateChildKeys(arguments[i]);
-			i = {};
-			var key = null;
-			if (null != config) for (propName in didWarnAboutOldJSXRuntime || !("__self" in config) || "key" in config || (didWarnAboutOldJSXRuntime = !0, console.warn("Your app (or one of its dependencies) is using an outdated JSX transform. Update to the modern JSX transform for faster performance: https://react.dev/link/new-jsx-transform")), hasValidKey(config) && (checkKeyStringCoercion(config.key), key = "" + config.key), config) hasOwnProperty.call(config, propName) && "key" !== propName && "__self" !== propName && "__source" !== propName && (i[propName] = config[propName]);
-			var childrenLength = arguments.length - 2;
-			if (1 === childrenLength) i.children = children;
-			else if (1 < childrenLength) {
-				for (var childArray = Array(childrenLength), _i = 0; _i < childrenLength; _i++) childArray[_i] = arguments[_i + 2];
-				Object.freeze && Object.freeze(childArray);
-				i.children = childArray;
-			}
-			if (type && type.defaultProps) for (propName in childrenLength = type.defaultProps, childrenLength) void 0 === i[propName] && (i[propName] = childrenLength[propName]);
-			key && defineKeyPropWarningGetter(i, "function" === typeof type ? type.displayName || type.name || "Unknown" : type);
-			var propName = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
-			return ReactElement(type, key, i, getOwner(), propName ? Error("react-stack-top-frame") : unknownOwnerDebugStack, propName ? createTask(getTaskName(type)) : unknownOwnerDebugTask);
-		};
-		exports.createRef = function() {
-			var refObject = { current: null };
-			Object.seal(refObject);
-			return refObject;
-		};
-		exports.forwardRef = function(render) {
-			null != render && render.$$typeof === REACT_MEMO_TYPE ? console.error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).") : "function" !== typeof render ? console.error("forwardRef requires a render function but was given %s.", null === render ? "null" : typeof render) : 0 !== render.length && 2 !== render.length && console.error("forwardRef render functions accept exactly two parameters: props and ref. %s", 1 === render.length ? "Did you forget to use the ref parameter?" : "Any additional parameter will be undefined.");
-			null != render && null != render.defaultProps && console.error("forwardRef render functions do not support defaultProps. Did you accidentally pass a React component?");
-			var elementType = {
-				$$typeof: REACT_FORWARD_REF_TYPE,
-				render
-			}, ownName;
-			Object.defineProperty(elementType, "displayName", {
-				enumerable: !1,
-				configurable: !0,
-				get: function() {
-					return ownName;
-				},
-				set: function(name) {
-					ownName = name;
-					render.name || render.displayName || (Object.defineProperty(render, "name", { value: name }), render.displayName = name);
-				}
-			});
-			return elementType;
-		};
-		exports.isValidElement = isValidElement;
-		exports.lazy = function(ctor) {
-			ctor = {
-				_status: -1,
-				_result: ctor
-			};
-			var lazyType = {
-				$$typeof: REACT_LAZY_TYPE,
-				_payload: ctor,
-				_init: lazyInitializer
-			}, ioInfo = {
-				name: "lazy",
-				start: -1,
-				end: -1,
-				value: null,
-				owner: null,
-				debugStack: Error("react-stack-top-frame"),
-				debugTask: console.createTask ? console.createTask("lazy()") : null
-			};
-			ctor._ioInfo = ioInfo;
-			lazyType._debugInfo = [{ awaited: ioInfo }];
-			return lazyType;
-		};
-		exports.memo = function(type, compare) {
-			type ?? console.error("memo: The first argument must be a component. Instead received: %s", null === type ? "null" : typeof type);
-			compare = {
-				$$typeof: REACT_MEMO_TYPE,
-				type,
-				compare: void 0 === compare ? null : compare
-			};
-			var ownName;
-			Object.defineProperty(compare, "displayName", {
-				enumerable: !1,
-				configurable: !0,
-				get: function() {
-					return ownName;
-				},
-				set: function(name) {
-					ownName = name;
-					type.name || type.displayName || (Object.defineProperty(type, "name", { value: name }), type.displayName = name);
-				}
-			});
-			return compare;
-		};
-		exports.startTransition = function(scope) {
-			var prevTransition = ReactSharedInternals.T, currentTransition = {};
-			currentTransition._updatedFibers = /* @__PURE__ */ new Set();
-			ReactSharedInternals.T = currentTransition;
-			try {
-				var returnValue = scope(), onStartTransitionFinish = ReactSharedInternals.S;
-				null !== onStartTransitionFinish && onStartTransitionFinish(currentTransition, returnValue);
-				"object" === typeof returnValue && null !== returnValue && "function" === typeof returnValue.then && (ReactSharedInternals.asyncTransitions++, returnValue.then(releaseAsyncTransition, releaseAsyncTransition), returnValue.then(noop, reportGlobalError));
-			} catch (error) {
-				reportGlobalError(error);
-			} finally {
-				null === prevTransition && currentTransition._updatedFibers && (scope = currentTransition._updatedFibers.size, currentTransition._updatedFibers.clear(), 10 < scope && console.warn("Detected a large number of updates inside startTransition. If this is due to a subscription please re-write it to use React provided hooks. Otherwise concurrent mode guarantees are off the table.")), null !== prevTransition && null !== currentTransition.types && (null !== prevTransition.types && prevTransition.types !== currentTransition.types && console.error("We expected inner Transitions to have transferred the outer types set and that you cannot add to the outer Transition while inside the inner.This is a bug in React."), prevTransition.types = currentTransition.types), ReactSharedInternals.T = prevTransition;
-			}
-		};
-		exports.unstable_useCacheRefresh = function() {
-			return resolveDispatcher().useCacheRefresh();
-		};
-		exports.use = function(usable) {
-			return resolveDispatcher().use(usable);
-		};
-		exports.useActionState = function(action, initialState, permalink) {
-			return resolveDispatcher().useActionState(action, initialState, permalink);
-		};
-		exports.useCallback = function(callback, deps) {
-			return resolveDispatcher().useCallback(callback, deps);
-		};
-		exports.useContext = function(Context) {
-			var dispatcher = resolveDispatcher();
-			Context.$$typeof === REACT_CONSUMER_TYPE && console.error("Calling useContext(Context.Consumer) is not supported and will cause bugs. Did you mean to call useContext(Context) instead?");
-			return dispatcher.useContext(Context);
-		};
-		exports.useDebugValue = function(value, formatterFn) {
-			return resolveDispatcher().useDebugValue(value, formatterFn);
-		};
-		exports.useDeferredValue = function(value, initialValue) {
-			return resolveDispatcher().useDeferredValue(value, initialValue);
-		};
-		exports.useEffect = function(create, deps) {
-			create ?? console.warn("React Hook useEffect requires an effect callback. Did you forget to pass a callback to the hook?");
-			return resolveDispatcher().useEffect(create, deps);
-		};
-		exports.useEffectEvent = function(callback) {
-			return resolveDispatcher().useEffectEvent(callback);
-		};
-		exports.useId = function() {
-			return resolveDispatcher().useId();
-		};
-		exports.useImperativeHandle = function(ref, create, deps) {
-			return resolveDispatcher().useImperativeHandle(ref, create, deps);
-		};
-		exports.useInsertionEffect = function(create, deps) {
-			create ?? console.warn("React Hook useInsertionEffect requires an effect callback. Did you forget to pass a callback to the hook?");
-			return resolveDispatcher().useInsertionEffect(create, deps);
-		};
-		exports.useLayoutEffect = function(create, deps) {
-			create ?? console.warn("React Hook useLayoutEffect requires an effect callback. Did you forget to pass a callback to the hook?");
-			return resolveDispatcher().useLayoutEffect(create, deps);
-		};
-		exports.useMemo = function(create, deps) {
-			return resolveDispatcher().useMemo(create, deps);
-		};
-		exports.useOptimistic = function(passthrough, reducer) {
-			return resolveDispatcher().useOptimistic(passthrough, reducer);
-		};
-		exports.useReducer = function(reducer, initialArg, init) {
-			return resolveDispatcher().useReducer(reducer, initialArg, init);
-		};
-		exports.useRef = function(initialValue) {
-			return resolveDispatcher().useRef(initialValue);
-		};
-		exports.useState = function(initialState) {
-			return resolveDispatcher().useState(initialState);
-		};
-		exports.useSyncExternalStore = function(subscribe, getSnapshot, getServerSnapshot) {
-			return resolveDispatcher().useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-		};
-		exports.useTransition = function() {
-			return resolveDispatcher().useTransition();
-		};
-		exports.version = "19.2.4";
-		"undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
-	})();
-}));
-//#endregion
-//#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/react@19.2.4/node_modules/react/index.js
-var require_react = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	module.exports = require_react_development();
 }));
 //#endregion
 //#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom.development.js
@@ -17297,210 +16512,6 @@ function useViewTransitionState(to, { relative } = {}) {
 	return matchPath(path.pathname, nextPath) != null || matchPath(path.pathname, currentPath) != null;
 }
 //#endregion
-//#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/react@19.2.4/node_modules/react/cjs/react-jsx-runtime.development.js
-/**
-* @license React
-* react-jsx-runtime.development.js
-*
-* Copyright (c) Meta Platforms, Inc. and affiliates.
-*
-* This source code is licensed under the MIT license found in the
-* LICENSE file in the root directory of this source tree.
-*/
-var require_react_jsx_runtime_development = /* @__PURE__ */ __commonJSMin(((exports) => {
-	(function() {
-		function getComponentNameFromType(type) {
-			if (null == type) return null;
-			if ("function" === typeof type) return type.$$typeof === REACT_CLIENT_REFERENCE ? null : type.displayName || type.name || null;
-			if ("string" === typeof type) return type;
-			switch (type) {
-				case REACT_FRAGMENT_TYPE: return "Fragment";
-				case REACT_PROFILER_TYPE: return "Profiler";
-				case REACT_STRICT_MODE_TYPE: return "StrictMode";
-				case REACT_SUSPENSE_TYPE: return "Suspense";
-				case REACT_SUSPENSE_LIST_TYPE: return "SuspenseList";
-				case REACT_ACTIVITY_TYPE: return "Activity";
-			}
-			if ("object" === typeof type) switch ("number" === typeof type.tag && console.error("Received an unexpected object in getComponentNameFromType(). This is likely a bug in React. Please file an issue."), type.$$typeof) {
-				case REACT_PORTAL_TYPE: return "Portal";
-				case REACT_CONTEXT_TYPE: return type.displayName || "Context";
-				case REACT_CONSUMER_TYPE: return (type._context.displayName || "Context") + ".Consumer";
-				case REACT_FORWARD_REF_TYPE:
-					var innerType = type.render;
-					type = type.displayName;
-					type || (type = innerType.displayName || innerType.name || "", type = "" !== type ? "ForwardRef(" + type + ")" : "ForwardRef");
-					return type;
-				case REACT_MEMO_TYPE: return innerType = type.displayName || null, null !== innerType ? innerType : getComponentNameFromType(type.type) || "Memo";
-				case REACT_LAZY_TYPE:
-					innerType = type._payload;
-					type = type._init;
-					try {
-						return getComponentNameFromType(type(innerType));
-					} catch (x) {}
-			}
-			return null;
-		}
-		function testStringCoercion(value) {
-			return "" + value;
-		}
-		function checkKeyStringCoercion(value) {
-			try {
-				testStringCoercion(value);
-				var JSCompiler_inline_result = !1;
-			} catch (e) {
-				JSCompiler_inline_result = !0;
-			}
-			if (JSCompiler_inline_result) {
-				JSCompiler_inline_result = console;
-				var JSCompiler_temp_const = JSCompiler_inline_result.error;
-				var JSCompiler_inline_result$jscomp$0 = "function" === typeof Symbol && Symbol.toStringTag && value[Symbol.toStringTag] || value.constructor.name || "Object";
-				JSCompiler_temp_const.call(JSCompiler_inline_result, "The provided key is an unsupported type %s. This value must be coerced to a string before using it here.", JSCompiler_inline_result$jscomp$0);
-				return testStringCoercion(value);
-			}
-		}
-		function getTaskName(type) {
-			if (type === REACT_FRAGMENT_TYPE) return "<>";
-			if ("object" === typeof type && null !== type && type.$$typeof === REACT_LAZY_TYPE) return "<...>";
-			try {
-				var name = getComponentNameFromType(type);
-				return name ? "<" + name + ">" : "<...>";
-			} catch (x) {
-				return "<...>";
-			}
-		}
-		function getOwner() {
-			var dispatcher = ReactSharedInternals.A;
-			return null === dispatcher ? null : dispatcher.getOwner();
-		}
-		function UnknownOwner() {
-			return Error("react-stack-top-frame");
-		}
-		function hasValidKey(config) {
-			if (hasOwnProperty.call(config, "key")) {
-				var getter = Object.getOwnPropertyDescriptor(config, "key").get;
-				if (getter && getter.isReactWarning) return !1;
-			}
-			return void 0 !== config.key;
-		}
-		function defineKeyPropWarningGetter(props, displayName) {
-			function warnAboutAccessingKey() {
-				specialPropKeyWarningShown || (specialPropKeyWarningShown = !0, console.error("%s: `key` is not a prop. Trying to access it will result in `undefined` being returned. If you need to access the same value within the child component, you should pass it as a different prop. (https://react.dev/link/special-props)", displayName));
-			}
-			warnAboutAccessingKey.isReactWarning = !0;
-			Object.defineProperty(props, "key", {
-				get: warnAboutAccessingKey,
-				configurable: !0
-			});
-		}
-		function elementRefGetterWithDeprecationWarning() {
-			var componentName = getComponentNameFromType(this.type);
-			didWarnAboutElementRef[componentName] || (didWarnAboutElementRef[componentName] = !0, console.error("Accessing element.ref was removed in React 19. ref is now a regular prop. It will be removed from the JSX Element type in a future release."));
-			componentName = this.props.ref;
-			return void 0 !== componentName ? componentName : null;
-		}
-		function ReactElement(type, key, props, owner, debugStack, debugTask) {
-			var refProp = props.ref;
-			type = {
-				$$typeof: REACT_ELEMENT_TYPE,
-				type,
-				key,
-				props,
-				_owner: owner
-			};
-			null !== (void 0 !== refProp ? refProp : null) ? Object.defineProperty(type, "ref", {
-				enumerable: !1,
-				get: elementRefGetterWithDeprecationWarning
-			}) : Object.defineProperty(type, "ref", {
-				enumerable: !1,
-				value: null
-			});
-			type._store = {};
-			Object.defineProperty(type._store, "validated", {
-				configurable: !1,
-				enumerable: !1,
-				writable: !0,
-				value: 0
-			});
-			Object.defineProperty(type, "_debugInfo", {
-				configurable: !1,
-				enumerable: !1,
-				writable: !0,
-				value: null
-			});
-			Object.defineProperty(type, "_debugStack", {
-				configurable: !1,
-				enumerable: !1,
-				writable: !0,
-				value: debugStack
-			});
-			Object.defineProperty(type, "_debugTask", {
-				configurable: !1,
-				enumerable: !1,
-				writable: !0,
-				value: debugTask
-			});
-			Object.freeze && (Object.freeze(type.props), Object.freeze(type));
-			return type;
-		}
-		function jsxDEVImpl(type, config, maybeKey, isStaticChildren, debugStack, debugTask) {
-			var children = config.children;
-			if (void 0 !== children) if (isStaticChildren) if (isArrayImpl(children)) {
-				for (isStaticChildren = 0; isStaticChildren < children.length; isStaticChildren++) validateChildKeys(children[isStaticChildren]);
-				Object.freeze && Object.freeze(children);
-			} else console.error("React.jsx: Static children should always be an array. You are likely explicitly calling React.jsxs or React.jsxDEV. Use the Babel transform instead.");
-			else validateChildKeys(children);
-			if (hasOwnProperty.call(config, "key")) {
-				children = getComponentNameFromType(type);
-				var keys = Object.keys(config).filter(function(k) {
-					return "key" !== k;
-				});
-				isStaticChildren = 0 < keys.length ? "{key: someKey, " + keys.join(": ..., ") + ": ...}" : "{key: someKey}";
-				didWarnAboutKeySpread[children + isStaticChildren] || (keys = 0 < keys.length ? "{" + keys.join(": ..., ") + ": ...}" : "{}", console.error("A props object containing a \"key\" prop is being spread into JSX:\n  let props = %s;\n  <%s {...props} />\nReact keys must be passed directly to JSX without using spread:\n  let props = %s;\n  <%s key={someKey} {...props} />", isStaticChildren, children, keys, children), didWarnAboutKeySpread[children + isStaticChildren] = !0);
-			}
-			children = null;
-			void 0 !== maybeKey && (checkKeyStringCoercion(maybeKey), children = "" + maybeKey);
-			hasValidKey(config) && (checkKeyStringCoercion(config.key), children = "" + config.key);
-			if ("key" in config) {
-				maybeKey = {};
-				for (var propName in config) "key" !== propName && (maybeKey[propName] = config[propName]);
-			} else maybeKey = config;
-			children && defineKeyPropWarningGetter(maybeKey, "function" === typeof type ? type.displayName || type.name || "Unknown" : type);
-			return ReactElement(type, children, maybeKey, getOwner(), debugStack, debugTask);
-		}
-		function validateChildKeys(node) {
-			isValidElement(node) ? node._store && (node._store.validated = 1) : "object" === typeof node && null !== node && node.$$typeof === REACT_LAZY_TYPE && ("fulfilled" === node._payload.status ? isValidElement(node._payload.value) && node._payload.value._store && (node._payload.value._store.validated = 1) : node._store && (node._store.validated = 1));
-		}
-		function isValidElement(object) {
-			return "object" === typeof object && null !== object && object.$$typeof === REACT_ELEMENT_TYPE;
-		}
-		var React = require_react(), REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy"), REACT_ACTIVITY_TYPE = Symbol.for("react.activity"), REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, hasOwnProperty = Object.prototype.hasOwnProperty, isArrayImpl = Array.isArray, createTask = console.createTask ? console.createTask : function() {
-			return null;
-		};
-		React = { react_stack_bottom_frame: function(callStackForError) {
-			return callStackForError();
-		} };
-		var specialPropKeyWarningShown;
-		var didWarnAboutElementRef = {};
-		var unknownOwnerDebugStack = React.react_stack_bottom_frame.bind(React, UnknownOwner)();
-		var unknownOwnerDebugTask = createTask(getTaskName(UnknownOwner));
-		var didWarnAboutKeySpread = {};
-		exports.Fragment = REACT_FRAGMENT_TYPE;
-		exports.jsx = function(type, config, maybeKey) {
-			var trackActualOwner = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
-			return jsxDEVImpl(type, config, maybeKey, !1, trackActualOwner ? Error("react-stack-top-frame") : unknownOwnerDebugStack, trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask);
-		};
-		exports.jsxs = function(type, config, maybeKey) {
-			var trackActualOwner = 1e4 > ReactSharedInternals.recentlyCreatedOwnerStacks++;
-			return jsxDEVImpl(type, config, maybeKey, !0, trackActualOwner ? Error("react-stack-top-frame") : unknownOwnerDebugStack, trackActualOwner ? createTask(getTaskName(type)) : unknownOwnerDebugTask);
-		};
-	})();
-}));
-//#endregion
-//#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/react@19.2.4/node_modules/react/jsx-runtime.js
-var require_jsx_runtime = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	module.exports = require_react_jsx_runtime_development();
-}));
-//#endregion
 //#region src/components/ThemeProvider.tsx
 var import_jsx_runtime = require_jsx_runtime();
 var ThemeProviderContext = (0, import_react.createContext)({
@@ -17999,17 +17010,17 @@ function getElementRef$2(element) {
 }
 //#endregion
 //#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/clsx@2.1.1/node_modules/clsx/dist/clsx.mjs
-function r(e) {
+function r$1(e) {
 	var t, f, n = "";
 	if ("string" == typeof e || "number" == typeof e) n += e;
 	else if ("object" == typeof e) if (Array.isArray(e)) {
 		var o = e.length;
-		for (t = 0; t < o; t++) e[t] && (f = r(e[t])) && (n && (n += " "), n += f);
+		for (t = 0; t < o; t++) e[t] && (f = r$1(e[t])) && (n && (n += " "), n += f);
 	} else for (f in e) e[f] && (n && (n += " "), n += f);
 	return n;
 }
 function clsx() {
-	for (var e, t, f = 0, n = "", o = arguments.length; f < o; f++) (e = arguments[f]) && (t = r(e)) && (n && (n += " "), n += t);
+	for (var e, t, f = 0, n = "", o = arguments.length; f < o; f++) (e = arguments[f]) && (t = r$1(e)) && (n && (n += " "), n += t);
 	return n;
 }
 //#endregion
@@ -21531,6 +20542,7 @@ var DescriptionWarning = ({ contentRef, descriptionId }) => {
 	return null;
 };
 var Root$3 = Dialog;
+var Trigger$1 = DialogTrigger;
 var Portal = DialogPortal;
 var Overlay = DialogOverlay;
 var Content$1 = DialogContent;
@@ -25055,107 +24067,1352 @@ function Layout() {
 	});
 }
 //#endregion
+//#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/pocketbase@0.26.8/node_modules/pocketbase/dist/pocketbase.es.mjs
+var ClientResponseError = class ClientResponseError extends Error {
+	constructor(e) {
+		super("ClientResponseError"), this.url = "", this.status = 0, this.response = {}, this.isAbort = !1, this.originalError = null, Object.setPrototypeOf(this, ClientResponseError.prototype), null !== e && "object" == typeof e && (this.originalError = e.originalError, this.url = "string" == typeof e.url ? e.url : "", this.status = "number" == typeof e.status ? e.status : 0, this.isAbort = !!e.isAbort || "AbortError" === e.name || "Aborted" === e.message, null !== e.response && "object" == typeof e.response ? this.response = e.response : null !== e.data && "object" == typeof e.data ? this.response = e.data : this.response = {}), this.originalError || e instanceof ClientResponseError || (this.originalError = e), this.name = "ClientResponseError " + this.status, this.message = this.response?.message, this.message || (this.isAbort ? this.message = "The request was aborted (most likely autocancelled; you can find more info in https://github.com/pocketbase/js-sdk#auto-cancellation)." : this.originalError?.cause?.message?.includes("ECONNREFUSED ::1") ? this.message = "Failed to connect to the PocketBase server. Try changing the SDK URL from localhost to 127.0.0.1 (https://github.com/pocketbase/js-sdk/issues/21)." : this.message = "Something went wrong."), this.cause = this.originalError;
+	}
+	get data() {
+		return this.response;
+	}
+	toJSON() {
+		return { ...this };
+	}
+};
+var e = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
+function cookieParse(e, t) {
+	const s = {};
+	if ("string" != typeof e) return s;
+	const i = Object.assign({}, t || {}).decode || defaultDecode;
+	let n = 0;
+	for (; n < e.length;) {
+		const t = e.indexOf("=", n);
+		if (-1 === t) break;
+		let r = e.indexOf(";", n);
+		if (-1 === r) r = e.length;
+		else if (r < t) {
+			n = e.lastIndexOf(";", t - 1) + 1;
+			continue;
+		}
+		const o = e.slice(n, t).trim();
+		if (void 0 === s[o]) {
+			let n = e.slice(t + 1, r).trim();
+			34 === n.charCodeAt(0) && (n = n.slice(1, -1));
+			try {
+				s[o] = i(n);
+			} catch (e) {
+				s[o] = n;
+			}
+		}
+		n = r + 1;
+	}
+	return s;
+}
+function cookieSerialize(t, s, i) {
+	const n = Object.assign({}, i || {}), r = n.encode || defaultEncode;
+	if (!e.test(t)) throw new TypeError("argument name is invalid");
+	const o = r(s);
+	if (o && !e.test(o)) throw new TypeError("argument val is invalid");
+	let a = t + "=" + o;
+	if (null != n.maxAge) {
+		const e = n.maxAge - 0;
+		if (isNaN(e) || !isFinite(e)) throw new TypeError("option maxAge is invalid");
+		a += "; Max-Age=" + Math.floor(e);
+	}
+	if (n.domain) {
+		if (!e.test(n.domain)) throw new TypeError("option domain is invalid");
+		a += "; Domain=" + n.domain;
+	}
+	if (n.path) {
+		if (!e.test(n.path)) throw new TypeError("option path is invalid");
+		a += "; Path=" + n.path;
+	}
+	if (n.expires) {
+		if (!function isDate(e) {
+			return "[object Date]" === Object.prototype.toString.call(e) || e instanceof Date;
+		}(n.expires) || isNaN(n.expires.valueOf())) throw new TypeError("option expires is invalid");
+		a += "; Expires=" + n.expires.toUTCString();
+	}
+	if (n.httpOnly && (a += "; HttpOnly"), n.secure && (a += "; Secure"), n.priority) switch ("string" == typeof n.priority ? n.priority.toLowerCase() : n.priority) {
+		case "low":
+			a += "; Priority=Low";
+			break;
+		case "medium":
+			a += "; Priority=Medium";
+			break;
+		case "high":
+			a += "; Priority=High";
+			break;
+		default: throw new TypeError("option priority is invalid");
+	}
+	if (n.sameSite) switch ("string" == typeof n.sameSite ? n.sameSite.toLowerCase() : n.sameSite) {
+		case !0:
+			a += "; SameSite=Strict";
+			break;
+		case "lax":
+			a += "; SameSite=Lax";
+			break;
+		case "strict":
+			a += "; SameSite=Strict";
+			break;
+		case "none":
+			a += "; SameSite=None";
+			break;
+		default: throw new TypeError("option sameSite is invalid");
+	}
+	return a;
+}
+function defaultDecode(e) {
+	return -1 !== e.indexOf("%") ? decodeURIComponent(e) : e;
+}
+function defaultEncode(e) {
+	return encodeURIComponent(e);
+}
+var t = "undefined" != typeof navigator && "ReactNative" === navigator.product || "undefined" != typeof global && global.HermesInternal;
+var s;
+function getTokenPayload(e) {
+	if (e) try {
+		const t = decodeURIComponent(s(e.split(".")[1]).split("").map((function(e) {
+			return "%" + ("00" + e.charCodeAt(0).toString(16)).slice(-2);
+		})).join(""));
+		return JSON.parse(t) || {};
+	} catch (e) {}
+	return {};
+}
+function isTokenExpired(e, t = 0) {
+	let s = getTokenPayload(e);
+	return !(Object.keys(s).length > 0 && (!s.exp || s.exp - t > Date.now() / 1e3));
+}
+s = "function" != typeof atob || t ? (e) => {
+	let t = String(e).replace(/=+$/, "");
+	if (t.length % 4 == 1) throw new Error("'atob' failed: The string to be decoded is not correctly encoded.");
+	for (var s, i, n = 0, r = 0, o = ""; i = t.charAt(r++); ~i && (s = n % 4 ? 64 * s + i : i, n++ % 4) && (o += String.fromCharCode(255 & s >> (-2 * n & 6)))) i = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(i);
+	return o;
+} : atob;
+var i = "pb_auth";
+var BaseAuthStore = class {
+	constructor() {
+		this.baseToken = "", this.baseModel = null, this._onChangeCallbacks = [];
+	}
+	get token() {
+		return this.baseToken;
+	}
+	get record() {
+		return this.baseModel;
+	}
+	get model() {
+		return this.baseModel;
+	}
+	get isValid() {
+		return !isTokenExpired(this.token);
+	}
+	get isSuperuser() {
+		let e = getTokenPayload(this.token);
+		return "auth" == e.type && ("_superusers" == this.record?.collectionName || !this.record?.collectionName && "pbc_3142635823" == e.collectionId);
+	}
+	get isAdmin() {
+		return console.warn("Please replace pb.authStore.isAdmin with pb.authStore.isSuperuser OR simply check the value of pb.authStore.record?.collectionName"), this.isSuperuser;
+	}
+	get isAuthRecord() {
+		return console.warn("Please replace pb.authStore.isAuthRecord with !pb.authStore.isSuperuser OR simply check the value of pb.authStore.record?.collectionName"), "auth" == getTokenPayload(this.token).type && !this.isSuperuser;
+	}
+	save(e, t) {
+		this.baseToken = e || "", this.baseModel = t || null, this.triggerChange();
+	}
+	clear() {
+		this.baseToken = "", this.baseModel = null, this.triggerChange();
+	}
+	loadFromCookie(e, t = i) {
+		const s = cookieParse(e || "")[t] || "";
+		let n = {};
+		try {
+			n = JSON.parse(s), ("object" != typeof n || Array.isArray(n)) && (n = {});
+		} catch (e) {}
+		this.save(n.token || "", n.record || n.model || null);
+	}
+	exportToCookie(e, t = i) {
+		const s = {
+			secure: !0,
+			sameSite: !0,
+			httpOnly: !0,
+			path: "/"
+		}, n = getTokenPayload(this.token);
+		s.expires = n?.exp ? /* @__PURE__ */ new Date(1e3 * n.exp) : /* @__PURE__ */ new Date("1970-01-01"), e = Object.assign({}, s, e);
+		const r = {
+			token: this.token,
+			record: this.record ? JSON.parse(JSON.stringify(this.record)) : null
+		};
+		let o = cookieSerialize(t, JSON.stringify(r), e);
+		const a = "undefined" != typeof Blob ? new Blob([o]).size : o.length;
+		if (r.record && a > 4096) {
+			r.record = {
+				id: r.record?.id,
+				email: r.record?.email
+			};
+			const s = [
+				"collectionId",
+				"collectionName",
+				"verified"
+			];
+			for (const e in this.record) s.includes(e) && (r.record[e] = this.record[e]);
+			o = cookieSerialize(t, JSON.stringify(r), e);
+		}
+		return o;
+	}
+	onChange(e, t = !1) {
+		return this._onChangeCallbacks.push(e), t && e(this.token, this.record), () => {
+			for (let t = this._onChangeCallbacks.length - 1; t >= 0; t--) if (this._onChangeCallbacks[t] == e) return delete this._onChangeCallbacks[t], void this._onChangeCallbacks.splice(t, 1);
+		};
+	}
+	triggerChange() {
+		for (const e of this._onChangeCallbacks) e && e(this.token, this.record);
+	}
+};
+var LocalAuthStore = class extends BaseAuthStore {
+	constructor(e = "pocketbase_auth") {
+		super(), this.storageFallback = {}, this.storageKey = e, this._bindStorageEvent();
+	}
+	get token() {
+		return (this._storageGet(this.storageKey) || {}).token || "";
+	}
+	get record() {
+		const e = this._storageGet(this.storageKey) || {};
+		return e.record || e.model || null;
+	}
+	get model() {
+		return this.record;
+	}
+	save(e, t) {
+		this._storageSet(this.storageKey, {
+			token: e,
+			record: t
+		}), super.save(e, t);
+	}
+	clear() {
+		this._storageRemove(this.storageKey), super.clear();
+	}
+	_storageGet(e) {
+		if ("undefined" != typeof window && window?.localStorage) {
+			const t = window.localStorage.getItem(e) || "";
+			try {
+				return JSON.parse(t);
+			} catch (e) {
+				return t;
+			}
+		}
+		return this.storageFallback[e];
+	}
+	_storageSet(e, t) {
+		if ("undefined" != typeof window && window?.localStorage) {
+			let s = t;
+			"string" != typeof t && (s = JSON.stringify(t)), window.localStorage.setItem(e, s);
+		} else this.storageFallback[e] = t;
+	}
+	_storageRemove(e) {
+		"undefined" != typeof window && window?.localStorage && window.localStorage?.removeItem(e), delete this.storageFallback[e];
+	}
+	_bindStorageEvent() {
+		"undefined" != typeof window && window?.localStorage && window.addEventListener && window.addEventListener("storage", ((e) => {
+			if (e.key != this.storageKey) return;
+			const t = this._storageGet(this.storageKey) || {};
+			super.save(t.token || "", t.record || t.model || null);
+		}));
+	}
+};
+var BaseService = class {
+	constructor(e) {
+		this.client = e;
+	}
+};
+var SettingsService = class extends BaseService {
+	async getAll(e) {
+		return e = Object.assign({ method: "GET" }, e), this.client.send("/api/settings", e);
+	}
+	async update(e, t) {
+		return t = Object.assign({
+			method: "PATCH",
+			body: e
+		}, t), this.client.send("/api/settings", t);
+	}
+	async testS3(e = "storage", t) {
+		return t = Object.assign({
+			method: "POST",
+			body: { filesystem: e }
+		}, t), this.client.send("/api/settings/test/s3", t).then((() => !0));
+	}
+	async testEmail(e, t, s, i) {
+		return i = Object.assign({
+			method: "POST",
+			body: {
+				email: t,
+				template: s,
+				collection: e
+			}
+		}, i), this.client.send("/api/settings/test/email", i).then((() => !0));
+	}
+	async generateAppleClientSecret(e, t, s, i, n, r) {
+		return r = Object.assign({
+			method: "POST",
+			body: {
+				clientId: e,
+				teamId: t,
+				keyId: s,
+				privateKey: i,
+				duration: n
+			}
+		}, r), this.client.send("/api/settings/apple/generate-client-secret", r);
+	}
+};
+var n = [
+	"requestKey",
+	"$cancelKey",
+	"$autoCancel",
+	"fetch",
+	"headers",
+	"body",
+	"query",
+	"params",
+	"cache",
+	"credentials",
+	"headers",
+	"integrity",
+	"keepalive",
+	"method",
+	"mode",
+	"redirect",
+	"referrer",
+	"referrerPolicy",
+	"signal",
+	"window"
+];
+function normalizeUnknownQueryParams(e) {
+	if (e) {
+		e.query = e.query || {};
+		for (let t in e) n.includes(t) || (e.query[t] = e[t], delete e[t]);
+	}
+}
+function serializeQueryParams(e) {
+	const t = [];
+	for (const s in e) {
+		const i = encodeURIComponent(s), n = Array.isArray(e[s]) ? e[s] : [e[s]];
+		for (let e of n) e = prepareQueryParamValue(e), null !== e && t.push(i + "=" + e);
+	}
+	return t.join("&");
+}
+function prepareQueryParamValue(e) {
+	return null == e ? null : e instanceof Date ? encodeURIComponent(e.toISOString().replace("T", " ")) : "object" == typeof e ? encodeURIComponent(JSON.stringify(e)) : encodeURIComponent(e);
+}
+var RealtimeService = class extends BaseService {
+	constructor() {
+		super(...arguments), this.clientId = "", this.eventSource = null, this.subscriptions = {}, this.lastSentSubscriptions = [], this.maxConnectTimeout = 15e3, this.reconnectAttempts = 0, this.maxReconnectAttempts = Infinity, this.predefinedReconnectIntervals = [
+			200,
+			300,
+			500,
+			1e3,
+			1200,
+			1500,
+			2e3
+		], this.pendingConnects = [];
+	}
+	get isConnected() {
+		return !!this.eventSource && !!this.clientId && !this.pendingConnects.length;
+	}
+	async subscribe(e, t, s) {
+		if (!e) throw new Error("topic must be set.");
+		let i = e;
+		if (s) {
+			normalizeUnknownQueryParams(s = Object.assign({}, s));
+			const e = "options=" + encodeURIComponent(JSON.stringify({
+				query: s.query,
+				headers: s.headers
+			}));
+			i += (i.includes("?") ? "&" : "?") + e;
+		}
+		const listener = function(e) {
+			const s = e;
+			let i;
+			try {
+				i = JSON.parse(s?.data);
+			} catch {}
+			t(i || {});
+		};
+		return this.subscriptions[i] || (this.subscriptions[i] = []), this.subscriptions[i].push(listener), this.isConnected ? 1 === this.subscriptions[i].length ? await this.submitSubscriptions() : this.eventSource?.addEventListener(i, listener) : await this.connect(), async () => this.unsubscribeByTopicAndListener(e, listener);
+	}
+	async unsubscribe(e) {
+		let t = !1;
+		if (e) {
+			const s = this.getSubscriptionsByTopic(e);
+			for (let e in s) if (this.hasSubscriptionListeners(e)) {
+				for (let t of this.subscriptions[e]) this.eventSource?.removeEventListener(e, t);
+				delete this.subscriptions[e], t || (t = !0);
+			}
+		} else this.subscriptions = {};
+		this.hasSubscriptionListeners() ? t && await this.submitSubscriptions() : this.disconnect();
+	}
+	async unsubscribeByPrefix(e) {
+		let t = !1;
+		for (let s in this.subscriptions) if ((s + "?").startsWith(e)) {
+			t = !0;
+			for (let e of this.subscriptions[s]) this.eventSource?.removeEventListener(s, e);
+			delete this.subscriptions[s];
+		}
+		t && (this.hasSubscriptionListeners() ? await this.submitSubscriptions() : this.disconnect());
+	}
+	async unsubscribeByTopicAndListener(e, t) {
+		let s = !1;
+		const i = this.getSubscriptionsByTopic(e);
+		for (let e in i) {
+			if (!Array.isArray(this.subscriptions[e]) || !this.subscriptions[e].length) continue;
+			let i = !1;
+			for (let s = this.subscriptions[e].length - 1; s >= 0; s--) this.subscriptions[e][s] === t && (i = !0, delete this.subscriptions[e][s], this.subscriptions[e].splice(s, 1), this.eventSource?.removeEventListener(e, t));
+			i && (this.subscriptions[e].length || delete this.subscriptions[e], s || this.hasSubscriptionListeners(e) || (s = !0));
+		}
+		this.hasSubscriptionListeners() ? s && await this.submitSubscriptions() : this.disconnect();
+	}
+	hasSubscriptionListeners(e) {
+		if (this.subscriptions = this.subscriptions || {}, e) return !!this.subscriptions[e]?.length;
+		for (let e in this.subscriptions) if (this.subscriptions[e]?.length) return !0;
+		return !1;
+	}
+	async submitSubscriptions() {
+		if (this.clientId) return this.addAllSubscriptionListeners(), this.lastSentSubscriptions = this.getNonEmptySubscriptionKeys(), this.client.send("/api/realtime", {
+			method: "POST",
+			body: {
+				clientId: this.clientId,
+				subscriptions: this.lastSentSubscriptions
+			},
+			requestKey: this.getSubscriptionsCancelKey()
+		}).catch(((e) => {
+			if (!e?.isAbort) throw e;
+		}));
+	}
+	getSubscriptionsCancelKey() {
+		return "realtime_" + this.clientId;
+	}
+	getSubscriptionsByTopic(e) {
+		const t = {};
+		e = e.includes("?") ? e : e + "?";
+		for (let s in this.subscriptions) (s + "?").startsWith(e) && (t[s] = this.subscriptions[s]);
+		return t;
+	}
+	getNonEmptySubscriptionKeys() {
+		const e = [];
+		for (let t in this.subscriptions) this.subscriptions[t].length && e.push(t);
+		return e;
+	}
+	addAllSubscriptionListeners() {
+		if (this.eventSource) {
+			this.removeAllSubscriptionListeners();
+			for (let e in this.subscriptions) for (let t of this.subscriptions[e]) this.eventSource.addEventListener(e, t);
+		}
+	}
+	removeAllSubscriptionListeners() {
+		if (this.eventSource) for (let e in this.subscriptions) for (let t of this.subscriptions[e]) this.eventSource.removeEventListener(e, t);
+	}
+	async connect() {
+		if (!(this.reconnectAttempts > 0)) return new Promise(((e, t) => {
+			this.pendingConnects.push({
+				resolve: e,
+				reject: t
+			}), this.pendingConnects.length > 1 || this.initConnect();
+		}));
+	}
+	initConnect() {
+		this.disconnect(!0), clearTimeout(this.connectTimeoutId), this.connectTimeoutId = setTimeout((() => {
+			this.connectErrorHandler(/* @__PURE__ */ new Error("EventSource connect took too long."));
+		}), this.maxConnectTimeout), this.eventSource = new EventSource(this.client.buildURL("/api/realtime")), this.eventSource.onerror = (e) => {
+			this.connectErrorHandler(/* @__PURE__ */ new Error("Failed to establish realtime connection."));
+		}, this.eventSource.addEventListener("PB_CONNECT", ((e) => {
+			this.clientId = e?.lastEventId, this.submitSubscriptions().then((async () => {
+				let e = 3;
+				for (; this.hasUnsentSubscriptions() && e > 0;) e--, await this.submitSubscriptions();
+			})).then((() => {
+				for (let e of this.pendingConnects) e.resolve();
+				this.pendingConnects = [], this.reconnectAttempts = 0, clearTimeout(this.reconnectTimeoutId), clearTimeout(this.connectTimeoutId);
+				const t = this.getSubscriptionsByTopic("PB_CONNECT");
+				for (let s in t) for (let i of t[s]) i(e);
+			})).catch(((e) => {
+				this.clientId = "", this.connectErrorHandler(e);
+			}));
+		}));
+	}
+	hasUnsentSubscriptions() {
+		const e = this.getNonEmptySubscriptionKeys();
+		if (e.length != this.lastSentSubscriptions.length) return !0;
+		for (const t of e) if (!this.lastSentSubscriptions.includes(t)) return !0;
+		return !1;
+	}
+	connectErrorHandler(e) {
+		if (clearTimeout(this.connectTimeoutId), clearTimeout(this.reconnectTimeoutId), !this.clientId && !this.reconnectAttempts || this.reconnectAttempts > this.maxReconnectAttempts) {
+			for (let t of this.pendingConnects) t.reject(new ClientResponseError(e));
+			this.pendingConnects = [], this.disconnect();
+			return;
+		}
+		this.disconnect(!0);
+		const t = this.predefinedReconnectIntervals[this.reconnectAttempts] || this.predefinedReconnectIntervals[this.predefinedReconnectIntervals.length - 1];
+		this.reconnectAttempts++, this.reconnectTimeoutId = setTimeout((() => {
+			this.initConnect();
+		}), t);
+	}
+	disconnect(e = !1) {
+		if (this.clientId && this.onDisconnect && this.onDisconnect(Object.keys(this.subscriptions)), clearTimeout(this.connectTimeoutId), clearTimeout(this.reconnectTimeoutId), this.removeAllSubscriptionListeners(), this.client.cancelRequest(this.getSubscriptionsCancelKey()), this.eventSource?.close(), this.eventSource = null, this.clientId = "", !e) {
+			this.reconnectAttempts = 0;
+			for (let e of this.pendingConnects) e.resolve();
+			this.pendingConnects = [];
+		}
+	}
+};
+var CrudService = class extends BaseService {
+	decode(e) {
+		return e;
+	}
+	async getFullList(e, t) {
+		if ("number" == typeof e) return this._getFullList(e, t);
+		let s = 1e3;
+		return (t = Object.assign({}, e, t)).batch && (s = t.batch, delete t.batch), this._getFullList(s, t);
+	}
+	async getList(e = 1, t = 30, s) {
+		return (s = Object.assign({ method: "GET" }, s)).query = Object.assign({
+			page: e,
+			perPage: t
+		}, s.query), this.client.send(this.baseCrudPath, s).then(((e) => (e.items = e.items?.map(((e) => this.decode(e))) || [], e)));
+	}
+	async getFirstListItem(e, t) {
+		return (t = Object.assign({ requestKey: "one_by_filter_" + this.baseCrudPath + "_" + e }, t)).query = Object.assign({
+			filter: e,
+			skipTotal: 1
+		}, t.query), this.getList(1, 1, t).then(((e) => {
+			if (!e?.items?.length) throw new ClientResponseError({
+				status: 404,
+				response: {
+					code: 404,
+					message: "The requested resource wasn't found.",
+					data: {}
+				}
+			});
+			return e.items[0];
+		}));
+	}
+	async getOne(e, t) {
+		if (!e) throw new ClientResponseError({
+			url: this.client.buildURL(this.baseCrudPath + "/"),
+			status: 404,
+			response: {
+				code: 404,
+				message: "Missing required record id.",
+				data: {}
+			}
+		});
+		return t = Object.assign({ method: "GET" }, t), this.client.send(this.baseCrudPath + "/" + encodeURIComponent(e), t).then(((e) => this.decode(e)));
+	}
+	async create(e, t) {
+		return t = Object.assign({
+			method: "POST",
+			body: e
+		}, t), this.client.send(this.baseCrudPath, t).then(((e) => this.decode(e)));
+	}
+	async update(e, t, s) {
+		return s = Object.assign({
+			method: "PATCH",
+			body: t
+		}, s), this.client.send(this.baseCrudPath + "/" + encodeURIComponent(e), s).then(((e) => this.decode(e)));
+	}
+	async delete(e, t) {
+		return t = Object.assign({ method: "DELETE" }, t), this.client.send(this.baseCrudPath + "/" + encodeURIComponent(e), t).then((() => !0));
+	}
+	_getFullList(e = 1e3, t) {
+		(t = t || {}).query = Object.assign({ skipTotal: 1 }, t.query);
+		let s = [], request = async (i) => this.getList(i, e || 1e3, t).then(((e) => {
+			const t = e.items;
+			return s = s.concat(t), t.length == e.perPage ? request(i + 1) : s;
+		}));
+		return request(1);
+	}
+};
+function normalizeLegacyOptionsArgs(e, t, s, i) {
+	const n = void 0 !== i;
+	return n || void 0 !== s ? n ? (console.warn(e), t.body = Object.assign({}, t.body, s), t.query = Object.assign({}, t.query, i), t) : Object.assign(t, s) : t;
+}
+function resetAutoRefresh(e) {
+	e._resetAutoRefresh?.();
+}
+var RecordService = class extends CrudService {
+	constructor(e, t) {
+		super(e), this.collectionIdOrName = t;
+	}
+	get baseCrudPath() {
+		return this.baseCollectionPath + "/records";
+	}
+	get baseCollectionPath() {
+		return "/api/collections/" + encodeURIComponent(this.collectionIdOrName);
+	}
+	get isSuperusers() {
+		return "_superusers" == this.collectionIdOrName || "_pbc_2773867675" == this.collectionIdOrName;
+	}
+	async subscribe(e, t, s) {
+		if (!e) throw new Error("Missing topic.");
+		if (!t) throw new Error("Missing subscription callback.");
+		return this.client.realtime.subscribe(this.collectionIdOrName + "/" + e, t, s);
+	}
+	async unsubscribe(e) {
+		return e ? this.client.realtime.unsubscribe(this.collectionIdOrName + "/" + e) : this.client.realtime.unsubscribeByPrefix(this.collectionIdOrName);
+	}
+	async getFullList(e, t) {
+		if ("number" == typeof e) return super.getFullList(e, t);
+		const s = Object.assign({}, e, t);
+		return super.getFullList(s);
+	}
+	async getList(e = 1, t = 30, s) {
+		return super.getList(e, t, s);
+	}
+	async getFirstListItem(e, t) {
+		return super.getFirstListItem(e, t);
+	}
+	async getOne(e, t) {
+		return super.getOne(e, t);
+	}
+	async create(e, t) {
+		return super.create(e, t);
+	}
+	async update(e, t, s) {
+		return super.update(e, t, s).then(((e) => {
+			if (this.client.authStore.record?.id === e?.id && (this.client.authStore.record?.collectionId === this.collectionIdOrName || this.client.authStore.record?.collectionName === this.collectionIdOrName)) {
+				let t = Object.assign({}, this.client.authStore.record.expand), s = Object.assign({}, this.client.authStore.record, e);
+				t && (s.expand = Object.assign(t, e.expand)), this.client.authStore.save(this.client.authStore.token, s);
+			}
+			return e;
+		}));
+	}
+	async delete(e, t) {
+		return super.delete(e, t).then(((t) => (!t || this.client.authStore.record?.id !== e || this.client.authStore.record?.collectionId !== this.collectionIdOrName && this.client.authStore.record?.collectionName !== this.collectionIdOrName || this.client.authStore.clear(), t)));
+	}
+	authResponse(e) {
+		const t = this.decode(e?.record || {});
+		return this.client.authStore.save(e?.token, t), Object.assign({}, e, {
+			token: e?.token || "",
+			record: t
+		});
+	}
+	async listAuthMethods(e) {
+		return e = Object.assign({
+			method: "GET",
+			fields: "mfa,otp,password,oauth2"
+		}, e), this.client.send(this.baseCollectionPath + "/auth-methods", e);
+	}
+	async authWithPassword(e, t, s) {
+		let i;
+		s = Object.assign({
+			method: "POST",
+			body: {
+				identity: e,
+				password: t
+			}
+		}, s), this.isSuperusers && (i = s.autoRefreshThreshold, delete s.autoRefreshThreshold, s.autoRefresh || resetAutoRefresh(this.client));
+		let n = await this.client.send(this.baseCollectionPath + "/auth-with-password", s);
+		return n = this.authResponse(n), i && this.isSuperusers && function registerAutoRefresh(e, t, s, i) {
+			resetAutoRefresh(e);
+			const n = e.beforeSend, r = e.authStore.record, o = e.authStore.onChange(((t, s) => {
+				(!t || s?.id != r?.id || (s?.collectionId || r?.collectionId) && s?.collectionId != r?.collectionId) && resetAutoRefresh(e);
+			}));
+			e._resetAutoRefresh = function() {
+				o(), e.beforeSend = n, delete e._resetAutoRefresh;
+			}, e.beforeSend = async (r, o) => {
+				const a = e.authStore.token;
+				if (o.query?.autoRefresh) return n ? n(r, o) : {
+					url: r,
+					sendOptions: o
+				};
+				let c = e.authStore.isValid;
+				if (c && isTokenExpired(e.authStore.token, t)) try {
+					await s();
+				} catch (e) {
+					c = !1;
+				}
+				c || await i();
+				const l = o.headers || {};
+				for (let t in l) if ("authorization" == t.toLowerCase() && a == l[t] && e.authStore.token) {
+					l[t] = e.authStore.token;
+					break;
+				}
+				return o.headers = l, n ? n(r, o) : {
+					url: r,
+					sendOptions: o
+				};
+			};
+		}(this.client, i, (() => this.authRefresh({ autoRefresh: !0 })), (() => this.authWithPassword(e, t, Object.assign({ autoRefresh: !0 }, s)))), n;
+	}
+	async authWithOAuth2Code(e, t, s, i, n, r, o) {
+		let a = {
+			method: "POST",
+			body: {
+				provider: e,
+				code: t,
+				codeVerifier: s,
+				redirectURL: i,
+				createData: n
+			}
+		};
+		return a = normalizeLegacyOptionsArgs("This form of authWithOAuth2Code(provider, code, codeVerifier, redirectURL, createData?, body?, query?) is deprecated. Consider replacing it with authWithOAuth2Code(provider, code, codeVerifier, redirectURL, createData?, options?).", a, r, o), this.client.send(this.baseCollectionPath + "/auth-with-oauth2", a).then(((e) => this.authResponse(e)));
+	}
+	authWithOAuth2(...e) {
+		if (e.length > 1 || "string" == typeof e?.[0]) return console.warn("PocketBase: This form of authWithOAuth2() is deprecated and may get removed in the future. Please replace with authWithOAuth2Code() OR use the authWithOAuth2() realtime form as shown in https://pocketbase.io/docs/authentication/#oauth2-integration."), this.authWithOAuth2Code(e?.[0] || "", e?.[1] || "", e?.[2] || "", e?.[3] || "", e?.[4] || {}, e?.[5] || {}, e?.[6] || {});
+		const t = e?.[0] || {};
+		let s = null;
+		t.urlCallback || (s = openBrowserPopup(void 0));
+		const i = new RealtimeService(this.client);
+		function cleanup() {
+			s?.close(), i.unsubscribe();
+		}
+		const n = {}, r = t.requestKey;
+		return r && (n.requestKey = r), this.listAuthMethods(n).then(((e) => {
+			const n = e.oauth2.providers.find(((e) => e.name === t.provider));
+			if (!n) throw new ClientResponseError(/* @__PURE__ */ new Error(`Missing or invalid provider "${t.provider}".`));
+			const o = this.client.buildURL("/api/oauth2-redirect");
+			return new Promise((async (e, a) => {
+				const c = r ? this.client.cancelControllers?.[r] : void 0;
+				c && (c.signal.onabort = () => {
+					cleanup(), a(new ClientResponseError({
+						isAbort: !0,
+						message: "manually cancelled"
+					}));
+				}), i.onDisconnect = (e) => {
+					e.length && a && (cleanup(), a(new ClientResponseError(/* @__PURE__ */ new Error("realtime connection interrupted"))));
+				};
+				try {
+					await i.subscribe("@oauth2", (async (s) => {
+						const r = i.clientId;
+						try {
+							if (!s.state || r !== s.state) throw new Error("State parameters don't match.");
+							if (s.error || !s.code) throw new Error("OAuth2 redirect error or missing code: " + s.error);
+							const i = Object.assign({}, t);
+							delete i.provider, delete i.scopes, delete i.createData, delete i.urlCallback, c?.signal?.onabort && (c.signal.onabort = null);
+							e(await this.authWithOAuth2Code(n.name, s.code, n.codeVerifier, o, t.createData, i));
+						} catch (e) {
+							a(new ClientResponseError(e));
+						}
+						cleanup();
+					}));
+					const r = { state: i.clientId };
+					t.scopes?.length && (r.scope = t.scopes.join(" "));
+					const l = this._replaceQueryParams(n.authURL + o, r);
+					await (t.urlCallback || function(e) {
+						s ? s.location.href = e : s = openBrowserPopup(e);
+					})(l);
+				} catch (e) {
+					c?.signal?.onabort && (c.signal.onabort = null), cleanup(), a(new ClientResponseError(e));
+				}
+			}));
+		})).catch(((e) => {
+			throw cleanup(), e;
+		}));
+	}
+	async authRefresh(e, t) {
+		let s = { method: "POST" };
+		return s = normalizeLegacyOptionsArgs("This form of authRefresh(body?, query?) is deprecated. Consider replacing it with authRefresh(options?).", s, e, t), this.client.send(this.baseCollectionPath + "/auth-refresh", s).then(((e) => this.authResponse(e)));
+	}
+	async requestPasswordReset(e, t, s) {
+		let i = {
+			method: "POST",
+			body: { email: e }
+		};
+		return i = normalizeLegacyOptionsArgs("This form of requestPasswordReset(email, body?, query?) is deprecated. Consider replacing it with requestPasswordReset(email, options?).", i, t, s), this.client.send(this.baseCollectionPath + "/request-password-reset", i).then((() => !0));
+	}
+	async confirmPasswordReset(e, t, s, i, n) {
+		let r = {
+			method: "POST",
+			body: {
+				token: e,
+				password: t,
+				passwordConfirm: s
+			}
+		};
+		return r = normalizeLegacyOptionsArgs("This form of confirmPasswordReset(token, password, passwordConfirm, body?, query?) is deprecated. Consider replacing it with confirmPasswordReset(token, password, passwordConfirm, options?).", r, i, n), this.client.send(this.baseCollectionPath + "/confirm-password-reset", r).then((() => !0));
+	}
+	async requestVerification(e, t, s) {
+		let i = {
+			method: "POST",
+			body: { email: e }
+		};
+		return i = normalizeLegacyOptionsArgs("This form of requestVerification(email, body?, query?) is deprecated. Consider replacing it with requestVerification(email, options?).", i, t, s), this.client.send(this.baseCollectionPath + "/request-verification", i).then((() => !0));
+	}
+	async confirmVerification(e, t, s) {
+		let i = {
+			method: "POST",
+			body: { token: e }
+		};
+		return i = normalizeLegacyOptionsArgs("This form of confirmVerification(token, body?, query?) is deprecated. Consider replacing it with confirmVerification(token, options?).", i, t, s), this.client.send(this.baseCollectionPath + "/confirm-verification", i).then((() => {
+			const t = getTokenPayload(e), s = this.client.authStore.record;
+			return s && !s.verified && s.id === t.id && s.collectionId === t.collectionId && (s.verified = !0, this.client.authStore.save(this.client.authStore.token, s)), !0;
+		}));
+	}
+	async requestEmailChange(e, t, s) {
+		let i = {
+			method: "POST",
+			body: { newEmail: e }
+		};
+		return i = normalizeLegacyOptionsArgs("This form of requestEmailChange(newEmail, body?, query?) is deprecated. Consider replacing it with requestEmailChange(newEmail, options?).", i, t, s), this.client.send(this.baseCollectionPath + "/request-email-change", i).then((() => !0));
+	}
+	async confirmEmailChange(e, t, s, i) {
+		let n = {
+			method: "POST",
+			body: {
+				token: e,
+				password: t
+			}
+		};
+		return n = normalizeLegacyOptionsArgs("This form of confirmEmailChange(token, password, body?, query?) is deprecated. Consider replacing it with confirmEmailChange(token, password, options?).", n, s, i), this.client.send(this.baseCollectionPath + "/confirm-email-change", n).then((() => {
+			const t = getTokenPayload(e), s = this.client.authStore.record;
+			return s && s.id === t.id && s.collectionId === t.collectionId && this.client.authStore.clear(), !0;
+		}));
+	}
+	async listExternalAuths(e, t) {
+		return this.client.collection("_externalAuths").getFullList(Object.assign({}, t, { filter: this.client.filter("recordRef = {:id}", { id: e }) }));
+	}
+	async unlinkExternalAuth(e, t, s) {
+		const i = await this.client.collection("_externalAuths").getFirstListItem(this.client.filter("recordRef = {:recordId} && provider = {:provider}", {
+			recordId: e,
+			provider: t
+		}));
+		return this.client.collection("_externalAuths").delete(i.id, s).then((() => !0));
+	}
+	async requestOTP(e, t) {
+		return t = Object.assign({
+			method: "POST",
+			body: { email: e }
+		}, t), this.client.send(this.baseCollectionPath + "/request-otp", t);
+	}
+	async authWithOTP(e, t, s) {
+		return s = Object.assign({
+			method: "POST",
+			body: {
+				otpId: e,
+				password: t
+			}
+		}, s), this.client.send(this.baseCollectionPath + "/auth-with-otp", s).then(((e) => this.authResponse(e)));
+	}
+	async impersonate(e, t, s) {
+		(s = Object.assign({
+			method: "POST",
+			body: { duration: t }
+		}, s)).headers = s.headers || {}, s.headers.Authorization || (s.headers.Authorization = this.client.authStore.token);
+		const i = new Client(this.client.baseURL, new BaseAuthStore(), this.client.lang), n = await i.send(this.baseCollectionPath + "/impersonate/" + encodeURIComponent(e), s);
+		return i.authStore.save(n?.token, this.decode(n?.record || {})), i;
+	}
+	_replaceQueryParams(e, t = {}) {
+		let s = e, i = "";
+		e.indexOf("?") >= 0 && (s = e.substring(0, e.indexOf("?")), i = e.substring(e.indexOf("?") + 1));
+		const n = {}, r = i.split("&");
+		for (const e of r) {
+			if ("" == e) continue;
+			const t = e.split("=");
+			n[decodeURIComponent(t[0].replace(/\+/g, " "))] = decodeURIComponent((t[1] || "").replace(/\+/g, " "));
+		}
+		for (let e in t) t.hasOwnProperty(e) && (null == t[e] ? delete n[e] : n[e] = t[e]);
+		i = "";
+		for (let e in n) n.hasOwnProperty(e) && ("" != i && (i += "&"), i += encodeURIComponent(e.replace(/%20/g, "+")) + "=" + encodeURIComponent(n[e].replace(/%20/g, "+")));
+		return "" != i ? s + "?" + i : s;
+	}
+};
+function openBrowserPopup(e) {
+	if ("undefined" == typeof window || !window?.open) throw new ClientResponseError(/* @__PURE__ */ new Error("Not in a browser context - please pass a custom urlCallback function."));
+	let t = 1024, s = 768, i = window.innerWidth, n = window.innerHeight;
+	t = t > i ? i : t, s = s > n ? n : s;
+	let r = i / 2 - t / 2, o = n / 2 - s / 2;
+	return window.open(e, "popup_window", "width=" + t + ",height=" + s + ",top=" + o + ",left=" + r + ",resizable,menubar=no");
+}
+var CollectionService = class extends CrudService {
+	get baseCrudPath() {
+		return "/api/collections";
+	}
+	async import(e, t = !1, s) {
+		return s = Object.assign({
+			method: "PUT",
+			body: {
+				collections: e,
+				deleteMissing: t
+			}
+		}, s), this.client.send(this.baseCrudPath + "/import", s).then((() => !0));
+	}
+	async getScaffolds(e) {
+		return e = Object.assign({ method: "GET" }, e), this.client.send(this.baseCrudPath + "/meta/scaffolds", e);
+	}
+	async truncate(e, t) {
+		return t = Object.assign({ method: "DELETE" }, t), this.client.send(this.baseCrudPath + "/" + encodeURIComponent(e) + "/truncate", t).then((() => !0));
+	}
+};
+var LogService = class extends BaseService {
+	async getList(e = 1, t = 30, s) {
+		return (s = Object.assign({ method: "GET" }, s)).query = Object.assign({
+			page: e,
+			perPage: t
+		}, s.query), this.client.send("/api/logs", s);
+	}
+	async getOne(e, t) {
+		if (!e) throw new ClientResponseError({
+			url: this.client.buildURL("/api/logs/"),
+			status: 404,
+			response: {
+				code: 404,
+				message: "Missing required log id.",
+				data: {}
+			}
+		});
+		return t = Object.assign({ method: "GET" }, t), this.client.send("/api/logs/" + encodeURIComponent(e), t);
+	}
+	async getStats(e) {
+		return e = Object.assign({ method: "GET" }, e), this.client.send("/api/logs/stats", e);
+	}
+};
+var HealthService = class extends BaseService {
+	async check(e) {
+		return e = Object.assign({ method: "GET" }, e), this.client.send("/api/health", e);
+	}
+};
+var FileService = class extends BaseService {
+	getUrl(e, t, s = {}) {
+		return console.warn("Please replace pb.files.getUrl() with pb.files.getURL()"), this.getURL(e, t, s);
+	}
+	getURL(e, t, s = {}) {
+		if (!t || !e?.id || !e?.collectionId && !e?.collectionName) return "";
+		const i = [];
+		i.push("api"), i.push("files"), i.push(encodeURIComponent(e.collectionId || e.collectionName)), i.push(encodeURIComponent(e.id)), i.push(encodeURIComponent(t));
+		let n = this.client.buildURL(i.join("/"));
+		!1 === s.download && delete s.download;
+		const r = serializeQueryParams(s);
+		return r && (n += (n.includes("?") ? "&" : "?") + r), n;
+	}
+	async getToken(e) {
+		return e = Object.assign({ method: "POST" }, e), this.client.send("/api/files/token", e).then(((e) => e?.token || ""));
+	}
+};
+var BackupService = class extends BaseService {
+	async getFullList(e) {
+		return e = Object.assign({ method: "GET" }, e), this.client.send("/api/backups", e);
+	}
+	async create(e, t) {
+		return t = Object.assign({
+			method: "POST",
+			body: { name: e }
+		}, t), this.client.send("/api/backups", t).then((() => !0));
+	}
+	async upload(e, t) {
+		return t = Object.assign({
+			method: "POST",
+			body: e
+		}, t), this.client.send("/api/backups/upload", t).then((() => !0));
+	}
+	async delete(e, t) {
+		return t = Object.assign({ method: "DELETE" }, t), this.client.send(`/api/backups/${encodeURIComponent(e)}`, t).then((() => !0));
+	}
+	async restore(e, t) {
+		return t = Object.assign({ method: "POST" }, t), this.client.send(`/api/backups/${encodeURIComponent(e)}/restore`, t).then((() => !0));
+	}
+	getDownloadUrl(e, t) {
+		return console.warn("Please replace pb.backups.getDownloadUrl() with pb.backups.getDownloadURL()"), this.getDownloadURL(e, t);
+	}
+	getDownloadURL(e, t) {
+		return this.client.buildURL(`/api/backups/${encodeURIComponent(t)}?token=${encodeURIComponent(e)}`);
+	}
+};
+var CronService = class extends BaseService {
+	async getFullList(e) {
+		return e = Object.assign({ method: "GET" }, e), this.client.send("/api/crons", e);
+	}
+	async run(e, t) {
+		return t = Object.assign({ method: "POST" }, t), this.client.send(`/api/crons/${encodeURIComponent(e)}`, t).then((() => !0));
+	}
+};
+function isFile(e) {
+	return "undefined" != typeof Blob && e instanceof Blob || "undefined" != typeof File && e instanceof File || null !== e && "object" == typeof e && e.uri && ("undefined" != typeof navigator && "ReactNative" === navigator.product || "undefined" != typeof global && global.HermesInternal);
+}
+function isFormData(e) {
+	return e && ("FormData" === e.constructor?.name || "undefined" != typeof FormData && e instanceof FormData);
+}
+function hasFileField(e) {
+	for (const t in e) {
+		const s = Array.isArray(e[t]) ? e[t] : [e[t]];
+		for (const e of s) if (isFile(e)) return !0;
+	}
+	return !1;
+}
+var r = /^[\-\.\d]+$/;
+function inferFormDataValue(e) {
+	if ("string" != typeof e) return e;
+	if ("true" == e) return !0;
+	if ("false" == e) return !1;
+	if (("-" === e[0] || e[0] >= "0" && e[0] <= "9") && r.test(e)) {
+		let t = +e;
+		if ("" + t === e) return t;
+	}
+	return e;
+}
+var BatchService = class extends BaseService {
+	constructor() {
+		super(...arguments), this.requests = [], this.subs = {};
+	}
+	collection(e) {
+		return this.subs[e] || (this.subs[e] = new SubBatchService(this.requests, e)), this.subs[e];
+	}
+	async send(e) {
+		const t = new FormData(), s = [];
+		for (let e = 0; e < this.requests.length; e++) {
+			const i = this.requests[e];
+			if (s.push({
+				method: i.method,
+				url: i.url,
+				headers: i.headers,
+				body: i.json
+			}), i.files) for (let s in i.files) {
+				const n = i.files[s] || [];
+				for (let i of n) t.append("requests." + e + "." + s, i);
+			}
+		}
+		return t.append("@jsonPayload", JSON.stringify({ requests: s })), e = Object.assign({
+			method: "POST",
+			body: t
+		}, e), this.client.send("/api/batch", e);
+	}
+};
+var SubBatchService = class {
+	constructor(e, t) {
+		this.requests = [], this.requests = e, this.collectionIdOrName = t;
+	}
+	upsert(e, t) {
+		t = Object.assign({ body: e || {} }, t);
+		const s = {
+			method: "PUT",
+			url: "/api/collections/" + encodeURIComponent(this.collectionIdOrName) + "/records"
+		};
+		this.prepareRequest(s, t), this.requests.push(s);
+	}
+	create(e, t) {
+		t = Object.assign({ body: e || {} }, t);
+		const s = {
+			method: "POST",
+			url: "/api/collections/" + encodeURIComponent(this.collectionIdOrName) + "/records"
+		};
+		this.prepareRequest(s, t), this.requests.push(s);
+	}
+	update(e, t, s) {
+		s = Object.assign({ body: t || {} }, s);
+		const i = {
+			method: "PATCH",
+			url: "/api/collections/" + encodeURIComponent(this.collectionIdOrName) + "/records/" + encodeURIComponent(e)
+		};
+		this.prepareRequest(i, s), this.requests.push(i);
+	}
+	delete(e, t) {
+		t = Object.assign({}, t);
+		const s = {
+			method: "DELETE",
+			url: "/api/collections/" + encodeURIComponent(this.collectionIdOrName) + "/records/" + encodeURIComponent(e)
+		};
+		this.prepareRequest(s, t), this.requests.push(s);
+	}
+	prepareRequest(e, t) {
+		if (normalizeUnknownQueryParams(t), e.headers = t.headers, e.json = {}, e.files = {}, void 0 !== t.query) {
+			const s = serializeQueryParams(t.query);
+			s && (e.url += (e.url.includes("?") ? "&" : "?") + s);
+		}
+		let s = t.body;
+		isFormData(s) && (s = function convertFormDataToObject(e) {
+			let t = {};
+			return e.forEach(((e, s) => {
+				if ("@jsonPayload" === s && "string" == typeof e) try {
+					let s = JSON.parse(e);
+					Object.assign(t, s);
+				} catch (e) {
+					console.warn("@jsonPayload error:", e);
+				}
+				else void 0 !== t[s] ? (Array.isArray(t[s]) || (t[s] = [t[s]]), t[s].push(inferFormDataValue(e))) : t[s] = inferFormDataValue(e);
+			})), t;
+		}(s));
+		for (const t in s) {
+			const i = s[t];
+			if (isFile(i)) e.files[t] = e.files[t] || [], e.files[t].push(i);
+			else if (Array.isArray(i)) {
+				const s = [], n = [];
+				for (const e of i) isFile(e) ? s.push(e) : n.push(e);
+				if (s.length > 0 && s.length == i.length) {
+					e.files[t] = e.files[t] || [];
+					for (let i of s) e.files[t].push(i);
+				} else if (e.json[t] = n, s.length > 0) {
+					let i = t;
+					t.startsWith("+") || t.endsWith("+") || (i += "+"), e.files[i] = e.files[i] || [];
+					for (let t of s) e.files[i].push(t);
+				}
+			} else e.json[t] = i;
+		}
+	}
+};
+var Client = class {
+	get baseUrl() {
+		return this.baseURL;
+	}
+	set baseUrl(e) {
+		this.baseURL = e;
+	}
+	constructor(e = "/", t, s = "en-US") {
+		this.cancelControllers = {}, this.recordServices = {}, this.enableAutoCancellation = !0, this.baseURL = e, this.lang = s, t ? this.authStore = t : "undefined" != typeof window && window.Deno ? this.authStore = new BaseAuthStore() : this.authStore = new LocalAuthStore(), this.collections = new CollectionService(this), this.files = new FileService(this), this.logs = new LogService(this), this.settings = new SettingsService(this), this.realtime = new RealtimeService(this), this.health = new HealthService(this), this.backups = new BackupService(this), this.crons = new CronService(this);
+	}
+	get admins() {
+		return this.collection("_superusers");
+	}
+	createBatch() {
+		return new BatchService(this);
+	}
+	collection(e) {
+		return this.recordServices[e] || (this.recordServices[e] = new RecordService(this, e)), this.recordServices[e];
+	}
+	autoCancellation(e) {
+		return this.enableAutoCancellation = !!e, this;
+	}
+	cancelRequest(e) {
+		return this.cancelControllers[e] && (this.cancelControllers[e].abort(), delete this.cancelControllers[e]), this;
+	}
+	cancelAllRequests() {
+		for (let e in this.cancelControllers) this.cancelControllers[e].abort();
+		return this.cancelControllers = {}, this;
+	}
+	filter(e, t) {
+		if (!t) return e;
+		for (let s in t) {
+			let i = t[s];
+			switch (typeof i) {
+				case "boolean":
+				case "number":
+					i = "" + i;
+					break;
+				case "string":
+					i = "'" + i.replace(/'/g, "\\'") + "'";
+					break;
+				default: i = null === i ? "null" : i instanceof Date ? "'" + i.toISOString().replace("T", " ") + "'" : "'" + JSON.stringify(i).replace(/'/g, "\\'") + "'";
+			}
+			e = e.replaceAll("{:" + s + "}", i);
+		}
+		return e;
+	}
+	getFileUrl(e, t, s = {}) {
+		return console.warn("Please replace pb.getFileUrl() with pb.files.getURL()"), this.files.getURL(e, t, s);
+	}
+	buildUrl(e) {
+		return console.warn("Please replace pb.buildUrl() with pb.buildURL()"), this.buildURL(e);
+	}
+	buildURL(e) {
+		let t = this.baseURL;
+		return "undefined" == typeof window || !window.location || t.startsWith("https://") || t.startsWith("http://") || (t = window.location.origin?.endsWith("/") ? window.location.origin.substring(0, window.location.origin.length - 1) : window.location.origin || "", this.baseURL.startsWith("/") || (t += window.location.pathname || "/", t += t.endsWith("/") ? "" : "/"), t += this.baseURL), e && (t += t.endsWith("/") ? "" : "/", t += e.startsWith("/") ? e.substring(1) : e), t;
+	}
+	async send(e, t) {
+		t = this.initSendOptions(e, t);
+		let s = this.buildURL(e);
+		if (this.beforeSend) {
+			const e = Object.assign({}, await this.beforeSend(s, t));
+			void 0 !== e.url || void 0 !== e.options ? (s = e.url || s, t = e.options || t) : Object.keys(e).length && (t = e, console?.warn && console.warn("Deprecated format of beforeSend return: please use `return { url, options }`, instead of `return options`."));
+		}
+		if (void 0 !== t.query) {
+			const e = serializeQueryParams(t.query);
+			e && (s += (s.includes("?") ? "&" : "?") + e), delete t.query;
+		}
+		"application/json" == this.getHeader(t.headers, "Content-Type") && t.body && "string" != typeof t.body && (t.body = JSON.stringify(t.body));
+		return (t.fetch || fetch)(s, t).then((async (e) => {
+			let s = {};
+			try {
+				s = await e.json();
+			} catch (e) {
+				if (t.signal?.aborted || "AbortError" == e?.name || "Aborted" == e?.message) throw e;
+			}
+			if (this.afterSend && (s = await this.afterSend(e, s, t)), e.status >= 400) throw new ClientResponseError({
+				url: e.url,
+				status: e.status,
+				data: s
+			});
+			return s;
+		})).catch(((e) => {
+			throw new ClientResponseError(e);
+		}));
+	}
+	initSendOptions(e, t) {
+		if ((t = Object.assign({ method: "GET" }, t)).body = function convertToFormDataIfNeeded(e) {
+			if ("undefined" == typeof FormData || void 0 === e || "object" != typeof e || null === e || isFormData(e) || !hasFileField(e)) return e;
+			const t = new FormData();
+			for (const s in e) {
+				const i = e[s];
+				if (void 0 !== i) if ("object" != typeof i || hasFileField({ data: i })) {
+					const e = Array.isArray(i) ? i : [i];
+					for (let i of e) t.append(s, i);
+				} else {
+					let e = {};
+					e[s] = i, t.append("@jsonPayload", JSON.stringify(e));
+				}
+			}
+			return t;
+		}(t.body), normalizeUnknownQueryParams(t), t.query = Object.assign({}, t.params, t.query), void 0 === t.requestKey && (!1 === t.$autoCancel || !1 === t.query.$autoCancel ? t.requestKey = null : (t.$cancelKey || t.query.$cancelKey) && (t.requestKey = t.$cancelKey || t.query.$cancelKey)), delete t.$autoCancel, delete t.query.$autoCancel, delete t.$cancelKey, delete t.query.$cancelKey, null !== this.getHeader(t.headers, "Content-Type") || isFormData(t.body) || (t.headers = Object.assign({}, t.headers, { "Content-Type": "application/json" })), null === this.getHeader(t.headers, "Accept-Language") && (t.headers = Object.assign({}, t.headers, { "Accept-Language": this.lang })), this.authStore.token && null === this.getHeader(t.headers, "Authorization") && (t.headers = Object.assign({}, t.headers, { Authorization: this.authStore.token })), this.enableAutoCancellation && null !== t.requestKey) {
+			const s = t.requestKey || (t.method || "GET") + e;
+			delete t.requestKey, this.cancelRequest(s);
+			const i = new AbortController();
+			this.cancelControllers[s] = i, t.signal = i.signal;
+		}
+		return t;
+	}
+	getHeader(e, t) {
+		e = e || {}, t = t.toLowerCase();
+		for (let s in e) if (s.toLowerCase() == t) return e[s];
+		return null;
+	}
+};
+//#endregion
+//#region src/lib/pocketbase/client.ts
+var pb = new Client("https://gerenciador-de-prestadores-d53d6.shrd00.internal.goskip.dev");
+pb.autoCancellation(false);
+//#endregion
+//#region src/hooks/use-auth.tsx
+var AuthContext = (0, import_react.createContext)(void 0);
+var useAuth = () => {
+	const context = (0, import_react.useContext)(AuthContext);
+	if (!context) throw new Error("useAuth must be used within an AuthProvider");
+	return context;
+};
+var AuthProvider = ({ children }) => {
+	const [user, setUser] = (0, import_react.useState)(pb.authStore.record);
+	const [loading, setLoading] = (0, import_react.useState)(true);
+	(0, import_react.useEffect)(() => {
+		const unsubscribe = pb.authStore.onChange((_token, record) => {
+			setUser(record);
+		});
+		setLoading(false);
+		return () => {
+			unsubscribe();
+		};
+	}, []);
+	const signIn = async (email, password) => {
+		try {
+			await pb.collection("users").authWithPassword(email, password);
+			return { error: null };
+		} catch (error) {
+			return { error };
+		}
+	};
+	const signOut = () => {
+		pb.authStore.clear();
+	};
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AuthContext.Provider, {
+		"data-uid": "src/hooks/use-auth.tsx:47:5",
+		"data-prohibitions": "[editContent]",
+		value: {
+			user,
+			signIn,
+			signOut,
+			loading
+		},
+		children
+	});
+};
+//#endregion
 //#region src/App.tsx
-var Dashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./Dashboard-CFA8QmaG.js"), []));
-var Processos = (0, import_react.lazy)(() => __vitePreload(() => import("./Processos-Dckgz8mE.js"), []));
-var Relatorios = (0, import_react.lazy)(() => __vitePreload(() => import("./Relatorios-BdKpoXkA.js"), []));
-var Configuracoes = (0, import_react.lazy)(() => __vitePreload(() => import("./Configuracoes-Bh1MFpPo.js"), []));
-var Ajuda = (0, import_react.lazy)(() => __vitePreload(() => import("./Ajuda-DYh19rGc.js"), []));
+var OperacionalDashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./OperacionalDashboardPage-DrT8IOwN.js"), __vite__mapDeps([0,1])));
+var Processos = (0, import_react.lazy)(() => __vitePreload(() => import("./Processos-B4XYN9h5.js"), __vite__mapDeps([2,1])));
+var Relatorios = (0, import_react.lazy)(() => __vitePreload(() => import("./Relatorios-ud8Hv5Gk.js"), __vite__mapDeps([3,1])));
+var Configuracoes = (0, import_react.lazy)(() => __vitePreload(() => import("./Configuracoes-D-ZZOkoB.js"), __vite__mapDeps([4,1])));
+var Ajuda = (0, import_react.lazy)(() => __vitePreload(() => import("./Ajuda-CAKBiVPB.js"), __vite__mapDeps([5,1])));
 function App() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ErrorBoundary, {
-		"data-uid": "src/App.tsx:15:5",
+		"data-uid": "src/App.tsx:16:5",
 		"data-prohibitions": "[]",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ThemeProvider, {
-			"data-uid": "src/App.tsx:16:7",
+			"data-uid": "src/App.tsx:17:7",
 			"data-prohibitions": "[]",
 			defaultTheme: "system",
 			storageKey: "theme",
-			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
-				"data-uid": "src/App.tsx:17:9",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(AuthProvider, {
+				"data-uid": "src/App.tsx:18:9",
 				"data-prohibitions": "[]",
-				future: {
-					v7_startTransition: false,
-					v7_relativeSplatPath: false
-				},
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Routes, {
-					"data-uid": "src/App.tsx:18:11",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(BrowserRouter, {
+					"data-uid": "src/App.tsx:19:11",
 					"data-prohibitions": "[]",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
-						"data-uid": "src/App.tsx:19:13",
+					future: {
+						v7_startTransition: false,
+						v7_relativeSplatPath: false
+					},
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Routes, {
+						"data-uid": "src/App.tsx:20:13",
 						"data-prohibitions": "[]",
-						element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {
-							"data-uid": "src/App.tsx:19:29",
-							"data-prohibitions": "[editContent]"
-						}),
-						children: [
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:20:15",
-								"data-prohibitions": "[editContent]",
-								path: "/",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-									"data-uid": "src/App.tsx:20:40",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Route, {
+							"data-uid": "src/App.tsx:21:15",
+							"data-prohibitions": "[]",
+							element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Layout, {
+								"data-uid": "src/App.tsx:21:31",
+								"data-prohibitions": "[editContent]"
+							}),
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+									"data-uid": "src/App.tsx:22:17",
 									"data-prohibitions": "[editContent]",
-									to: "/dashboard",
-									replace: true
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:21:15",
-								"data-prohibitions": "[editContent]",
-								path: "/dashboard",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Dashboard, {
-									"data-uid": "src/App.tsx:21:49",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:22:15",
-								"data-prohibitions": "[editContent]",
-								path: "/processos",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Processos, {
-									"data-uid": "src/App.tsx:22:49",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:23:15",
-								"data-prohibitions": "[editContent]",
-								path: "/relatorios",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Relatorios, {
-									"data-uid": "src/App.tsx:23:50",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:24:15",
-								"data-prohibitions": "[editContent]",
-								path: "/configuracoes",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Configuracoes, {
-									"data-uid": "src/App.tsx:24:53",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:25:15",
-								"data-prohibitions": "[editContent]",
-								path: "/ajuda",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ajuda, {
-									"data-uid": "src/App.tsx:25:45",
-									"data-prohibitions": "[editContent]"
-								})
-							}),
-							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
-								"data-uid": "src/App.tsx:26:15",
-								"data-prohibitions": "[editContent]",
-								path: "*",
-								element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
-									"data-uid": "src/App.tsx:26:40",
+									path: "/",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
+										"data-uid": "src/App.tsx:22:42",
+										"data-prohibitions": "[editContent]",
+										to: "/dashboard",
+										replace: true
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+									"data-uid": "src/App.tsx:23:17",
 									"data-prohibitions": "[editContent]",
-									to: "/dashboard",
-									replace: true
+									path: "/dashboard",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(OperacionalDashboard, {
+										"data-uid": "src/App.tsx:23:51",
+										"data-prohibitions": "[editContent]"
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+									"data-uid": "src/App.tsx:24:17",
+									"data-prohibitions": "[editContent]",
+									path: "/processos",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Processos, {
+										"data-uid": "src/App.tsx:24:51",
+										"data-prohibitions": "[editContent]"
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+									"data-uid": "src/App.tsx:25:17",
+									"data-prohibitions": "[editContent]",
+									path: "/relatorios",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Relatorios, {
+										"data-uid": "src/App.tsx:25:52",
+										"data-prohibitions": "[editContent]"
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+									"data-uid": "src/App.tsx:26:17",
+									"data-prohibitions": "[editContent]",
+									path: "/configuracoes",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Configuracoes, {
+										"data-uid": "src/App.tsx:26:55",
+										"data-prohibitions": "[editContent]"
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+									"data-uid": "src/App.tsx:27:17",
+									"data-prohibitions": "[editContent]",
+									path: "/ajuda",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Ajuda, {
+										"data-uid": "src/App.tsx:27:47",
+										"data-prohibitions": "[editContent]"
+									})
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Route, {
+									"data-uid": "src/App.tsx:28:17",
+									"data-prohibitions": "[editContent]",
+									path: "*",
+									element: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Navigate, {
+										"data-uid": "src/App.tsx:28:42",
+										"data-prohibitions": "[editContent]",
+										to: "/dashboard",
+										replace: true
+									})
 								})
-							})
-						]
+							]
+						})
 					})
 				})
 			})
@@ -25169,6 +25426,6 @@ function App() {
 	"data-prohibitions": "[editContent]"
 }));
 //#endregion
-export { require_jsx_runtime as t };
+export { useLayoutEffect2 as A, createLucideIcon as B, FocusScope as C, createSlot as D, Primitive as E, cn as F, useComposedRefs as I, X as L, composeEventHandlers as M, Input as N, useControllableState as O, Button as P, Search as R, Portal$1 as S, useCallbackRef$1 as T, require_react_dom as V, Trigger$1 as _, Arrow as a, useFocusGuards as b, createPopperScope as c, Content$1 as d, Description as f, Title as g, Root$3 as h, Anchor as i, createContextScope$1 as j, useId as k, Skeleton as l, Portal as m, pb as n, Content as o, Overlay as p, VISUALLY_HIDDEN_STYLES as r, Root2 as s, useAuth as t, Close as u, hideOthers as v, DismissableLayer as w, Presence as x, ReactRemoveScroll as y, FileText as z };
 
-//# sourceMappingURL=index-CRqGZkjJ.js.map
+//# sourceMappingURL=index-D1FpZszG.js.map

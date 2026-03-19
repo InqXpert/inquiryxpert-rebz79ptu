@@ -17,7 +17,9 @@ export function TabHistorico({ historico }: Props) {
               <div className="absolute w-2.5 h-2.5 bg-muted-foreground rounded-full -left-[6px] top-1.5 ring-4 ring-background" />
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-foreground capitalize">{h.tipo_evento.replace('_', ' ')}</span>
+                  <span className="text-sm font-medium text-foreground capitalize">
+                    {h.tipo_evento.replace('_', ' ')}
+                  </span>
                   <span className="text-xs text-muted-foreground flex items-center gap-1">
                     <Clock className="w-3 h-3" /> {new Date(h.created).toLocaleString()}
                   </span>
@@ -25,11 +27,17 @@ export function TabHistorico({ historico }: Props) {
                 <p className="text-sm text-muted-foreground mt-1">{h.descricao}</p>
                 {h.data_anteriores && h.data_novos && (
                   <div className="mt-2 text-xs bg-muted/50 p-2 rounded border inline-block">
-                    <span className="text-muted-foreground line-through mr-2">{h.data_anteriores}</span>
-                    <span className="text-foreground font-medium text-primary">➔ {h.data_novos}</span>
+                    <span className="text-muted-foreground line-through mr-2">
+                      {h.data_anteriores}
+                    </span>
+                    <span className="text-foreground font-medium text-primary">
+                      ➔ {h.data_novos}
+                    </span>
                   </div>
                 )}
-                <span className="text-xs text-muted-foreground mt-2 font-medium">Por: {h.user_name}</span>
+                <span className="text-xs text-muted-foreground mt-2 font-medium">
+                  Por: {h.user_name}
+                </span>
               </div>
             </div>
           ))}

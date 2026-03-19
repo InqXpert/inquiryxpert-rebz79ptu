@@ -42,7 +42,12 @@ export interface Prestador {
   observacoes: string
 }
 
-export type ProcessoStatus = 'em_elaboracao' | 'em_execucao' | 'finalizado' | 'cancelado' | 'analise_inicial'
+export type ProcessoStatus =
+  | 'em_elaboracao'
+  | 'em_execucao'
+  | 'finalizado'
+  | 'cancelado'
+  | 'analise_inicial'
 export type ProcessoResultado = 'regular' | 'irregular' | 'analise' | 'cancelado' | ''
 
 export interface ProcessoOperacional {

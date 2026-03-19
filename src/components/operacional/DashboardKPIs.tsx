@@ -10,7 +10,7 @@ export function DashboardKPIs({ processos, loading }: Props) {
   if (loading) {
     return (
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        {[1, 2, 3, 4].map(i => (
+        {[1, 2, 3, 4].map((i) => (
           <div key={i} className="h-[120px] rounded-2xl bg-muted animate-pulse" />
         ))}
       </div>
@@ -19,9 +19,22 @@ export function DashboardKPIs({ processos, loading }: Props) {
 
   const kpis = [
     { title: 'Total de Processos', value: processos.length, subtitle: 'Todos os registros' },
-    { title: 'Em Execução', value: processos.filter(p => p.status === 'em_execucao').length, subtitle: 'Acompanhamento ativo' },
-    { title: 'Finalizados', value: processos.filter(p => p.status === 'finalizado').length, subtitle: 'Concluídos' },
-    { title: 'Pendências', value: processos.filter(p => ['em_elaboracao', 'analise_inicial'].includes(p.status)).length, subtitle: 'Requer atenção' },
+    {
+      title: 'Em Execução',
+      value: processos.filter((p) => p.status === 'em_execucao').length,
+      subtitle: 'Acompanhamento ativo',
+    },
+    {
+      title: 'Finalizados',
+      value: processos.filter((p) => p.status === 'finalizado').length,
+      subtitle: 'Concluídos',
+    },
+    {
+      title: 'Pendências',
+      value: processos.filter((p) => ['em_elaboracao', 'analise_inicial'].includes(p.status))
+        .length,
+      subtitle: 'Requer atenção',
+    },
   ]
 
   return (
@@ -31,8 +44,9 @@ export function DashboardKPIs({ processos, loading }: Props) {
           key={kpi.title}
           className="relative overflow-hidden rounded-2xl p-5 min-h-[120px] flex flex-col justify-center animate-in slide-in-from-bottom-4 fade-in duration-400 fill-mode-both"
           style={{
-            background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.85) 100%)',
-            animationDelay: `${i * 80}ms`
+            background:
+              'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.85) 100%)',
+            animationDelay: `${i * 80}ms`,
           }}
         >
           <div className="absolute -bottom-5 -right-5 w-20 h-20 bg-white/10 rounded-full" />

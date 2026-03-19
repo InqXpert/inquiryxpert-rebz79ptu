@@ -15,7 +15,14 @@ export function useOperacionalDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const defaultFilters = { status: 'Todos', cia: 'Todas', agente_prestador: 'Todos', data_entrada_from: '', data_entrada_to: '', search: '' }
+  const defaultFilters = {
+    status: 'Todos',
+    cia: 'Todas',
+    agente_prestador: 'Todos',
+    data_entrada_from: '',
+    data_entrada_to: '',
+    search: '',
+  }
   const [filters, setFiltersState] = useState(defaultFilters)
   const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 25, totalCount: 0 })
 
@@ -25,10 +32,10 @@ export function useOperacionalDashboard() {
     try {
       let data = await service.fetchProcessos(filters)
       if (userRole === 'analista') {
-        data = data.filter(p => p.user_id === userId)
+        data = data.filter((p) => p.user_id === userId)
       }
       setProcessos(data)
-      setPagination(p => ({ ...p, totalCount: data.length }))
+      setPagination((p) => ({ ...p, totalCount: data.length }))
     } catch (err) {
       setError('Erro ao carregar processos. Tente novamente.')
     } finally {
@@ -41,24 +48,31 @@ export function useOperacionalDashboard() {
   }, [fetchProcessos])
 
   const setFilters = (newFilters: Partial<typeof filters>) => {
-    setFiltersState(prev => ({ ...prev, ...newFilters }))
-    setPagination(p => ({ ...p, currentPage: 1 }))
+    setFiltersState((prev) => ({ ...prev, ...newFilters }))
+    setPagination((p) => ({ ...p, currentPage: 1 }))
   }
 
   const clearFilters = () => {
     setFiltersState(defaultFilters)
-    setPagination(p => ({ ...p, currentPage: 1 }))
+    setPagination((p) => ({ ...p, currentPage: 1 }))
   }
 
   const updateProcesso = async (id: string, data: Partial<ProcessoOperacional>) => {
-    const canEdit = userRole === 'admin' || userRole === 'supervisor' || processos.find(p => p.id === id)?.user_id === userId
+    const canEdit =
+      userRole === 'admin' ||
+      userRole === 'supervisor' ||
+      processos.find((p) => p.id === id)?.user_id === userId
     if (!canEdit) {
-      toast({ title: 'Acesso Negado', description: 'Você não tem permissão para editar este processo.', variant: 'destructive' })
+      toast({
+        title: 'Acesso Negado',
+        description: 'Você não tem permissão para editar este processo.',
+        variant: 'destructive',
+      })
       return
     }
     try {
       const updated = await service.updateProcesso(id, data)
-      setProcessos(prev => prev.map(p => p.id === id ? { ...p, ...updated } : p))
+      setProcessos((prev) => prev.map((p) => (p.id === id ? { ...p, ...updated } : p)))
       toast({ title: 'Sucesso', description: 'Processo atualizado com sucesso!' })
     } catch (err) {
       toast({ title: 'Erro', description: 'Erro ao atualizar processo.', variant: 'destructive' })
@@ -67,12 +81,16 @@ export function useOperacionalDashboard() {
 
   const deleteProcesso = async (id: string) => {
     if (userRole !== 'admin') {
-      toast({ title: 'Acesso Negado', description: 'Você não tem permissão para deletar.', variant: 'destructive' })
+      toast({
+        title: 'Acesso Negado',
+        description: 'Você não tem permissão para deletar.',
+        variant: 'destructive',
+      })
       return
     }
     try {
       await service.deleteProcesso(id)
-      setProcessos(prev => prev.filter(p => p.id !== id))
+      setProcessos((prev) => prev.filter((p) => p.id !== id))
       toast({ title: 'Sucesso', description: 'Processo deletado com sucesso!' })
     } catch (err) {
       toast({ title: 'Erro', description: 'Erro ao deletar processo.', variant: 'destructive' })
@@ -97,6 +115,6 @@ export function useOperacionalDashboard() {
     deleteProcesso,
     canDelete,
     canExport,
-    canImport
+    canImport,
   }
 }

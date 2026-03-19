@@ -102,7 +102,7 @@ export const mockHistorico: ProcessoHistorico[] = [
     data_anteriores: 'em_elaboracao',
     data_novos: 'em_execucao',
     created: '2023-10-02T15:30:00.000Z',
-  }
+  },
 ]
 
 export const mockDocumentos: ProcessoDocumento[] = [
@@ -113,6 +113,6 @@ export const mockDocumentos: ProcessoDocumento[] = [
     name: 'Boletim_Ocorrencia.pdf',
     size: 1024500,
     created: '2023-10-02T14:00:00.000Z',
-    url: '#'
-  }
+    url: '#',
+  },
 ]

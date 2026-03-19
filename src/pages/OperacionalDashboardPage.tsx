@@ -9,8 +9,16 @@ import { useToast } from '@/hooks/use-toast'
 
 export default function OperacionalDashboardPage() {
   const {
-    processos, loading, filters, pagination, setPagination,
-    setFilters, clearFilters, canExport, canImport, fetchProcessos
+    processos,
+    loading,
+    filters,
+    pagination,
+    setPagination,
+    setFilters,
+    clearFilters,
+    canExport,
+    canImport,
+    fetchProcessos,
   } = useOperacionalDashboard()
 
   const [selectedProcessoId, setSelectedProcessoId] = useState<string | null>(null)
@@ -33,15 +41,19 @@ export default function OperacionalDashboardPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Visão Geral Operacional</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Acompanhamento de todos os processos em andamento</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+            Visão Geral Operacional
+          </h1>
+          <p className="text-muted-foreground mt-1 text-sm">
+            Acompanhamento de todos os processos em andamento
+          </p>
         </div>
       </div>
 
-      <DashboardFilters 
-        filters={filters} 
-        setFilters={setFilters} 
-        clearFilters={clearFilters} 
+      <DashboardFilters
+        filters={filters}
+        setFilters={setFilters}
+        clearFilters={clearFilters}
         onExport={handleExport}
         onImport={handleImport}
         canExport={canExport()}
@@ -50,17 +62,17 @@ export default function OperacionalDashboardPage() {
 
       <DashboardKPIs processos={processos} loading={loading} />
 
-      <ProcessosOperacionaisTable 
-        processos={processos} 
-        loading={loading} 
+      <ProcessosOperacionaisTable
+        processos={processos}
+        loading={loading}
         onViewDetail={setSelectedProcessoId}
         pagination={pagination}
         setPagination={setPagination}
       />
 
-      <ProcessoDetailModal 
-        processoId={selectedProcessoId} 
-        isOpen={!!selectedProcessoId} 
+      <ProcessoDetailModal
+        processoId={selectedProcessoId}
+        isOpen={!!selectedProcessoId}
         onClose={() => setSelectedProcessoId(null)}
         onUpdated={fetchProcessos}
       />

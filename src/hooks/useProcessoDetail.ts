@@ -24,7 +24,7 @@ export function useProcessoDetail() {
       const [procData, histData, docData] = await Promise.all([
         service.fetchProcessoById(id),
         service.fetchHistorico(id),
-        service.fetchDocumentos(id)
+        service.fetchDocumentos(id),
       ])
       if (!procData) throw new Error('Not found')
       setProcesso(procData)
@@ -54,10 +54,17 @@ export function useProcessoDetail() {
       const updated = await service.addObservacao(processo.id, observacao, userName)
       setProcesso(updated)
       // Refresh history mock logic
-      setHistorico(prev => [{
-        id: Math.random().toString(), processo_id: processo.id, tipo_evento: 'observacao_adicionada',
-        descricao: 'Observação adicionada', user_name: userName, created: new Date().toISOString()
-      }, ...prev])
+      setHistorico((prev) => [
+        {
+          id: Math.random().toString(),
+          processo_id: processo.id,
+          tipo_evento: 'observacao_adicionada',
+          descricao: 'Observação adicionada',
+          user_name: userName,
+          created: new Date().toISOString(),
+        },
+        ...prev,
+      ])
       toast({ title: 'Sucesso', description: 'Observação adicionada com sucesso!' })
     } catch (err) {
       toast({ title: 'Erro', description: 'Erro ao adicionar observação.', variant: 'destructive' })
@@ -79,7 +86,7 @@ export function useProcessoDetail() {
     if (!processo) return
     try {
       const doc = await service.uploadDocumento(processo.id, file)
-      setDocumentos(prev => [doc, ...prev])
+      setDocumentos((prev) => [doc, ...prev])
       toast({ title: 'Sucesso', description: 'Documento enviado com sucesso!' })
     } catch (err) {
       toast({ title: 'Erro', description: 'Erro ao enviar documento.', variant: 'destructive' })
@@ -89,22 +96,36 @@ export function useProcessoDetail() {
   const deleteDocumento = async (documentoId: string) => {
     try {
       await service.deleteDocumento(documentoId)
-      setDocumentos(prev => prev.filter(d => d.id !== documentoId))
+      setDocumentos((prev) => prev.filter((d) => d.id !== documentoId))
       toast({ title: 'Sucesso', description: 'Documento deletado com sucesso!' })
     } catch (err) {
       toast({ title: 'Erro', description: 'Erro ao deletar documento.', variant: 'destructive' })
     }
   }
 
-  const canEditProcesso = () => userRole === 'admin' || userRole === 'supervisor' || processo?.user_id === userId
+  const canEditProcesso = () =>
+    userRole === 'admin' || userRole === 'supervisor' || processo?.user_id === userId
   const canDeleteProcesso = () => userRole === 'admin'
   const canAddObservacao = () => true
   const canAddPosicao = () => true
   const canUploadDocumento = () => true
 
   return {
-    processo, historico, documentos, loading, error, fetchProcessoDetail,
-    updateProcesso, addObservacao, addPosicao, uploadDocumento, deleteDocumento,
-    canEditProcesso, canDeleteProcesso, canAddObservacao, canAddPosicao, canUploadDocumento
+    processo,
+    historico,
+    documentos,
+    loading,
+    error,
+    fetchProcessoDetail,
+    updateProcesso,
+    addObservacao,
+    addPosicao,
+    uploadDocumento,
+    deleteDocumento,
+    canEditProcesso,
+    canDeleteProcesso,
+    canAddObservacao,
+    canAddPosicao,
+    canUploadDocumento,
   }
 }
