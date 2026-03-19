@@ -1,15 +1,20 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
 export default function Ajuda() {
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">Ajuda</h1>
-          <p className="text-muted-foreground mt-1 text-sm">Central de suporte e documentação</p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight text-primary">Ajuda e Suporte</h1>
+        <p className="text-muted-foreground mt-1 text-sm">Acesse tutoriais e contato de suporte</p>
       </div>
-      <div className="p-8 text-center border rounded-2xl bg-card">
-        <p className="text-muted-foreground">Página em construção.</p>
-      </div>
+      <Card className="border-none shadow-sm rounded-2xl">
+        <CardHeader>
+          <CardTitle className="text-lg text-primary">Central de Ajuda</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground text-sm">Página em construção.</p>
+        </CardContent>
+      </Card>
     </div>
   )
 }

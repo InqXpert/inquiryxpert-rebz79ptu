@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Search, Upload, Download } from 'lucide-react'
+import { Search, Upload, Download, X } from 'lucide-react'
 
 interface Props {
   filters: any
@@ -29,78 +29,63 @@ export function DashboardFilters({
   canImport,
 }: Props) {
   return (
-    <div className="bg-card border border-border rounded-[8px] p-[16px] flex flex-col md:flex-row gap-[12px] flex-wrap items-center">
-      <div className="relative flex-grow w-full md:w-auto">
-        <Search className="absolute left-[12px] top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+    <div className="flex flex-col md:flex-row gap-4 w-full">
+      <div className="relative flex-1">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar controle, segurado ou placa..."
-          className="pl-[36px] h-[40px] border-border rounded-[6px] text-[13px] bg-transparent focus-visible:ring-1 focus-visible:ring-[hsl(210_60%_25%)]"
+          placeholder="Buscar processos..."
+          className="pl-11 h-12 bg-muted/30 border-none rounded-xl text-sm focus-visible:ring-2 focus-visible:ring-secondary/50"
           value={filters.search}
           onChange={(e) => setFilters({ search: e.target.value })}
-          aria-label="Buscar processos"
         />
       </div>
 
-      <div className="flex flex-wrap lg:flex-nowrap gap-[12px] w-full md:w-auto">
+      <div className="flex flex-wrap sm:flex-nowrap gap-3 items-center">
         <Select value={filters.status} onValueChange={(v) => setFilters({ status: v })}>
-          <SelectTrigger
-            className="h-[40px] border-border rounded-[6px] px-[12px] text-[13px] w-full md:w-[160px] bg-transparent focus:ring-1 focus:ring-[hsl(210_60%_25%)]"
-            aria-label="Filtrar por status"
-          >
+          <SelectTrigger className="h-12 w-full sm:w-[180px] bg-muted/30 border-none rounded-xl">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Todos">Todos os Status</SelectItem>
             <SelectItem value="em_elaboracao">Em Elaboração</SelectItem>
             <SelectItem value="em_execucao">Em Execução</SelectItem>
-            <SelectItem value="finalizado">Finalizado</SelectItem>
+            <SelectItem value="finalizado">Concluído</SelectItem>
             <SelectItem value="cancelado">Cancelado</SelectItem>
-            <SelectItem value="analise_inicial">Análise Inicial</SelectItem>
+            <SelectItem value="analise_inicial">Análise</SelectItem>
           </SelectContent>
         </Select>
 
-        <Input
-          type="date"
-          className="h-[40px] border-border rounded-[6px] px-[12px] text-[13px] w-full md:w-[140px] bg-transparent focus-visible:ring-1 focus-visible:ring-[hsl(210_60%_25%)]"
-          value={filters.data_entrada_from}
-          onChange={(e) => setFilters({ data_entrada_from: e.target.value })}
-          aria-label="Data inicial"
-        />
-        <Input
-          type="date"
-          className="h-[40px] border-border rounded-[6px] px-[12px] text-[13px] w-full md:w-[140px] bg-transparent focus-visible:ring-1 focus-visible:ring-[hsl(210_60%_25%)]"
-          value={filters.data_entrada_to}
-          onChange={(e) => setFilters({ data_entrada_to: e.target.value })}
-          aria-label="Data final"
-        />
-
         <Button
-          variant="outline"
-          className="h-[40px] px-[16px] rounded-[6px] text-muted-foreground w-full md:w-auto font-medium"
+          variant="ghost"
+          size="icon"
+          className="h-12 w-12 rounded-xl text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
           onClick={clearFilters}
-          aria-label="Limpar Filtros"
+          title="Limpar Filtros"
         >
-          Limpar Filtros
+          <X className="w-5 h-5" />
         </Button>
 
-        {canExport && (
-          <Button
-            className="h-[40px] px-[16px] rounded-[6px] bg-[hsl(210_60%_25%)] hover:bg-[hsl(210_60%_35%)] text-white w-full md:w-auto font-medium"
-            onClick={onExport}
-            aria-label="Exportar para Excel"
-          >
-            <Download className="w-4 h-4 mr-2" /> Exportar para Excel
-          </Button>
-        )}
-        {canImport && (
-          <Button
-            className="h-[40px] px-[16px] rounded-[6px] bg-[hsl(210_60%_25%)] hover:bg-[hsl(210_60%_35%)] text-white w-full md:w-auto font-medium"
-            onClick={onImport}
-            aria-label="Importar Dados"
-          >
-            <Upload className="w-4 h-4 mr-2" /> Importar Dados
-          </Button>
-        )}
+        <div className="flex gap-2 w-full sm:w-auto">
+          {canExport && (
+            <Button
+              variant="outline"
+              className="h-12 flex-1 sm:flex-none rounded-xl border-border text-foreground hover:bg-muted/50"
+              onClick={onExport}
+            >
+              <Download className="w-4 h-4 sm:mr-2" />{' '}
+              <span className="hidden sm:inline">Exportar</span>
+            </Button>
+          )}
+          {canImport && (
+            <Button
+              className="h-12 flex-1 sm:flex-none rounded-xl bg-secondary text-white hover:bg-secondary/90 font-semibold shadow-sm"
+              onClick={onImport}
+            >
+              <Upload className="w-4 h-4 sm:mr-2" />{' '}
+              <span className="hidden sm:inline">Importar</span>
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   )

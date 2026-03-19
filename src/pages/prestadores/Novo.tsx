@@ -10,6 +10,7 @@ import { createPrestador } from '@/services/prestadores'
 import { getErrorMessage } from '@/lib/pocketbase/errors'
 import { useState, useEffect } from 'react'
 import { ImportedFieldsContext } from '@/components/prestadores/FormHelpers'
+import { ChevronLeft, Save } from 'lucide-react'
 
 export default function NovoPrestador() {
   const navigate = useNavigate()
@@ -64,22 +65,45 @@ export default function NovoPrestador() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto pb-20">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Cadastro de Prestador</h1>
-        <div className="flex gap-4">
-          <Button variant="outline" onClick={() => navigate(-1)} disabled={saving}>
+    <div className="max-w-5xl mx-auto pb-20 space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-2 text-muted-foreground hover:text-primary hover:bg-transparent px-0 mb-2"
+            onClick={() => navigate(-1)}
+          >
+            <ChevronLeft className="w-4 h-4" />
+            Voltar
+          </Button>
+          <h1 className="text-3xl font-bold text-primary tracking-tight">Cadastro de Prestador</h1>
+        </div>
+        <div className="flex gap-3 w-full sm:w-auto">
+          <Button
+            variant="outline"
+            onClick={() => navigate(-1)}
+            disabled={saving}
+            className="flex-1 sm:flex-none h-12 rounded-xl"
+          >
             Cancelar
           </Button>
           <Button
             onClick={form.handleSubmit(onSubmit)}
-            className="rounded-full px-8"
+            className="flex-1 sm:flex-none h-12 px-8 bg-secondary text-white hover:bg-secondary/90 rounded-xl font-semibold shadow-sm"
             disabled={saving}
           >
-            {saving ? 'Salvando...' : 'Salvar'}
+            {saving ? (
+              'Salvando...'
+            ) : (
+              <>
+                <Save className="w-4 h-4 mr-2" /> Salvar Prestador
+              </>
+            )}
           </Button>
         </div>
       </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <ImportedFieldsContext.Provider value={importedFields}>

@@ -1,0 +1,9 @@
+import { r as createLucideIcon } from "./client-riYRmEzR.js";
+var ChevronLeft = createLucideIcon("chevron-left", [["path", {
+	d: "m15 18-6-6 6-6",
+	key: "1wnfg3"
+}]]);
+//#endregion
+export { ChevronLeft as t };
+
+//# sourceMappingURL=chevron-left-Dr0W9006.js.map

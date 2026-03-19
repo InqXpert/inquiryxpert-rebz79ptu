@@ -10,10 +10,12 @@ export function FormContent() {
   const naBlackList = watch('naBlackList')
 
   return (
-    <div className="grid gap-8">
-      <Card className="rounded-2xl shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-xl text-primary">Dados Cadastrais do Prestador</CardTitle>
+    <div className="grid gap-6">
+      <Card className="rounded-2xl shadow-sm border-none">
+        <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+          <CardTitle className="text-lg font-semibold text-primary">
+            Dados Cadastrais do Prestador
+          </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <FInput name="nomeCompleto" label="Nome completo" />
@@ -27,7 +29,7 @@ export function FormContent() {
           {notaTerceiros === 'Sim' && (
             <FInput name="vinculoTerceiroNf" label="Qual o vínculo do terceiro (NF)?" />
           )}
-          <div className="col-span-full border-t my-2" />
+          <div className="col-span-full border-t border-muted/50 my-2" />
           <FInput name="baseAtendimento" label="Base de atendimento" />
           <FInput name="regiaoAbrangencia" label="Região de abrangência" />
           <FInput name="cepBase" label="CEP de saída da base" />
@@ -36,17 +38,19 @@ export function FormContent() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card className="rounded-2xl shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-xl text-primary">Dados Bancários</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="rounded-2xl shadow-sm border-none">
+          <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+            <CardTitle className="text-lg font-semibold text-primary">Dados Bancários</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <FInput name="banco" label="Banco" />
             <FInput name="agencia" label="Agência" />
             <FInput name="conta" label="Conta" />
             <FInput name="titularConta" label="Titular da conta" />
-            <FInput name="chavePix" label="Chave Pix" />
+            <div className="sm:col-span-2">
+              <FInput name="chavePix" label="Chave Pix" />
+            </div>
             <FSimNao name="dadosBancariosTerceiros" label="Bancários de terceiros?" />
             {dadosBancariosTerceiros === 'Sim' && (
               <FInput name="vinculoTerceiroBanco" label="Qual o vínculo?" />
@@ -54,9 +58,11 @@ export function FormContent() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-xl text-primary">Condições Comerciais</CardTitle>
+        <Card className="rounded-2xl shadow-sm border-none">
+          <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+            <CardTitle className="text-lg font-semibold text-primary">
+              Condições Comerciais
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <FInput name="valorHonorario" label="Valor do honorário (R$)" type="number" />
@@ -65,10 +71,12 @@ export function FormContent() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <Card className="rounded-2xl shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-xl text-primary">Status do Prestador</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="rounded-2xl shadow-sm border-none">
+          <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+            <CardTitle className="text-lg font-semibold text-primary">
+              Status do Prestador
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <FSimNao name="ativo" label="Prestador ativo?" />
@@ -83,13 +91,13 @@ export function FormContent() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-xl text-primary">Outras Informações</CardTitle>
+        <Card className="rounded-2xl shadow-sm border-none">
+          <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+            <CardTitle className="text-lg font-semibold text-primary">Outras Informações</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-6">
-            <FTextarea name="outrasEmpresas" label="Outras empresas onde presta serviço" />
             <FInput name="origemIndicacao" label="De onde veio a indicação" />
+            <FTextarea name="outrasEmpresas" label="Outras empresas onde presta serviço" />
             <FTextarea name="observacoes" label="Observações" />
           </CardContent>
         </Card>

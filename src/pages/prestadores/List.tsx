@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, AlertTriangle, ChevronDown, Pencil, Upload } from 'lucide-react'
+import { Search, AlertTriangle, ChevronDown, Pencil, Upload, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -49,30 +49,31 @@ export default function PrestadoresList() {
 
   return (
     <div className="flex flex-col gap-6 h-full">
-      <div className="flex justify-between items-end">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Prestadores</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-primary">Prestadores</h1>
           <p className="text-muted-foreground mt-1">Gerencie a rede de prestadores externos.</p>
         </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="rounded-full shadow-elevation px-6">
-              Novo Prestador <ChevronDown className="w-5 h-5 ml-2" />
+            <Button className="rounded-xl shadow-sm px-6 bg-secondary text-white hover:bg-secondary/90 font-semibold h-12">
+              <UserPlus className="w-5 h-5 mr-2" /> Novo Prestador{' '}
+              <ChevronDown className="w-5 h-5 ml-2" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-56 rounded-xl border-border shadow-md">
             <DropdownMenuItem
-              className="cursor-pointer py-2"
+              className="cursor-pointer py-3 font-medium text-primary hover:bg-muted focus:bg-muted"
               onClick={() => navigate('/prestadores/novo')}
             >
-              <Pencil className="w-4 h-4 mr-2" /> Preencher Manualmente
+              <Pencil className="w-4 h-4 mr-3" /> Preencher Manualmente
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="cursor-pointer py-2"
+              className="cursor-pointer py-3 font-medium text-primary hover:bg-muted focus:bg-muted"
               onClick={() => setIsImportModalOpen(true)}
             >
-              <Upload className="w-4 h-4 mr-2" /> Importar Planilha
+              <Upload className="w-4 h-4 mr-3" /> Importar Planilha
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -80,17 +81,17 @@ export default function PrestadoresList() {
 
       <Card className="p-4 flex flex-wrap gap-4 shadow-sm rounded-2xl border-none">
         <div className="flex-1 min-w-[200px] relative">
-          <Search className="absolute left-3 top-3 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Buscar por nome ou CPF..."
-            className="pl-9 bg-background border-none"
+            className="pl-11 h-12 bg-muted/30 border-none rounded-xl text-sm focus-visible:ring-2 focus-visible:ring-secondary/50"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="w-48">
+        <div className="w-full sm:w-48">
           <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="bg-background border-none">
+            <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
@@ -100,9 +101,9 @@ export default function PrestadoresList() {
             </SelectContent>
           </Select>
         </div>
-        <div className="w-48">
+        <div className="w-full sm:w-48">
           <Select value={blacklist} onValueChange={setBlacklist}>
-            <SelectTrigger className="bg-background border-none">
+            <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl">
               <SelectValue placeholder="Black List" />
             </SelectTrigger>
             <SelectContent>
@@ -114,72 +115,80 @@ export default function PrestadoresList() {
         </div>
       </Card>
 
-      <Card className="rounded-2xl shadow-elevation border-none overflow-hidden flex-1 flex flex-col">
+      <Card className="rounded-2xl shadow-sm border-none overflow-hidden flex-1 flex flex-col">
         {loading ? (
-          <div className="flex-1 flex items-center justify-center py-20 text-muted-foreground">
+          <div className="flex-1 flex items-center justify-center py-20 text-muted-foreground animate-pulse">
             Carregando prestadores...
           </div>
         ) : filtered.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
-            <img
-              src="https://img.usecurling.com/p/200/200?q=empty%20box&color=gray"
-              alt="Empty"
-              className="opacity-50 mb-6 w-32"
-            />
-            <h3 className="text-xl font-semibold text-foreground">Nenhum prestador encontrado</h3>
-            <p>Tente ajustar os filtros ou adicione um novo.</p>
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+              <Search className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-bold text-primary mb-1">Nenhum prestador encontrado</h3>
+            <p className="text-sm">Tente ajustar os filtros ou adicione um novo.</p>
           </div>
         ) : (
           <div className="overflow-auto flex-1">
             <Table>
-              <TableHeader className="bg-muted/50">
-                <TableRow className="border-b-muted">
-                  <TableHead className="pl-6">Nome Completo</TableHead>
-                  <TableHead>CPF/CNPJ</TableHead>
-                  <TableHead>Região</TableHead>
-                  <TableHead>Honorário</TableHead>
-                  <TableHead>Status</TableHead>
+              <TableHeader className="bg-muted/30">
+                <TableRow className="border-b-border">
+                  <TableHead className="pl-6 py-4 font-semibold text-muted-foreground">
+                    Nome Completo
+                  </TableHead>
+                  <TableHead className="py-4 font-semibold text-muted-foreground">
+                    CPF/CNPJ
+                  </TableHead>
+                  <TableHead className="py-4 font-semibold text-muted-foreground">Região</TableHead>
+                  <TableHead className="py-4 font-semibold text-muted-foreground">
+                    Honorário
+                  </TableHead>
+                  <TableHead className="py-4 font-semibold text-muted-foreground">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filtered.map((p) => (
                   <TableRow
                     key={p.id}
-                    className="cursor-pointer hover:bg-muted/30 border-b-border/50"
+                    className="cursor-pointer hover:bg-muted/20 border-b-border/50 transition-colors"
                     onClick={() => navigate(`/prestadores/${p.id}`)}
                   >
-                    <TableCell className="pl-6 font-medium text-primary py-4 flex items-center gap-3">
+                    <TableCell className="pl-6 font-semibold text-primary py-4 flex items-center gap-4">
                       <img
                         src={`https://img.usecurling.com/ppl/thumbnail?seed=${p.id}&gender=male`}
-                        className="w-8 h-8 rounded-full bg-muted"
+                        className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
                         alt="Avatar"
                       />
                       {p.nomeCompleto}
                     </TableCell>
-                    <TableCell>{p.cpf || p.cnpj}</TableCell>
-                    <TableCell>{p.regiaoAbrangencia}</TableCell>
-                    <TableCell className="font-medium text-accent-foreground">
+                    <TableCell className="text-muted-foreground font-medium">
+                      {p.cpf || p.cnpj || '-'}
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {p.regiaoAbrangencia || '-'}
+                    </TableCell>
+                    <TableCell className="font-bold text-primary">
                       R$ {Number(p.valorHonorario || 0).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       {p.naBlackList === 'Sim' ? (
                         <Badge
                           variant="destructive"
-                          className="bg-destructive/10 text-destructive border-0 hover:bg-destructive/20"
+                          className="bg-destructive/10 text-destructive border-0 hover:bg-destructive/20 font-bold px-3 py-1"
                         >
-                          <AlertTriangle className="w-3 h-3 mr-1" /> Black List
+                          <AlertTriangle className="w-3 h-3 mr-1.5" /> Black List
                         </Badge>
                       ) : p.ativo === 'Sim' ? (
                         <Badge
                           variant="secondary"
-                          className="bg-secondary/10 text-secondary-foreground border-0 hover:bg-secondary/20"
+                          className="bg-secondary/10 text-secondary border-0 hover:bg-secondary/20 font-bold px-3 py-1"
                         >
                           Ativo
                         </Badge>
                       ) : (
                         <Badge
                           variant="outline"
-                          className="text-muted-foreground border-muted-foreground/30"
+                          className="text-muted-foreground border-muted-foreground/30 font-bold px-3 py-1"
                         >
                           Inativo
                         </Badge>
