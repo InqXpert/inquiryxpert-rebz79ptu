@@ -103,6 +103,18 @@ export function useProcessoDetail() {
     }
   }
 
+  const removeProcesso = async () => {
+    if (!processo) return false
+    try {
+      await service.deleteProcesso(processo.id)
+      toast({ title: 'Sucesso', description: 'Processo excluído com sucesso!' })
+      return true
+    } catch (err) {
+      toast({ title: 'Erro', description: 'Erro ao excluir processo.', variant: 'destructive' })
+      return false
+    }
+  }
+
   const canEditProcesso = () =>
     userRole === 'admin' || userRole === 'supervisor' || processo?.user_id === userId
   const canDeleteProcesso = () => userRole === 'admin'
@@ -122,6 +134,7 @@ export function useProcessoDetail() {
     addPosicao,
     uploadDocumento,
     deleteDocumento,
+    removeProcesso,
     canEditProcesso,
     canDeleteProcesso,
     canAddObservacao,

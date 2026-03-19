@@ -118,7 +118,7 @@ export const deleteDocumento = async (documentoId: string): Promise<boolean> => 
   return true
 }
 
-export const exportToExcel = async (processos: ProcessoOperacional[]): Promise<boolean> => {
+export const exportToCSV = async (processos: ProcessoOperacional[]): Promise<boolean> => {
   try {
     const headers = [
       'numero_controle',
@@ -134,16 +134,31 @@ export const exportToExcel = async (processos: ProcessoOperacional[]): Promise<b
       'resultado',
     ]
 
-    const dataRows = processos.map((p) => headers.map((k) => (p as any)[k] || ''))
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...dataRows])
-    const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Processos')
+    const dataRows = processos.map((p) => {
+      return headers
+        .map((k) => {
+          let val = (p as any)[k] || ''
+          val = String(val).replace(/"/g, '""')
+          return `"${val}"`
+        })
+        .join(',')
+    })
 
+    const csvContent = [headers.join(','), ...dataRows].join('\n')
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
     const dateStr = new Date().toISOString().split('T')[0]
-    XLSX.writeFile(workbook, `processos-operacionais-${dateStr}.xlsx`)
+
+    link.setAttribute('href', url)
+    link.setAttribute('download', `processos-operacionais-${dateStr}.csv`)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
     return true
   } catch (err) {
-    throw new Error('Erro ao exportar')
+    throw new Error('Erro ao exportar CSV')
   }
 }
 

@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { prestadorSchema, PrestadorFormValues } from '@/schemas/prestador'
@@ -6,25 +6,18 @@ import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { FormContent } from './FormContent'
-import { createPrestador } from '@/services/prestadores'
+import { getPrestador, updatePrestador } from '@/services/prestadores'
 import { getErrorMessage } from '@/lib/pocketbase/errors'
 import { useState, useEffect } from 'react'
 import { ImportedFieldsContext } from '@/components/prestadores/FormHelpers'
-import { ChevronLeft, Save, Upload } from 'lucide-react'
-import { ImportProviderModal } from '@/components/providers/ImportProviderModal'
+import { ChevronLeft, Save } from 'lucide-react'
 
-export default function NovoPrestador() {
+export default function EditPrestador() {
+  const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const location = useLocation()
   const { toast } = useToast()
   const [saving, setSaving] = useState(false)
-  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
-
-  const [initialData] = useState(() => location.state?.importedData || {})
-  const [importedFields, setImportedFields] = useState<string[]>(() => {
-    const data = location.state?.importedData || {}
-    return Object.keys(data).filter((k) => data[k] !== undefined && data[k] !== '')
-  })
+  const [loading, setLoading] = useState(true)
 
   const form = useForm<PrestadorFormValues>({
     resolver: zodResolver(prestadorSchema),
@@ -35,28 +28,33 @@ export default function NovoPrestador() {
       dadosBancariosTerceiros: 'Não',
       ativo: 'Sim',
       naBlackList: 'Não',
-      ...initialData,
     },
   })
 
   useEffect(() => {
-    if (location.state?.showImportSuccess && location.state?.importedData) {
-      toast({
-        title: 'Sucesso',
-        description: 'Planilha importada com sucesso! Revise os dados antes de salvar.',
-      })
-      const data = location.state.importedData
-      form.reset({ ...form.getValues(), ...data })
-      setImportedFields(Object.keys(data).filter((k) => data[k] !== undefined && data[k] !== ''))
-      navigate(location.pathname, { replace: true, state: {} })
+    if (id) {
+      getPrestador(id)
+        .then((data) => {
+          form.reset(data as unknown as PrestadorFormValues)
+          setLoading(false)
+        })
+        .catch(() => {
+          toast({
+            title: 'Erro',
+            description: 'Não foi possível carregar o prestador',
+            variant: 'destructive',
+          })
+          navigate('/prestadores')
+        })
     }
-  }, [location.state, navigate, toast, form])
+  }, [id, form, navigate, toast])
 
   const onSubmit = async (data: PrestadorFormValues) => {
+    if (!id) return
     setSaving(true)
     try {
-      await createPrestador(data as any)
-      toast({ title: 'Sucesso', description: 'Prestador cadastrado com sucesso!' })
+      await updatePrestador(id, data as any)
+      toast({ title: 'Sucesso', description: 'Prestador atualizado com sucesso!' })
       navigate('/prestadores')
     } catch (error) {
       toast({
@@ -67,6 +65,14 @@ export default function NovoPrestador() {
     } finally {
       setSaving(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center py-20 text-muted-foreground animate-pulse">
+        Carregando prestador...
+      </div>
+    )
   }
 
   return (
@@ -82,18 +88,9 @@ export default function NovoPrestador() {
             <ChevronLeft className="w-4 h-4" />
             Voltar
           </Button>
-          <h1 className="text-3xl font-bold text-primary tracking-tight">Cadastro de Prestador</h1>
+          <h1 className="text-3xl font-bold text-primary tracking-tight">Editar Prestador</h1>
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
-          <Button
-            variant="outline"
-            type="button"
-            onClick={() => setIsImportModalOpen(true)}
-            disabled={saving}
-            className="flex-1 sm:flex-none h-12 rounded-xl"
-          >
-            <Upload className="w-4 h-4 mr-2" /> Importar e Preencher
-          </Button>
           <Button
             variant="outline"
             type="button"
@@ -112,7 +109,7 @@ export default function NovoPrestador() {
               'Salvando...'
             ) : (
               <>
-                <Save className="w-4 h-4 mr-2" /> Salvar Prestador
+                <Save className="w-4 h-4 mr-2" /> Salvar Alterações
               </>
             )}
           </Button>
@@ -121,13 +118,11 @@ export default function NovoPrestador() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <ImportedFieldsContext.Provider value={importedFields}>
+          <ImportedFieldsContext.Provider value={[]}>
             <FormContent />
           </ImportedFieldsContext.Provider>
         </form>
       </Form>
-
-      <ImportProviderModal open={isImportModalOpen} onOpenChange={setIsImportModalOpen} />
     </div>
   )
 }

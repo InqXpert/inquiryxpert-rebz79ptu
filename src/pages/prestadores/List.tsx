@@ -144,6 +144,9 @@ export default function PrestadoresList() {
                     Honorário
                   </TableHead>
                   <TableHead className="py-4 font-semibold text-muted-foreground">Status</TableHead>
+                  <TableHead className="py-4 font-semibold text-muted-foreground text-right pr-6">
+                    Ações
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -193,6 +196,19 @@ export default function PrestadoresList() {
                           Inativo
                         </Badge>
                       )}
+                    </TableCell>
+                    <TableCell className="text-right pr-6">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-muted"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          navigate(`/prestadores/${p.id}/edit`)
+                        }}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

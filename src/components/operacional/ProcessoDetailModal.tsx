@@ -5,6 +5,17 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -36,6 +47,7 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
     addPosicao,
     uploadDocumento,
     deleteDocumento,
+    removeProcesso,
     canEditProcesso,
     canDeleteProcesso,
     canAddObservacao,
@@ -48,6 +60,14 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
       fetchProcessoDetail(processoId)
     }
   }, [isOpen, processoId, fetchProcessoDetail])
+
+  const handleDelete = async () => {
+    const success = await removeProcesso()
+    if (success) {
+      onUpdated()
+      onClose()
+    }
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -144,12 +164,36 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
               </div>
             </Tabs>
 
-            <div className="flex flex-row gap-[12px] justify-end mt-[24px]">
-              {canDeleteProcesso() && (
-                <Button variant="destructive" className="h-[40px] px-[20px]" onClick={() => {}}>
-                  Excluir Processo
-                </Button>
-              )}
+            <div className="flex flex-row gap-[12px] justify-between mt-[24px]">
+              <div>
+                {canDeleteProcesso() && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive" className="h-[40px] px-[20px]">
+                        Excluir Processo
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Confirmação</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Tem certeza que deseja excluir este processo? Esta ação não pode ser
+                          desfeita.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={handleDelete}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          Excluir
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </div>
               <Button variant="outline" className="h-[40px] px-[20px]" onClick={onClose}>
                 Fechar
               </Button>

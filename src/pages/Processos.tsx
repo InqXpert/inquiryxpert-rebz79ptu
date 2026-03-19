@@ -4,7 +4,7 @@ import { ProcessosOperacionaisTable } from '@/components/operacional/ProcessosOp
 import { DashboardFilters } from '@/components/operacional/DashboardFilters'
 import { ProcessoDetailModal } from '@/components/operacional/ProcessoDetailModal'
 import { ImportOperacionalDataModal } from '@/components/operacional/ImportOperacionalDataModal'
-import { exportToExcel } from '@/services/procesosOperacionais'
+import { exportToCSV } from '@/services/procesosOperacionais'
 import { useToast } from '@/hooks/use-toast'
 import { Card } from '@/components/ui/card'
 
@@ -28,8 +28,8 @@ export default function Processos() {
 
   const handleExport = async () => {
     try {
-      await exportToExcel(processos)
-      toast({ title: 'Sucesso', description: 'Planilha exportada com sucesso!' })
+      await exportToCSV(processos)
+      toast({ title: 'Sucesso', description: 'Arquivo CSV exportado com sucesso!' })
     } catch (e) {
       toast({ title: 'Erro', description: 'Erro ao exportar.', variant: 'destructive' })
     }
