@@ -2,6 +2,8 @@ export type SimNao = 'Sim' | 'Não'
 
 export interface Prestador {
   id: string
+  created?: string
+  updated?: string
   // 1. Dados Cadastrais
   nomeCompleto: string
   dataNascimento: string

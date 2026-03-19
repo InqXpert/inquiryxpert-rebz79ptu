@@ -1,24 +1,59 @@
+import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { Edit, Trash, MapPin, Phone, Mail, Building, AlertCircle } from 'lucide-react'
-import { useAppContext } from '@/store/AppContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { getPrestador, deletePrestador } from '@/services/prestadores'
+import { Prestador } from '@/types'
+import { useToast } from '@/hooks/use-toast'
+import { useRealtime } from '@/hooks/use-realtime'
 
 export default function ProfilePrestador() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { prestadores, deletePrestador } = useAppContext()
+  const { toast } = useToast()
+  const [p, setP] = useState<Prestador | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const p = prestadores.find((p) => p.id === id)
-  if (!p) return <div className="p-8 text-center text-xl">Prestador não encontrado.</div>
-
-  const handleDelete = () => {
-    if (confirm('Tem certeza que deseja remover este prestador?')) {
-      deletePrestador(id!)
+  const loadData = async () => {
+    if (!id) return
+    try {
+      const data = await getPrestador(id)
+      setP(data)
+    } catch (err) {
+      toast({ title: 'Erro', description: 'Prestador não encontrado', variant: 'destructive' })
       navigate('/prestadores')
+    } finally {
+      setLoading(false)
     }
   }
+
+  useEffect(() => {
+    loadData()
+  }, [id])
+
+  useRealtime('prestadores', (e) => {
+    if (e.record.id === id) {
+      if (e.action === 'delete') navigate('/prestadores')
+      else loadData()
+    }
+  })
+
+  const handleDelete = async () => {
+    if (confirm('Tem certeza que deseja remover este prestador?')) {
+      try {
+        await deletePrestador(id!)
+        toast({ title: 'Removido', description: 'Prestador deletado com sucesso.' })
+        navigate('/prestadores')
+      } catch (err) {
+        toast({ title: 'Erro', description: 'Falha ao remover.', variant: 'destructive' })
+      }
+    }
+  }
+
+  if (loading) return <div className="p-8 text-center">Carregando...</div>
+  if (!p) return <div className="p-8 text-center text-xl">Prestador não encontrado.</div>
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -96,11 +131,11 @@ export default function ProfilePrestador() {
             </h3>
             <div>
               <p className="text-sm text-muted-foreground">Valor Honorário</p>
-              <p className="font-medium text-xl">R$ {p.valorHonorario.toFixed(2)}</p>
+              <p className="font-medium text-xl">R$ {Number(p.valorHonorario || 0).toFixed(2)}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Valor KM</p>
-              <p className="font-medium">R$ {p.valorKm.toFixed(2)}</p>
+              <p className="font-medium">R$ {Number(p.valorKm || 0).toFixed(2)}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Banco / Chave Pix</p>

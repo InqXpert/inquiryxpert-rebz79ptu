@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Search, Plus, Filter, AlertTriangle } from 'lucide-react'
-import { useAppContext } from '@/store/AppContext'
+import { Search, Plus, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -21,9 +20,10 @@ import {
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
+import { usePrestadores } from '@/hooks/use-prestadores'
 
 export default function PrestadoresList() {
-  const { prestadores } = useAppContext()
+  const { prestadores, loading } = usePrestadores()
   const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
@@ -32,7 +32,8 @@ export default function PrestadoresList() {
 
   const filtered = prestadores.filter((p) => {
     const matchSearch =
-      p.nomeCompleto.toLowerCase().includes(search.toLowerCase()) || p.cpf.includes(search)
+      p.nomeCompleto.toLowerCase().includes(search.toLowerCase()) ||
+      (p.cpf && p.cpf.includes(search))
     const matchStatus = status === 'Todos' || p.ativo === status
     const matchBl = blacklist === 'Todos' || p.naBlackList === blacklist
     return matchSearch && matchStatus && matchBl
@@ -89,7 +90,11 @@ export default function PrestadoresList() {
       </Card>
 
       <Card className="rounded-2xl shadow-elevation border-none overflow-hidden flex-1 flex flex-col">
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex-1 flex items-center justify-center py-20 text-muted-foreground">
+            Carregando prestadores...
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground">
             <img
               src="https://img.usecurling.com/p/200/200?q=empty%20box&color=gray"
@@ -122,13 +127,14 @@ export default function PrestadoresList() {
                       <img
                         src={`https://img.usecurling.com/ppl/thumbnail?seed=${p.id}&gender=male`}
                         className="w-8 h-8 rounded-full bg-muted"
+                        alt="Avatar"
                       />
                       {p.nomeCompleto}
                     </TableCell>
                     <TableCell>{p.cpf || p.cnpj}</TableCell>
                     <TableCell>{p.regiaoAbrangencia}</TableCell>
                     <TableCell className="font-medium text-accent-foreground">
-                      R$ {p.valorHonorario.toFixed(2)}
+                      R$ {Number(p.valorHonorario || 0).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       {p.naBlackList === 'Sim' ? (

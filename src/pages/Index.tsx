@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { PieChart, Pie, Cell } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
-import { useAppContext } from '@/store/AppContext'
+import { usePrestadores } from '@/hooks/use-prestadores'
 
 const chartConfig = {
   ativos: { label: 'Ativos', color: 'hsl(var(--secondary))' },
@@ -12,7 +12,10 @@ const chartConfig = {
 }
 
 export default function Dashboard() {
-  const { prestadores } = useAppContext()
+  const { prestadores, loading } = usePrestadores()
+
+  if (loading)
+    return <div className="p-8 text-center text-muted-foreground">Carregando métricas...</div>
 
   const ativosCount = prestadores.filter((p) => p.ativo === 'Sim').length
   const totalCount = prestadores.length

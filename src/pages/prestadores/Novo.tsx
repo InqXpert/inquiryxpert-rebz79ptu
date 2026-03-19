@@ -2,16 +2,18 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { prestadorSchema, PrestadorFormValues } from '@/schemas/prestador'
-import { useAppContext } from '@/store/AppContext'
 import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { FormContent } from './FormContent'
+import { createPrestador } from '@/services/prestadores'
+import { getErrorMessage } from '@/lib/pocketbase/errors'
+import { useState } from 'react'
 
 export default function NovoPrestador() {
-  const { addPrestador } = useAppContext()
   const navigate = useNavigate()
   const { toast } = useToast()
+  const [saving, setSaving] = useState(false)
 
   const form = useForm<PrestadorFormValues>({
     resolver: zodResolver(prestadorSchema),
@@ -25,10 +27,21 @@ export default function NovoPrestador() {
     },
   })
 
-  const onSubmit = (data: PrestadorFormValues) => {
-    addPrestador({ ...data, id: Date.now().toString() } as any)
-    toast({ title: 'Sucesso', description: 'Prestador cadastrado com sucesso!' })
-    navigate('/prestadores')
+  const onSubmit = async (data: PrestadorFormValues) => {
+    setSaving(true)
+    try {
+      await createPrestador(data as any)
+      toast({ title: 'Sucesso', description: 'Prestador cadastrado com sucesso!' })
+      navigate('/prestadores')
+    } catch (error) {
+      toast({
+        title: 'Erro ao salvar',
+        description: getErrorMessage(error),
+        variant: 'destructive',
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -36,11 +49,15 @@ export default function NovoPrestador() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Cadastro de Prestador</h1>
         <div className="flex gap-4">
-          <Button variant="outline" onClick={() => navigate(-1)}>
+          <Button variant="outline" onClick={() => navigate(-1)} disabled={saving}>
             Cancelar
           </Button>
-          <Button onClick={form.handleSubmit(onSubmit)} className="rounded-full px-8">
-            Salvar
+          <Button
+            onClick={form.handleSubmit(onSubmit)}
+            className="rounded-full px-8"
+            disabled={saving}
+          >
+            {saving ? 'Salvando...' : 'Salvar'}
           </Button>
         </div>
       </div>
