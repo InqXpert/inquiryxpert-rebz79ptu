@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/OperacionalDashboardPage-omoNC4X4.js","assets/jsx-runtime-huLxtCwt.js","assets/Processos-B4XYN9h5.js","assets/Relatorios-ud8Hv5Gk.js","assets/Configuracoes-D-ZZOkoB.js","assets/Ajuda-CAKBiVPB.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/OperacionalDashboardPage-Augxt6yg.js","assets/jsx-runtime-huLxtCwt.js","assets/Processos-B4XYN9h5.js","assets/Relatorios-ud8Hv5Gk.js","assets/Configuracoes-D-ZZOkoB.js","assets/Ajuda-CAKBiVPB.js"])))=>i.map(i=>d[i]);
 import { i as __toESM, n as require_react, r as __commonJSMin, t as require_jsx_runtime } from "./jsx-runtime-huLxtCwt.js";
 //#region \0vite/modulepreload-polyfill.js
 (function polyfill() {
@@ -23877,7 +23877,7 @@ function AppSidebar() {
 				"data-uid": "src/components/Layout.tsx:45:9",
 				"data-prohibitions": "[]",
 				className: "text-2xl font-bold text-primary flex items-center h-full tracking-tight",
-				children: "Organix"
+				children: "Inquiry Xperty"
 			})
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SidebarContent, {
 			"data-uid": "src/components/Layout.tsx:49:7",
@@ -25309,7 +25309,7 @@ var AuthProvider = ({ children }) => {
 };
 //#endregion
 //#region src/App.tsx
-var OperacionalDashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./OperacionalDashboardPage-omoNC4X4.js"), __vite__mapDeps([0,1])));
+var OperacionalDashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./OperacionalDashboardPage-Augxt6yg.js"), __vite__mapDeps([0,1])));
 var Processos = (0, import_react.lazy)(() => __vitePreload(() => import("./Processos-B4XYN9h5.js"), __vite__mapDeps([2,1])));
 var Relatorios = (0, import_react.lazy)(() => __vitePreload(() => import("./Relatorios-ud8Hv5Gk.js"), __vite__mapDeps([3,1])));
 var Configuracoes = (0, import_react.lazy)(() => __vitePreload(() => import("./Configuracoes-D-ZZOkoB.js"), __vite__mapDeps([4,1])));
@@ -25428,4 +25428,4 @@ function App() {
 //#endregion
 export { useId as A, Search as B, Portal$1 as C, Primitive as D, useCallbackRef$1 as E, Input as F, require_react_dom as H, Button as I, cn as L, createContextScope$1 as M, composeEventHandlers as N, createSlot as O, Primitive$1 as P, useComposedRefs as R, Presence as S, DismissableLayer as T, createLucideIcon as V, Title as _, Anchor as a, ReactRemoveScroll as b, Root2 as c, Close as d, Content$1 as f, Root$3 as g, Portal as h, VISUALLY_HIDDEN_STYLES as i, useLayoutEffect2 as j, useControllableState as k, createPopperScope as l, Overlay as m, pb as n, Arrow as o, Description as p, createContextScope as r, Content as s, useAuth as t, Skeleton as u, Trigger$1 as v, FocusScope as w, useFocusGuards as x, hideOthers as y, X as z };
 
-//# sourceMappingURL=index-BCL80ebu.js.map
+//# sourceMappingURL=index-CP3I8Np7.js.map

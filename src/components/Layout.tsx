@@ -43,7 +43,7 @@ function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="h-16 flex justify-center px-6 border-b border-sidebar-border/50">
         <h1 className="text-2xl font-bold text-primary flex items-center h-full tracking-tight">
-          Organix
+          Inquiry Xperty
         </h1>
       </SidebarHeader>
       <SidebarContent className="py-4">
