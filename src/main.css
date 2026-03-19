@@ -6,75 +6,85 @@
 
 @layer base {
   :root {
-    /* Design System Colors */
-    --background: 165 40% 98%; /* #f8fcfb */
-    --foreground: 235 44% 23%; /* #202453 */
+    --background: 0 0% 100%;
+    --foreground: 210 20% 20%;
 
-    --card: 0 0% 100%; /* #ffffff */
-    --card-foreground: 235 44% 23%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 20% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 235 44% 23%;
+    --popover-foreground: 210 20% 20%;
 
-    --primary: 235 44% 23%; /* #202453 Navy */
+    --primary: 210 60% 25%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 183 66% 49%; /* #2bc8cf Cyan */
+    --secondary: 180 100% 50%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 240 14% 93%; /* #eaeaef */
-    --muted-foreground: 235 20% 50%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 210 15% 45%;
 
-    --accent: 173 34% 77%; /* #b1dad5 Teal */
-    --accent-foreground: 235 44% 23%;
+    --accent: 10 100% 60%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 352 89% 59%; /* #f43b53 Red */
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 14% 93%; /* #eaeaef */
-    --input: 240 14% 93%;
-    --ring: 183 66% 49%; /* Cyan focus ring */
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 210 60% 25%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Sidebar - Dark Navy Theme */
-    --sidebar-background: 235 44% 23%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 183 66% 49%;
+    /* Sidebar */
+    --sidebar-background: 210 20% 96%;
+    --sidebar-foreground: 210 20% 20%;
+    --sidebar-primary: 210 60% 25%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 235 30% 35%;
-    --sidebar-accent-foreground: 183 66% 49%;
-    --sidebar-border: 235 30% 35%;
-    --sidebar-ring: 183 66% 49%;
-
-    /* Charts */
-    --chart-1: 183 66% 49%; /* Cyan */
-    --chart-2: 173 34% 77%; /* Teal */
-    --chart-3: 352 89% 59%; /* Red */
-    --chart-4: 235 44% 23%; /* Navy */
-    --chart-5: 240 14% 93%; /* Gray */
+    --sidebar-accent: 210 20% 90%;
+    --sidebar-accent-foreground: 210 20% 20%;
+    --sidebar-border: 210 20% 90%;
+    --sidebar-ring: 210 60% 25%;
   }
 
   .dark {
-    --background: 235 44% 15%;
+    --background: 210 20% 10%;
     --foreground: 0 0% 100%;
-    --card: 235 44% 20%;
+
+    --card: 210 20% 10%;
     --card-foreground: 0 0% 100%;
-    --popover: 235 44% 20%;
+
+    --popover: 210 20% 10%;
     --popover-foreground: 0 0% 100%;
-    --primary: 183 66% 49%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 173 34% 77%;
-    --secondary-foreground: 235 44% 15%;
-    --muted: 235 30% 30%;
-    --muted-foreground: 240 14% 80%;
-    --accent: 173 34% 77%;
-    --accent-foreground: 235 44% 15%;
-    --destructive: 352 89% 59%;
+
+    --primary: 210 60% 70%;
+    --primary-foreground: 210 20% 10%;
+
+    --secondary: 180 100% 40%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 20% 15%;
+    --muted-foreground: 210 15% 65%;
+
+    --accent: 10 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 100%;
-    --border: 235 30% 30%;
-    --input: 235 30% 30%;
-    --ring: 183 66% 49%;
+
+    --border: 210 20% 20%;
+    --input: 210 20% 20%;
+    --ring: 210 60% 70%;
+
+    /* Sidebar Dark */
+    --sidebar-background: 210 20% 12%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 210 60% 70%;
+    --sidebar-primary-foreground: 210 20% 10%;
+    --sidebar-accent: 210 20% 20%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 210 20% 20%;
+    --sidebar-ring: 210 60% 70%;
   }
 }
 
