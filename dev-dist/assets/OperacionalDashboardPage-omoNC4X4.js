@@ -1,5 +1,5 @@
 import { i as __toESM, n as require_react, t as require_jsx_runtime } from "./jsx-runtime-huLxtCwt.js";
-import { A as useId, B as Search, C as Portal$1, D as Primitive, E as useCallbackRef, F as Input, H as require_react_dom, I as Button, L as cn, M as createContextScope, N as composeEventHandlers, O as createSlot, P as Primitive$1, R as useComposedRefs, S as Presence, T as DismissableLayer, V as createLucideIcon, _ as Title, a as Anchor, b as ReactRemoveScroll, c as Root2$2, d as Close, f as Content$2, g as Root$2, h as Portal$2, i as VISUALLY_HIDDEN_STYLES, j as useLayoutEffect2, k as useControllableState, l as createPopperScope, m as Overlay, n as pb, o as Arrow, p as Description, r as createContextScope$1, s as Content$1, t as useAuth, u as Skeleton, w as FocusScope, x as useFocusGuards, y as hideOthers, z as X } from "./index-DnipNVyl.js";
+import { A as useId, B as Search, C as Portal$1, D as Primitive, E as useCallbackRef, F as Input, H as require_react_dom, I as Button, L as cn, M as createContextScope, N as composeEventHandlers, O as createSlot, P as Primitive$1, R as useComposedRefs, S as Presence, T as DismissableLayer, V as createLucideIcon, _ as Title, a as Anchor, b as ReactRemoveScroll, c as Root2$2, d as Close, f as Content$2, g as Root$2, h as Portal$2, i as VISUALLY_HIDDEN_STYLES, j as useLayoutEffect2, k as useControllableState, l as createPopperScope, m as Overlay, n as pb, o as Arrow, p as Description, r as createContextScope$1, s as Content$1, t as useAuth, u as Skeleton, w as FocusScope, x as useFocusGuards, y as hideOthers, z as X } from "./index-BCL80ebu.js";
 var ArrowDown = createLucideIcon("arrow-down", [["path", {
 	d: "M12 5v14",
 	key: "s699le"
@@ -30187,39 +30187,53 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 			"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:54:7",
 			"data-prohibitions": "[editContent]",
 			className: "max-w-[900px] p-[24px] !rounded-[8px] max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-5 duration-300 gap-0",
-			children: loading || !processo ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:56:11",
-				"data-prohibitions": "[]",
-				className: "space-y-4 py-4",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:57:13",
-						"data-prohibitions": "[editContent]",
-						className: "h-8 w-1/3"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:58:13",
-						"data-prohibitions": "[editContent]",
-						className: "h-4 w-1/4 mb-8"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:59:13",
-						"data-prohibitions": "[editContent]",
-						className: "h-[400px] w-full"
-					})
-				]
-			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+			children: loading || !processo ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
+					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:57:13",
+					"data-prohibitions": "[]",
+					className: "sr-only",
+					children: "Carregando detalhes do processo"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogDescription, {
+					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:58:13",
+					"data-prohibitions": "[]",
+					className: "sr-only",
+					children: "Aguarde enquanto os detalhes são carregados."
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:61:13",
+					"data-prohibitions": "[]",
+					className: "space-y-4 py-4",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
+							"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:62:15",
+							"data-prohibitions": "[editContent]",
+							className: "h-8 w-1/3"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
+							"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:63:15",
+							"data-prohibitions": "[editContent]",
+							className: "h-4 w-1/4 mb-8"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
+							"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:64:15",
+							"data-prohibitions": "[editContent]",
+							className: "h-[400px] w-full"
+						})
+					]
+				})
+			] }) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogHeader, {
-					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:63:13",
+					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:69:13",
 					"data-prohibitions": "[editContent]",
 					className: "mb-0 space-y-0",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:64:15",
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:70:15",
 						"data-prohibitions": "[]",
 						className: "text-[20px] font-bold text-foreground",
 						children: "Detalhes do Processo"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogDescription, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:67:15",
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:73:15",
 						"data-prohibitions": "[editContent]",
 						className: "text-[13px] text-muted-foreground mb-[16px] mt-[4px]",
 						children: [
@@ -30230,45 +30244,45 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs, {
-					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:72:13",
+					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:78:13",
 					"data-prohibitions": "[]",
 					defaultValue: "gerais",
 					className: "w-full",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TabsList, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:73:15",
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:79:15",
 						"data-prohibitions": "[]",
 						className: "flex flex-row gap-[16px] border-b border-border mb-[20px] bg-transparent h-auto p-0 justify-start rounded-none",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:74:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:80:17",
 								"data-prohibitions": "[]",
 								value: "gerais",
 								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
 								children: "Informações Gerais"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:80:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:86:17",
 								"data-prohibitions": "[]",
 								value: "posicoes",
 								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
 								children: "Posições Preliminares"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:86:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:92:17",
 								"data-prohibitions": "[]",
 								value: "observacoes",
 								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
 								children: "Observações"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:92:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:98:17",
 								"data-prohibitions": "[]",
 								value: "documentos",
 								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
 								children: "Documentos"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:98:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:104:17",
 								"data-prohibitions": "[]",
 								value: "historico",
 								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
@@ -30276,17 +30290,17 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 							})
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:106:15",
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:112:15",
 						"data-prohibitions": "[]",
 						className: "mt-4 flex-1 animate-in fade-in duration-200",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:107:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:113:17",
 								"data-prohibitions": "[]",
 								value: "gerais",
 								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabInformacoesGerais, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:108:19",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:114:19",
 									"data-prohibitions": "[editContent]",
 									processo,
 									canEdit: canEditProcesso(),
@@ -30297,12 +30311,12 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:117:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:123:17",
 								"data-prohibitions": "[]",
 								value: "posicoes",
 								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabPosicoes, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:118:19",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:124:19",
 									"data-prohibitions": "[editContent]",
 									processo,
 									canAdd: canAddPosicao(),
@@ -30310,12 +30324,12 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:120:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:126:17",
 								"data-prohibitions": "[]",
 								value: "observacoes",
 								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabObservacoes, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:121:19",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:127:19",
 									"data-prohibitions": "[editContent]",
 									processo,
 									canAdd: canAddObservacao(),
@@ -30323,12 +30337,12 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:127:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:133:17",
 								"data-prohibitions": "[]",
 								value: "documentos",
 								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabDocumentos, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:128:19",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:134:19",
 									"data-prohibitions": "[editContent]",
 									documentos,
 									canUpload: canUploadDocumento(),
@@ -30337,12 +30351,12 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:135:17",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:141:17",
 								"data-prohibitions": "[]",
 								value: "historico",
 								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabHistorico, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:136:19",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:142:19",
 									"data-prohibitions": "[editContent]",
 									historico
 								})
@@ -30351,18 +30365,18 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 					})]
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:141:13",
+					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:147:13",
 					"data-prohibitions": "[editContent]",
 					className: "flex flex-row gap-[12px] justify-end mt-[24px]",
 					children: [canDeleteProcesso() && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:143:17",
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:149:17",
 						"data-prohibitions": "[]",
 						variant: "destructive",
 						className: "h-[40px] px-[20px]",
 						onClick: () => {},
 						children: "Excluir Processo"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:147:15",
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:153:15",
 						"data-prohibitions": "[]",
 						variant: "outline",
 						className: "h-[40px] px-[20px]",
@@ -31228,4 +31242,4 @@ function OperacionalDashboardPage() {
 //#endregion
 export { OperacionalDashboardPage as default };
 
-//# sourceMappingURL=OperacionalDashboardPage-Ct7FXY_W.js.map
+//# sourceMappingURL=OperacionalDashboardPage-omoNC4X4.js.map

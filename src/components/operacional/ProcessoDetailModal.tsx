@@ -53,11 +53,17 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-[900px] p-[24px] !rounded-[8px] max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-5 duration-300 gap-0">
         {loading || !processo ? (
-          <div className="space-y-4 py-4">
-            <Skeleton className="h-8 w-1/3" />
-            <Skeleton className="h-4 w-1/4 mb-8" />
-            <Skeleton className="h-[400px] w-full" />
-          </div>
+          <>
+            <DialogTitle className="sr-only">Carregando detalhes do processo</DialogTitle>
+            <DialogDescription className="sr-only">
+              Aguarde enquanto os detalhes são carregados.
+            </DialogDescription>
+            <div className="space-y-4 py-4">
+              <Skeleton className="h-8 w-1/3" />
+              <Skeleton className="h-4 w-1/4 mb-8" />
+              <Skeleton className="h-[400px] w-full" />
+            </div>
+          </>
         ) : (
           <>
             <DialogHeader className="mb-0 space-y-0">
