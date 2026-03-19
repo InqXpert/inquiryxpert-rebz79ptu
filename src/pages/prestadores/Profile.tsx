@@ -88,7 +88,8 @@ export default function ProfilePrestador() {
         <div className="h-[56px] flex flex-row justify-between items-center">
           <Button
             variant="ghost"
-            className="gap-[8px] text-[14px] text-muted-foreground hover:text-foreground hover:bg-transparent px-0 h-auto"
+            size="sm"
+            className="gap-[8px] text-[14px] text-muted-foreground hover:text-foreground hover:bg-transparent px-0"
             asChild
           >
             <Link to="/prestadores">
@@ -123,7 +124,7 @@ export default function ProfilePrestador() {
         </div>
 
         {/* Profile header card */}
-        <div className="bg-card border border-border rounded-[16px] p-[24px] mb-[24px] grid grid-cols-1 md:grid-cols-[200px_auto_220px] gap-[32px] md:text-left text-center animate-in fade-in duration-300 ease-out">
+        <div className="bg-card border border-border rounded-[16px] p-[24px] mb-[24px] grid grid-cols-1 md:grid-cols-[200px_auto_220px] gap-[32px] md:items-start text-center md:text-left animate-in fade-in duration-300 ease-out">
           <div className="flex flex-col items-center md:items-start">
             <img
               src={`https://img.usecurling.com/ppl/large?gender=male&seed=${p.id}`}
@@ -134,9 +135,9 @@ export default function ProfilePrestador() {
               {p.nomeCompleto}
             </h2>
             <Badge variant="secondary" className="text-[12px] mt-[4px]">
-              {p.regiaoAbrangencia}
+              {p.regiaoAbrangencia || 'Sem Especialidade'}
             </Badge>
-            <div className="flex gap-2 mt-[12px]">
+            <div className="flex flex-row justify-center md:justify-start gap-[8px] mt-[12px]">
               {p.naBlackList === 'Sim' && (
                 <div className="bg-red-100 text-red-700 border border-red-200 text-[12px] font-semibold px-[8px] py-[2px] rounded-full flex flex-row gap-[4px] items-center">
                   <AlertTriangle className="w-[12px] h-[12px]" /> Blacklist
@@ -229,14 +230,18 @@ export default function ProfilePrestador() {
           ].map((kpi, i) => (
             <div
               key={i}
-              className="rounded-[16px] p-[20px] min-h-[120px] overflow-hidden relative bg-gradient-to-br from-primary to-[hsl(var(--primary)/0.85)] animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both"
+              className="rounded-[16px] p-[20px] min-h-[120px] overflow-hidden relative bg-gradient-to-br from-primary to-primary/85 animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both"
               style={{ animationDelay: kpi.delay, animationDuration: '400ms' }}
             >
               <div className="absolute -bottom-[20px] -right-[20px] w-[80px] h-[80px] bg-white/10 rounded-full" />
-              <h4 className="text-[13px] font-medium text-white/85 mb-[8px]">{kpi.title}</h4>
-              <div className="text-[36px] font-bold text-white leading-none">{kpi.number}</div>
-              <p className="text-[12px] text-white/70 mt-[4px]">{kpi.subtitle}</p>
-              <TrendingUp className="w-[16px] h-[16px] text-white/70 absolute top-[16px] right-[16px]" />
+              <h4 className="text-[13px] font-medium text-white/85 mb-[8px] relative z-10">
+                {kpi.title}
+              </h4>
+              <div className="text-[36px] font-bold text-white leading-none relative z-10">
+                {kpi.number}
+              </div>
+              <p className="text-[12px] text-white/70 mt-[4px] relative z-10">{kpi.subtitle}</p>
+              <TrendingUp className="w-[16px] h-[16px] text-white/70 absolute top-[16px] right-[16px] z-10" />
             </div>
           ))}
         </div>
@@ -290,7 +295,15 @@ export default function ProfilePrestador() {
                     </span>
                   </div>
                   <div className="flex flex-col items-end gap-[4px]">
-                    <div className={getBadgeClass(proc.status)}>{proc.status}</div>
+                    <div
+                      className={cn(
+                        getBadgeClass(proc.status),
+                        'animate-in zoom-in-[0.8] duration-200 ease-out fill-mode-both',
+                      )}
+                      style={{ animationDelay: `${i * 40 + 50}ms` }}
+                    >
+                      {proc.status}
+                    </div>
                     <span className="text-[12px] text-muted-foreground">{proc.date}</span>
                   </div>
                 </div>

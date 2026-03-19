@@ -143,7 +143,7 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
           />
 
           {file ? (
-            <div className="border-2 border-dashed rounded-xl p-[24px] text-center transition-colors duration-200 border-green-400 bg-green-50">
+            <div className="border-2 border-dashed border-green-400 bg-green-50 rounded-[12px] p-[24px] text-center transition-colors duration-200">
               <div className="flex flex-row justify-between items-center bg-white p-[12px] rounded-lg border border-green-200 shadow-sm">
                 <div className="flex items-center gap-[12px]">
                   <FileSpreadsheet className="w-[20px] h-[20px] text-green-600" />
@@ -206,7 +206,7 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
               className={cn(
-                'border-2 border-dashed rounded-xl p-[40px_24px] text-center transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary',
+                'border-2 border-dashed rounded-[12px] p-[40px_24px] text-center transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary',
                 dragOver
                   ? 'border-primary bg-accent/30'
                   : 'border-border bg-transparent hover:border-primary hover:bg-accent/30',
