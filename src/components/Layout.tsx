@@ -10,6 +10,7 @@ import {
   Settings,
   HelpCircle,
   User,
+  Users,
 } from 'lucide-react'
 import {
   SidebarProvider,
@@ -30,6 +31,7 @@ import { useTheme } from './ThemeProvider'
 
 const navItems = [
   { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
+  { title: 'Prestadores', url: '/prestadores', icon: Users },
   { title: 'Processos', url: '/processos', icon: FileText },
   { title: 'Relatórios', url: '/relatorios', icon: BarChart },
   { title: 'Configurações', url: '/configuracoes', icon: Settings },

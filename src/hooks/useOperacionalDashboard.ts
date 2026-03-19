@@ -4,11 +4,12 @@ import { useToast } from '@/hooks/use-toast'
 import * as service from '@/services/procesosOperacionais'
 import { ProcessoOperacional } from '@/types'
 import { getErrorMessage } from '@/lib/pocketbase/errors'
+import { useRealtime } from '@/hooks/use-realtime'
 
 export function useOperacionalDashboard() {
   const { user } = useAuth()
   const { toast } = useToast()
-  // Mocking role if not present
+
   const userRole = user?.role || 'admin'
   const userId = user?.id || 'u1'
 
@@ -28,37 +29,44 @@ export function useOperacionalDashboard() {
   const [filters, setFiltersState] = useState(defaultFilters)
   const [pagination, setPagination] = useState({ currentPage: 1, pageSize: 25, totalCount: 0 })
 
-  const fetchProcessos = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      let data = await service.fetchProcessos(filters)
+  const fetchProcessos = useCallback(
+    async (isRealtimeUpdate = false) => {
+      if (!isRealtimeUpdate) setLoading(true)
+      setError(null)
+      try {
+        let data = await service.fetchProcessos(filters)
 
-      if (userRole === 'analista') {
-        data = data.filter((p) => p.user_id === userId)
+        if (userRole === 'analista') {
+          data = data.filter((p) => p.user_id === userId)
+        }
+
+        setProcessos(data)
+        setPagination((p) => ({ ...p, totalCount: data.length }))
+      } catch (err: any) {
+        console.error(err)
+        const msg = getErrorMessage(err)
+        setError(msg)
+        toast({
+          title: 'Erro de Conexão',
+          description: msg || 'Não foi possível carregar os processos da base de dados.',
+          variant: 'destructive',
+        })
+        setProcessos([])
+        setPagination((p) => ({ ...p, totalCount: 0 }))
+      } finally {
+        if (!isRealtimeUpdate) setLoading(false)
       }
-
-      setProcessos(data)
-      setPagination((p) => ({ ...p, totalCount: data.length }))
-    } catch (err: any) {
-      console.error(err)
-      const msg = getErrorMessage(err)
-      setError(msg)
-      toast({
-        title: 'Erro de Conexão',
-        description: msg || 'Não foi possível carregar os processos da base de dados.',
-        variant: 'destructive',
-      })
-      setProcessos([])
-      setPagination((p) => ({ ...p, totalCount: 0 }))
-    } finally {
-      setLoading(false)
-    }
-  }, [filters, userRole, userId, toast])
+    },
+    [filters, userRole, userId, toast],
+  )
 
   useEffect(() => {
     fetchProcessos()
   }, [fetchProcessos])
+
+  useRealtime('processos_operacionais', () => {
+    fetchProcessos(true)
+  })
 
   const setFilters = (newFilters: Partial<typeof filters>) => {
     setFiltersState((prev) => ({ ...prev, ...newFilters }))
