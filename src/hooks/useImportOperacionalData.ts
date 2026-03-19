@@ -151,6 +151,8 @@ export function useImportOperacionalData() {
     }
   }
 
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
   const confirmImport = async () => {
     if (!parsedData) return
     setState('importing')
@@ -159,18 +161,46 @@ export function useImportOperacionalData() {
       const total = parsedData.rowsToImport.length
       for (let i = 0; i < total; i++) {
         const rowData = { ...parsedData.rowsToImport[i], user_id: user?.id }
-        const record = await pb.collection('processos_operacionais').create(rowData)
-        await pb.collection('processos_historico').create({
-          processo_id: record.id,
-          tipo_evento: 'criado',
-          descricao: 'Processo importado via planilha.',
-          user_name: user?.name || user?.email || 'Sistema',
-        })
+
+        let success = false
+        let retries = 0
+
+        while (!success && retries < 5) {
+          try {
+            const record = await pb.collection('processos_operacionais').create(rowData)
+            await pb.collection('processos_historico').create({
+              processo_id: record.id,
+              tipo_evento: 'criado',
+              descricao: 'Processo importado via planilha.',
+              user_name: user?.name || user?.email || 'Sistema',
+            })
+            success = true
+          } catch (e: any) {
+            if (e.status === 429) {
+              retries++
+              await sleep(1000 * retries)
+            } else {
+              throw e
+            }
+          }
+        }
+
+        if (!success) {
+          throw new Error('Limite de requisições excedido. A importação foi interrompida.')
+        }
+
         setProgress(Math.round(((i + 1) / total) * 100))
+
+        // Rate limiting de prevenção para evitar erro 429 na infraestrutura
+        if ((i + 1) % 5 === 0) {
+          await sleep(500)
+        } else {
+          await sleep(100)
+        }
       }
       setState('success')
     } catch (e: any) {
-      const msg = 'Erro ao importar para o banco de dados. Tente novamente.'
+      const msg = e.message || 'Erro ao importar para o banco de dados. Tente novamente.'
       setErrorMsg(msg)
       toast({ title: 'Erro', description: msg, variant: 'destructive' })
       setState('error')
