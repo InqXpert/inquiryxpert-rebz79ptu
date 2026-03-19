@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { Search, Plus, AlertTriangle } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Search, AlertTriangle, ChevronDown, Pencil, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -10,6 +10,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   Table,
   TableBody,
@@ -21,6 +27,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { usePrestadores } from '@/hooks/use-prestadores'
+import { ImportProviderModal } from '@/components/providers/ImportProviderModal'
 
 export default function PrestadoresList() {
   const { prestadores, loading } = usePrestadores()
@@ -29,6 +36,7 @@ export default function PrestadoresList() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('Todos')
   const [blacklist, setBlacklist] = useState('Todos')
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
   const filtered = prestadores.filter((p) => {
     const matchSearch =
@@ -46,11 +54,28 @@ export default function PrestadoresList() {
           <h1 className="text-3xl font-bold tracking-tight">Prestadores</h1>
           <p className="text-muted-foreground mt-1">Gerencie a rede de prestadores externos.</p>
         </div>
-        <Button asChild className="rounded-full shadow-elevation px-6">
-          <Link to="/prestadores/novo">
-            <Plus className="w-5 h-5 mr-2" /> Novo Prestador
-          </Link>
-        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="rounded-full shadow-elevation px-6">
+              Novo Prestador <ChevronDown className="w-5 h-5 ml-2" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuItem
+              className="cursor-pointer py-2"
+              onClick={() => navigate('/prestadores/novo')}
+            >
+              <Pencil className="w-4 h-4 mr-2" /> Preencher Manualmente
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer py-2"
+              onClick={() => setIsImportModalOpen(true)}
+            >
+              <Upload className="w-4 h-4 mr-2" /> Importar Planilha
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <Card className="p-4 flex flex-wrap gap-4 shadow-sm rounded-2xl border-none">
@@ -167,6 +192,8 @@ export default function PrestadoresList() {
           </div>
         )}
       </Card>
+
+      <ImportProviderModal open={isImportModalOpen} onOpenChange={setIsImportModalOpen} />
     </div>
   )
 }

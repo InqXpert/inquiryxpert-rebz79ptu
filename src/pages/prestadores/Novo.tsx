@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { prestadorSchema, PrestadorFormValues } from '@/schemas/prestador'
@@ -8,12 +8,30 @@ import { useToast } from '@/hooks/use-toast'
 import { FormContent } from './FormContent'
 import { createPrestador } from '@/services/prestadores'
 import { getErrorMessage } from '@/lib/pocketbase/errors'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { ImportedFieldsContext } from '@/components/prestadores/FormHelpers'
 
 export default function NovoPrestador() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { toast } = useToast()
   const [saving, setSaving] = useState(false)
+
+  const [initialData] = useState(() => location.state?.importedData || {})
+  const [importedFields] = useState<string[]>(() => {
+    const data = location.state?.importedData || {}
+    return Object.keys(data).filter((k) => data[k] !== undefined && data[k] !== '')
+  })
+
+  useEffect(() => {
+    if (location.state?.showImportSuccess) {
+      toast({
+        title: 'Sucesso',
+        description: 'Planilha importada com sucesso! Revise os dados antes de salvar.',
+      })
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.state, navigate, toast])
 
   const form = useForm<PrestadorFormValues>({
     resolver: zodResolver(prestadorSchema),
@@ -24,6 +42,7 @@ export default function NovoPrestador() {
       dadosBancariosTerceiros: 'Não',
       ativo: 'Sim',
       naBlackList: 'Não',
+      ...initialData,
     },
   })
 
@@ -63,7 +82,9 @@ export default function NovoPrestador() {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <FormContent />
+          <ImportedFieldsContext.Provider value={importedFields}>
+            <FormContent />
+          </ImportedFieldsContext.Provider>
         </form>
       </Form>
     </div>

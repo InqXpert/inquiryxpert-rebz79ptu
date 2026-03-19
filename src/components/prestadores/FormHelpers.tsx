@@ -1,3 +1,4 @@
+import React, { createContext, useContext } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -9,6 +10,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { cn } from '@/lib/utils'
+
+export const ImportedFieldsContext = createContext<string[]>([])
 
 interface FieldProps {
   name: string
@@ -23,6 +27,9 @@ export function FInput({
   type = 'text',
 }: FieldProps & { type?: string }) {
   const { control } = useFormContext()
+  const importedFields = useContext(ImportedFieldsContext)
+  const isImported = importedFields.includes(name)
+
   return (
     <FormField
       control={control}
@@ -31,7 +38,13 @@ export function FInput({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input placeholder={placeholder} type={type} {...field} value={field.value ?? ''} />
+            <Input
+              placeholder={placeholder}
+              type={type}
+              {...field}
+              value={field.value ?? ''}
+              className={cn(isImported && 'border-l-4 border-l-green-500 bg-green-50/10')}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
@@ -46,6 +59,9 @@ export function FSelect({
   options,
 }: FieldProps & { options: { label: string; value: string }[] }) {
   const { control } = useFormContext()
+  const importedFields = useContext(ImportedFieldsContext)
+  const isImported = importedFields.includes(name)
+
   return (
     <FormField
       control={control}
@@ -55,7 +71,9 @@ export function FSelect({
           <FormLabel>{label}</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger>
+              <SelectTrigger
+                className={cn(isImported && 'border-l-4 border-l-green-500 bg-green-50/10')}
+              >
                 <SelectValue placeholder="Selecione..." />
               </SelectTrigger>
             </FormControl>
@@ -89,6 +107,9 @@ export function FSimNao({ name, label }: FieldProps) {
 
 export function FTextarea({ name, label, placeholder }: FieldProps) {
   const { control } = useFormContext()
+  const importedFields = useContext(ImportedFieldsContext)
+  const isImported = importedFields.includes(name)
+
   return (
     <FormField
       control={control}
@@ -97,7 +118,12 @@ export function FTextarea({ name, label, placeholder }: FieldProps) {
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Textarea placeholder={placeholder} {...field} value={field.value ?? ''} />
+            <Textarea
+              placeholder={placeholder}
+              {...field}
+              value={field.value ?? ''}
+              className={cn(isImported && 'border-l-4 border-l-green-500 bg-green-50/10')}
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
