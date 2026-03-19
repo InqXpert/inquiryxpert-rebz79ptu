@@ -41,7 +41,7 @@ export default function EditarPrestador() {
     try {
       await updatePrestador(id!, data as any)
       toast({ title: 'Atualizado', description: 'Dados salvos com sucesso!' })
-      navigate('/prestadores')
+      navigate(`/prestadores/${id}`)
     } catch (error) {
       toast({
         title: 'Erro ao atualizar',
@@ -61,12 +61,16 @@ export default function EditarPrestador() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Editar Prestador</h1>
         <div className="flex gap-4">
-          <Button variant="outline" onClick={() => navigate(-1)} disabled={saving}>
+          <Button
+            variant="outline"
+            onClick={() => navigate(`/prestadores/${id}`)}
+            disabled={saving}
+          >
             Cancelar
           </Button>
           <Button
             onClick={form.handleSubmit(onSubmit)}
-            className="rounded-full px-8"
+            className="rounded-full px-8 bg-secondary text-white hover:bg-secondary/90 font-semibold"
             disabled={saving}
           >
             {saving ? 'Salvando...' : 'Salvar'}

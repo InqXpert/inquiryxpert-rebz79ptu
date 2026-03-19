@@ -10,7 +10,7 @@ const Processos = lazy(() => import('./pages/Processos'))
 const PrestadoresList = lazy(() => import('./pages/prestadores/List'))
 const NovoPrestador = lazy(() => import('./pages/prestadores/Novo'))
 const ProfilePrestador = lazy(() => import('./pages/prestadores/Profile'))
-const EditPrestador = lazy(() => import('./pages/prestadores/Edit'))
+const EditPrestador = lazy(() => import('./pages/prestadores/Editar'))
 const Configuracoes = lazy(() => import('./pages/Configuracoes'))
 const Ajuda = lazy(() => import('./pages/Ajuda'))
 

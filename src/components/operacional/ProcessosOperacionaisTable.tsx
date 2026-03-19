@@ -18,7 +18,7 @@ export function ProcessosOperacionaisTable({
   pagination,
   setPagination,
 }: Props) {
-  const [sortKey, setSortKey] = useState<keyof ProcessoOperacional>('created')
+  const [sortKey, setSortKey] = useState<keyof ProcessoOperacional>('data_entrada')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
 
   const handleSort = (key: keyof ProcessoOperacional) => {
@@ -31,8 +31,20 @@ export function ProcessosOperacionaisTable({
   }
 
   const sortedData = [...processos].sort((a, b) => {
-    const valA = a[sortKey] || ''
-    const valB = b[sortKey] || ''
+    let valA = a[sortKey] || ''
+    let valB = b[sortKey] || ''
+
+    if (sortKey === 'data_entrada') {
+      const parseDate = (d: string) => {
+        if (!d) return ''
+        const parts = d.split('/')
+        if (parts.length === 3) return `${parts[2]}-${parts[1]}-${parts[0]}`
+        return d
+      }
+      valA = parseDate(valA as string)
+      valB = parseDate(valB as string)
+    }
+
     if (valA < valB) return sortDir === 'asc' ? -1 : 1
     if (valA > valB) return sortDir === 'asc' ? 1 : -1
     return 0
@@ -105,6 +117,12 @@ export function ProcessosOperacionaisTable({
               </th>
               <th
                 className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
+                onClick={() => handleSort('agente_prestador')}
+              >
+                Prestador <SortIcon colKey="agente_prestador" />
+              </th>
+              <th
+                className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
                 onClick={() => handleSort('data_entrada')}
               >
                 Data Entrada <SortIcon colKey="data_entrada" />
@@ -126,7 +144,7 @@ export function ProcessosOperacionaisTable({
                 onClick={() => onViewDetail(p.id)}
               >
                 <td className="py-4 px-6 text-sm font-semibold text-primary">
-                  {p.numero_controle}
+                  {p.numero_controle || '-'}
                 </td>
                 <td className="py-4 px-6 text-sm">
                   <StatusBadge status={p.status} />
@@ -134,6 +152,9 @@ export function ProcessosOperacionaisTable({
                 <td className="py-4 px-6 text-sm text-muted-foreground">{p.cia || '-'}</td>
                 <td className="py-4 px-6 text-sm font-medium text-foreground">
                   {p.nome_segurado || '-'}
+                </td>
+                <td className="py-4 px-6 text-sm text-muted-foreground">
+                  {p.agente_prestador || '-'}
                 </td>
                 <td className="py-4 px-6 text-sm text-muted-foreground">{p.data_entrada || '-'}</td>
                 <td className="py-4 px-6 text-sm text-muted-foreground">

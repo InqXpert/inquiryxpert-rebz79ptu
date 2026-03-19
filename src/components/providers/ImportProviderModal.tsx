@@ -34,7 +34,7 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const navigate = useNavigate()
-  const { status, parseFile, reset } = useImportProvider()
+  const { status, analyzeFile, analysis, reset } = useImportProvider()
 
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
@@ -45,7 +45,7 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
     onOpenChange(isOpen)
   }
 
-  const validateAndSetFile = (f: File) => {
+  const validateAndSetFile = async (f: File) => {
     setInlineError(null)
     const isXlsx =
       f.name.toLowerCase().endsWith('.xlsx') ||
@@ -53,7 +53,7 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
     const isCsv = f.name.toLowerCase().endsWith('.csv') || f.type === 'text/csv'
 
     if (!isXlsx && !isCsv) {
-      setInlineError('Formato invalido. Use .xlsx ou .csv.')
+      setInlineError('Formato inválido. Use .xlsx ou .csv.')
       return
     }
     if (f.size > 5 * 1024 * 1024) {
@@ -61,6 +61,7 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
       return
     }
     setFile(f)
+    await analyzeFile(f)
   }
 
   const handleDrop = (e: React.DragEvent) => {
@@ -71,13 +72,12 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
     }
   }
 
-  const handleImport = async () => {
-    if (!file) return
-    const parsed = await parseFile(file)
-    if (parsed) {
-      handleOpenChange(false)
-      navigate('/prestadores/novo', { state: { importedData: parsed, showImportSuccess: true } })
-    }
+  const handleImport = () => {
+    if (!analysis?.parsed) return
+    handleOpenChange(false)
+    navigate('/prestadores/novo', {
+      state: { importedData: analysis.parsed, showImportSuccess: true },
+    })
   }
 
   const downloadTemplate = () => {
@@ -160,6 +160,7 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
                   onClick={(e) => {
                     e.stopPropagation()
                     setFile(null)
+                    reset()
                     if (fileInputRef.current) fileInputRef.current.value = ''
                   }}
                   disabled={status === 'loading'}
@@ -169,24 +170,45 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
                 </Button>
               </div>
 
-              <div className="mt-[24px] text-left">
-                <div className="flex flex-col gap-[8px]">
-                  <div className="flex flex-row gap-[8px] items-center">
-                    <CheckCircle2 className="w-[14px] h-[14px] text-green-600" />
-                    <span className="text-[13px] text-foreground">Campos Encontrados</span>
-                  </div>
-                  <div className="flex flex-row gap-[8px] items-center">
-                    <AlertTriangle className="w-[14px] h-[14px] text-yellow-600" />
-                    <span className="text-[13px] text-muted-foreground">
-                      Especialidade (não encontrada)
-                    </span>
-                  </div>
+              {status === 'loading' ? (
+                <div className="mt-[24px] flex flex-col items-center justify-center">
+                  <Loader2 className="w-6 h-6 animate-spin text-green-600 mb-2" />
+                  <span className="text-[13px] text-muted-foreground">Analisando planilha...</span>
                 </div>
-                <div className="border-t border-border my-[12px]" />
-                <p className="text-[12px] text-muted-foreground italic">
-                  Os dados serão preenchidos automaticamente no formulário a seguir.
-                </p>
-              </div>
+              ) : analysis ? (
+                <div className="mt-[24px] text-left">
+                  <div className="flex flex-col gap-[8px]">
+                    {analysis.matched.length > 0 && (
+                      <div className="flex flex-row gap-[8px] items-start">
+                        <CheckCircle2 className="w-[14px] h-[14px] text-green-600 mt-0.5 shrink-0" />
+                        <span className="text-[13px] text-foreground">
+                          <strong>{analysis.matched.length}</strong> colunas mapeadas com sucesso.
+                        </span>
+                      </div>
+                    )}
+                    {analysis.missing.length > 0 && (
+                      <div className="flex flex-row gap-[8px] items-start">
+                        <AlertTriangle className="w-[14px] h-[14px] text-yellow-600 mt-0.5 shrink-0" />
+                        <span className="text-[13px] text-muted-foreground">
+                          Ausentes: {analysis.missing.join(', ')}
+                        </span>
+                      </div>
+                    )}
+                    {analysis.unmatched.length > 0 && (
+                      <div className="flex flex-row gap-[8px] items-start">
+                        <AlertTriangle className="w-[14px] h-[14px] text-blue-500 mt-0.5 shrink-0" />
+                        <span className="text-[13px] text-muted-foreground">
+                          Extras (nas observações): {analysis.unmatched.join(', ')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="border-t border-border/50 my-[12px]" />
+                  <p className="text-[12px] text-muted-foreground italic">
+                    Os dados serão preenchidos automaticamente no formulário a seguir.
+                  </p>
+                </div>
+              ) : null}
             </div>
           ) : (
             <div
@@ -244,7 +266,7 @@ export function ImportProviderModal({ open, onOpenChange }: ImportProviderModalP
           >
             Cancelar
           </Button>
-          <Button onClick={handleImport} disabled={!file || status === 'loading'}>
+          <Button onClick={handleImport} disabled={!file || status !== 'success'}>
             {status === 'loading' && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
             Importar e Preencher
           </Button>

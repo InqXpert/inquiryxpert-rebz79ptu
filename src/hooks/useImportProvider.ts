@@ -2,69 +2,105 @@ import { useState } from 'react'
 import * as XLSX from 'xlsx'
 import { toast } from '@/hooks/use-toast'
 
+interface AnalysisResult {
+  matched: string[]
+  missing: string[]
+  unmatched: string[]
+  parsed: any
+}
+
 export function useImportProvider() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null)
 
-  const parseCsv = (text: string) => {
-    const lines = text.split('\n').filter((l) => l.trim() !== '')
-    if (lines.length < 2) throw new Error('Planilha vazia.')
-
-    const splitCsv = (str: string) => {
-      const result = []
-      let inQuotes = false,
-        curr = ''
-      for (let i = 0; i < str.length; i++) {
-        if (str[i] === '"') {
-          inQuotes = !inQuotes
-          continue
-        }
-        if (str[i] === ',' && !inQuotes) {
-          result.push(curr.trim())
-          curr = ''
-          continue
-        }
-        curr += str[i]
-      }
-      result.push(curr.trim())
-      return result
-    }
-
-    const headers = splitCsv(lines[0])
-    const rowVals = splitCsv(lines[1])
-    const row: Record<string, string> = {}
-    headers.forEach((h, i) => {
-      row[h] = rowVals[i] || ''
-    })
-    return row
+  const expectedHeaders: Record<string, string> = {
+    Nome: 'nomeCompleto',
+    'CPF/CNPJ': 'cpf',
+    Email: 'email',
+    Telefone: 'telefone',
+    Endereco: 'baseAtendimento',
+    CEP: 'cepBase',
+    Banco: 'banco',
+    Agencia: 'agencia',
+    Conta: 'conta',
+    'Chave PIX': 'chavePix',
+    'Valor por Processo': 'valorHonorario',
   }
 
-  const parseFile = async (file: File) => {
+  const analyzeFile = async (file: File) => {
     setStatus('loading')
     try {
-      let row: Record<string, any>
+      let row: Record<string, any> = {}
+      let fileHeaders: string[] = []
 
       if (file.name.toLowerCase().endsWith('.csv') || file.type === 'text/csv') {
         const text = await file.text()
-        row = parseCsv(text)
+        const lines = text.split('\n').filter((l) => l.trim() !== '')
+        if (lines.length < 2) throw new Error('Planilha vazia.')
+
+        const splitCsv = (str: string) => {
+          const result = []
+          let inQuotes = false,
+            curr = ''
+          for (let i = 0; i < str.length; i++) {
+            if (str[i] === '"') {
+              inQuotes = !inQuotes
+              continue
+            }
+            if (str[i] === ',' && !inQuotes) {
+              result.push(curr.trim())
+              curr = ''
+              continue
+            }
+            curr += str[i]
+          }
+          result.push(curr.trim())
+          return result
+        }
+
+        fileHeaders = splitCsv(lines[0])
+        const rowVals = splitCsv(lines[1])
+        fileHeaders.forEach((h, i) => {
+          row[h] = rowVals[i] || ''
+        })
       } else {
         const buffer = await file.arrayBuffer()
         const workbook = XLSX.read(buffer)
-        const data = XLSX.utils.sheet_to_json<Record<string, any>>(
-          workbook.Sheets[workbook.SheetNames[0]],
-        )
+        const sheet = workbook.Sheets[workbook.SheetNames[0]]
+        const data = XLSX.utils.sheet_to_json<Record<string, any>>(sheet)
         if (!data || data.length === 0) throw new Error('Planilha vazia.')
         row = data[0]
+        fileHeaders = Object.keys(row)
       }
 
       if (!row['Nome']) {
         setStatus('error')
         toast({
           title: 'Erro na importação',
-          description: "Coluna obrigatoria 'Nome' nao encontrada na planilha.",
+          description: "Coluna obrigatória 'Nome' não encontrada na planilha.",
           variant: 'destructive',
         })
+        setAnalysis(null)
         return null
       }
+
+      const matched: string[] = []
+      const missing: string[] = []
+      const unmatched: string[] = []
+
+      Object.keys(expectedHeaders).forEach((eh) => {
+        if (fileHeaders.includes(eh)) {
+          matched.push(eh)
+        } else {
+          missing.push(eh)
+        }
+      })
+
+      fileHeaders.forEach((h) => {
+        if (!Object.keys(expectedHeaders).includes(h)) {
+          unmatched.push(h)
+        }
+      })
 
       const parsed: any = {}
       if (row['Nome']) parsed.nomeCompleto = String(row['Nome'])
@@ -83,20 +119,37 @@ export function useImportProvider() {
       if (row['Cidade']) observacoes.push(`Cidade: ${row['Cidade']}`)
       if (row['Estado']) observacoes.push(`Estado: ${row['Estado']}`)
       if (row['Especialidade']) observacoes.push(`Especialidade: ${row['Especialidade']}`)
+
+      unmatched.forEach((u) => {
+        if (row[u] && !['Cidade', 'Estado', 'Especialidade'].includes(u)) {
+          observacoes.push(`${u}: ${row[u]}`)
+        }
+      })
+
       if (observacoes.length > 0) parsed.observacoes = observacoes.join('\n')
 
+      setAnalysis({ matched, missing, unmatched, parsed })
       setStatus('success')
       return parsed
     } catch (err: any) {
       setStatus('error')
       toast({
         title: 'Erro na importação',
-        description: 'Nao foi possivel ler o arquivo. Verifique o formato e tente novamente.',
+        description: 'Não foi possível ler o arquivo. Verifique o formato e tente novamente.',
         variant: 'destructive',
       })
+      setAnalysis(null)
       return null
     }
   }
 
-  return { status, parseFile, reset: () => setStatus('idle') }
+  return {
+    status,
+    analyzeFile,
+    analysis,
+    reset: () => {
+      setStatus('idle')
+      setAnalysis(null)
+    },
+  }
 }
