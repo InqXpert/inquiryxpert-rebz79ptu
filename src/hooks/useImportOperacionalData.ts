@@ -165,9 +165,14 @@ export function useImportOperacionalData() {
         let success = false
         let retries = 0
 
-        while (!success && retries < 5) {
+        while (!success && retries < 8) {
           try {
+            if (retries > 0) {
+              await sleep(2000 * Math.pow(2, retries - 1)) // Exponential backoff
+            }
+
             const record = await pb.collection('processos_operacionais').create(rowData)
+            await sleep(300) // Delay explicitly between operations for the same record
             await pb.collection('processos_historico').create({
               processo_id: record.id,
               tipo_evento: 'criado',
@@ -176,9 +181,8 @@ export function useImportOperacionalData() {
             })
             success = true
           } catch (e: any) {
-            if (e.status === 429) {
+            if (e?.status === 429 || e?.response?.status === 429) {
               retries++
-              await sleep(1000 * retries)
             } else {
               throw e
             }
@@ -186,17 +190,15 @@ export function useImportOperacionalData() {
         }
 
         if (!success) {
-          throw new Error('Limite de requisições excedido. A importação foi interrompida.')
+          throw new Error(
+            'Limite de requisições excedido repetidamente. A importação foi interrompida.',
+          )
         }
 
         setProgress(Math.round(((i + 1) / total) * 100))
 
-        // Rate limiting de prevenção para evitar erro 429 na infraestrutura
-        if ((i + 1) % 5 === 0) {
-          await sleep(500)
-        } else {
-          await sleep(100)
-        }
+        // Mais conservador: sempre aguarda 600ms entre iterações para não causar 429.
+        await sleep(600)
       }
       setState('success')
     } catch (e: any) {
