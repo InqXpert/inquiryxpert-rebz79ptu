@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-19T19:46:29.689Z",
+  "generatedAt": "2026-03-19T19:49:50.046Z",
   "collections": [
     {
       "name": "users",
@@ -29,14 +29,19 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
       "indexes": [
@@ -90,21 +95,30 @@
           "type": "select",
           "required": false,
           "system": false,
-          "selectValues": ["Sim", "Não"]
+          "selectValues": [
+            "Sim",
+            "Não"
+          ]
         },
         {
           "name": "emiteNotaFiscal",
           "type": "select",
           "required": false,
           "system": false,
-          "selectValues": ["Sim", "Não"]
+          "selectValues": [
+            "Sim",
+            "Não"
+          ]
         },
         {
           "name": "notaTerceiros",
           "type": "select",
           "required": false,
           "system": false,
-          "selectValues": ["Sim", "Não"]
+          "selectValues": [
+            "Sim",
+            "Não"
+          ]
         },
         {
           "name": "vinculoTerceiroNf",
@@ -177,7 +191,10 @@
           "type": "select",
           "required": false,
           "system": false,
-          "selectValues": ["Sim", "Não"]
+          "selectValues": [
+            "Sim",
+            "Não"
+          ]
         },
         {
           "name": "vinculoTerceiroBanco",
@@ -202,7 +219,10 @@
           "type": "select",
           "required": false,
           "system": false,
-          "selectValues": ["Sim", "Não"]
+          "selectValues": [
+            "Sim",
+            "Não"
+          ]
         },
         {
           "name": "dataAtivacao",
@@ -221,7 +241,10 @@
           "type": "select",
           "required": false,
           "system": false,
-          "selectValues": ["Sim", "Não"]
+          "selectValues": [
+            "Sim",
+            "Não"
+          ]
         },
         {
           "name": "motivoBlackList",
@@ -252,14 +275,19 @@
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate"]
+          "autodateTriggers": [
+            "onCreate"
+          ]
         },
         {
           "name": "updated",
           "type": "autodate",
           "required": false,
           "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
+          "autodateTriggers": [
+            "onCreate",
+            "onUpdate"
+          ]
         }
       ],
       "indexes": []
