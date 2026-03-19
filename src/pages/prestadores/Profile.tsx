@@ -1,13 +1,29 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { Edit, Trash, MapPin, Phone, Mail, Building, AlertCircle } from 'lucide-react'
+import {
+  ChevronLeft,
+  Plus,
+  AlertTriangle,
+  CheckCircle2,
+  Mail,
+  Phone,
+  MapPin,
+  CreditCard,
+  DollarSign,
+  Car,
+  Building,
+  Key,
+  TrendingUp,
+  Trash,
+  Edit,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { getPrestador, deletePrestador } from '@/services/prestadores'
 import { Prestador } from '@/types'
 import { useToast } from '@/hooks/use-toast'
 import { useRealtime } from '@/hooks/use-realtime'
+import { cn } from '@/lib/utils'
 
 export default function ProfilePrestador() {
   const { id } = useParams()
@@ -55,108 +71,274 @@ export default function ProfilePrestador() {
   if (loading) return <div className="p-8 text-center">Carregando...</div>
   if (!p) return <div className="p-8 text-center text-xl">Prestador não encontrado.</div>
 
+  const getBadgeClass = (status: string) => {
+    const base = 'text-[11px] font-semibold px-[8px] py-[2px] rounded-full border'
+    if (status === 'Concluido') return cn(base, 'bg-green-100 text-green-700 border-green-200')
+    if (status === 'Em Andamento') return cn(base, 'bg-blue-100 text-blue-700 border-blue-200')
+    if (status === 'Pendente') return cn(base, 'bg-yellow-100 text-yellow-700 border-yellow-200')
+    if (status === 'Entregue com Pendencia')
+      return cn(base, 'bg-orange-100 text-orange-700 border-orange-200')
+    return base
+  }
+
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold">Perfil do Prestador</h1>
-        <div className="flex gap-3">
-          <Button variant="destructive" onClick={handleDelete} className="rounded-full">
-            <Trash className="w-4 h-4 mr-2" />
-            Remover
-          </Button>
-          <Button asChild className="rounded-full px-6">
-            <Link to={`/prestadores/${p.id}/editar`}>
-              <Edit className="w-4 h-4 mr-2" /> Editar
+    <div className="bg-background min-h-screen pb-10">
+      <div className="max-w-[1280px] mx-auto px-[24px] space-y-[20px] pt-6">
+        {/* Top bar */}
+        <div className="h-[56px] flex flex-row justify-between items-center">
+          <Button
+            variant="ghost"
+            className="gap-[8px] text-[14px] text-muted-foreground hover:text-foreground hover:bg-transparent px-0 h-auto"
+            asChild
+          >
+            <Link to="/prestadores">
+              <ChevronLeft className="w-[16px] h-[16px]" />
+              Voltar para Prestadores
             </Link>
           </Button>
-        </div>
-      </div>
-
-      <Card className="rounded-3xl border-none shadow-elevation overflow-hidden mb-8">
-        <div className="h-32 bg-primary/10 relative">
-          {p.naBlackList === 'Sim' && (
-            <div className="absolute top-4 right-4 bg-destructive text-white px-4 py-1 rounded-full text-sm font-bold shadow-md animate-pulse">
-              NA BLACK LIST
-            </div>
-          )}
-        </div>
-        <CardContent className="px-8 pb-8 relative">
-          <img
-            src={`https://img.usecurling.com/ppl/large?gender=male&seed=${p.id}`}
-            className="w-32 h-32 rounded-2xl border-4 border-card shadow-lg absolute -top-16 object-cover"
-            alt="Profile"
-          />
-          <div className="mt-20 flex justify-between items-start">
-            <div>
-              <h2 className="text-3xl font-bold text-primary">{p.nomeCompleto}</h2>
-              <p className="text-muted-foreground font-medium flex items-center gap-2 mt-1">
-                <MapPin className="w-4 h-4" /> {p.baseAtendimento} - {p.regiaoAbrangencia}
-              </p>
-            </div>
-            <Badge
-              variant={p.ativo === 'Sim' ? 'secondary' : 'outline'}
-              className="text-sm px-4 py-1"
+          <div className="flex gap-[12px] items-center">
+            <Button
+              variant="ghost"
+              onClick={handleDelete}
+              className="text-destructive hover:bg-destructive/10 hover:text-destructive h-[40px] px-[12px] rounded-lg"
+              title="Remover"
             >
-              {p.ativo === 'Sim' ? 'Ativo' : 'Inativo'}
-            </Badge>
+              <Trash className="w-[16px] h-[16px]" />
+            </Button>
+            <Button variant="outline" asChild className="h-[40px] px-[16px] rounded-lg gap-2">
+              <Link to={`/prestadores/${p.id}/editar`}>
+                <Edit className="w-[16px] h-[16px]" /> Editar
+              </Link>
+            </Button>
+            <Button
+              className="bg-primary text-white rounded-lg h-[40px] px-[16px] gap-[8px] hover:brightness-110 transition-all"
+              asChild
+            >
+              <Link to={`/prestadores/${p.id}/processos/novo`}>
+                <Plus className="w-[16px] h-[16px]" />
+                Novo Processo
+              </Link>
+            </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
-        <Card className="rounded-2xl shadow-sm">
-          <CardContent className="p-6 grid gap-4">
-            <h3 className="font-bold text-lg text-primary mb-2 flex items-center gap-2">
-              <Phone className="w-5 h-5" /> Contato
+        {/* Profile header card */}
+        <div className="bg-card border border-border rounded-[16px] p-[24px] mb-[24px] grid grid-cols-1 md:grid-cols-[200px_auto_220px] gap-[32px] md:text-left text-center animate-in fade-in duration-300 ease-out">
+          <div className="flex flex-col items-center md:items-start">
+            <img
+              src={`https://img.usecurling.com/ppl/large?gender=male&seed=${p.id}`}
+              className="w-[80px] h-[80px] rounded-full object-cover border-[3px] border-primary"
+              alt="Profile"
+            />
+            <h2 className="text-[22px] font-bold text-foreground mt-[12px] leading-tight">
+              {p.nomeCompleto}
+            </h2>
+            <Badge variant="secondary" className="text-[12px] mt-[4px]">
+              {p.regiaoAbrangencia}
+            </Badge>
+            <div className="flex gap-2 mt-[12px]">
+              {p.naBlackList === 'Sim' && (
+                <div className="bg-red-100 text-red-700 border border-red-200 text-[12px] font-semibold px-[8px] py-[2px] rounded-full flex flex-row gap-[4px] items-center">
+                  <AlertTriangle className="w-[12px] h-[12px]" /> Blacklist
+                </div>
+              )}
+              {p.ativo === 'Sim' && (
+                <div className="bg-green-100 text-green-700 border border-green-200 text-[12px] font-semibold px-[8px] py-[2px] rounded-full flex flex-row gap-[4px] items-center">
+                  <CheckCircle2 className="w-[12px] h-[12px]" /> Ativo
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-center">
+            <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.05em] mb-[12px]">
+              Informações de Contato
             </h3>
-            <div>
-              <p className="text-sm text-muted-foreground">E-mail</p>
-              <p className="font-medium">{p.email}</p>
+            <div className="flex flex-row gap-[8px] items-center mb-[8px]">
+              <Mail className="w-[14px] h-[14px] text-muted-foreground shrink-0" />
+              <span className="text-[12px] text-muted-foreground w-[60px]">Email</span>
+              <span className="text-[13px] text-foreground font-medium truncate">
+                {p.email || 'Não informado'}
+              </span>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Telefone</p>
-              <p className="font-medium">{p.telefone}</p>
+            <div className="flex flex-row gap-[8px] items-center mb-[8px]">
+              <Phone className="w-[14px] h-[14px] text-muted-foreground shrink-0" />
+              <span className="text-[12px] text-muted-foreground w-[60px]">Telefone</span>
+              <span className="text-[13px] text-foreground font-medium">
+                {p.telefone || 'Não informado'}
+              </span>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Documento</p>
-              <p className="font-medium">{p.cpf || p.cnpj}</p>
+            <div className="flex flex-row gap-[8px] items-center mb-[8px]">
+              <MapPin className="w-[14px] h-[14px] text-muted-foreground shrink-0" />
+              <span className="text-[12px] text-muted-foreground w-[60px]">Base</span>
+              <span className="text-[13px] text-foreground font-medium truncate">
+                {p.baseAtendimento || 'Não informada'}
+              </span>
             </div>
-          </CardContent>
-        </Card>
+            <div className="flex flex-row gap-[8px] items-center mb-[8px]">
+              <CreditCard className="w-[14px] h-[14px] text-muted-foreground shrink-0" />
+              <span className="text-[12px] text-muted-foreground w-[60px]">Doc</span>
+              <span className="text-[13px] text-foreground font-medium">
+                {p.cpf || p.cnpj || 'Não informado'}
+              </span>
+            </div>
+          </div>
 
-        <Card className="rounded-2xl shadow-sm">
-          <CardContent className="p-6 grid gap-4">
-            <h3 className="font-bold text-lg text-primary mb-2 flex items-center gap-2">
-              <Building className="w-5 h-5" /> Comercial
+          <div className="flex flex-col justify-center">
+            <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-[0.05em] mb-[12px]">
+              Informações Comerciais
             </h3>
-            <div>
-              <p className="text-sm text-muted-foreground">Valor Honorário</p>
-              <p className="font-medium text-xl">R$ {Number(p.valorHonorario || 0).toFixed(2)}</p>
+            <div className="flex flex-row gap-[8px] items-center mb-[8px]">
+              <DollarSign className="w-[14px] h-[14px] text-muted-foreground shrink-0" />
+              <span className="text-[12px] text-muted-foreground w-[80px]">Honorário</span>
+              <span className="text-[13px] text-foreground font-medium">
+                R$ {Number(p.valorHonorario || 0).toFixed(2)}
+              </span>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Valor KM</p>
-              <p className="font-medium">R$ {Number(p.valorKm || 0).toFixed(2)}</p>
+            <div className="flex flex-row gap-[8px] items-center mb-[8px]">
+              <Car className="w-[14px] h-[14px] text-muted-foreground shrink-0" />
+              <span className="text-[12px] text-muted-foreground w-[80px]">Valor KM</span>
+              <span className="text-[13px] text-foreground font-medium">
+                R$ {Number(p.valorKm || 0).toFixed(2)}
+              </span>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Banco / Chave Pix</p>
-              <p className="font-medium">
-                {p.banco} / {p.chavePix}
-              </p>
+            <div className="flex flex-row gap-[8px] items-center mb-[8px]">
+              <Building className="w-[14px] h-[14px] text-muted-foreground shrink-0" />
+              <span className="text-[12px] text-muted-foreground w-[80px]">Banco</span>
+              <span className="text-[13px] text-foreground font-medium truncate">
+                {p.banco || '-'}
+              </span>
             </div>
-          </CardContent>
-        </Card>
+            <div className="flex flex-row gap-[8px] items-center mb-[8px]">
+              <Key className="w-[14px] h-[14px] text-muted-foreground shrink-0" />
+              <span className="text-[12px] text-muted-foreground w-[80px]">Chave Pix</span>
+              <span className="text-[13px] text-foreground font-medium truncate" title={p.chavePix}>
+                {p.chavePix || '-'}
+              </span>
+            </div>
+          </div>
+        </div>
 
-        {p.naBlackList === 'Sim' && (
-          <Card className="col-span-full border-destructive/50 bg-destructive/5 rounded-2xl shadow-sm">
-            <CardContent className="p-6 flex gap-4">
-              <AlertCircle className="w-8 h-8 text-destructive shrink-0" />
-              <div>
-                <h3 className="font-bold text-lg text-destructive">Motivo da Black List</h3>
-                <p className="text-destructive/80 mt-1">{p.motivoBlackList || 'Não informado.'}</p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* KPI Cards Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-[16px] mb-[24px]">
+          {[
+            { title: 'Total Processos', number: '142', subtitle: '+12 esse mês', delay: '0ms' },
+            { title: 'Concluídos', number: '98', subtitle: '69% de sucesso', delay: '80ms' },
+            { title: 'Em Andamento', number: '41', subtitle: 'No prazo', delay: '160ms' },
+            { title: 'Pendências', number: '3', subtitle: 'Atenção necessária', delay: '240ms' },
+          ].map((kpi, i) => (
+            <div
+              key={i}
+              className="rounded-[16px] p-[20px] min-h-[120px] overflow-hidden relative bg-gradient-to-br from-primary to-[hsl(var(--primary)/0.85)] animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both"
+              style={{ animationDelay: kpi.delay, animationDuration: '400ms' }}
+            >
+              <div className="absolute -bottom-[20px] -right-[20px] w-[80px] h-[80px] bg-white/10 rounded-full" />
+              <h4 className="text-[13px] font-medium text-white/85 mb-[8px]">{kpi.title}</h4>
+              <div className="text-[36px] font-bold text-white leading-none">{kpi.number}</div>
+              <p className="text-[12px] text-white/70 mt-[4px]">{kpi.subtitle}</p>
+              <TrendingUp className="w-[16px] h-[16px] text-white/70 absolute top-[16px] right-[16px]" />
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Section */}
+        <div className="grid grid-cols-1 md:grid-cols-[60%_40%] gap-[20px]">
+          {/* ProcessList */}
+          <div className="bg-card border border-border rounded-[16px] p-[20px]">
+            <div className="flex flex-row justify-between items-center mb-[16px]">
+              <h3 className="text-[16px] font-semibold text-foreground">Processos Recentes</h3>
+              <Button variant="outline" size="sm" className="border-primary text-primary" asChild>
+                <Link to={`/prestadores/${p.id}/processos/novo`}>Novo Processo</Link>
+              </Button>
+            </div>
+            <div className="flex flex-col">
+              {[
+                {
+                  id: 'PRC-2023-001',
+                  title: 'Investigação Patrimonial',
+                  status: 'Concluido',
+                  date: '10 Out 2023',
+                },
+                {
+                  id: 'PRC-2023-002',
+                  title: 'Busca de Veículos',
+                  status: 'Em Andamento',
+                  date: '15 Out 2023',
+                },
+                {
+                  id: 'PRC-2023-003',
+                  title: 'Diligência Presencial',
+                  status: 'Pendente',
+                  date: '18 Out 2023',
+                },
+                {
+                  id: 'PRC-2023-004',
+                  title: 'Notificação Extrajudicial',
+                  status: 'Entregue com Pendencia',
+                  date: '20 Out 2023',
+                },
+              ].map((proc, i) => (
+                <div
+                  key={proc.id}
+                  className="border-b border-border py-[12px] hover:bg-muted/50 transition-colors animate-in fade-in slide-in-from-bottom-2 ease-out fill-mode-both flex flex-row items-center justify-between"
+                  style={{ animationDelay: `${i * 40}ms`, animationDuration: '250ms' }}
+                >
+                  <div className="flex flex-col">
+                    <span className="text-[12px] text-muted-foreground font-medium">{proc.id}</span>
+                    <span className="text-[14px] text-foreground font-medium mt-[2px]">
+                      {proc.title}
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-end gap-[4px]">
+                    <div className={getBadgeClass(proc.status)}>{proc.status}</div>
+                    <span className="text-[12px] text-muted-foreground">{proc.date}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-row gap-[8px] justify-end mt-[16px]">
+              <Button variant="outline" size="sm" className="w-[32px] h-[32px] p-0">
+                1
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-[32px] h-[32px] p-0 bg-primary text-white border-primary"
+              >
+                2
+              </Button>
+              <Button variant="outline" size="sm" className="w-[32px] h-[32px] p-0">
+                3
+              </Button>
+            </div>
+          </div>
+
+          {/* RecentActivityCard */}
+          <div className="bg-card border border-border rounded-[16px] p-[20px]">
+            <h3 className="text-[16px] font-semibold text-foreground mb-[16px]">
+              Atividade Recente
+            </h3>
+            <div className="flex flex-col">
+              {[
+                { text: 'Documento CNH atualizado', time: 'Hoje, 14:30' },
+                { text: 'Novo processo atribuído: PRC-2023-005', time: 'Ontem, 09:15' },
+                { text: 'Honorários pagos (R$ 450,00)', time: '12 Out 2023' },
+                { text: 'Status alterado para Ativo', time: '10 Out 2023' },
+              ].map((act, i, arr) => (
+                <div key={i} className="flex flex-row gap-[12px] pb-[16px] relative">
+                  {i !== arr.length - 1 && (
+                    <div className="absolute left-[3px] top-[14px] w-[2px] h-[calc(100%-14px)] bg-border" />
+                  )}
+                  <div className="w-[8px] h-[8px] rounded-full bg-primary mt-[6px] shrink-0 relative z-10" />
+                  <div className="flex flex-col">
+                    <span className="text-[13px] text-foreground">{act.text}</span>
+                    <span className="text-[11px] text-muted-foreground mt-[2px]">{act.time}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )

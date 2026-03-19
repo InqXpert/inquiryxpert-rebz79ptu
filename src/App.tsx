@@ -12,6 +12,7 @@ import PrestadoresList from './pages/prestadores/List'
 import NovoPrestador from './pages/prestadores/Novo'
 import EditarPrestador from './pages/prestadores/Editar'
 import ProfilePrestador from './pages/prestadores/Profile'
+import AddProcesso from './pages/prestadores/AddProcesso'
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth()
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/prestadores" element={<PrestadoresList />} />
             <Route path="/prestadores/novo" element={<NovoPrestador />} />
             <Route path="/prestadores/:id/editar" element={<EditarPrestador />} />
+            <Route path="/prestadores/:id/processos/novo" element={<AddProcesso />} />
             <Route path="/prestadores/:id" element={<ProfilePrestador />} />
           </Route>
           <Route path="*" element={<NotFound />} />

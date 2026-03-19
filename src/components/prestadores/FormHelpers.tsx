@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 export const ImportedFieldsContext = createContext<string[]>([])
@@ -34,21 +35,40 @@ export function FInput({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Input
-              placeholder={placeholder}
-              type={type}
-              {...field}
-              value={field.value ?? ''}
-              className={cn(isImported && 'border-l-4 border-l-green-500 bg-green-50/10')}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field }) => {
+        const inputNode = (
+          <Input
+            placeholder={placeholder}
+            type={type}
+            {...field}
+            value={field.value ?? ''}
+            className={cn(
+              isImported &&
+                'border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in',
+            )}
+          />
+        )
+        return (
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            {isImported ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="relative w-full">
+                    <FormControl>{inputNode}</FormControl>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="bg-foreground text-background text-[11px] rounded-md px-[8px] py-[4px]">
+                  <p>Preenchido automaticamente via planilha</p>
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <FormControl>{inputNode}</FormControl>
+            )}
+            <FormMessage />
+          </FormItem>
+        )
+      }}
     />
   )
 }
@@ -66,28 +86,45 @@ export function FSelect({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <FormControl>
-              <SelectTrigger
-                className={cn(isImported && 'border-l-4 border-l-green-500 bg-green-50/10')}
-              >
-                <SelectValue placeholder="Selecione..." />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              {options.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field }) => {
+        return (
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              {isImported ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="relative w-full">
+                      <FormControl>
+                        <SelectTrigger className="border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in">
+                          <SelectValue placeholder="Selecione..." />
+                        </SelectTrigger>
+                      </FormControl>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-foreground text-background text-[11px] rounded-md px-[8px] py-[4px]">
+                    <p>Preenchido automaticamente via planilha</p>
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                </FormControl>
+              )}
+              <SelectContent>
+                {options.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )
+      }}
     />
   )
 }
@@ -114,20 +151,39 @@ export function FTextarea({ name, label, placeholder }: FieldProps) {
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <Textarea
-              placeholder={placeholder}
-              {...field}
-              value={field.value ?? ''}
-              className={cn(isImported && 'border-l-4 border-l-green-500 bg-green-50/10')}
-            />
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field }) => {
+        const textareaNode = (
+          <Textarea
+            placeholder={placeholder}
+            {...field}
+            value={field.value ?? ''}
+            className={cn(
+              isImported &&
+                'border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in',
+            )}
+          />
+        )
+        return (
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            {isImported ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="relative w-full">
+                    <FormControl>{textareaNode}</FormControl>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent className="bg-foreground text-background text-[11px] rounded-md px-[8px] py-[4px]">
+                  <p>Preenchido automaticamente via planilha</p>
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <FormControl>{textareaNode}</FormControl>
+            )}
+            <FormMessage />
+          </FormItem>
+        )
+      }}
     />
   )
 }
