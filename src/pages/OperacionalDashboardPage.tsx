@@ -4,6 +4,7 @@ import { DashboardFilters } from '@/components/operacional/DashboardFilters'
 import { DashboardKPIs } from '@/components/operacional/DashboardKPIs'
 import { ProcessosOperacionaisTable } from '@/components/operacional/ProcessosOperacionaisTable'
 import { ProcessoDetailModal } from '@/components/operacional/ProcessoDetailModal'
+import { ImportOperacionalDataModal } from '@/components/operacional/ImportOperacionalDataModal'
 import { exportToExcel } from '@/services/procesosOperacionais'
 import { useToast } from '@/hooks/use-toast'
 
@@ -22,19 +23,29 @@ export default function OperacionalDashboardPage() {
   } = useOperacionalDashboard()
 
   const [selectedProcessoId, setSelectedProcessoId] = useState<string | null>(null)
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
   const { toast } = useToast()
 
   const handleExport = async () => {
     try {
       await exportToExcel(processos)
-      toast({ title: 'Sucesso', description: 'Exportação concluída.' })
+      toast({ title: 'Sucesso', description: 'Planilha exportada com sucesso!' })
     } catch (e) {
-      toast({ title: 'Erro', description: 'Erro na exportação.', variant: 'destructive' })
+      toast({
+        title: 'Erro',
+        description: 'Erro ao exportar. Tente novamente.',
+        variant: 'destructive',
+      })
     }
   }
 
-  const handleImport = () => {
-    toast({ title: 'Info', description: 'Funcionalidade de importação em desenvolvimento.' })
+  const handleImportClick = () => {
+    setIsImportModalOpen(true)
+  }
+
+  const handleImportComplete = () => {
+    setIsImportModalOpen(false)
+    fetchProcessos()
   }
 
   return (
@@ -54,7 +65,7 @@ export default function OperacionalDashboardPage() {
           setFilters={setFilters}
           clearFilters={clearFilters}
           onExport={handleExport}
-          onImport={handleImport}
+          onImport={handleImportClick}
           canExport={canExport()}
           canImport={canImport()}
         />
@@ -74,6 +85,12 @@ export default function OperacionalDashboardPage() {
           isOpen={!!selectedProcessoId}
           onClose={() => setSelectedProcessoId(null)}
           onUpdated={fetchProcessos}
+        />
+
+        <ImportOperacionalDataModal
+          isOpen={isImportModalOpen}
+          onClose={() => setIsImportModalOpen(false)}
+          onComplete={handleImportComplete}
         />
       </div>
     </div>

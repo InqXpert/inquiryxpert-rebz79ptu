@@ -1,6 +1,7 @@
 import pb from '@/lib/pocketbase/client'
 import { ProcessoOperacional, ProcessoHistorico, ProcessoDocumento } from '@/types'
 import { mockProcessos, mockHistorico, mockDocumentos } from './mockOperacional'
+import * as XLSX from 'xlsx'
 
 export const fetchProcessos = async (filters: any): Promise<ProcessoOperacional[]> => {
   try {
@@ -172,34 +173,59 @@ export const deleteDocumento = async (documentoId: string): Promise<boolean> => 
 }
 
 export const exportToExcel = async (processos: ProcessoOperacional[]): Promise<boolean> => {
-  const header = [
-    'Numero Controle',
+  try {
+    const headers = [
+      'numero_controle',
+      'status',
+      'nome_segurado',
+      'cia',
+      'tipo_servico',
+      'agente_prestador',
+      'data_entrada',
+      'dias_uteis',
+      'data_retorno',
+      'data_saida',
+      'resultado',
+    ]
+
+    const dataRows = processos.map((p) => headers.map((k) => (p as any)[k] || ''))
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...dataRows])
+    const workbook = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Processos')
+
+    const dateStr = new Date().toISOString().split('T')[0]
+    XLSX.writeFile(workbook, `processos-operacionais-${dateStr}.xlsx`)
+    return true
+  } catch (err) {
+    throw new Error('Erro ao exportar')
+  }
+}
+
+export const downloadTemplate = () => {
+  const headers = [
+    'Numero',
     'Status',
     'Cia',
     'Tipo Servico',
+    'Local Sinistro',
+    'Agente Prestador',
     'Data Entrada',
+    'Dias Uteis',
     'Resultado',
-  ].join(',')
-  const rows = processos
-    .map(
-      (p) =>
-        `${p.numero_controle},${p.status},${p.cia},${p.tipo_servico},${p.data_entrada},${p.resultado}`,
-    )
-    .join('\n')
-  const csv = `${header}\n${rows}`
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'processos_operacionais.csv'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
-  return true
-}
-
-export const importProcessos = async (data: any[]): Promise<string[]> => {
-  // Mock import
-  return ['id1', 'id2']
+  ]
+  const example = [
+    '03.26.04.03.05690',
+    'EM ELABORACAO',
+    'BRADESCO',
+    'AUTO',
+    'SP / SAO PAULO',
+    'SP / YASSUO',
+    '02/03/2026',
+    14,
+    'REGULAR',
+  ]
+  const worksheet = XLSX.utils.aoa_to_sheet([headers, example])
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Modelo')
+  XLSX.writeFile(workbook, 'modelo-importacao-operacional.xlsx')
 }

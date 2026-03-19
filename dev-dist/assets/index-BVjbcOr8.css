@@ -1554,6 +1554,10 @@ body{
   max-width: 520px;
 }
 
+.max-w-\[600px\]{
+  max-width: 600px;
+}
+
 .max-w-\[800px\]{
   max-width: 800px;
 }
@@ -1885,6 +1889,12 @@ body{
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
 }
 
+.space-y-\[16px\] > :not([hidden]) ~ :not([hidden]){
+  --tw-space-y-reverse: 0;
+  margin-top: calc(16px * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(16px * var(--tw-space-y-reverse));
+}
+
 .space-y-\[20px\] > :not([hidden]) ~ :not([hidden]){
   --tw-space-y-reverse: 0;
   margin-top: calc(20px * calc(1 - var(--tw-space-y-reverse)));
@@ -1933,6 +1943,10 @@ body{
 
 .\!rounded-\[8px\]{
   border-radius: 8px !important;
+}
+
+.rounded{
+  border-radius: 0.25rem;
 }
 
 .rounded-2xl{
@@ -2279,6 +2293,11 @@ body{
   background-color: rgb(254 226 226 / var(--tw-bg-opacity, 1));
 }
 
+.bg-red-50{
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1));
+}
+
 .bg-secondary{
   background-color: hsl(var(--secondary));
 }
@@ -2315,6 +2334,11 @@ body{
 .bg-yellow-100{
   --tw-bg-opacity: 1;
   background-color: rgb(254 249 195 / var(--tw-bg-opacity, 1));
+}
+
+.bg-yellow-50{
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 252 232 / var(--tw-bg-opacity, 1));
 }
 
 .bg-gradient-to-br{
@@ -2414,6 +2438,10 @@ body{
 
 .p-\[32px\]{
   padding: 32px;
+}
+
+.p-\[40px\]{
+  padding: 40px;
 }
 
 .p-\[40px_24px\]{
@@ -2537,6 +2565,11 @@ body{
 .py-6{
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.py-8{
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .py-\[12px\]{

@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Search } from 'lucide-react'
+import { Search, Upload, Download } from 'lucide-react'
 
 interface Props {
   filters: any
@@ -89,7 +89,7 @@ export function DashboardFilters({
             onClick={onExport}
             aria-label="Exportar para Excel"
           >
-            Exportar para Excel
+            <Download className="w-4 h-4 mr-2" /> Exportar para Excel
           </Button>
         )}
         {canImport && (
@@ -98,7 +98,7 @@ export function DashboardFilters({
             onClick={onImport}
             aria-label="Importar Dados"
           >
-            Importar Dados
+            <Upload className="w-4 h-4 mr-2" /> Importar Dados
           </Button>
         )}
       </div>
