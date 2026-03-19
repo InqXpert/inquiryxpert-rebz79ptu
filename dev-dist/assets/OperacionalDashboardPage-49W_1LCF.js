@@ -1,11 +1,18 @@
 import { i as __toESM, n as require_react, t as require_jsx_runtime } from "./jsx-runtime-huLxtCwt.js";
-import { A as useLayoutEffect2, B as createLucideIcon, C as FocusScope, D as createSlot, E as Primitive, F as cn, I as useComposedRefs, L as X, M as composeEventHandlers, N as Input, O as useControllableState, P as Button, R as Search, S as Portal$1, T as useCallbackRef, V as require_react_dom, a as Arrow, b as useFocusGuards, c as createPopperScope, d as Content$2, f as Description, g as Title, h as Root$1, i as Anchor, j as createContextScope, k as useId, l as Skeleton, m as Portal$2, n as pb, o as Content$1, p as Overlay, r as VISUALLY_HIDDEN_STYLES, s as Root2$2, t as useAuth, u as Close, v as hideOthers, w as DismissableLayer, x as Presence, y as ReactRemoveScroll, z as FileText } from "./index-D1FpZszG.js";
-var ArrowUpRight = createLucideIcon("arrow-up-right", [["path", {
-	d: "M7 7h10v10",
-	key: "1tivn9"
+import { A as useLayoutEffect2, B as require_react_dom, C as FocusScope, D as createSlot, E as Primitive, F as cn, I as useComposedRefs, L as X, M as composeEventHandlers, N as Input, O as useControllableState, P as Button, R as Search, S as Portal$1, T as useCallbackRef, a as Arrow, b as useFocusGuards, c as createPopperScope, d as Content$2, f as Description, g as Title, h as Root$1, i as Anchor, j as createContextScope, k as useId, l as Skeleton, m as Portal$2, n as pb, o as Content$1, p as Overlay, r as VISUALLY_HIDDEN_STYLES, s as Root2$2, t as useAuth, u as Close, v as hideOthers, w as DismissableLayer, x as Presence, y as ReactRemoveScroll, z as createLucideIcon } from "./index-CySE6ChI.js";
+var ArrowDown = createLucideIcon("arrow-down", [["path", {
+	d: "M12 5v14",
+	key: "s699le"
 }], ["path", {
-	d: "M7 17 17 7",
-	key: "1vkiza"
+	d: "m19 12-7 7-7-7",
+	key: "1idqje"
+}]]);
+var ArrowUp = createLucideIcon("arrow-up", [["path", {
+	d: "m5 12 7-7 7 7",
+	key: "hav0vg"
+}], ["path", {
+	d: "M12 19V5",
+	key: "x0mq9r"
 }]]);
 var Check = createLucideIcon("check", [["path", {
 	d: "M20 6 9 17l-5-5",
@@ -18,15 +25,6 @@ var ChevronDown = createLucideIcon("chevron-down", [["path", {
 var ChevronUp = createLucideIcon("chevron-up", [["path", {
 	d: "m18 15-6-6-6 6",
 	key: "153udz"
-}]]);
-var Clock = createLucideIcon("clock", [["circle", {
-	cx: "12",
-	cy: "12",
-	r: "10",
-	key: "1mglay"
-}], ["path", {
-	d: "M12 6v6l4 2",
-	key: "mmk7yg"
 }]]);
 var Download = createLucideIcon("download", [
 	["path", {
@@ -42,6 +40,31 @@ var Download = createLucideIcon("download", [
 		key: "brsn70"
 	}]
 ]);
+var File = createLucideIcon("file", [["path", {
+	d: "M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z",
+	key: "1oefj6"
+}], ["path", {
+	d: "M14 2v5a1 1 0 0 0 1 1h5",
+	key: "wfsgrz"
+}]]);
+var FolderOpen = createLucideIcon("folder-open", [["path", {
+	d: "m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2",
+	key: "usdka0"
+}]]);
+var Pencil = createLucideIcon("pencil", [["path", {
+	d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+	key: "1a8usu"
+}], ["path", {
+	d: "m15 5 4 4",
+	key: "1mk7zo"
+}]]);
+var Plus = createLucideIcon("plus", [["path", {
+	d: "M5 12h14",
+	key: "1ays0h"
+}], ["path", {
+	d: "M12 5v14",
+	key: "s699le"
+}]]);
 var Trash2 = createLucideIcon("trash-2", [
 	["path", {
 		d: "M10 11v6",
@@ -1770,147 +1793,135 @@ SelectSeparator.displayName = Separator.displayName;
 //#endregion
 //#region src/components/operacional/DashboardFilters.tsx
 function DashboardFilters({ filters, setFilters, clearFilters, onExport, onImport, canExport, canImport }) {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		"data-uid": "src/components/operacional/DashboardFilters.tsx:32:5",
 		"data-prohibitions": "[editContent]",
-		className: "flex flex-col gap-4 mb-6",
-		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "bg-card border border-border rounded-[8px] p-[16px] flex flex-col md:flex-row gap-[12px] flex-wrap items-center",
+		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			"data-uid": "src/components/operacional/DashboardFilters.tsx:33:7",
-			"data-prohibitions": "[editContent]",
-			className: "flex flex-col lg:flex-row gap-4",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-prohibitions": "[]",
+			className: "relative flex-grow w-full md:w-auto",
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, {
 				"data-uid": "src/components/operacional/DashboardFilters.tsx:34:9",
-				"data-prohibitions": "[]",
-				className: "relative flex-1",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Search, {
-					"data-uid": "src/components/operacional/DashboardFilters.tsx:35:11",
-					"data-prohibitions": "[editContent]",
-					className: "absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-					"data-uid": "src/components/operacional/DashboardFilters.tsx:36:11",
-					"data-prohibitions": "[editContent]",
-					placeholder: "Buscar controle, segurado ou placa...",
-					className: "pl-9 bg-card",
-					value: filters.search,
-					onChange: (e) => setFilters({ search: e.target.value }),
-					"aria-label": "Buscar processos"
-				})]
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/operacional/DashboardFilters.tsx:44:9",
 				"data-prohibitions": "[editContent]",
-				className: "flex flex-wrap lg:flex-nowrap gap-3",
-				children: [
-					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-						"data-uid": "src/components/operacional/DashboardFilters.tsx:45:11",
-						"data-prohibitions": "[]",
-						value: filters.status,
-						onValueChange: (v) => setFilters({ status: v }),
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-							"data-uid": "src/components/operacional/DashboardFilters.tsx:46:13",
-							"data-prohibitions": "[]",
-							className: "w-[160px] bg-card",
-							"aria-label": "Filtrar por status",
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-								"data-uid": "src/components/operacional/DashboardFilters.tsx:47:15",
-								"data-prohibitions": "[editContent]",
-								placeholder: "Status"
-							})
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectContent, {
-							"data-uid": "src/components/operacional/DashboardFilters.tsx:49:13",
-							"data-prohibitions": "[]",
-							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/components/operacional/DashboardFilters.tsx:50:15",
-									"data-prohibitions": "[]",
-									value: "Todos",
-									children: "Todos os Status"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/components/operacional/DashboardFilters.tsx:51:15",
-									"data-prohibitions": "[]",
-									value: "em_elaboracao",
-									children: "Em Elaboração"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/components/operacional/DashboardFilters.tsx:52:15",
-									"data-prohibitions": "[]",
-									value: "em_execucao",
-									children: "Em Execução"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/components/operacional/DashboardFilters.tsx:53:15",
-									"data-prohibitions": "[]",
-									value: "finalizado",
-									children: "Finalizado"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/components/operacional/DashboardFilters.tsx:54:15",
-									"data-prohibitions": "[]",
-									value: "cancelado",
-									children: "Cancelado"
-								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-									"data-uid": "src/components/operacional/DashboardFilters.tsx:55:15",
-									"data-prohibitions": "[]",
-									value: "analise_inicial",
-									children: "Análise Inicial"
-								})
-							]
-						})]
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-						"data-uid": "src/components/operacional/DashboardFilters.tsx:59:11",
-						"data-prohibitions": "[editContent]",
-						type: "date",
-						className: "w-[140px] bg-card text-sm",
-						value: filters.data_entrada_from,
-						onChange: (e) => setFilters({ data_entrada_from: e.target.value }),
-						"aria-label": "Data inicial"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-						"data-uid": "src/components/operacional/DashboardFilters.tsx:66:11",
-						"data-prohibitions": "[editContent]",
-						type: "date",
-						className: "w-[140px] bg-card text-sm",
-						value: filters.data_entrada_to,
-						onChange: (e) => setFilters({ data_entrada_to: e.target.value }),
-						"aria-label": "Data final"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/DashboardFilters.tsx:74:11",
-						"data-prohibitions": "[]",
-						variant: "outline",
-						onClick: clearFilters,
-						"aria-label": "Limpar Filtros",
-						children: "Limpar"
-					}),
-					canExport && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/DashboardFilters.tsx:79:13",
-						"data-prohibitions": "[]",
-						variant: "secondary",
-						onClick: onExport,
-						"aria-label": "Exportar para Excel",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, {
-							"data-uid": "src/components/operacional/DashboardFilters.tsx:80:15",
-							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4"
-						})
-					}),
-					canImport && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/DashboardFilters.tsx:84:13",
-						"data-prohibitions": "[]",
-						variant: "secondary",
-						onClick: onImport,
-						"aria-label": "Importar Dados",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Upload, {
-							"data-uid": "src/components/operacional/DashboardFilters.tsx:85:15",
-							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4"
-						})
-					})
-				]
+				className: "absolute left-[12px] top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
+			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+				"data-uid": "src/components/operacional/DashboardFilters.tsx:35:9",
+				"data-prohibitions": "[editContent]",
+				placeholder: "Buscar controle, segurado ou placa...",
+				className: "pl-[36px] h-[40px] border-border rounded-[6px] text-[13px] bg-transparent focus-visible:ring-1 focus-visible:ring-[hsl(210_60%_25%)]",
+				value: filters.search,
+				onChange: (e) => setFilters({ search: e.target.value }),
+				"aria-label": "Buscar processos"
 			})]
-		})
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/components/operacional/DashboardFilters.tsx:44:7",
+			"data-prohibitions": "[editContent]",
+			className: "flex flex-wrap lg:flex-nowrap gap-[12px] w-full md:w-auto",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
+					"data-uid": "src/components/operacional/DashboardFilters.tsx:45:9",
+					"data-prohibitions": "[]",
+					value: filters.status,
+					onValueChange: (v) => setFilters({ status: v }),
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
+						"data-uid": "src/components/operacional/DashboardFilters.tsx:46:11",
+						"data-prohibitions": "[]",
+						className: "h-[40px] border-border rounded-[6px] px-[12px] text-[13px] w-full md:w-[160px] bg-transparent focus:ring-1 focus:ring-[hsl(210_60%_25%)]",
+						"aria-label": "Filtrar por status",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
+							"data-uid": "src/components/operacional/DashboardFilters.tsx:50:13",
+							"data-prohibitions": "[editContent]",
+							placeholder: "Status"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(SelectContent, {
+						"data-uid": "src/components/operacional/DashboardFilters.tsx:52:11",
+						"data-prohibitions": "[]",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
+								"data-uid": "src/components/operacional/DashboardFilters.tsx:53:13",
+								"data-prohibitions": "[]",
+								value: "Todos",
+								children: "Todos os Status"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
+								"data-uid": "src/components/operacional/DashboardFilters.tsx:54:13",
+								"data-prohibitions": "[]",
+								value: "em_elaboracao",
+								children: "Em Elaboração"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
+								"data-uid": "src/components/operacional/DashboardFilters.tsx:55:13",
+								"data-prohibitions": "[]",
+								value: "em_execucao",
+								children: "Em Execução"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
+								"data-uid": "src/components/operacional/DashboardFilters.tsx:56:13",
+								"data-prohibitions": "[]",
+								value: "finalizado",
+								children: "Finalizado"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
+								"data-uid": "src/components/operacional/DashboardFilters.tsx:57:13",
+								"data-prohibitions": "[]",
+								value: "cancelado",
+								children: "Cancelado"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
+								"data-uid": "src/components/operacional/DashboardFilters.tsx:58:13",
+								"data-prohibitions": "[]",
+								value: "analise_inicial",
+								children: "Análise Inicial"
+							})
+						]
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+					"data-uid": "src/components/operacional/DashboardFilters.tsx:62:9",
+					"data-prohibitions": "[editContent]",
+					type: "date",
+					className: "h-[40px] border-border rounded-[6px] px-[12px] text-[13px] w-full md:w-[140px] bg-transparent focus-visible:ring-1 focus-visible:ring-[hsl(210_60%_25%)]",
+					value: filters.data_entrada_from,
+					onChange: (e) => setFilters({ data_entrada_from: e.target.value }),
+					"aria-label": "Data inicial"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+					"data-uid": "src/components/operacional/DashboardFilters.tsx:69:9",
+					"data-prohibitions": "[editContent]",
+					type: "date",
+					className: "h-[40px] border-border rounded-[6px] px-[12px] text-[13px] w-full md:w-[140px] bg-transparent focus-visible:ring-1 focus-visible:ring-[hsl(210_60%_25%)]",
+					value: filters.data_entrada_to,
+					onChange: (e) => setFilters({ data_entrada_to: e.target.value }),
+					"aria-label": "Data final"
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					"data-uid": "src/components/operacional/DashboardFilters.tsx:77:9",
+					"data-prohibitions": "[]",
+					variant: "outline",
+					className: "h-[40px] px-[16px] rounded-[6px] text-muted-foreground w-full md:w-auto font-medium",
+					onClick: clearFilters,
+					"aria-label": "Limpar Filtros",
+					children: "Limpar Filtros"
+				}),
+				canExport && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					"data-uid": "src/components/operacional/DashboardFilters.tsx:87:11",
+					"data-prohibitions": "[]",
+					className: "h-[40px] px-[16px] rounded-[6px] bg-[hsl(210_60%_25%)] hover:bg-[hsl(210_60%_35%)] text-white w-full md:w-auto font-medium",
+					onClick: onExport,
+					"aria-label": "Exportar para Excel",
+					children: "Exportar para Excel"
+				}),
+				canImport && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+					"data-uid": "src/components/operacional/DashboardFilters.tsx:96:11",
+					"data-prohibitions": "[]",
+					className: "h-[40px] px-[16px] rounded-[6px] bg-[hsl(210_60%_25%)] hover:bg-[hsl(210_60%_35%)] text-white w-full md:w-auto font-medium",
+					onClick: onImport,
+					"aria-label": "Importar Dados",
+					children: "Importar Dados"
+				})
+			]
+		})]
 	});
 }
 //#endregion
@@ -1919,7 +1930,7 @@ function DashboardKPIs({ processos, loading }) {
 	if (loading) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		"data-uid": "src/components/operacional/DashboardKPIs.tsx:12:7",
 		"data-prohibitions": "[editContent]",
-		className: "grid grid-cols-2 md:grid-cols-4 gap-4 mb-6",
+		className: "grid grid-cols-2 lg:grid-cols-4 gap-[16px] mb-[24px]",
 		children: [
 			1,
 			2,
@@ -1928,7 +1939,7 @@ function DashboardKPIs({ processos, loading }) {
 		].map((i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			"data-uid": "src/components/operacional/DashboardKPIs.tsx:14:11",
 			"data-prohibitions": "[editContent]",
-			className: "h-[120px] rounded-2xl bg-muted animate-pulse"
+			className: "h-[120px] rounded-[8px] bg-muted animate-pulse"
 		}, i))
 	});
 	const kpis = [
@@ -1956,169 +1967,48 @@ function DashboardKPIs({ processos, loading }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		"data-uid": "src/components/operacional/DashboardKPIs.tsx:41:5",
 		"data-prohibitions": "[editContent]",
-		className: "grid grid-cols-2 md:grid-cols-4 gap-4 mb-6",
+		className: "grid grid-cols-2 lg:grid-cols-4 gap-[16px] mb-[24px]",
 		children: kpis.map((kpi, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			"data-uid": "src/components/operacional/DashboardKPIs.tsx:43:9",
 			"data-prohibitions": "[editContent]",
-			className: "relative overflow-hidden rounded-2xl p-5 min-h-[120px] flex flex-col justify-center animate-in slide-in-from-bottom-4 fade-in duration-400 fill-mode-both",
+			className: "relative overflow-hidden rounded-[8px] p-[20px] min-h-[120px] flex flex-col justify-center animate-in slide-in-from-bottom-4 fade-in duration-400 ease-out fill-mode-both",
 			style: {
-				background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.85) 100%)",
+				background: "linear-gradient(135deg, hsl(210 60% 25%) 0%, hsl(210 60% 35%) 100%)",
 				animationDelay: `${i * 80}ms`
 			},
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:52:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:51:11",
 					"data-prohibitions": "[editContent]",
-					className: "absolute -bottom-5 -right-5 w-20 h-20 bg-white/10 rounded-full"
+					className: "absolute -bottom-[20px] -right-[20px] w-[80px] h-[80px] bg-white/10 rounded-full"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TrendingUp, {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:53:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:52:11",
 					"data-prohibitions": "[editContent]",
-					className: "w-4 h-4 text-white/70 absolute top-4 right-4"
+					className: "w-[16px] h-[16px] text-white/70 absolute top-[16px] right-[16px]"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:54:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:53:11",
 					"data-prohibitions": "[editContent]",
-					className: "text-[13px] font-medium text-white/85 mb-2 z-10",
+					className: "text-[13px] font-medium text-white/85 mb-[8px] relative z-10",
 					children: kpi.title
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:55:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:56:11",
 					"data-prohibitions": "[editContent]",
-					className: "text-3xl font-bold text-white leading-none z-10",
+					className: "text-[36px] font-bold text-white leading-[1] relative z-10",
 					children: kpi.value
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-					"data-uid": "src/components/operacional/DashboardKPIs.tsx:56:11",
+					"data-uid": "src/components/operacional/DashboardKPIs.tsx:59:11",
 					"data-prohibitions": "[editContent]",
-					className: "text-[12px] text-white/70 mt-1 z-10",
+					className: "text-[12px] text-white/70 mt-[4px] relative z-10",
 					children: kpi.subtitle
 				})
 			]
 		}, kpi.title))
 	});
 }
-//#endregion
-//#region src/components/ui/table.tsx
-var Table = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/table.tsx:8:5",
-	"data-prohibitions": "[editContent]",
-	className: "relative w-full overflow-auto",
-	children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("table", {
-		"data-uid": "src/components/ui/table.tsx:9:7",
-		"data-prohibitions": "[editContent]",
-		ref,
-		className: cn("w-full caption-bottom text-sm", className),
-		...props
-	})
-}));
-Table.displayName = "Table";
-var TableHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", {
-	"data-uid": "src/components/ui/table.tsx:19:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("[&_tr]:border-b", className),
-	...props
-}));
-TableHeader.displayName = "TableHeader";
-var TableBody = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", {
-	"data-uid": "src/components/ui/table.tsx:27:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("[&_tr:last-child]:border-0", className),
-	...props
-}));
-TableBody.displayName = "TableBody";
-var TableFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tfoot", {
-	"data-uid": "src/components/ui/table.tsx:35:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("border-t bg-muted/50 font-medium [&>tr]:last:border-b-0", className),
-	...props
-}));
-TableFooter.displayName = "TableFooter";
-var TableRow = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tr", {
-	"data-uid": "src/components/ui/table.tsx:45:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted", className),
-	...props
-}));
-TableRow.displayName = "TableRow";
-var TableHead = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
-	"data-uid": "src/components/ui/table.tsx:61:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0", className),
-	...props
-}));
-TableHead.displayName = "TableHead";
-var TableCell = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
-	"data-uid": "src/components/ui/table.tsx:76:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className),
-	...props
-}));
-TableCell.displayName = "TableCell";
-var TableCaption = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("caption", {
-	"data-uid": "src/components/ui/table.tsx:88:3",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("mt-4 text-sm text-muted-foreground", className),
-	...props
-}));
-TableCaption.displayName = "TableCaption";
-//#endregion
-//#region src/components/ui/card.tsx
-var Card = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:8:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("rounded-lg border bg-card text-card-foreground shadow-sm", className),
-	...props
-}));
-Card.displayName = "Card";
-var CardHeader = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:19:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("flex flex-col space-y-1.5 p-6", className),
-	...props
-}));
-CardHeader.displayName = "CardHeader";
-var CardTitle = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:26:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("text-2xl font-semibold leading-none tracking-tight", className),
-	...props
-}));
-CardTitle.displayName = "CardTitle";
-var CardDescription = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:37:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("text-sm text-muted-foreground", className),
-	...props
-}));
-CardDescription.displayName = "CardDescription";
-var CardContent = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:44:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("p-6 pt-0", className),
-	...props
-}));
-CardContent.displayName = "CardContent";
-var CardFooter = import_react.forwardRef(({ className, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-	"data-uid": "src/components/ui/card.tsx:51:5",
-	"data-prohibitions": "[editContent]",
-	ref,
-	className: cn("flex items-center p-6 pt-0", className),
-	...props
-}));
-CardFooter.displayName = "CardFooter";
 //#endregion
 //#region src/components/operacional/ProcessosOperacionaisTable.tsx
 function ProcessosOperacionaisTable({ processos, loading, onViewDetail, pagination, setPagination }) {
@@ -2141,8 +2031,20 @@ function ProcessosOperacionaisTable({ processos, loading, onViewDetail, paginati
 	const startIndex = (pagination.currentPage - 1) * pagination.pageSize;
 	const pageData = sortedData.slice(startIndex, startIndex + pagination.pageSize);
 	const totalPages = Math.ceil(pagination.totalCount / pagination.pageSize);
+	const SortIcon = ({ colKey }) => {
+		if (sortKey !== colKey) return null;
+		return sortDir === "asc" ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUp, {
+			"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:48:7",
+			"data-prohibitions": "[editContent]",
+			className: "inline w-3 h-3 ml-1"
+		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowDown, {
+			"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:50:7",
+			"data-prohibitions": "[editContent]",
+			className: "inline w-3 h-3 ml-1"
+		});
+	};
 	if (loading) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:57:7",
+		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:56:7",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-4",
 		children: [
@@ -2150,34 +2052,34 @@ function ProcessosOperacionaisTable({ processos, loading, onViewDetail, paginati
 			2,
 			3
 		].map((i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:59:11",
+			"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:58:11",
 			"data-prohibitions": "[editContent]",
-			className: "h-16 bg-muted animate-pulse rounded-lg"
+			className: "h-16 bg-muted animate-pulse rounded-[8px]"
 		}, i))
 	});
 	if (processos.length === 0) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:67:7",
+		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:66:7",
 		"data-prohibitions": "[]",
-		className: "py-20 text-center flex flex-col items-center justify-center border rounded-2xl bg-card",
+		className: "py-20 text-center flex flex-col items-center justify-center border rounded-[8px] bg-card mt-6",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:68:9",
+				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:67:9",
 				"data-prohibitions": "[]",
 				className: "w-12 h-12 bg-muted rounded-full flex items-center justify-center mb-4",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowUpRight, {
-					"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:69:11",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FolderOpen, {
+					"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:68:11",
 					"data-prohibitions": "[editContent]",
 					className: "w-6 h-6 text-muted-foreground"
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:71:9",
+				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:70:9",
 				"data-prohibitions": "[]",
 				className: "text-lg font-medium text-foreground mb-1",
 				children: "Nenhum processo encontrado"
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:72:9",
+				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:71:9",
 				"data-prohibitions": "[]",
 				className: "text-sm text-muted-foreground",
 				children: "Ajuste os filtros ou adicione um novo processo."
@@ -2185,73 +2087,131 @@ function ProcessosOperacionaisTable({ processos, loading, onViewDetail, paginati
 		]
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:80:5",
+		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:79:5",
 		"data-prohibitions": "[editContent]",
 		className: "space-y-4",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:82:7",
+				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:81:7",
 				"data-prohibitions": "[editContent]",
-				className: "md:hidden space-y-4",
-				children: pageData.map((p) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:84:11",
+				className: "md:hidden space-y-4 mt-6",
+				children: pageData.map((p, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:83:11",
 					"data-prohibitions": "[editContent]",
-					className: "p-4 flex flex-col gap-3",
+					className: "bg-card border border-border rounded-[8px] p-4 flex flex-col gap-3 animate-in fade-in fill-mode-both",
+					style: { animationDelay: `${i * 40}ms` },
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:85:13",
+							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:88:13",
 							"data-prohibitions": "[editContent]",
 							className: "flex justify-between items-start",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:86:15",
+								"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:89:15",
 								"data-prohibitions": "[editContent]",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:87:17",
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:90:17",
 									"data-prohibitions": "[editContent]",
-									className: "text-xs text-muted-foreground font-medium",
+									className: "text-[12px] text-muted-foreground font-medium",
 									children: p.numero_controle
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:88:17",
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:93:17",
 									"data-prohibitions": "[editContent]",
-									className: "font-medium text-foreground text-sm mt-0.5",
+									className: "font-medium text-foreground text-[13px] mt-0.5",
 									children: p.nome_segurado
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StatusBadge, {
-								"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:90:15",
+								"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:97:15",
 								"data-prohibitions": "[editContent]",
 								status: p.status
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:92:13",
+							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:99:13",
 							"data-prohibitions": "[editContent]",
-							className: "grid grid-cols-2 gap-2 text-xs text-muted-foreground",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:93:15",
-								"data-prohibitions": "[editContent]",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:94:17",
+							className: "grid grid-cols-2 gap-2 text-[12px] text-muted-foreground mt-1",
+							children: [
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:100:15",
+									"data-prohibitions": "[editContent]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:101:17",
+										"data-prohibitions": "[]",
+										className: "block font-medium",
+										children: "Seguradora"
+									}), p.cia]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:104:15",
+									"data-prohibitions": "[editContent]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:105:17",
+										"data-prohibitions": "[]",
+										className: "block font-medium",
+										children: "Serviço"
+									}), p.tipo_servico]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:108:15",
+									"data-prohibitions": "[editContent]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:109:17",
+										"data-prohibitions": "[]",
+										className: "block font-medium",
+										children: "Data Entrada"
+									}), p.data_entrada]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:112:15",
+									"data-prohibitions": "[editContent]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:113:17",
+										"data-prohibitions": "[]",
+										className: "block font-medium",
+										children: "Dias Úteis"
+									}), p.dias_uteis]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:116:15",
+									"data-prohibitions": "[editContent]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:117:17",
+										"data-prohibitions": "[]",
+										className: "block font-medium",
+										children: "Data Retorno"
+									}), p.data_retorno]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:120:15",
+									"data-prohibitions": "[editContent]",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:121:17",
+										"data-prohibitions": "[]",
+										className: "block font-medium",
+										children: "Data Saída"
+									}), p.data_saida]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:124:15",
 									"data-prohibitions": "[]",
-									className: "block font-medium",
-									children: "Seguradora"
-								}), p.cia]
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:97:15",
-								"data-prohibitions": "[editContent]",
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:98:17",
-									"data-prohibitions": "[]",
-									className: "block font-medium",
-									children: "Data Entrada"
-								}), p.data_entrada]
-							})]
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:125:17",
+										"data-prohibitions": "[]",
+										className: "block font-medium",
+										children: "Resultado"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ResultadoBadge, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:126:17",
+										"data-prohibitions": "[editContent]",
+										resultado: p.resultado
+									})]
+								})
+							]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:102:13",
+							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:129:13",
 							"data-prohibitions": "[]",
 							variant: "outline",
 							size: "sm",
-							className: "w-full mt-2",
+							className: "w-full mt-2 border-[hsl(210_60%_25%)] text-[hsl(210_60%_25%)] hover:bg-[hsl(210_60%_25%)]/10",
 							onClick: () => onViewDetail(p.id),
 							children: "Ver Detalhes"
 						})
@@ -2259,146 +2219,249 @@ function ProcessosOperacionaisTable({ processos, loading, onViewDetail, paginati
 				}, p.id))
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:115:7",
+				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:142:7",
 				"data-prohibitions": "[editContent]",
-				className: "hidden md:block rounded-xl border bg-card overflow-hidden",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Table, {
-					"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:116:9",
+				className: "hidden md:block bg-card border border-border rounded-[8px] overflow-hidden mt-6",
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("table", {
+					"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:143:9",
 					"data-prohibitions": "[editContent]",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHeader, {
-						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:117:11",
+					className: "w-full text-left",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("thead", {
+						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:144:11",
 						"data-prohibitions": "[]",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:118:13",
+						className: "bg-muted/50 border-b border-border",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:145:13",
 							"data-prohibitions": "[]",
-							className: "bg-muted/50 hover:bg-muted/50",
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:119:15",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:146:15",
 									"data-prohibitions": "[]",
-									className: "cursor-pointer",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
 									onClick: () => handleSort("numero_controle"),
-									children: "Controle"
+									children: ["Controle ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:150:26",
+										"data-prohibitions": "[editContent]",
+										colKey: "numero_controle"
+									})]
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:122:15",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:152:15",
 									"data-prohibitions": "[]",
-									className: "cursor-pointer",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
 									onClick: () => handleSort("status"),
-									children: "Status"
+									children: ["Status ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:156:24",
+										"data-prohibitions": "[editContent]",
+										colKey: "status"
+									})]
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:125:15",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:158:15",
 									"data-prohibitions": "[]",
-									className: "cursor-pointer",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
 									onClick: () => handleSort("nome_segurado"),
-									children: "Segurado"
+									children: ["Segurado ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:162:26",
+										"data-prohibitions": "[editContent]",
+										colKey: "nome_segurado"
+									})]
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:128:15",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:164:15",
 									"data-prohibitions": "[]",
-									className: "cursor-pointer",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
 									onClick: () => handleSort("cia"),
-									children: "Seguradora"
+									children: ["Seguradora ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:168:28",
+										"data-prohibitions": "[editContent]",
+										colKey: "cia"
+									})]
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:131:15",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:170:15",
 									"data-prohibitions": "[]",
-									className: "cursor-pointer",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
 									onClick: () => handleSort("tipo_servico"),
-									children: "Serviço"
+									children: ["Serviço ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:174:25",
+										"data-prohibitions": "[editContent]",
+										colKey: "tipo_servico"
+									})]
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:134:15",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:176:15",
 									"data-prohibitions": "[]",
-									className: "cursor-pointer",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
+									onClick: () => handleSort("agente_prestador"),
+									children: ["Agente Prestador ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:180:34",
+										"data-prohibitions": "[editContent]",
+										colKey: "agente_prestador"
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:182:15",
+									"data-prohibitions": "[]",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
 									onClick: () => handleSort("data_entrada"),
-									children: "Entrada"
+									children: ["Data Entrada ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:186:30",
+										"data-prohibitions": "[editContent]",
+										colKey: "data_entrada"
+									})]
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:137:15",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:188:15",
 									"data-prohibitions": "[]",
-									className: "cursor-pointer",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
+									onClick: () => handleSort("dias_uteis"),
+									children: ["Dias Úteis ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:192:28",
+										"data-prohibitions": "[editContent]",
+										colKey: "dias_uteis"
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:194:15",
+									"data-prohibitions": "[]",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
+									onClick: () => handleSort("data_retorno"),
+									children: ["Data Retorno ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:198:30",
+										"data-prohibitions": "[editContent]",
+										colKey: "data_retorno"
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:200:15",
+									"data-prohibitions": "[]",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
+									onClick: () => handleSort("data_saida"),
+									children: ["Data Saída ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:204:28",
+										"data-prohibitions": "[editContent]",
+										colKey: "data_saida"
+									})]
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:206:15",
+									"data-prohibitions": "[]",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground cursor-pointer hover:bg-muted/70 transition-colors",
 									onClick: () => handleSort("resultado"),
-									children: "Resultado"
+									children: ["Resultado ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SortIcon, {
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:210:27",
+										"data-prohibitions": "[editContent]",
+										colKey: "resultado"
+									})]
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableHead, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:140:15",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("th", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:212:15",
 									"data-prohibitions": "[]",
-									className: "text-right",
+									className: "py-[12px] px-[16px] text-[12px] font-semibold text-muted-foreground text-right",
 									children: "Ações"
 								})
 							]
 						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableBody, {
-						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:143:11",
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("tbody", {
+						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:217:11",
 						"data-prohibitions": "[editContent]",
-						children: pageData.map((p, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TableRow, {
-							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:145:15",
+						children: pageData.map((p, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("tr", {
+							"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:219:15",
 							"data-prohibitions": "[editContent]",
-							className: "hover:bg-muted/50 transition-colors animate-in slide-in-from-bottom-2 fade-in",
-							style: { animationDelay: `${i * 30}ms` },
+							className: "border-b border-border hover:bg-muted/30 cursor-pointer transition-colors animate-in fade-in fill-mode-both",
+							style: { animationDelay: `${i * 40}ms` },
+							onClick: () => onViewDetail(p.id),
 							children: [
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:150:17",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:225:17",
 									"data-prohibitions": "[editContent]",
-									className: "font-medium text-xs text-muted-foreground",
+									className: "py-[12px] px-[16px] text-[13px] font-medium text-foreground",
 									children: p.numero_controle
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:153:17",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:228:17",
 									"data-prohibitions": "[]",
+									className: "py-[12px] px-[16px] text-[13px]",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(StatusBadge, {
-										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:154:19",
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:229:19",
 										"data-prohibitions": "[editContent]",
 										status: p.status
 									})
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:156:17",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:231:17",
 									"data-prohibitions": "[editContent]",
-									className: "font-medium",
+									className: "py-[12px] px-[16px] text-[13px] text-foreground",
 									children: p.nome_segurado
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:157:17",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:234:17",
 									"data-prohibitions": "[editContent]",
-									className: "text-muted-foreground",
+									className: "py-[12px] px-[16px] text-[13px] text-foreground",
 									children: p.cia
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:158:17",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:235:17",
 									"data-prohibitions": "[editContent]",
-									className: "text-muted-foreground",
+									className: "py-[12px] px-[16px] text-[13px] text-foreground",
 									children: p.tipo_servico
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:159:17",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:238:17",
 									"data-prohibitions": "[editContent]",
-									className: "text-muted-foreground",
+									className: "py-[12px] px-[16px] text-[13px] text-foreground",
+									children: p.agente_prestador
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:241:17",
+									"data-prohibitions": "[editContent]",
+									className: "py-[12px] px-[16px] text-[13px] text-foreground",
 									children: p.data_entrada
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:160:17",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:244:17",
+									"data-prohibitions": "[editContent]",
+									className: "py-[12px] px-[16px] text-[13px] text-foreground",
+									children: p.dias_uteis
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:245:17",
+									"data-prohibitions": "[editContent]",
+									className: "py-[12px] px-[16px] text-[13px] text-foreground",
+									children: p.data_retorno
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:248:17",
+									"data-prohibitions": "[editContent]",
+									className: "py-[12px] px-[16px] text-[13px] text-foreground",
+									children: p.data_saida
+								}),
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:249:17",
 									"data-prohibitions": "[]",
+									className: "py-[12px] px-[16px] text-[13px]",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ResultadoBadge, {
-										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:161:19",
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:250:19",
 										"data-prohibitions": "[editContent]",
 										resultado: p.resultado
 									})
 								}),
-								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TableCell, {
-									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:163:17",
+								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("td", {
+									"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:252:17",
 									"data-prohibitions": "[]",
-									className: "text-right",
+									className: "py-[12px] px-[16px] text-right",
 									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:164:19",
+										"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:253:19",
 										"data-prohibitions": "[]",
-										variant: "ghost",
+										variant: "outline",
 										size: "sm",
-										onClick: () => onViewDetail(p.id),
-										"aria-label": "Detalhes",
-										children: "Detalhes"
+										className: "border-[hsl(210_60%_25%)] text-[hsl(210_60%_25%)] hover:bg-[hsl(210_60%_25%)]/10 text-[13px] h-[32px]",
+										onClick: (e) => {
+											e.stopPropagation();
+											onViewDetail(p.id);
+										},
+										children: "Ações"
 									})
 								})
 							]
@@ -2407,14 +2470,27 @@ function ProcessosOperacionaisTable({ processos, loading, onViewDetail, paginati
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:179:7",
+				"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:271:7",
 				"data-prohibitions": "[editContent]",
-				className: "flex justify-end gap-2 items-center pt-2",
+				className: "flex flex-row gap-[8px] justify-center mt-[16px]",
 				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:272:9",
+						"data-prohibitions": "[]",
+						variant: "outline",
+						size: "sm",
+						className: "w-[32px] h-[32px] p-0 text-[13px]",
+						disabled: pagination.currentPage === 1,
+						onClick: () => setPagination((prev) => ({
+							...prev,
+							currentPage: prev.currentPage - 1
+						})),
+						children: "<"
+					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:180:9",
+						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:283:9",
 						"data-prohibitions": "[editContent]",
-						className: "text-xs text-muted-foreground mr-4",
+						className: "text-[13px] flex items-center justify-center font-medium mx-2 text-muted-foreground",
 						children: [
 							"Página ",
 							pagination.currentPage,
@@ -2423,24 +2499,11 @@ function ProcessosOperacionaisTable({ processos, loading, onViewDetail, paginati
 						]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:183:9",
+						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:286:9",
 						"data-prohibitions": "[]",
 						variant: "outline",
 						size: "sm",
-						className: "w-8 h-8 p-0",
-						disabled: pagination.currentPage === 1,
-						onClick: () => setPagination((prev) => ({
-							...prev,
-							currentPage: prev.currentPage - 1
-						})),
-						children: "<"
-					}),
-					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:194:9",
-						"data-prohibitions": "[]",
-						variant: "outline",
-						size: "sm",
-						className: "w-8 h-8 p-0",
+						className: "w-[32px] h-[32px] p-0 text-[13px]",
 						disabled: pagination.currentPage >= totalPages,
 						onClick: () => setPagination((prev) => ({
 							...prev,
@@ -2455,11 +2518,11 @@ function ProcessosOperacionaisTable({ processos, loading, onViewDetail, paginati
 }
 function StatusBadge({ status }) {
 	const colors = {
-		em_elaboracao: "bg-yellow-100 text-yellow-700 border-yellow-200",
-		em_execucao: "bg-blue-100 text-blue-700 border-blue-200",
-		finalizado: "bg-green-100 text-green-700 border-green-200",
-		cancelado: "bg-red-100 text-red-700 border-red-200",
-		analise_inicial: "bg-gray-100 text-gray-700 border-gray-200"
+		em_elaboracao: "bg-yellow-100 text-yellow-700 border border-yellow-200",
+		em_execucao: "bg-blue-100 text-blue-700 border border-blue-200",
+		finalizado: "bg-green-100 text-green-700 border border-green-200",
+		cancelado: "bg-red-100 text-red-700 border border-red-200",
+		analise_inicial: "bg-gray-100 text-gray-700 border border-gray-200"
 	};
 	const labels = {
 		em_elaboracao: "Em Elaboração",
@@ -2469,32 +2532,32 @@ function StatusBadge({ status }) {
 		analise_inicial: "Análise Inicial"
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:226:5",
+		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:318:5",
 		"data-prohibitions": "[editContent]",
 		role: "status",
 		"aria-label": `Status: ${labels[status] || status}`,
-		className: `inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border ${colors[status] || "bg-muted text-muted-foreground"}`,
+		className: `inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold whitespace-nowrap ${colors[status] || "bg-muted text-muted-foreground border border-border"}`,
 		children: labels[status] || status
 	});
 }
 function ResultadoBadge({ resultado }) {
 	if (!resultado) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:237:26",
+		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:329:26",
 		"data-prohibitions": "[]",
-		className: "text-xs text-muted-foreground",
+		className: "text-[11px] text-muted-foreground",
 		children: "-"
 	});
 	const colors = {
-		regular: "bg-green-100 text-green-700 border-green-200",
-		irregular: "bg-orange-100 text-orange-700 border-orange-200",
-		analise: "bg-blue-100 text-blue-700 border-blue-200",
-		cancelado: "bg-red-100 text-red-700 border-red-200"
+		regular: "bg-green-100 text-green-700 border border-green-200",
+		irregular: "bg-orange-100 text-orange-700 border border-orange-200",
+		analise: "bg-blue-100 text-blue-700 border border-blue-200",
+		cancelado: "bg-red-100 text-red-700 border border-red-200"
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:245:5",
+		"data-uid": "src/components/operacional/ProcessosOperacionaisTable.tsx:337:5",
 		"data-prohibitions": "[editContent]",
 		role: "status",
-		className: `inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border capitalize ${colors[resultado] || "bg-muted text-muted-foreground"}`,
+		className: `inline-flex items-center px-[8px] py-[2px] rounded-full text-[11px] font-semibold capitalize whitespace-nowrap ${colors[resultado] || "bg-muted text-muted-foreground border border-border"}`,
 		children: resultado
 	});
 }
@@ -3170,96 +3233,93 @@ function TabInformacoesGerais({ processo, canEdit, onSave }) {
 		}
 	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:63:5",
+		"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:64:5",
 		"data-prohibitions": "[editContent]",
-		className: "space-y-6 pt-4 animate-in fade-in",
+		className: "pt-2 relative",
 		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:64:7",
-				"data-prohibitions": "[editContent]",
-				className: "flex justify-between items-center",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-					"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:65:9",
-					"data-prohibitions": "[]",
-					className: "text-sm font-semibold text-foreground uppercase tracking-wide",
-					children: "Dados Cadastrais"
-				}), canEdit && !isEditing && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:69:11",
-					"data-prohibitions": "[]",
-					variant: "outline",
-					size: "sm",
-					onClick: () => setIsEditing(true),
-					children: "Editar Dados"
-				})]
+			canEdit && !isEditing && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+				"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:66:9",
+				"data-prohibitions": "[]",
+				variant: "outline",
+				size: "sm",
+				className: "absolute right-0 -top-[52px] z-10 text-[13px] h-[32px]",
+				onClick: () => setIsEditing(true),
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pencil, {
+					"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:72:11",
+					"data-prohibitions": "[editContent]",
+					className: "w-3 h-3 mr-2"
+				}), " Editar"]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:75:7",
+				"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:76:7",
 				"data-prohibitions": "[editContent]",
-				className: "grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4",
+				className: "grid grid-cols-1 md:grid-cols-2 gap-[16px]",
 				children: fields.map((f) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:77:11",
+					"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:78:11",
 					"data-prohibitions": "[editContent]",
-					className: "flex flex-col gap-1.5",
+					className: "flex flex-col gap-[4px]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:78:13",
+						"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:79:13",
 						"data-prohibitions": "[editContent]",
-						className: "text-xs text-muted-foreground font-medium",
+						className: "text-[12px] font-medium text-muted-foreground",
 						children: f.label
 					}), isEditing ? f.type === "select" ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-						"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:81:17",
+						"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:82:17",
 						"data-prohibitions": "[editContent]",
 						value: formData[f.key] || "",
 						onValueChange: (v) => handleChange(f.key, v),
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-							"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:85:19",
+							"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:86:19",
 							"data-prohibitions": "[]",
-							className: "h-9 text-sm",
+							className: "h-[40px] text-[13px] rounded-[6px]",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-								"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:86:21",
+								"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:87:21",
 								"data-prohibitions": "[editContent]"
 							})
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
-							"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:88:19",
+							"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:89:19",
 							"data-prohibitions": "[editContent]",
 							children: f.options?.map((opt) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-								"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:90:23",
+								"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:91:23",
 								"data-prohibitions": "[editContent]",
 								value: opt,
-								className: "capitalize",
+								className: "capitalize text-[13px]",
 								children: opt.replace("_", " ")
 							}, opt))
 						})]
 					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-						"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:97:17",
+						"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:98:17",
 						"data-prohibitions": "[editContent]",
 						type: f.type || "text",
-						className: "h-9 text-sm",
+						className: "h-[40px] text-[13px] rounded-[6px]",
 						value: formData[f.key] || "",
 						onChange: (e) => handleChange(f.key, e.target.value)
 					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:105:15",
+						"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:106:15",
 						"data-prohibitions": "[editContent]",
-						className: "text-sm font-medium text-foreground capitalize",
+						className: "text-[13px] text-foreground capitalize",
 						children: processo[f.key] ? String(processo[f.key]).replace("_", " ") : "-"
 					})]
 				}, f.key))
 			}),
 			isEditing && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:116:9",
+				"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:117:9",
 				"data-prohibitions": "[]",
-				className: "flex justify-end gap-3 pt-4 border-t mt-6",
+				className: "flex flex-row gap-[12px] justify-end mt-[24px]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:117:11",
+					"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:118:11",
 					"data-prohibitions": "[]",
-					variant: "ghost",
+					variant: "outline",
+					className: "h-[40px] px-[20px]",
 					onClick: () => {
 						setIsEditing(false);
 						setFormData(processo);
 					},
 					children: "Cancelar"
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:126:11",
+					"data-uid": "src/components/operacional/tabs/TabInformacoesGerais.tsx:128:11",
 					"data-prohibitions": "[]",
+					className: "bg-[hsl(210_60%_25%)] text-white h-[40px] px-[20px] hover:bg-[hsl(210_60%_35%)]",
 					onClick: handleSave,
 					children: "Salvar Alterações"
 				})]
@@ -3280,6 +3340,9 @@ function TabPosicoes({ processo, canAdd, onAdd }) {
 		onAdd(n, text);
 		setEditingPos(null);
 	};
+	const handleDelete = (n) => {
+		onAdd(n, "");
+	};
 	const posicoes = [
 		{
 			n: 1,
@@ -3298,156 +3361,232 @@ function TabPosicoes({ processo, canAdd, onAdd }) {
 		}
 	];
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:33:5",
+		"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:38:5",
 		"data-prohibitions": "[editContent]",
-		className: "space-y-6 pt-4 animate-in fade-in pl-2",
+		className: "pt-2",
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:34:7",
+			"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:39:7",
 			"data-prohibitions": "[editContent]",
-			className: "relative border-l-2 border-muted ml-3 space-y-8 pb-4",
-			children: posicoes.map((p) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:36:11",
+			className: "space-y-0 relative",
+			children: posicoes.map((p, index) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:41:11",
 				"data-prohibitions": "[editContent]",
-				className: "relative pl-6",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:37:13",
-					"data-prohibitions": "[editContent]",
-					className: "absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-1.5 ring-4 ring-background"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:38:13",
-					"data-prohibitions": "[editContent]",
-					className: "flex flex-col gap-2",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-						"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:39:15",
+				className: "flex flex-row gap-[12px] pb-[16px] relative",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:43:13",
 						"data-prohibitions": "[editContent]",
-						className: "text-xs font-semibold text-muted-foreground uppercase",
-						children: p.label
-					}), editingPos === p.n ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:43:17",
-						"data-prohibitions": "[]",
-						className: "flex flex-col gap-2 w-full max-w-md",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
-							"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:44:19",
-							"data-prohibitions": "[editContent]",
-							value: text,
-							onChange: (e) => setText(e.target.value),
-							placeholder: "Descreva a posição..."
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:49:19",
-							"data-prohibitions": "[]",
-							className: "flex gap-2",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:50:21",
-								"data-prohibitions": "[]",
-								size: "sm",
-								onClick: () => handleSave(p.n),
-								children: "Salvar"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:53:21",
-								"data-prohibitions": "[]",
-								size: "sm",
-								variant: "ghost",
-								onClick: () => setEditingPos(null),
-								children: "Cancelar"
-							})]
-						})]
-					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:59:17",
+						className: "w-[8px] h-[8px] rounded-full bg-[hsl(210_60%_25%)] mt-[6px] z-10 shrink-0"
+					}),
+					index < posicoes.length - 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:47:15",
 						"data-prohibitions": "[editContent]",
-						className: "flex flex-col gap-2 items-start",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:60:19",
-							"data-prohibitions": "[editContent]",
-							className: "text-sm text-foreground bg-muted/50 p-3 rounded-md w-full max-w-md border",
-							children: p.val || /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:62:23",
+						className: "absolute left-[3px] top-[14px] w-[2px] h-full bg-border"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:50:13",
+						"data-prohibitions": "[editContent]",
+						className: "flex flex-col w-full",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:51:15",
+								"data-prohibitions": "[editContent]",
+								className: "text-[13px] font-medium text-foreground",
+								children: p.label
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:52:15",
 								"data-prohibitions": "[]",
-								className: "text-muted-foreground italic",
-								children: "Aguardando preenchimento..."
+								className: "text-[12px] text-muted-foreground mt-[2px]",
+								children: "Status Atualizado"
+							}),
+							editingPos === p.n ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:55:17",
+								"data-prohibitions": "[]",
+								className: "flex flex-col gap-2 mt-2 w-full max-w-md",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+									"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:56:19",
+									"data-prohibitions": "[editContent]",
+									value: text,
+									onChange: (e) => setText(e.target.value),
+									placeholder: "Descreva a posição...",
+									className: "h-[40px] text-[13px] rounded-[6px]"
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+									"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:62:19",
+									"data-prohibitions": "[]",
+									className: "flex gap-2",
+									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:63:21",
+										"data-prohibitions": "[]",
+										size: "sm",
+										className: "bg-[hsl(210_60%_25%)] text-white hover:bg-[hsl(210_60%_35%)] h-[32px] px-[16px]",
+										onClick: () => handleSave(p.n),
+										children: "Salvar"
+									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+										"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:70:21",
+										"data-prohibitions": "[]",
+										size: "sm",
+										variant: "outline",
+										className: "h-[32px] px-[16px]",
+										onClick: () => setEditingPos(null),
+										children: "Cancelar"
+									})]
+								})]
+							}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:81:17",
+								"data-prohibitions": "[editContent]",
+								className: "mt-1 flex flex-col items-start gap-2",
+								children: [
+									p.val && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+										"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:83:21",
+										"data-prohibitions": "[editContent]",
+										className: "flex flex-row gap-2 items-center w-full max-w-md",
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:84:23",
+											"data-prohibitions": "[editContent]",
+											className: "text-[13px] text-foreground p-3 bg-muted/50 rounded-[6px] border border-border flex-1 min-h-[40px]",
+											children: p.val
+										}), canAdd && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:88:25",
+											"data-prohibitions": "[]",
+											className: "flex flex-row gap-1",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+												"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:89:27",
+												"data-prohibitions": "[]",
+												variant: "outline",
+												size: "icon",
+												className: "w-[32px] h-[32px]",
+												onClick: () => handleEdit(p.n, p.val),
+												children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pencil, {
+													"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:95:29",
+													"data-prohibitions": "[editContent]",
+													className: "w-4 h-4 text-muted-foreground"
+												})
+											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+												"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:97:27",
+												"data-prohibitions": "[]",
+												variant: "outline",
+												size: "icon",
+												className: "w-[32px] h-[32px] hover:text-destructive hover:border-destructive",
+												onClick: () => handleDelete(p.n),
+												children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trash2, {
+													"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:103:29",
+													"data-prohibitions": "[editContent]",
+													className: "w-4 h-4"
+												})
+											})]
+										})]
+									}),
+									!p.val && canAdd && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+										"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:111:21",
+										"data-prohibitions": "[]",
+										size: "sm",
+										className: "bg-[hsl(210_60%_25%)] text-white mt-[12px] hover:bg-[hsl(210_60%_35%)] h-[32px] px-[16px]",
+										onClick: () => handleEdit(p.n, ""),
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Plus, {
+											"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:116:23",
+											"data-prohibitions": "[editContent]",
+											className: "w-4 h-4 mr-1"
+										}), " Adicionar Posição"]
+									}),
+									!p.val && !canAdd && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+										"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:120:21",
+										"data-prohibitions": "[]",
+										className: "text-[13px] text-muted-foreground italic mt-2",
+										children: "Aguardando preenchimento..."
+									})
+								]
 							})
-						}), canAdd && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/components/operacional/tabs/TabPosicoes.tsx:68:21",
-							"data-prohibitions": "[editContent]",
-							variant: "link",
-							size: "sm",
-							className: "h-auto p-0 text-xs text-primary",
-							onClick: () => handleEdit(p.n, p.val),
-							children: p.val ? "Editar Posição" : "Adicionar Posição"
-						})]
-					})]
-				})]
+						]
+					})
+				]
 			}, p.n))
 		})
 	});
 }
 //#endregion
-//#region src/components/ui/textarea.tsx
-var Textarea = import_react.forwardRef(({ className, ...props }, ref) => {
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
-		"data-uid": "src/components/ui/textarea.tsx:9:7",
-		"data-prohibitions": "[editContent]",
-		className: cn("flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className),
-		ref,
-		...props
-	});
-});
-Textarea.displayName = "Textarea";
-//#endregion
 //#region src/components/operacional/tabs/TabObservacoes.tsx
 function TabObservacoes({ processo, canAdd, onAdd }) {
 	const [text, setText] = (0, import_react.useState)("");
+	const [isAdding, setIsAdding] = (0, import_react.useState)(false);
 	const handleSave = () => {
 		if (!text.trim()) return;
 		onAdd(text);
 		setText("");
+		setIsAdding(false);
 	};
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:22:5",
+		"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:24:5",
 		"data-prohibitions": "[editContent]",
-		className: "space-y-6 pt-4 animate-in fade-in flex flex-col h-full",
-		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:23:7",
-			"data-prohibitions": "[editContent]",
-			className: "flex-1 bg-muted/30 border rounded-xl p-4 min-h-[200px] overflow-y-auto whitespace-pre-wrap text-sm text-foreground",
-			children: processo.observacoes || /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-				"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:25:11",
+		className: "pt-2 relative",
+		children: [
+			canAdd && !isAdding && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+				"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:26:9",
 				"data-prohibitions": "[]",
-				className: "text-muted-foreground italic",
-				children: "Nenhuma observação registrada."
-			})
-		}), canAdd && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:30:9",
-			"data-prohibitions": "[]",
-			className: "flex flex-col gap-3",
-			children: [
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-					"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:31:11",
-					"data-prohibitions": "[]",
-					className: "text-xs font-semibold text-muted-foreground uppercase",
-					children: "Nova Observação"
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
-					"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:34:11",
+				variant: "outline",
+				size: "sm",
+				className: "absolute right-0 -top-[52px] z-10 text-[13px] h-[32px]",
+				onClick: () => setIsAdding(true),
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Pencil, {
+					"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:32:11",
+					"data-prohibitions": "[editContent]",
+					className: "w-3 h-3 mr-2"
+				}), " Editar"]
+			}),
+			isAdding && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:37:9",
+				"data-prohibitions": "[]",
+				className: "flex flex-col gap-3 mb-[24px]",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("textarea", {
+					"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:38:11",
 					"data-prohibitions": "[editContent]",
 					placeholder: "Digite aqui para adicionar ao histórico de observações...",
 					value: text,
 					onChange: (e) => setText(e.target.value),
-					className: "resize-y min-h-[100px]"
-				}),
-				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:40:11",
+					className: "min-h-[200px] border border-border rounded-[6px] p-[12px] text-[13px] resize-y bg-transparent focus:outline-none focus:ring-1 focus:ring-[hsl(210_60%_25%)]"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:44:11",
 					"data-prohibitions": "[]",
-					className: "flex justify-end",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:41:13",
+					className: "flex justify-end gap-[12px]",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:45:13",
 						"data-prohibitions": "[]",
+						variant: "outline",
+						className: "h-[40px] px-[20px]",
+						onClick: () => setIsAdding(false),
+						children: "Cancelar"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:52:13",
+						"data-prohibitions": "[]",
+						className: "bg-[hsl(210_60%_25%)] text-white hover:bg-[hsl(210_60%_35%)] h-[40px] px-[20px]",
 						onClick: handleSave,
 						disabled: !text.trim(),
-						children: "Adicionar Observação"
+						children: "Salvar Observação"
+					})]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:63:7",
+				"data-prohibitions": "[editContent]",
+				className: "mt-4",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
+					"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:64:9",
+					"data-prohibitions": "[]",
+					className: "text-[13px] font-semibold text-foreground mb-3",
+					children: "Histórico de Observações"
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+					"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:65:9",
+					"data-prohibitions": "[editContent]",
+					className: "p-[12px] bg-muted/30 border border-border rounded-[6px] min-h-[200px] whitespace-pre-wrap text-[13px] text-foreground",
+					children: processo.observacoes || /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+						"data-uid": "src/components/operacional/tabs/TabObservacoes.tsx:67:13",
+						"data-prohibitions": "[]",
+						className: "text-muted-foreground italic",
+						children: "Nenhuma observação registrada."
 					})
-				})
-			]
-		})]
+				})]
+			})
+		]
 	});
 }
 //#endregion
@@ -3460,28 +3599,28 @@ function TabDocumentos({ documentos, canUpload, onUpload, onDelete }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 		"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:23:5",
 		"data-prohibitions": "[editContent]",
-		className: "space-y-6 pt-4 animate-in fade-in",
+		className: "pt-2",
 		children: [canUpload && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 			"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:25:9",
 			"data-prohibitions": "[]",
-			className: "border-2 border-dashed border-muted-foreground/30 rounded-xl p-8 text-center bg-muted/20 hover:bg-accent/10 hover:border-primary transition-colors cursor-pointer",
+			className: "border-2 border-dashed border-border rounded-[6px] p-[20px] text-center bg-muted/30 hover:border-[hsl(210_60%_25%)] hover:bg-accent/10 transition-colors cursor-pointer mb-[24px]",
 			onClick: () => fileInputRef.current?.click(),
 			children: [
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Upload, {
 					"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:29:11",
 					"data-prohibitions": "[editContent]",
-					className: "w-8 h-8 text-muted-foreground mx-auto mb-3"
+					className: "w-[24px] h-[24px] text-muted-foreground mx-auto mb-[8px]"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
 					"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:30:11",
 					"data-prohibitions": "[]",
-					className: "text-sm font-medium text-foreground",
+					className: "text-[13px] font-medium text-foreground",
 					children: "Clique ou arraste um arquivo"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 					"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:31:11",
 					"data-prohibitions": "[]",
-					className: "text-xs text-muted-foreground mt-1",
+					className: "text-[11px] text-muted-foreground mt-[4px]",
 					children: "PDF, DOC, DOCX, JPG ou PNG"
 				}),
 				/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
@@ -3493,55 +3632,41 @@ function TabDocumentos({ documentos, canUpload, onUpload, onDelete }) {
 					onChange: handleFileChange
 				})
 			]
-		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 			"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:36:7",
 			"data-prohibitions": "[editContent]",
-			className: "space-y-3",
-			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h4", {
-				"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:37:9",
-				"data-prohibitions": "[editContent]",
-				className: "text-xs font-semibold text-muted-foreground uppercase mb-4",
-				children: [
-					"Arquivos Anexados (",
-					documentos.length,
-					")"
-				]
-			}), documentos.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-				"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:41:11",
+			className: "space-y-[8px]",
+			children: documentos.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+				"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:38:11",
 				"data-prohibitions": "[]",
-				className: "text-sm text-muted-foreground italic text-center py-4",
+				className: "text-[13px] text-muted-foreground italic py-4",
 				children: "Nenhum documento anexado."
 			}) : documentos.map((doc) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:46:13",
+				"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:41:13",
 				"data-prohibitions": "[editContent]",
-				className: "flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors",
+				className: "flex flex-row justify-between items-center p-[8px_12px] bg-muted rounded-[6px]",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:50:15",
+					"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:45:15",
 					"data-prohibitions": "[editContent]",
-					className: "flex items-center gap-3 overflow-hidden",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:51:17",
-						"data-prohibitions": "[]",
-						className: "p-2 bg-primary/10 rounded-md shrink-0 text-primary",
-						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FileText, {
-							"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:52:19",
-							"data-prohibitions": "[editContent]",
-							className: "w-5 h-5"
-						})
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:54:17",
+					className: "flex items-center gap-[12px] overflow-hidden",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(File, {
+						"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:46:17",
 						"data-prohibitions": "[editContent]",
-						className: "min-w-0",
+						className: "w-[16px] h-[16px] text-muted-foreground shrink-0"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:47:17",
+						"data-prohibitions": "[editContent]",
+						className: "min-w-0 flex flex-col justify-center",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:55:19",
+							"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:48:19",
 							"data-prohibitions": "[editContent]",
-							className: "text-sm font-medium text-foreground truncate",
+							className: "text-[13px] font-medium text-foreground truncate",
 							title: doc.name,
 							children: doc.name
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-							"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:58:19",
+							"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:51:19",
 							"data-prohibitions": "[editContent]",
-							className: "text-xs text-muted-foreground mt-0.5",
+							className: "text-[11px] text-muted-foreground mt-[2px]",
 							children: [
 								(doc.size / 1024).toFixed(1),
 								" KB • ",
@@ -3550,35 +3675,35 @@ function TabDocumentos({ documentos, canUpload, onUpload, onDelete }) {
 						})]
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:63:15",
+					"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:56:15",
 					"data-prohibitions": "[]",
-					className: "flex items-center gap-1 shrink-0",
+					className: "flex items-center gap-[8px] shrink-0 ml-[16px]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:64:17",
+						"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:57:17",
 						"data-prohibitions": "[]",
-						variant: "ghost",
+						variant: "outline",
 						size: "icon",
-						className: "h-8 w-8 text-muted-foreground hover:text-primary",
+						className: "h-[32px] w-[32px] text-muted-foreground hover:text-foreground",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, {
-							"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:69:19",
+							"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:62:19",
 							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4"
+							className: "w-[16px] h-[16px]"
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:71:17",
+						"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:64:17",
 						"data-prohibitions": "[]",
-						variant: "ghost",
+						variant: "outline",
 						size: "icon",
-						className: "h-8 w-8 text-muted-foreground hover:text-destructive",
+						className: "h-[32px] w-[32px] text-muted-foreground hover:text-destructive hover:border-destructive",
 						onClick: () => onDelete(doc.id),
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trash2, {
-							"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:77:19",
+							"data-uid": "src/components/operacional/tabs/TabDocumentos.tsx:70:19",
 							"data-prohibitions": "[editContent]",
-							className: "w-4 h-4"
+							className: "w-[16px] h-[16px]"
 						})
 					})]
 				})]
-			}, doc.id))]
+			}, doc.id))
 		})]
 	});
 }
@@ -3586,85 +3711,74 @@ function TabDocumentos({ documentos, canUpload, onUpload, onDelete }) {
 //#region src/components/operacional/tabs/TabHistorico.tsx
 function TabHistorico({ historico }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-		"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:10:5",
+		"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:9:5",
 		"data-prohibitions": "[editContent]",
-		className: "space-y-6 pt-4 animate-in fade-in pl-2",
+		className: "pt-2",
 		children: historico.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-			"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:12:9",
+			"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:11:9",
 			"data-prohibitions": "[]",
-			className: "text-sm text-muted-foreground italic py-4",
+			className: "text-[13px] text-muted-foreground italic py-4",
 			children: "Nenhum evento registrado."
 		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:14:9",
+			"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:13:9",
 			"data-prohibitions": "[editContent]",
-			className: "relative border-l-2 border-muted ml-3 space-y-6 pb-4",
+			className: "space-y-0 relative",
 			children: historico.map((h, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:16:13",
+				"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:15:13",
 				"data-prohibitions": "[editContent]",
-				className: "relative pl-6",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-					"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:17:15",
-					"data-prohibitions": "[editContent]",
-					className: "absolute w-2.5 h-2.5 bg-muted-foreground rounded-full -left-[6px] top-1.5 ring-4 ring-background"
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:18:15",
-					"data-prohibitions": "[editContent]",
-					className: "flex flex-col gap-1",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:19:17",
-							"data-prohibitions": "[editContent]",
-							className: "flex items-center gap-2",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:20:19",
+				className: "flex flex-row gap-[12px] pb-[16px] relative",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:16:15",
+						"data-prohibitions": "[editContent]",
+						className: "w-[6px] h-[6px] rounded-full bg-[hsl(210_60%_25%)] mt-[8px] z-10 shrink-0"
+					}),
+					i < historico.length - 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+						"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:18:17",
+						"data-prohibitions": "[editContent]",
+						className: "absolute left-[2px] top-[14px] w-[2px] h-full bg-border"
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:21:15",
+						"data-prohibitions": "[editContent]",
+						className: "flex flex-col",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:22:17",
 								"data-prohibitions": "[editContent]",
-								className: "text-sm font-medium text-foreground capitalize",
+								className: "text-[12px] font-semibold text-foreground capitalize",
 								children: h.tipo_evento.replace("_", " ")
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-								"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:23:19",
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+								"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:25:17",
 								"data-prohibitions": "[editContent]",
-								className: "text-xs text-muted-foreground flex items-center gap-1",
+								className: "text-[13px] text-foreground mt-[2px]",
+								children: h.descricao
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+								"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:26:17",
+								"data-prohibitions": "[editContent]",
+								className: "text-[11px] text-muted-foreground mt-[2px]",
 								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Clock, {
-										"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:24:21",
-										"data-prohibitions": "[editContent]",
-										className: "w-3 h-3"
-									}),
-									" ",
-									new Date(h.created).toLocaleString()
+									new Date(h.created).toLocaleString(),
+									" por ",
+									h.user_name
 								]
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-							"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:27:17",
-							"data-prohibitions": "[editContent]",
-							className: "text-sm text-muted-foreground mt-1",
-							children: h.descricao
-						}),
-						h.data_anteriores && h.data_novos && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:29:19",
-							"data-prohibitions": "[editContent]",
-							className: "mt-2 text-xs bg-muted/50 p-2 rounded border inline-block",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-								"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:30:21",
+							}),
+							h.data_anteriores && h.data_novos && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+								"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:31:19",
 								"data-prohibitions": "[editContent]",
-								className: "text-muted-foreground line-through mr-2",
-								children: h.data_anteriores
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-								"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:33:21",
-								"data-prohibitions": "[editContent]",
-								className: "text-foreground font-medium text-primary",
-								children: ["➔ ", h.data_novos]
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-							"data-uid": "src/components/operacional/tabs/TabHistorico.tsx:38:17",
-							"data-prohibitions": "[editContent]",
-							className: "text-xs text-muted-foreground mt-2 font-medium",
-							children: ["Por: ", h.user_name]
-						})
-					]
-				})]
+								className: "text-[11px] text-muted-foreground italic mt-[4px]",
+								children: [
+									"De: ",
+									h.data_anteriores,
+									" ➔ Para: ",
+									h.data_novos
+								]
+							})
+						]
+					})
+				]
 			}, h.id))
 		})
 	});
@@ -3688,11 +3802,11 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogContent, {
 			"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:54:7",
 			"data-prohibitions": "[editContent]",
-			className: "max-w-4xl max-h-[90vh] flex flex-col gap-0 p-0 overflow-hidden",
+			className: "max-w-[900px] p-[24px] !rounded-[8px] max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-5 duration-300 gap-0",
 			children: loading || !processo ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:56:11",
 				"data-prohibitions": "[]",
-				className: "p-6 space-y-4",
+				className: "space-y-4 py-4",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
 						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:57:13",
@@ -3710,103 +3824,85 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 						className: "h-[400px] w-full"
 					})
 				]
-			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogHeader, {
-				"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:63:13",
-				"data-prohibitions": "[editContent]",
-				className: "p-6 pb-4 border-b shrink-0 bg-background/95 backdrop-blur z-10",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:64:15",
+			}) : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogHeader, {
+					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:63:13",
 					"data-prohibitions": "[editContent]",
-					className: "flex items-center justify-between gap-4",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:65:17",
-						"data-prohibitions": "[editContent]",
-						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
-							"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:66:19",
-							"data-prohibitions": "[]",
-							className: "text-xl font-bold text-foreground",
-							children: "Detalhes do Processo"
-						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogDescription, {
-							"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:69:19",
-							"data-prohibitions": "[editContent]",
-							className: "text-sm font-medium mt-1 uppercase tracking-wide text-primary",
-							children: [
-								processo.numero_controle,
-								" • ",
-								processo.nome_segurado
-							]
-						})]
-					}), canDeleteProcesso() && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:74:19",
+					className: "mb-0 space-y-0",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:64:15",
 						"data-prohibitions": "[]",
-						variant: "destructive",
-						size: "sm",
-						onClick: () => {},
-						children: "Excluir Processo"
+						className: "text-[20px] font-bold text-foreground",
+						children: "Detalhes do Processo"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogDescription, {
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:67:15",
+						"data-prohibitions": "[editContent]",
+						className: "text-[13px] text-muted-foreground mb-[16px] mt-[4px]",
+						children: [
+							processo.numero_controle,
+							" • ",
+							processo.nome_segurado
+						]
 					})]
-				})
-			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:81:13",
-				"data-prohibitions": "[]",
-				className: "flex-1 overflow-y-auto bg-muted/10 p-6 pt-2",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs, {
-					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:82:15",
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tabs, {
+					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:72:13",
 					"data-prohibitions": "[]",
 					defaultValue: "gerais",
-					className: "w-full h-full flex flex-col",
+					className: "w-full",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(TabsList, {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:83:17",
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:73:15",
 						"data-prohibitions": "[]",
-						className: "w-full justify-start border-b rounded-none bg-transparent h-12 p-0 space-x-6",
+						className: "flex flex-row gap-[16px] border-b border-border mb-[20px] bg-transparent h-auto p-0 justify-start rounded-none",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:84:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:74:17",
 								"data-prohibitions": "[]",
 								value: "gerais",
-								className: "rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm",
-								children: "Inf. Gerais"
+								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
+								children: "Informações Gerais"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:90:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:80:17",
 								"data-prohibitions": "[]",
 								value: "posicoes",
-								className: "rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm",
-								children: "Posições"
+								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
+								children: "Posições Preliminares"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:96:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:86:17",
 								"data-prohibitions": "[]",
 								value: "observacoes",
-								className: "rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm",
+								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
 								children: "Observações"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:102:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:92:17",
 								"data-prohibitions": "[]",
 								value: "documentos",
-								className: "rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm",
+								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
 								children: "Documentos"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsTrigger, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:108:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:98:17",
 								"data-prohibitions": "[]",
 								value: "historico",
-								className: "rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm",
+								className: "px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium",
 								children: "Histórico"
 							})
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:116:17",
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:106:15",
 						"data-prohibitions": "[]",
-						className: "mt-4 flex-1",
+						className: "mt-4 flex-1 animate-in fade-in duration-200",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:117:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:107:17",
 								"data-prohibitions": "[]",
 								value: "gerais",
-								className: "m-0 h-full",
+								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabInformacoesGerais, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:118:21",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:108:19",
 									"data-prohibitions": "[editContent]",
 									processo,
 									canEdit: canEditProcesso(),
@@ -3817,12 +3913,12 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:127:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:117:17",
 								"data-prohibitions": "[]",
 								value: "posicoes",
-								className: "m-0 h-full",
+								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabPosicoes, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:128:21",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:118:19",
 									"data-prohibitions": "[editContent]",
 									processo,
 									canAdd: canAddPosicao(),
@@ -3830,12 +3926,12 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:130:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:120:17",
 								"data-prohibitions": "[]",
 								value: "observacoes",
-								className: "m-0 h-full",
+								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabObservacoes, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:131:21",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:121:19",
 									"data-prohibitions": "[editContent]",
 									processo,
 									canAdd: canAddObservacao(),
@@ -3843,12 +3939,12 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:137:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:127:17",
 								"data-prohibitions": "[]",
 								value: "documentos",
-								className: "m-0 h-full",
+								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabDocumentos, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:138:21",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:128:19",
 									"data-prohibitions": "[editContent]",
 									documentos,
 									canUpload: canUploadDocumento(),
@@ -3857,20 +3953,40 @@ function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }) {
 								})
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabsContent, {
-								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:145:19",
+								"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:135:17",
 								"data-prohibitions": "[]",
 								value: "historico",
-								className: "m-0 h-full",
+								className: "m-0 focus-visible:outline-none",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TabHistorico, {
-									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:146:21",
+									"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:136:19",
 									"data-prohibitions": "[editContent]",
 									historico
 								})
 							})
 						]
 					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:141:13",
+					"data-prohibitions": "[editContent]",
+					className: "flex flex-row gap-[12px] justify-end mt-[24px]",
+					children: [canDeleteProcesso() && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:143:17",
+						"data-prohibitions": "[]",
+						variant: "destructive",
+						className: "h-[40px] px-[20px]",
+						onClick: () => {},
+						children: "Excluir Processo"
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+						"data-uid": "src/components/operacional/ProcessoDetailModal.tsx:147:15",
+						"data-prohibitions": "[]",
+						variant: "outline",
+						className: "h-[40px] px-[20px]",
+						onClick: onClose,
+						children: "Fechar"
+					})]
 				})
-			})] })
+			] })
 		})
 	});
 }
@@ -3901,69 +4017,70 @@ function OperacionalDashboardPage() {
 			description: "Funcionalidade de importação em desenvolvimento."
 		});
 	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 		"data-uid": "src/pages/OperacionalDashboardPage.tsx:41:5",
 		"data-prohibitions": "[]",
-		className: "space-y-6",
-		children: [
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/OperacionalDashboardPage.tsx:42:7",
-				"data-prohibitions": "[]",
-				className: "flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2",
-				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		className: "bg-background min-h-full",
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+			"data-uid": "src/pages/OperacionalDashboardPage.tsx:42:7",
+			"data-prohibitions": "[]",
+			className: "max-w-[1400px] mx-auto px-6 py-6 space-y-[20px]",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 					"data-uid": "src/pages/OperacionalDashboardPage.tsx:43:9",
 					"data-prohibitions": "[]",
+					className: "mb-0",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
 						"data-uid": "src/pages/OperacionalDashboardPage.tsx:44:11",
 						"data-prohibitions": "[]",
-						className: "text-3xl font-bold tracking-tight text-foreground",
+						className: "text-[28px] font-bold text-foreground mb-[4px]",
 						children: "Visão Geral Operacional"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 						"data-uid": "src/pages/OperacionalDashboardPage.tsx:47:11",
 						"data-prohibitions": "[]",
-						className: "text-muted-foreground mt-1 text-sm",
+						className: "text-[14px] text-muted-foreground mb-[24px]",
 						children: "Acompanhamento de todos os processos em andamento"
 					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardFilters, {
+					"data-uid": "src/pages/OperacionalDashboardPage.tsx:52:9",
+					"data-prohibitions": "[editContent]",
+					filters,
+					setFilters,
+					clearFilters,
+					onExport: handleExport,
+					onImport: handleImport,
+					canExport: canExport(),
+					canImport: canImport()
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardKPIs, {
+					"data-uid": "src/pages/OperacionalDashboardPage.tsx:62:9",
+					"data-prohibitions": "[editContent]",
+					processos,
+					loading
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProcessosOperacionaisTable, {
+					"data-uid": "src/pages/OperacionalDashboardPage.tsx:64:9",
+					"data-prohibitions": "[editContent]",
+					processos,
+					loading,
+					onViewDetail: setSelectedProcessoId,
+					pagination,
+					setPagination
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProcessoDetailModal, {
+					"data-uid": "src/pages/OperacionalDashboardPage.tsx:72:9",
+					"data-prohibitions": "[editContent]",
+					processoId: selectedProcessoId,
+					isOpen: !!selectedProcessoId,
+					onClose: () => setSelectedProcessoId(null),
+					onUpdated: fetchProcessos
 				})
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardFilters, {
-				"data-uid": "src/pages/OperacionalDashboardPage.tsx:53:7",
-				"data-prohibitions": "[editContent]",
-				filters,
-				setFilters,
-				clearFilters,
-				onExport: handleExport,
-				onImport: handleImport,
-				canExport: canExport(),
-				canImport: canImport()
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DashboardKPIs, {
-				"data-uid": "src/pages/OperacionalDashboardPage.tsx:63:7",
-				"data-prohibitions": "[editContent]",
-				processos,
-				loading
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProcessosOperacionaisTable, {
-				"data-uid": "src/pages/OperacionalDashboardPage.tsx:65:7",
-				"data-prohibitions": "[editContent]",
-				processos,
-				loading,
-				onViewDetail: setSelectedProcessoId,
-				pagination,
-				setPagination
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ProcessoDetailModal, {
-				"data-uid": "src/pages/OperacionalDashboardPage.tsx:73:7",
-				"data-prohibitions": "[editContent]",
-				processoId: selectedProcessoId,
-				isOpen: !!selectedProcessoId,
-				onClose: () => setSelectedProcessoId(null),
-				onUpdated: fetchProcessos
-			})
-		]
+			]
+		})
 	});
 }
 //#endregion
 export { OperacionalDashboardPage as default };
 
-//# sourceMappingURL=OperacionalDashboardPage-DrT8IOwN.js.map
+//# sourceMappingURL=OperacionalDashboardPage-49W_1LCF.js.map

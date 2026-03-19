@@ -1,6 +1,6 @@
 import { ProcessoDocumento } from '@/types'
 import { Button } from '@/components/ui/button'
-import { Upload, FileText, Trash2, Download } from 'lucide-react'
+import { Upload, File, Download, Trash2 } from 'lucide-react'
 import { useRef } from 'react'
 
 interface Props {
@@ -20,61 +20,54 @@ export function TabDocumentos({ documentos, canUpload, onUpload, onDelete }: Pro
   }
 
   return (
-    <div className="space-y-6 pt-4 animate-in fade-in">
+    <div className="pt-2">
       {canUpload && (
         <div
-          className="border-2 border-dashed border-muted-foreground/30 rounded-xl p-8 text-center bg-muted/20 hover:bg-accent/10 hover:border-primary transition-colors cursor-pointer"
+          className="border-2 border-dashed border-border rounded-[6px] p-[20px] text-center bg-muted/30 hover:border-[hsl(210_60%_25%)] hover:bg-accent/10 transition-colors cursor-pointer mb-[24px]"
           onClick={() => fileInputRef.current?.click()}
         >
-          <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
-          <h4 className="text-sm font-medium text-foreground">Clique ou arraste um arquivo</h4>
-          <p className="text-xs text-muted-foreground mt-1">PDF, DOC, DOCX, JPG ou PNG</p>
+          <Upload className="w-[24px] h-[24px] text-muted-foreground mx-auto mb-[8px]" />
+          <h4 className="text-[13px] font-medium text-foreground">Clique ou arraste um arquivo</h4>
+          <p className="text-[11px] text-muted-foreground mt-[4px]">PDF, DOC, DOCX, JPG ou PNG</p>
           <input type="file" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
         </div>
       )}
 
-      <div className="space-y-3">
-        <h4 className="text-xs font-semibold text-muted-foreground uppercase mb-4">
-          Arquivos Anexados ({documentos.length})
-        </h4>
+      <div className="space-y-[8px]">
         {documentos.length === 0 ? (
-          <p className="text-sm text-muted-foreground italic text-center py-4">
-            Nenhum documento anexado.
-          </p>
+          <p className="text-[13px] text-muted-foreground italic py-4">Nenhum documento anexado.</p>
         ) : (
           documentos.map((doc) => (
             <div
               key={doc.id}
-              className="flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+              className="flex flex-row justify-between items-center p-[8px_12px] bg-muted rounded-[6px]"
             >
-              <div className="flex items-center gap-3 overflow-hidden">
-                <div className="p-2 bg-primary/10 rounded-md shrink-0 text-primary">
-                  <FileText className="w-5 h-5" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate" title={doc.name}>
+              <div className="flex items-center gap-[12px] overflow-hidden">
+                <File className="w-[16px] h-[16px] text-muted-foreground shrink-0" />
+                <div className="min-w-0 flex flex-col justify-center">
+                  <p className="text-[13px] font-medium text-foreground truncate" title={doc.name}>
                     {doc.name}
                   </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-[11px] text-muted-foreground mt-[2px]">
                     {(doc.size / 1024).toFixed(1)} KB • {new Date(doc.created).toLocaleDateString()}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="flex items-center gap-[8px] shrink-0 ml-[16px]">
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
-                  className="h-8 w-8 text-muted-foreground hover:text-primary"
+                  className="h-[32px] w-[32px] text-muted-foreground hover:text-foreground"
                 >
-                  <Download className="w-4 h-4" />
+                  <Download className="w-[16px] h-[16px]" />
                 </Button>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="icon"
-                  className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                  className="h-[32px] w-[32px] text-muted-foreground hover:text-destructive hover:border-destructive"
                   onClick={() => onDelete(doc.id)}
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-[16px] h-[16px]" />
                 </Button>
               </div>
             </div>

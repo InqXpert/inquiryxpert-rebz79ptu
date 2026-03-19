@@ -38,44 +38,44 @@ export default function OperacionalDashboardPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+    <div className="bg-background min-h-full">
+      <div className="max-w-[1400px] mx-auto px-6 py-6 space-y-[20px]">
+        <div className="mb-0">
+          <h1 className="text-[28px] font-bold text-foreground mb-[4px]">
             Visão Geral Operacional
           </h1>
-          <p className="text-muted-foreground mt-1 text-sm">
+          <p className="text-[14px] text-muted-foreground mb-[24px]">
             Acompanhamento de todos os processos em andamento
           </p>
         </div>
+
+        <DashboardFilters
+          filters={filters}
+          setFilters={setFilters}
+          clearFilters={clearFilters}
+          onExport={handleExport}
+          onImport={handleImport}
+          canExport={canExport()}
+          canImport={canImport()}
+        />
+
+        <DashboardKPIs processos={processos} loading={loading} />
+
+        <ProcessosOperacionaisTable
+          processos={processos}
+          loading={loading}
+          onViewDetail={setSelectedProcessoId}
+          pagination={pagination}
+          setPagination={setPagination}
+        />
+
+        <ProcessoDetailModal
+          processoId={selectedProcessoId}
+          isOpen={!!selectedProcessoId}
+          onClose={() => setSelectedProcessoId(null)}
+          onUpdated={fetchProcessos}
+        />
       </div>
-
-      <DashboardFilters
-        filters={filters}
-        setFilters={setFilters}
-        clearFilters={clearFilters}
-        onExport={handleExport}
-        onImport={handleImport}
-        canExport={canExport()}
-        canImport={canImport()}
-      />
-
-      <DashboardKPIs processos={processos} loading={loading} />
-
-      <ProcessosOperacionaisTable
-        processos={processos}
-        loading={loading}
-        onViewDetail={setSelectedProcessoId}
-        pagination={pagination}
-        setPagination={setPagination}
-      />
-
-      <ProcessoDetailModal
-        processoId={selectedProcessoId}
-        isOpen={!!selectedProcessoId}
-        onClose={() => setSelectedProcessoId(null)}
-        onUpdated={fetchProcessos}
-      />
     </div>
   )
 }

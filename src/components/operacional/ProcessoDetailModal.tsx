@@ -51,102 +51,102 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col gap-0 p-0 overflow-hidden">
+      <DialogContent className="max-w-[900px] p-[24px] !rounded-[8px] max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-5 duration-300 gap-0">
         {loading || !processo ? (
-          <div className="p-6 space-y-4">
+          <div className="space-y-4 py-4">
             <Skeleton className="h-8 w-1/3" />
             <Skeleton className="h-4 w-1/4 mb-8" />
             <Skeleton className="h-[400px] w-full" />
           </div>
         ) : (
           <>
-            <DialogHeader className="p-6 pb-4 border-b shrink-0 bg-background/95 backdrop-blur z-10">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <DialogTitle className="text-xl font-bold text-foreground">
-                    Detalhes do Processo
-                  </DialogTitle>
-                  <DialogDescription className="text-sm font-medium mt-1 uppercase tracking-wide text-primary">
-                    {processo.numero_controle} • {processo.nome_segurado}
-                  </DialogDescription>
-                </div>
-                {canDeleteProcesso() && (
-                  <Button variant="destructive" size="sm" onClick={() => {}}>
-                    Excluir Processo
-                  </Button>
-                )}
-              </div>
+            <DialogHeader className="mb-0 space-y-0">
+              <DialogTitle className="text-[20px] font-bold text-foreground">
+                Detalhes do Processo
+              </DialogTitle>
+              <DialogDescription className="text-[13px] text-muted-foreground mb-[16px] mt-[4px]">
+                {processo.numero_controle} • {processo.nome_segurado}
+              </DialogDescription>
             </DialogHeader>
 
-            <div className="flex-1 overflow-y-auto bg-muted/10 p-6 pt-2">
-              <Tabs defaultValue="gerais" className="w-full h-full flex flex-col">
-                <TabsList className="w-full justify-start border-b rounded-none bg-transparent h-12 p-0 space-x-6">
-                  <TabsTrigger
-                    value="gerais"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm"
-                  >
-                    Inf. Gerais
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="posicoes"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm"
-                  >
-                    Posições
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="observacoes"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm"
-                  >
-                    Observações
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="documentos"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm"
-                  >
-                    Documentos
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="historico"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-1 py-3 text-sm"
-                  >
-                    Histórico
-                  </TabsTrigger>
-                </TabsList>
+            <Tabs defaultValue="gerais" className="w-full">
+              <TabsList className="flex flex-row gap-[16px] border-b border-border mb-[20px] bg-transparent h-auto p-0 justify-start rounded-none">
+                <TabsTrigger
+                  value="gerais"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                >
+                  Informações Gerais
+                </TabsTrigger>
+                <TabsTrigger
+                  value="posicoes"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                >
+                  Posições Preliminares
+                </TabsTrigger>
+                <TabsTrigger
+                  value="observacoes"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                >
+                  Observações
+                </TabsTrigger>
+                <TabsTrigger
+                  value="documentos"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                >
+                  Documentos
+                </TabsTrigger>
+                <TabsTrigger
+                  value="historico"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                >
+                  Histórico
+                </TabsTrigger>
+              </TabsList>
 
-                <div className="mt-4 flex-1">
-                  <TabsContent value="gerais" className="m-0 h-full">
-                    <TabInformacoesGerais
-                      processo={processo}
-                      canEdit={canEditProcesso()}
-                      onSave={(d) => {
-                        updateProcesso(d)
-                        onUpdated()
-                      }}
-                    />
-                  </TabsContent>
-                  <TabsContent value="posicoes" className="m-0 h-full">
-                    <TabPosicoes processo={processo} canAdd={canAddPosicao()} onAdd={addPosicao} />
-                  </TabsContent>
-                  <TabsContent value="observacoes" className="m-0 h-full">
-                    <TabObservacoes
-                      processo={processo}
-                      canAdd={canAddObservacao()}
-                      onAdd={addObservacao}
-                    />
-                  </TabsContent>
-                  <TabsContent value="documentos" className="m-0 h-full">
-                    <TabDocumentos
-                      documentos={documentos}
-                      canUpload={canUploadDocumento()}
-                      onUpload={uploadDocumento}
-                      onDelete={deleteDocumento}
-                    />
-                  </TabsContent>
-                  <TabsContent value="historico" className="m-0 h-full">
-                    <TabHistorico historico={historico} />
-                  </TabsContent>
-                </div>
-              </Tabs>
+              <div className="mt-4 flex-1 animate-in fade-in duration-200">
+                <TabsContent value="gerais" className="m-0 focus-visible:outline-none">
+                  <TabInformacoesGerais
+                    processo={processo}
+                    canEdit={canEditProcesso()}
+                    onSave={(d) => {
+                      updateProcesso(d)
+                      onUpdated()
+                    }}
+                  />
+                </TabsContent>
+                <TabsContent value="posicoes" className="m-0 focus-visible:outline-none">
+                  <TabPosicoes processo={processo} canAdd={canAddPosicao()} onAdd={addPosicao} />
+                </TabsContent>
+                <TabsContent value="observacoes" className="m-0 focus-visible:outline-none">
+                  <TabObservacoes
+                    processo={processo}
+                    canAdd={canAddObservacao()}
+                    onAdd={addObservacao}
+                  />
+                </TabsContent>
+                <TabsContent value="documentos" className="m-0 focus-visible:outline-none">
+                  <TabDocumentos
+                    documentos={documentos}
+                    canUpload={canUploadDocumento()}
+                    onUpload={uploadDocumento}
+                    onDelete={deleteDocumento}
+                  />
+                </TabsContent>
+                <TabsContent value="historico" className="m-0 focus-visible:outline-none">
+                  <TabHistorico historico={historico} />
+                </TabsContent>
+              </div>
+            </Tabs>
+
+            <div className="flex flex-row gap-[12px] justify-end mt-[24px]">
+              {canDeleteProcesso() && (
+                <Button variant="destructive" className="h-[40px] px-[20px]" onClick={() => {}}>
+                  Excluir Processo
+                </Button>
+              )}
+              <Button variant="outline" className="h-[40px] px-[20px]" onClick={onClose}>
+                Fechar
+              </Button>
             </div>
           </>
         )}

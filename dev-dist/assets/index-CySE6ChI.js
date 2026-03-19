@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/OperacionalDashboardPage-DrT8IOwN.js","assets/jsx-runtime-huLxtCwt.js","assets/Processos-B4XYN9h5.js","assets/Relatorios-ud8Hv5Gk.js","assets/Configuracoes-D-ZZOkoB.js","assets/Ajuda-CAKBiVPB.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/OperacionalDashboardPage-49W_1LCF.js","assets/jsx-runtime-huLxtCwt.js","assets/Processos-B4XYN9h5.js","assets/Relatorios-ud8Hv5Gk.js","assets/Configuracoes-D-ZZOkoB.js","assets/Ajuda-CAKBiVPB.js"])))=>i.map(i=>d[i]);
 import { i as __toESM, n as require_react, r as __commonJSMin, t as require_jsx_runtime } from "./jsx-runtime-huLxtCwt.js";
 //#region \0vite/modulepreload-polyfill.js
 (function polyfill() {
@@ -25309,7 +25309,7 @@ var AuthProvider = ({ children }) => {
 };
 //#endregion
 //#region src/App.tsx
-var OperacionalDashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./OperacionalDashboardPage-DrT8IOwN.js"), __vite__mapDeps([0,1])));
+var OperacionalDashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./OperacionalDashboardPage-49W_1LCF.js"), __vite__mapDeps([0,1])));
 var Processos = (0, import_react.lazy)(() => __vitePreload(() => import("./Processos-B4XYN9h5.js"), __vite__mapDeps([2,1])));
 var Relatorios = (0, import_react.lazy)(() => __vitePreload(() => import("./Relatorios-ud8Hv5Gk.js"), __vite__mapDeps([3,1])));
 var Configuracoes = (0, import_react.lazy)(() => __vitePreload(() => import("./Configuracoes-D-ZZOkoB.js"), __vite__mapDeps([4,1])));
@@ -25426,6 +25426,6 @@ function App() {
 	"data-prohibitions": "[editContent]"
 }));
 //#endregion
-export { useLayoutEffect2 as A, createLucideIcon as B, FocusScope as C, createSlot as D, Primitive as E, cn as F, useComposedRefs as I, X as L, composeEventHandlers as M, Input as N, useControllableState as O, Button as P, Search as R, Portal$1 as S, useCallbackRef$1 as T, require_react_dom as V, Trigger$1 as _, Arrow as a, useFocusGuards as b, createPopperScope as c, Content$1 as d, Description as f, Title as g, Root$3 as h, Anchor as i, createContextScope$1 as j, useId as k, Skeleton as l, Portal as m, pb as n, Content as o, Overlay as p, VISUALLY_HIDDEN_STYLES as r, Root2 as s, useAuth as t, Close as u, hideOthers as v, DismissableLayer as w, Presence as x, ReactRemoveScroll as y, FileText as z };
+export { useLayoutEffect2 as A, require_react_dom as B, FocusScope as C, createSlot as D, Primitive as E, cn as F, useComposedRefs as I, X as L, composeEventHandlers as M, Input as N, useControllableState as O, Button as P, Search as R, Portal$1 as S, useCallbackRef$1 as T, Trigger$1 as _, Arrow as a, useFocusGuards as b, createPopperScope as c, Content$1 as d, Description as f, Title as g, Root$3 as h, Anchor as i, createContextScope$1 as j, useId as k, Skeleton as l, Portal as m, pb as n, Content as o, Overlay as p, VISUALLY_HIDDEN_STYLES as r, Root2 as s, useAuth as t, Close as u, hideOthers as v, DismissableLayer as w, Presence as x, ReactRemoveScroll as y, createLucideIcon as z };
 
-//# sourceMappingURL=index-D1FpZszG.js.map
+//# sourceMappingURL=index-CySE6ChI.js.map

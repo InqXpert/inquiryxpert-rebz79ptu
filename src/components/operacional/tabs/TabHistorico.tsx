@@ -1,5 +1,4 @@
 import { ProcessoHistorico } from '@/types'
-import { Clock } from 'lucide-react'
 
 interface Props {
   historico: ProcessoHistorico[]
@@ -7,37 +6,32 @@ interface Props {
 
 export function TabHistorico({ historico }: Props) {
   return (
-    <div className="space-y-6 pt-4 animate-in fade-in pl-2">
+    <div className="pt-2">
       {historico.length === 0 ? (
-        <p className="text-sm text-muted-foreground italic py-4">Nenhum evento registrado.</p>
+        <p className="text-[13px] text-muted-foreground italic py-4">Nenhum evento registrado.</p>
       ) : (
-        <div className="relative border-l-2 border-muted ml-3 space-y-6 pb-4">
+        <div className="space-y-0 relative">
           {historico.map((h, i) => (
-            <div key={h.id} className="relative pl-6">
-              <div className="absolute w-2.5 h-2.5 bg-muted-foreground rounded-full -left-[6px] top-1.5 ring-4 ring-background" />
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-foreground capitalize">
-                    {h.tipo_evento.replace('_', ' ')}
-                  </span>
-                  <span className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Clock className="w-3 h-3" /> {new Date(h.created).toLocaleString()}
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">{h.descricao}</p>
+            <div key={h.id} className="flex flex-row gap-[12px] pb-[16px] relative">
+              <div className="w-[6px] h-[6px] rounded-full bg-[hsl(210_60%_25%)] mt-[8px] z-10 shrink-0" />
+              {i < historico.length - 1 && (
+                <div className="absolute left-[2px] top-[14px] w-[2px] h-full bg-border" />
+              )}
+
+              <div className="flex flex-col">
+                <span className="text-[12px] font-semibold text-foreground capitalize">
+                  {h.tipo_evento.replace('_', ' ')}
+                </span>
+                <span className="text-[13px] text-foreground mt-[2px]">{h.descricao}</span>
+                <span className="text-[11px] text-muted-foreground mt-[2px]">
+                  {new Date(h.created).toLocaleString()} por {h.user_name}
+                </span>
+
                 {h.data_anteriores && h.data_novos && (
-                  <div className="mt-2 text-xs bg-muted/50 p-2 rounded border inline-block">
-                    <span className="text-muted-foreground line-through mr-2">
-                      {h.data_anteriores}
-                    </span>
-                    <span className="text-foreground font-medium text-primary">
-                      ➔ {h.data_novos}
-                    </span>
+                  <div className="text-[11px] text-muted-foreground italic mt-[4px]">
+                    De: {h.data_anteriores} ➔ Para: {h.data_novos}
                   </div>
                 )}
-                <span className="text-xs text-muted-foreground mt-2 font-medium">
-                  Por: {h.user_name}
-                </span>
               </div>
             </div>
           ))}

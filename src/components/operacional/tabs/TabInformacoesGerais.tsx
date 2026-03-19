@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useState } from 'react'
+import { Pencil } from 'lucide-react'
 
 interface Props {
   processo: ProcessoOperacional
@@ -60,34 +61,34 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
   ]
 
   return (
-    <div className="space-y-6 pt-4 animate-in fade-in">
-      <div className="flex justify-between items-center">
-        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">
-          Dados Cadastrais
-        </h3>
-        {canEdit && !isEditing && (
-          <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
-            Editar Dados
-          </Button>
-        )}
-      </div>
+    <div className="pt-2 relative">
+      {canEdit && !isEditing && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="absolute right-0 -top-[52px] z-10 text-[13px] h-[32px]"
+          onClick={() => setIsEditing(true)}
+        >
+          <Pencil className="w-3 h-3 mr-2" /> Editar
+        </Button>
+      )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
         {fields.map((f) => (
-          <div key={f.key} className="flex flex-col gap-1.5">
-            <span className="text-xs text-muted-foreground font-medium">{f.label}</span>
+          <div key={f.key} className="flex flex-col gap-[4px]">
+            <span className="text-[12px] font-medium text-muted-foreground">{f.label}</span>
             {isEditing ? (
               f.type === 'select' ? (
                 <Select
                   value={(formData as any)[f.key] || ''}
                   onValueChange={(v) => handleChange(f.key as any, v)}
                 >
-                  <SelectTrigger className="h-9 text-sm">
+                  <SelectTrigger className="h-[40px] text-[13px] rounded-[6px]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {f.options?.map((opt) => (
-                      <SelectItem key={opt} value={opt} className="capitalize">
+                      <SelectItem key={opt} value={opt} className="capitalize text-[13px]">
                         {opt.replace('_', ' ')}
                       </SelectItem>
                     ))}
@@ -96,13 +97,13 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
               ) : (
                 <Input
                   type={f.type || 'text'}
-                  className="h-9 text-sm"
+                  className="h-[40px] text-[13px] rounded-[6px]"
                   value={(formData as any)[f.key] || ''}
                   onChange={(e) => handleChange(f.key as any, e.target.value)}
                 />
               )
             ) : (
-              <span className="text-sm font-medium text-foreground capitalize">
+              <span className="text-[13px] text-foreground capitalize">
                 {(processo as any)[f.key]
                   ? String((processo as any)[f.key]).replace('_', ' ')
                   : '-'}
@@ -113,9 +114,10 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
       </div>
 
       {isEditing && (
-        <div className="flex justify-end gap-3 pt-4 border-t mt-6">
+        <div className="flex flex-row gap-[12px] justify-end mt-[24px]">
           <Button
-            variant="ghost"
+            variant="outline"
+            className="h-[40px] px-[20px]"
             onClick={() => {
               setIsEditing(false)
               setFormData(processo)
@@ -123,7 +125,12 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
           >
             Cancelar
           </Button>
-          <Button onClick={handleSave}>Salvar Alterações</Button>
+          <Button
+            className="bg-[hsl(210_60%_25%)] text-white h-[40px] px-[20px] hover:bg-[hsl(210_60%_35%)]"
+            onClick={handleSave}
+          >
+            Salvar Alterações
+          </Button>
         </div>
       )}
     </div>
