@@ -10,7 +10,7 @@ const Processos = lazy(() => import('./pages/Processos'))
 const AgentesList = lazy(() => import('./pages/agentes/List'))
 const NovoAgente = lazy(() => import('./pages/agentes/Novo'))
 const ProfileAgente = lazy(() => import('./pages/agentes/Profile'))
-const EditarAgente = lazy(() => import('./pages/agentes/Editar'))
+const SindicanciaAgente = lazy(() => import('./pages/agentes/Sindicancia'))
 const Configuracoes = lazy(() => import('./pages/Configuracoes'))
 const Ajuda = lazy(() => import('./pages/Ajuda'))
 
@@ -28,7 +28,7 @@ export default function App() {
                 <Route path="/agentes" element={<AgentesList />} />
                 <Route path="/agentes/novo" element={<NovoAgente />} />
                 <Route path="/agentes/:id" element={<ProfileAgente />} />
-                <Route path="/agentes/:id/editar" element={<EditarAgente />} />
+                <Route path="/agentes/:id/sindicancia" element={<SindicanciaAgente />} />
                 <Route path="/configuracoes" element={<Configuracoes />} />
                 <Route path="/ajuda" element={<Ajuda />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />

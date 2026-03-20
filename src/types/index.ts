@@ -44,6 +44,11 @@ export interface Agente {
   outrasEmpresas: string
   origemIndicacao: string
   observacoes: string
+
+  // 6. KPIs
+  qualidade_nivel?: string
+  experiencia_nivel?: string
+  compliance_nivel?: string
 }
 
 export type ProcessoStatus =
@@ -74,6 +79,7 @@ export interface ProcessoOperacional {
   analista_solicitante: string
   revisor: string
   observacoes: string
+  orientacoes?: string
   posicao_1: string
   posicao_2: string
   posicao_3: string

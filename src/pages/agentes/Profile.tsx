@@ -14,6 +14,7 @@ import {
   Trash,
   Edit,
   Copy,
+  Briefcase,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -23,6 +24,9 @@ import { Agente } from '@/types'
 import { useToast } from '@/hooks/use-toast'
 import { useRealtime } from '@/hooks/use-realtime'
 import { cn } from '@/lib/utils'
+import { Skeleton } from '@/components/ui/skeleton'
+import { EditAgenteModal } from '@/components/agentes/EditAgenteModal'
+import { AgentePerformanceKPIs } from '@/components/agentes/AgentePerformanceKPIs'
 
 export default function ProfileAgente() {
   const { id } = useParams()
@@ -30,6 +34,7 @@ export default function ProfileAgente() {
   const { toast } = useToast()
   const [p, setP] = useState<Agente | null>(null)
   const [loading, setLoading] = useState(true)
+  const [editModalOpen, setEditModalOpen] = useState(false)
 
   const loadData = async () => {
     if (!id) return
@@ -37,7 +42,11 @@ export default function ProfileAgente() {
       const data = await getAgente(id)
       setP(data)
     } catch (err) {
-      toast({ title: 'Erro', description: 'Erro ao carregar agentes.', variant: 'destructive' })
+      toast({
+        title: 'Erro ao carregar KPIs.',
+        description: 'Agente não encontrado ou erro de rede.',
+        variant: 'destructive',
+      })
       navigate('/agentes')
     } finally {
       setLoading(false)
@@ -68,7 +77,23 @@ export default function ProfileAgente() {
   }
 
   if (loading)
-    return <div className="p-8 text-center text-muted-foreground animate-pulse">Carregando...</div>
+    return (
+      <div className="space-y-6 pb-10 max-w-[1400px] w-full">
+        <Skeleton className="h-10 w-48" />
+        <Skeleton className="h-64 w-full rounded-2xl" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-28 rounded-2xl" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <Skeleton key={i} className="h-32 rounded-2xl" />
+          ))}
+        </div>
+      </div>
+    )
+
   if (!p)
     return (
       <div className="p-8 text-center text-xl text-muted-foreground">Agente não encontrado.</div>
@@ -85,7 +110,7 @@ export default function ProfileAgente() {
 
   return (
     <div className="space-y-6 pb-10">
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <Button
           variant="ghost"
           size="sm"
@@ -97,29 +122,27 @@ export default function ProfileAgente() {
             Voltar para Agentes
           </Link>
         </Button>
-        <div className="flex gap-3 items-center">
+        <div className="flex flex-wrap gap-3 items-center w-full sm:w-auto">
           <Button
             variant="ghost"
             onClick={handleDelete}
-            className="text-destructive hover:bg-destructive/10 hover:text-destructive h-10 px-3 rounded-xl"
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive h-10 px-3 rounded-xl flex-1 sm:flex-none"
             title="Remover"
           >
-            <Trash className="w-4 h-4" />
-          </Button>
-          <Button variant="outline" asChild className="h-10 px-4 rounded-xl gap-2 font-medium">
-            <Link to={`/agentes/${p.id}/editar`}>
-              <Edit className="w-4 h-4" /> Editar
-            </Link>
+            <Trash className="w-4 h-4 sm:mr-2" /> <span className="sm:hidden">Remover</span>
           </Button>
           <Button
-            className="bg-secondary text-white rounded-xl h-10 px-4 gap-2 hover:bg-secondary/90 font-semibold shadow-sm"
-            onClick={() =>
-              navigate('/processos', {
-                state: { openNewProcess: true, providerId: p.id, providerName: p.nomeCompleto },
-              })
-            }
+            variant="outline"
+            onClick={() => setEditModalOpen(true)}
+            className="h-10 px-4 rounded-xl gap-2 font-medium flex-1 sm:flex-none"
           >
-            <Plus className="w-4 h-4" />
+            <Edit className="w-4 h-4" /> Editar
+          </Button>
+          <Button
+            className="bg-secondary text-white rounded-xl h-10 px-4 gap-2 hover:bg-secondary/90 font-semibold shadow-sm w-full sm:w-auto"
+            onClick={() => navigate(`/agentes/${p.id}/sindicancia`)}
+          >
+            <Briefcase className="w-4 h-4" />
             Encaminhar sindicância
           </Button>
         </div>
@@ -136,7 +159,7 @@ export default function ProfileAgente() {
             <h2 className="text-2xl font-bold text-primary mt-4 leading-tight">{p.nomeCompleto}</h2>
             {p.numero_controle && (
               <div className="flex items-center gap-2 mt-2 bg-primary/5 text-primary px-3 py-1.5 rounded-lg border border-primary/10">
-                <span className="text-sm font-bold">Nº de Controle: {p.numero_controle}</span>
+                <span className="text-sm font-bold">Nº: {p.numero_controle}</span>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -145,7 +168,6 @@ export default function ProfileAgente() {
                     navigator.clipboard.writeText(p.numero_controle!)
                     toast({
                       title: 'Número copiado!',
-                      description: 'O número de controle foi copiado.',
                       className: 'bg-green-500 text-white border-none',
                     })
                   }}
@@ -183,7 +205,7 @@ export default function ProfileAgente() {
                 <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4 text-muted-foreground" />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col overflow-hidden">
                   <span className="text-xs text-muted-foreground font-medium">Email</span>
                   <span className="text-sm text-foreground font-semibold truncate">
                     {p.email || '-'}
@@ -288,6 +310,8 @@ export default function ProfileAgente() {
         ))}
       </div>
 
+      <AgentePerformanceKPIs agente={p} onRefresh={loadData} />
+
       <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-6">
         <Card className="border-none shadow-sm rounded-2xl p-6">
           <div className="flex flex-row justify-between items-center mb-6">
@@ -296,13 +320,9 @@ export default function ProfileAgente() {
               variant="outline"
               size="sm"
               className="font-semibold rounded-xl text-primary"
-              onClick={() =>
-                navigate('/processos', {
-                  state: { openNewProcess: true, providerId: p.id, providerName: p.nomeCompleto },
-                })
-              }
+              asChild
             >
-              Encaminhar sindicância
+              <Link to={`/agentes/${p.id}/sindicancia`}>Nova Sindicância</Link>
             </Button>
           </div>
           <div className="flex flex-col divide-y divide-border/50">
@@ -324,12 +344,6 @@ export default function ProfileAgente() {
                 title: 'Diligência Presencial',
                 status: 'Pendente',
                 date: '18 Out 2023',
-              },
-              {
-                id: 'PRC-2023-004',
-                title: 'Notificação Extrajudicial',
-                status: 'Entregue com Pendencia',
-                date: '20 Out 2023',
               },
             ].map((proc, i) => (
               <div
@@ -358,7 +372,6 @@ export default function ProfileAgente() {
             {[
               { text: 'Documento CNH atualizado', time: 'Hoje, 14:30' },
               { text: 'Novo processo atribuído: PRC-2023-005', time: 'Ontem, 09:15' },
-              { text: 'Honorários pagos (R$ 450,00)', time: '12 Out 2023' },
               { text: 'Status alterado para Ativo', time: '10 Out 2023' },
             ].map((act, i, arr) => (
               <div key={i} className="flex flex-row gap-4 pb-6 relative">
@@ -375,6 +388,13 @@ export default function ProfileAgente() {
           </div>
         </Card>
       </div>
+
+      <EditAgenteModal
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+        agente={p}
+        onSuccess={loadData}
+      />
     </div>
   )
 }
