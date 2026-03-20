@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-20T05:12:02.394Z",
+  "generatedAt": "2026-03-20T05:17:50.986Z",
   "collections": [
     {
       "name": "users",
@@ -45,7 +45,7 @@
       ]
     },
     {
-      "name": "prestadores",
+      "name": "agentes",
       "type": "base",
       "apiRules": {
         "list": "@request.auth.id != ''",
@@ -260,9 +260,17 @@
           "required": false,
           "system": false,
           "autodateTriggers": ["onCreate", "onUpdate"]
+        },
+        {
+          "name": "numero_controle",
+          "type": "text",
+          "required": false,
+          "system": false
         }
       ],
-      "indexes": []
+      "indexes": [
+        "CREATE UNIQUE INDEX `idx_agentes_numero_controle` ON `agentes` (numero_controle)"
+      ]
     },
     {
       "name": "processos_operacionais",

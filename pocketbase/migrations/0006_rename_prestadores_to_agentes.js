@@ -1,11 +1,14 @@
 migrate(
   (app) => {
+    const oldName = 'prestadores'
+    const newName = 'agentes'
+
     let collection
     try {
-      collection = app.findCollectionByNameOrId('prestadores')
-      collection.name = 'agentes'
+      collection = app.findCollectionByNameOrId(oldName)
+      collection.name = newName
     } catch (e) {
-      collection = app.findCollectionByNameOrId('agentes')
+      collection = app.findCollectionByNameOrId(newName)
     }
 
     if (!collection.fields.getByName('numero_controle')) {
@@ -22,7 +25,7 @@ migrate(
     }
 
     const records = app.findRecordsByFilter(
-      'agentes',
+      collection.id,
       "numero_controle = '' || numero_controle = null",
       '',
       1000,
@@ -36,8 +39,17 @@ migrate(
     }
   },
   (app) => {
-    const collection = app.findCollectionByNameOrId('agentes')
-    collection.name = 'prestadores'
+    const oldName = 'prestadores'
+    const newName = 'agentes'
+
+    let collection
+    try {
+      collection = app.findCollectionByNameOrId(newName)
+      collection.name = oldName
+    } catch (e) {
+      collection = app.findCollectionByNameOrId(oldName)
+    }
+
     try {
       collection.removeIndex('idx_agentes_numero_controle')
     } catch (e) {}
