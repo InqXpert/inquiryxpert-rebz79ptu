@@ -1,6 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, AlertTriangle, ChevronDown, Pencil, Upload, UserPlus } from 'lucide-react'
+import {
+  Search,
+  AlertTriangle,
+  ChevronDown,
+  CheckCircle2,
+  Lock,
+  Unlock,
+  Mail,
+  Phone,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -11,12 +20,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import {
   Table,
   TableBody,
   TableCell,
@@ -25,7 +28,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
-import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAgentes } from '@/hooks/use-agentes'
 import { ImportAgenteModal } from '@/components/agentes/ImportAgenteModal'
@@ -43,7 +45,7 @@ export default function AgentesList() {
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
   const filtered = agentes.filter((p) => {
-    if (searchMode === 'Nome') {
+    if (searchMode === 'Nome' && search) {
       return (
         p.nomeCompleto.toLowerCase().includes(search.toLowerCase()) ||
         (p.cpf && p.cpf.includes(search)) ||
@@ -51,7 +53,7 @@ export default function AgentesList() {
         (p.numero_controle && p.numero_controle.toLowerCase().includes(search.toLowerCase()))
       )
     }
-    if (searchMode === 'Região') {
+    if (searchMode === 'Região' && search) {
       return (
         (p.base_atendimento_cidade || '').toLowerCase().includes(search.toLowerCase()) ||
         (p.base_atendimento_estado || '').toLowerCase().includes(search.toLowerCase()) ||
@@ -68,234 +70,244 @@ export default function AgentesList() {
   })
 
   return (
-    <div className="flex flex-col gap-6 h-full">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+    <div className="flex flex-col h-full bg-card border shadow-sm rounded-md">
+      {/* Page Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 py-6 pb-4 bg-white rounded-t-md">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-primary">Agentes</h1>
-          <p className="text-muted-foreground mt-1">Gerencie a rede de agentes externos.</p>
+          <h1 className="text-[24px] font-bold tracking-tight text-foreground flex items-center gap-3">
+            Agentes
+            <ChevronDown className="w-[18px] h-[18px] text-muted-foreground mt-1 cursor-pointer hover:text-foreground transition-colors" />
+          </h1>
+          <p className="text-[13px] font-medium text-muted-foreground mt-1">
+            {filtered.length} records
+          </p>
         </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="rounded-xl shadow-sm px-6 bg-secondary text-white hover:bg-secondary/90 font-semibold h-12">
-              <UserPlus className="w-5 h-5 mr-2" /> Novo Agente{' '}
-              <ChevronDown className="w-5 h-5 ml-2" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 rounded-xl border-border shadow-md">
-            <DropdownMenuItem
-              className="cursor-pointer py-3 font-medium text-primary hover:bg-muted focus:bg-muted"
-              onClick={() => navigate('/agentes/novo')}
-            >
-              <Pencil className="w-4 h-4 mr-3" /> Preencher Manualmente
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className="cursor-pointer py-3 font-medium text-primary hover:bg-muted focus:bg-muted"
-              onClick={() => setIsImportModalOpen(true)}
-            >
-              <Upload className="w-4 h-4 mr-3" /> Importar Planilha
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-3 mt-4 md:mt-0">
+          <Button variant="outline" className="text-foreground h-9 font-semibold text-[13px]">
+            Actions <ChevronDown className="w-[14px] h-[14px] ml-2 text-muted-foreground" />
+          </Button>
+          <Button
+            variant="outline"
+            className="text-primary font-semibold border-primary/30 hover:bg-primary/5 h-9 text-[13px]"
+            onClick={() => setIsImportModalOpen(true)}
+          >
+            Import
+          </Button>
+          <Button
+            className="bg-primary hover:bg-primary/90 text-white shadow-none h-9 font-semibold text-[13px] px-5"
+            onClick={() => navigate('/agentes/novo')}
+          >
+            Create agente
+          </Button>
+        </div>
       </div>
 
-      <Tabs defaultValue="list" className="w-full">
-        <TabsList className="grid w-full max-w-[400px] grid-cols-2 h-12 rounded-xl bg-muted/50 p-1 mb-2">
-          <TabsTrigger
-            value="list"
-            className="rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm"
-          >
-            Lista de Agentes
-          </TabsTrigger>
-          <TabsTrigger
-            value="map"
-            className="rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm"
-          >
-            Mapa Logístico
-          </TabsTrigger>
-        </TabsList>
+      <Tabs defaultValue="list" className="w-full flex flex-col flex-1">
+        <div className="px-6 border-b border-border bg-white">
+          <TabsList className="w-auto border-none h-auto">
+            <TabsTrigger value="list">All agentes</TabsTrigger>
+            <TabsTrigger value="map">Map view</TabsTrigger>
+          </TabsList>
+        </div>
 
-        <TabsContent value="list" className="mt-0 flex flex-col gap-6 h-full outline-none">
-          <Card className="p-4 flex flex-wrap gap-4 shadow-sm rounded-2xl border-none items-center">
-            <div className="w-full sm:w-auto">
-              <Select value={searchMode} onValueChange={setSearchMode}>
-                <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl min-w-[200px]">
-                  <SelectValue placeholder="Tipo de Busca" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Nome">Buscar: Nome</SelectItem>
-                  <SelectItem value="Status/Blacklist">Filtro: Status/Blacklist</SelectItem>
-                  <SelectItem value="Região">Buscar: Região</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        <TabsContent value="list" className="m-0 border-none outline-none flex flex-col flex-1">
+          {/* Tag Filters Area */}
+          <div className="px-6 py-2.5 flex flex-wrap gap-2 items-center border-b border-border bg-[#f5f8fa]">
+            <Select value={searchMode} onValueChange={setSearchMode}>
+              <SelectTrigger className="h-8 w-auto min-w-[140px] border-transparent hover:bg-muted/60 bg-transparent shadow-none font-medium text-[13px] text-foreground focus:ring-0">
+                <span className="text-muted-foreground mr-1.5 font-normal">Filter by:</span>{' '}
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Nome">Name/Doc</SelectItem>
+                <SelectItem value="Região">Region</SelectItem>
+                <SelectItem value="Status/Blacklist">Status</SelectItem>
+              </SelectContent>
+            </Select>
 
-            {searchMode === 'Nome' || searchMode === 'Região' ? (
-              <div className="flex-1 min-w-[200px] relative animate-in fade-in zoom-in duration-200">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder={
-                    searchMode === 'Nome'
-                      ? 'Buscar por nome ou documento...'
-                      : 'Buscar por cidade ou estado...'
-                  }
-                  className="pl-11 h-12 bg-muted/30 border-none rounded-xl text-sm focus-visible:ring-2 focus-visible:ring-secondary/50"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-            ) : (
-              <div className="flex flex-1 flex-wrap gap-4 animate-in fade-in zoom-in duration-200">
-                <div className="w-full sm:w-48">
-                  <Select value={status} onValueChange={setStatus}>
-                    <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Todos">Status: Todos</SelectItem>
-                      <SelectItem value="Sim">Ativos</SelectItem>
-                      <SelectItem value="Não">Inativos</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="w-full sm:w-48">
-                  <Select value={blacklist} onValueChange={setBlacklist}>
-                    <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl">
-                      <SelectValue placeholder="Black List" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Todos">Black List: Todos</SelectItem>
-                      <SelectItem value="Sim">Apenas Black List</SelectItem>
-                      <SelectItem value="Não">Sem Black List</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
+            {searchMode === 'Status/Blacklist' && (
+              <>
+                <div className="h-4 w-[1px] bg-border mx-1"></div>
+                <Select value={status} onValueChange={setStatus}>
+                  <SelectTrigger className="h-8 w-auto min-w-[120px] border-transparent hover:bg-muted/60 bg-transparent shadow-none font-medium text-[13px] text-foreground focus:ring-0">
+                    <span className="text-muted-foreground mr-1.5 font-normal">Active:</span>{' '}
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Todos">All</SelectItem>
+                    <SelectItem value="Sim">Yes</SelectItem>
+                    <SelectItem value="Não">No</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={blacklist} onValueChange={setBlacklist}>
+                  <SelectTrigger className="h-8 w-auto min-w-[120px] border-transparent hover:bg-muted/60 bg-transparent shadow-none font-medium text-[13px] text-foreground focus:ring-0">
+                    <span className="text-muted-foreground mr-1.5 font-normal">Blacklist:</span>{' '}
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Todos">All</SelectItem>
+                    <SelectItem value="Sim">Blacklisted</SelectItem>
+                    <SelectItem value="Não">Clean</SelectItem>
+                  </SelectContent>
+                </Select>
+              </>
             )}
-          </Card>
 
-          <Card className="rounded-2xl shadow-sm border-none overflow-hidden flex-1 flex flex-col">
+            <Button
+              variant="ghost"
+              className="h-8 text-primary font-semibold text-[13px] px-3 ml-auto hover:bg-primary/5 hover:text-primary"
+            >
+              Advanced filters (0)
+            </Button>
+          </div>
+
+          {/* Search & Table Actions Bar */}
+          <div className="px-6 py-3 flex justify-between items-center bg-white border-b border-border">
+            <div className="relative w-full max-w-[320px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-[14px] h-[14px] text-muted-foreground" />
+              <Input
+                placeholder={
+                  searchMode === 'Nome'
+                    ? 'Search name, doc, phone...'
+                    : searchMode === 'Região'
+                      ? 'Search city, state...'
+                      : 'Search...'
+                }
+                className="pl-9 h-8 text-[13px] border-border bg-white rounded-[3px] shadow-none focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:border-primary/40"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                disabled={searchMode === 'Status/Blacklist'}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 text-[12px] font-semibold text-foreground border-border"
+              >
+                Export
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 text-[12px] font-semibold text-foreground border-border"
+              >
+                Edit columns
+              </Button>
+            </div>
+          </div>
+
+          {/* Table Container */}
+          <div className="overflow-auto flex-1 bg-white rounded-b-md">
             {loading ? (
-              <div className="flex flex-col gap-4 p-6">
+              <div className="flex flex-col gap-2 p-6">
                 {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="h-14 w-full rounded-xl bg-muted/50" />
+                  <Skeleton key={i} className="h-12 w-full rounded-sm bg-muted/40" />
                 ))}
               </div>
             ) : filtered.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground animate-in fade-in">
-                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-                  <Search className="w-8 h-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-xl font-bold text-primary mb-1">Nenhum agente encontrado</h3>
-                <p className="text-sm">
-                  Tente ajustar os filtros de busca ou adicione um novo agente.
-                </p>
+              <div className="flex-1 flex flex-col items-center justify-center py-24 text-muted-foreground bg-white">
+                <Search className="w-10 h-10 text-muted-foreground/40 mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-1">No agents found</h3>
+                <p className="text-[13px]">Try adjusting your search or filter criteria.</p>
               </div>
             ) : (
-              <div className="overflow-auto flex-1 animate-in fade-in">
-                <Table>
-                  <TableHeader className="bg-muted/30">
-                    <TableRow className="border-b-border">
-                      <TableHead className="pl-6 py-4 font-semibold text-muted-foreground">
-                        Nome Completo
-                      </TableHead>
-                      <TableHead className="py-4 font-semibold text-muted-foreground">
-                        CPF/CNPJ
-                      </TableHead>
-                      <TableHead className="py-4 font-semibold text-muted-foreground">
-                        Região
-                      </TableHead>
-                      <TableHead className="py-4 font-semibold text-muted-foreground">
-                        Valor Hora
-                      </TableHead>
-                      <TableHead className="py-4 font-semibold text-muted-foreground">
-                        Status
-                      </TableHead>
-                      <TableHead className="py-4 font-semibold text-muted-foreground text-right pr-6">
-                        Ações
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filtered.map((p) => (
-                      <TableRow
-                        key={p.id}
-                        className="cursor-pointer hover:bg-muted/20 border-b-border/50 transition-colors"
-                        onClick={() => navigate(`/agentes/${p.id}`)}
-                      >
-                        <TableCell className="pl-6 font-semibold text-primary py-4 flex items-center gap-4">
-                          <img
-                            src={`https://img.usecurling.com/ppl/thumbnail?seed=${p.id}&gender=male`}
-                            className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                            alt="Avatar"
-                          />
-                          <div className="flex flex-col">
-                            <span>{p.nomeCompleto}</span>
-                            {p.numero_controle && (
-                              <span className="text-xs font-medium text-muted-foreground">
-                                {p.numero_controle}
-                              </span>
-                            )}
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-[#f5f8fa]">
+                    <TableHead className="w-[40px] px-6">
+                      <div className="w-3.5 h-3.5 rounded-[2px] border border-muted-foreground/40 bg-white"></div>
+                    </TableHead>
+                    <TableHead>NAME</TableHead>
+                    <TableHead>EMAIL</TableHead>
+                    <TableHead>PHONE NUMBER</TableHead>
+                    <TableHead>REGION</TableHead>
+                    <TableHead>STATUS</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((p) => (
+                    <TableRow
+                      key={p.id}
+                      className="cursor-pointer group"
+                      onClick={() => navigate(`/agentes/${p.id}`)}
+                    >
+                      <TableCell className="px-6 py-3 w-[40px]">
+                        <div className="w-3.5 h-3.5 rounded-[2px] border border-muted-foreground/40 bg-white group-hover:border-primary"></div>
+                      </TableCell>
+                      <TableCell className="py-3 font-semibold flex items-center gap-3">
+                        <div className="w-[30px] h-[30px] rounded-full bg-[#f5f8fa] border border-border flex items-center justify-center text-[#516f90] font-bold text-[11px] shrink-0">
+                          {p.nomeCompleto.charAt(0).toUpperCase()}
+                        </div>
+                        <div className="flex flex-col overflow-hidden">
+                          <span className="text-primary group-hover:underline truncate">
+                            {p.nomeCompleto}
+                          </span>
+                          {p.cpf || p.cnpj ? (
+                            <span className="text-[11px] text-muted-foreground font-normal truncate mt-0.5">
+                              {p.cpf || p.cnpj}
+                            </span>
+                          ) : null}
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-3 text-muted-foreground">
+                        {p.email ? (
+                          <span className="flex items-center gap-1.5 text-primary hover:underline">
+                            {p.email}
+                          </span>
+                        ) : (
+                          '--'
+                        )}
+                      </TableCell>
+                      <TableCell className="py-3 text-muted-foreground">
+                        {p.telefone || '--'}
+                      </TableCell>
+                      <TableCell className="py-3 text-muted-foreground truncate max-w-[200px]">
+                        {p.base_atendimento_cidade && p.base_atendimento_estado
+                          ? `${p.base_atendimento_cidade} - ${p.base_atendimento_estado}`
+                          : p.baseAtendimento || p.regiaoAbrangencia || '--'}
+                      </TableCell>
+                      <TableCell className="py-3">
+                        {p.naBlackList === 'Sim' ? (
+                          <div className="flex items-center gap-1.5 text-destructive font-semibold text-[12px]">
+                            <Lock className="w-3.5 h-3.5" /> Blacklisted
                           </div>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground font-medium">
-                          {p.cpf || p.cnpj || '-'}
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {p.base_atendimento_cidade && p.base_atendimento_estado
-                            ? `${p.base_atendimento_cidade} - ${p.base_atendimento_estado}`
-                            : p.baseAtendimento || p.regiaoAbrangencia || '-'}
-                        </TableCell>
-                        <TableCell className="font-bold text-primary">
-                          R$ {Number(p.valor_hora || p.valorHonorario || 0).toFixed(2)}
-                        </TableCell>
-                        <TableCell>
-                          {p.naBlackList === 'Sim' ? (
-                            <Badge
-                              variant="destructive"
-                              className="bg-destructive/10 text-destructive border-0 hover:bg-destructive/20 font-bold px-3 py-1"
-                            >
-                              <AlertTriangle className="w-3 h-3 mr-1.5" /> Black List
-                            </Badge>
-                          ) : p.ativo === 'Sim' ? (
-                            <Badge
-                              variant="secondary"
-                              className="bg-secondary/10 text-secondary border-0 hover:bg-secondary/20 font-bold px-3 py-1"
-                            >
-                              Ativo
-                            </Badge>
-                          ) : (
-                            <Badge
-                              variant="outline"
-                              className="text-muted-foreground border-muted-foreground/30 font-bold px-3 py-1"
-                            >
-                              Inativo
-                            </Badge>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-right pr-6">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-muted"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              navigate(`/agentes/${p.id}/editar`)
-                            }}
-                          >
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                        ) : p.ativo === 'Sim' ? (
+                          <div className="flex items-center gap-1.5 text-emerald-600 font-semibold text-[12px]">
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Active
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1.5 text-muted-foreground font-semibold text-[12px]">
+                            <Unlock className="w-3.5 h-3.5" /> Inactive
+                          </div>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             )}
-          </Card>
+          </div>
+
+          {/* Pagination Footer (Mocked visually to match HubSpot) */}
+          <div className="px-6 py-3 border-t border-border bg-white flex items-center justify-between text-[12px] font-medium text-muted-foreground rounded-b-md">
+            <span>{filtered.length} records</span>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <span className="opacity-50 cursor-not-allowed text-primary">Prev</span>
+                <span className="w-6 h-6 rounded flex items-center justify-center bg-primary/10 text-primary font-bold">
+                  1
+                </span>
+                <span className="opacity-50 cursor-not-allowed text-primary">Next</span>
+              </div>
+              <span>
+                25 per page <ChevronDown className="inline w-3 h-3 ml-1" />
+              </span>
+            </div>
+          </div>
         </TabsContent>
 
-        <TabsContent value="map" className="mt-0 outline-none">
+        <TabsContent value="map" className="m-0 bg-white p-6 rounded-b-md flex-1 outline-none">
           <InvestigationMap agentes={agentes} loading={loading} />
         </TabsContent>
       </Tabs>

@@ -1,131 +1,119 @@
 import { Suspense } from 'react'
-import { Outlet, Link, useLocation } from 'react-router-dom'
-import {
-  Search,
-  LayoutDashboard,
-  ClipboardList,
-  Users,
-  Settings,
-  HelpCircle,
-  Bell,
-  LogOut,
-} from 'lucide-react'
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarTrigger,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarFooter,
-} from '@/components/ui/sidebar'
-import { Input } from '@/components/ui/input'
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
+import { Search, Bell, Settings, HelpCircle, User, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/hooks/use-auth'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { cn } from '@/lib/utils'
 
 const navItems = [
-  { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
-  { title: 'Processos', url: '/processos', icon: ClipboardList },
-  { title: 'Agentes', url: '/agentes', icon: Users },
-  { title: 'Configurações', url: '/configuracoes', icon: Settings },
-  { title: 'Ajuda', url: '/ajuda', icon: HelpCircle },
+  { title: 'Dashboard', url: '/dashboard' },
+  { title: 'Processos', url: '/processos' },
+  { title: 'Agentes', url: '/agentes' },
 ]
 
-function AppSidebar() {
+function TopNav() {
   const location = useLocation()
   const { signOut } = useAuth()
+  const navigate = useNavigate()
 
   return (
-    <Sidebar>
-      <SidebarHeader className="h-20 flex justify-center px-6">
-        <h1 className="text-2xl font-bold text-white flex items-center h-full tracking-tight gap-2">
-          <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center text-primary font-bold">
+    <header className="h-[56px] bg-[#2d3e50] text-white flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30 shadow-sm border-b border-[#202c39]">
+      <div className="flex items-center gap-6 h-full">
+        <Link to="/" className="flex items-center gap-2 mr-4 group">
+          <div
+            className="w-7 h-7 rounded-[4px] text-white flex items-center justify-center font-bold text-xs"
+            style={{ backgroundColor: '#ff7a59' }}
+          >
             IX
           </div>
-          InquiryXperty
-        </h1>
-      </SidebarHeader>
-      <SidebarContent className="py-4">
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu className="gap-2 px-4">
-              {navItems.map((item) => {
-                const isActive = location.pathname.startsWith(item.url)
-                return (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={isActive}
-                      tooltip={item.title}
-                      className="h-12 transition-colors rounded-xl font-medium"
-                    >
-                      <Link to={item.url} className="flex items-center gap-3">
-                        <item.icon className="w-5 h-5 opacity-80" />
-                        <span className="text-[15px]">{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                )
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-      <SidebarFooter className="p-4">
-        <Button
-          onClick={signOut}
-          className="w-full bg-destructive hover:bg-destructive/90 text-white rounded-xl h-12 flex items-center justify-center gap-2 font-semibold shadow-sm"
-        >
-          <LogOut className="w-5 h-5" />
-          Log Out
-        </Button>
-      </SidebarFooter>
-    </Sidebar>
-  )
-}
+          <span className="font-semibold text-[16px] tracking-tight hidden sm:block group-hover:text-white text-[#cbd6e2] transition-colors">
+            InquiryXperty
+          </span>
+        </Link>
 
-function Header() {
-  return (
-    <header className="h-20 bg-background flex items-center justify-between px-6 lg:px-10 sticky top-0 z-30">
-      <div className="flex items-center gap-4">
-        <SidebarTrigger className="text-muted-foreground hover:text-primary md:hidden" />
+        <nav className="hidden md:flex h-full">
+          {navItems.map((item) => {
+            const isActive = location.pathname.startsWith(item.url)
+            return (
+              <Link
+                key={item.title}
+                to={item.url}
+                className={cn(
+                  'px-4 h-full flex items-center text-[14px] font-medium transition-colors border-b-[3px]',
+                  isActive
+                    ? 'border-primary text-white bg-[#ffffff10]'
+                    : 'border-transparent text-[#cbd6e2] hover:bg-[#ffffff10] hover:text-white',
+                )}
+              >
+                {item.title}
+              </Link>
+            )
+          })}
+        </nav>
       </div>
 
-      <div className="flex-1 max-w-2xl px-4 hidden md:flex items-center">
-        <div className="relative group w-full max-w-md">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-secondary transition-colors" />
-          <Input
-            type="search"
-            placeholder="Search Management..."
-            className="w-full pl-11 bg-white border-none rounded-full h-12 shadow-sm focus-visible:ring-2 focus-visible:ring-secondary/50 text-[15px] transition-all"
-          />
-        </div>
-      </div>
-
-      <div className="flex items-center gap-4 sm:gap-6">
+      <div className="flex items-center gap-1 sm:gap-2">
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full text-muted-foreground hover:text-primary hover:bg-muted relative shadow-sm bg-white"
+          className="text-[#cbd6e2] hover:text-white hover:bg-[#ffffff1a] rounded-full h-9 w-9 focus-visible:ring-0"
         >
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-destructive rounded-full border-2 border-white"></span>
+          <Search className="w-[18px] h-[18px]" />
         </Button>
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex flex-col items-end text-sm">
-            <span className="font-semibold text-primary">Inquiry Admin</span>
-            <span className="text-muted-foreground text-xs">admin@inquiry.com</span>
-          </div>
-          <Avatar className="w-10 h-10 border-2 border-white shadow-sm cursor-pointer hover:opacity-90 transition-opacity">
-            <AvatarImage src="https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12" />
-            <AvatarFallback>AD</AvatarFallback>
-          </Avatar>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-[#cbd6e2] hover:text-white hover:bg-[#ffffff1a] rounded-full h-9 w-9 focus-visible:ring-0"
+          onClick={() => navigate('/configuracoes')}
+        >
+          <Settings className="w-[18px] h-[18px]" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-[#cbd6e2] hover:text-white hover:bg-[#ffffff1a] rounded-full h-9 w-9 relative focus-visible:ring-0"
+          onClick={() => navigate('/ajuda')}
+        >
+          <HelpCircle className="w-[18px] h-[18px]" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-[#cbd6e2] hover:text-white hover:bg-[#ffffff1a] rounded-full h-9 w-9 relative focus-visible:ring-0"
+        >
+          <Bell className="w-[18px] h-[18px]" />
+          <span className="absolute top-[6px] right-[6px] w-[8px] h-[8px] bg-primary rounded-full"></span>
+        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar className="w-8 h-8 ml-2 cursor-pointer border border-[#cbd6e2]/30 hover:border-[#cbd6e2] transition-colors bg-[#ffffff1a]">
+              <AvatarImage src="https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12" />
+              <AvatarFallback className="bg-transparent text-xs text-[#cbd6e2]">AD</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="w-56 mt-2 rounded-[4px] border-border shadow-md"
+          >
+            <DropdownMenuItem className="text-foreground flex items-center py-2 px-3 font-medium cursor-pointer">
+              <User className="w-[14px] h-[14px] mr-2 text-muted-foreground" /> Meu Perfil
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={signOut}
+              className="text-destructive focus:bg-destructive/10 cursor-pointer py-2 px-3 font-medium border-t border-border mt-1"
+            >
+              <LogOut className="w-[14px] h-[14px] mr-2" /> Sair
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   )
@@ -133,27 +121,22 @@ function Header() {
 
 export default function Layout() {
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full bg-background text-foreground">
-        <AppSidebar />
-        <div className="flex flex-col flex-1 min-w-0 bg-[#F5F6FA]">
-          <Header />
-          <main className="flex-1 overflow-y-auto">
-            <div className="max-w-[1400px] mx-auto w-full p-4 md:p-8 animate-in fade-in duration-500">
-              <Suspense
-                fallback={
-                  <div className="py-20 flex flex-col items-center justify-center text-primary animate-pulse gap-3">
-                    <div className="w-8 h-8 rounded-full border-2 border-secondary border-t-transparent animate-spin" />
-                    <span className="text-sm font-medium">Carregando...</span>
-                  </div>
-                }
-              >
-                <Outlet />
-              </Suspense>
-            </div>
-          </main>
+    <div className="flex flex-col min-h-screen w-full bg-secondary font-sans text-foreground">
+      <TopNav />
+      <main className="flex-1 overflow-y-auto">
+        <div className="max-w-[1400px] mx-auto w-full p-6 md:p-8 animate-in fade-in duration-500">
+          <Suspense
+            fallback={
+              <div className="py-20 flex flex-col items-center justify-center text-muted-foreground animate-pulse gap-3">
+                <div className="w-6 h-6 rounded-full border-[3px] border-primary border-t-transparent animate-spin" />
+                <span className="text-[13px] font-medium">Carregando...</span>
+              </div>
+            }
+          >
+            <Outlet />
+          </Suspense>
         </div>
-      </div>
-    </SidebarProvider>
+      </main>
+    </div>
   )
 }
