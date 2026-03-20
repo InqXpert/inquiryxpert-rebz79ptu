@@ -1,0 +1,1503 @@
+import { i as require_react, r as require_jsx_runtime, s as __toESM, t as cn } from "./utils-B9zKDa3a.js";
+import { a as Slot, n as Button, s as useComposedRefs } from "./dist-dHjiV_RN.js";
+import { r as createLucideIcon } from "./client-riYRmEzR.js";
+import { C as createContextScope, D as Check, _ as Primitive, a as Anchor, b as createSlottable, c as Root2, d as useId, i as Portal, l as createPopperScope, m as DismissableLayer, o as Arrow, r as Presence, s as Content, w as composeEventHandlers, x as useControllableState } from "./Combination-CaVwfZpk.js";
+import { a as SelectValue, i as SelectTrigger, n as SelectContent, o as Root, r as SelectItem, s as Input, t as Select } from "./select-DGlMpVlA.js";
+import { a as CommandInput, c as Popover, d as ChevronsUpDown, i as CommandGroup, l as PopoverContent, n as Command, o as CommandItem, r as CommandEmpty, s as CommandList, t as useMunicipios, u as PopoverTrigger } from "./use-municipios-DWHwa41L.js";
+import { i as CardTitle, n as CardContent, r as CardHeader, t as Card } from "./card-DqCKMwAt.js";
+import { t as Label } from "./label-D9B33VZM.js";
+import { c as FormProvider, i as string, n as _enum, o as _coercedNumber, r as object, s as Controller, t as ZodNumber, u as useFormContext } from "./schemas-ru_PgzNZ.js";
+import { n as useToast } from "./use-toast-C1zkQ-lx.js";
+import { t as Textarea } from "./textarea-BlePx3PY.js";
+var ChevronLeft = createLucideIcon("chevron-left", [["path", {
+	d: "m15 18-6-6 6-6",
+	key: "1wnfg3"
+}]]);
+var Copy = createLucideIcon("copy", [["rect", {
+	width: "14",
+	height: "14",
+	x: "8",
+	y: "8",
+	rx: "2",
+	ry: "2",
+	key: "17jyea"
+}], ["path", {
+	d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2",
+	key: "zix9uf"
+}]]);
+//#endregion
+//#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/zod@4.3.6/node_modules/zod/v4/classic/coerce.js
+function number(params) {
+	return _coercedNumber(ZodNumber, params);
+}
+//#endregion
+//#region src/schemas/agente.ts
+var simNaoSchema = _enum(["Sim", "Não"]);
+var agenteSchema = object({
+	numero_controle: string().optional(),
+	nomeCompleto: string().min(3, "Nome é obrigatório"),
+	dataNascimento: string().min(1, "Data obrigatória"),
+	cpf: string().min(11, "CPF inválido"),
+	rg: string().min(5, "RG obrigatório"),
+	cnpj: string().optional(),
+	possuiCnpj: simNaoSchema,
+	emiteNotaFiscal: simNaoSchema,
+	notaTerceiros: simNaoSchema,
+	vinculoTerceiroNf: string().optional(),
+	baseAtendimento: string().min(2, "Obrigatório"),
+	base_atendimento_estado: string().optional(),
+	base_atendimento_cidade: string().optional(),
+	regiaoAbrangencia: string().min(2, "Obrigatório"),
+	cepBase: string().min(8, "CEP inválido"),
+	telefone: string().min(10, "Telefone inválido"),
+	email: string().email("E-mail inválido"),
+	banco: string().min(2, "Banco obrigatório"),
+	agencia: string().min(2, "Agência obrigatória"),
+	conta: string().min(2, "Conta obrigatória"),
+	titularConta: string().min(3, "Titular obrigatório"),
+	chavePix: string().min(3, "Pix obrigatório"),
+	dadosBancariosTerceiros: simNaoSchema,
+	vinculoTerceiroBanco: string().optional(),
+	valorHonorario: number().min(0),
+	valorKm: number().min(0),
+	valor_hora: number().min(0).optional(),
+	ativo: simNaoSchema,
+	dataAtivacao: string().min(1, "Data obrigatória"),
+	dataInativacao: string().optional(),
+	naBlackList: simNaoSchema,
+	motivoBlackList: string().optional(),
+	outrasEmpresas: string().optional(),
+	origemIndicacao: string().optional(),
+	observacoes: string().optional(),
+	qualidade_nivel: string().optional(),
+	experiencia_nivel: string().optional(),
+	compliance_nivel: string().optional()
+});
+//#endregion
+//#region src/components/ui/form.tsx
+var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
+var import_jsx_runtime = require_jsx_runtime();
+var Form = FormProvider;
+var FormFieldContext = import_react.createContext({});
+var FormField = ({ ...props }) => {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormFieldContext.Provider, {
+		"data-uid": "src/components/ui/form.tsx:35:5",
+		"data-prohibitions": "[]",
+		value: { name: props.name },
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Controller, {
+			"data-uid": "src/components/ui/form.tsx:36:7",
+			"data-prohibitions": "[editContent]",
+			...props
+		})
+	});
+};
+var useFormField = () => {
+	const fieldContext = import_react.useContext(FormFieldContext);
+	const itemContext = import_react.useContext(FormItemContext);
+	const { getFieldState, formState } = useFormContext();
+	const fieldState = getFieldState(fieldContext.name, formState);
+	if (!fieldContext) throw new Error("useFormField should be used within <FormField>");
+	const { id } = itemContext;
+	return {
+		id,
+		name: fieldContext.name,
+		formItemId: `${id}-form-item`,
+		formDescriptionId: `${id}-form-item-description`,
+		formMessageId: `${id}-form-item-message`,
+		...fieldState
+	};
+};
+var FormItemContext = import_react.createContext({});
+var FormItem = import_react.forwardRef(({ className, ...props }, ref) => {
+	const id = import_react.useId();
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormItemContext.Provider, {
+		"data-uid": "src/components/ui/form.tsx:75:7",
+		"data-prohibitions": "[editContent]",
+		value: { id },
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+			"data-uid": "src/components/ui/form.tsx:76:9",
+			"data-prohibitions": "[editContent]",
+			ref,
+			className: cn("space-y-2", className),
+			...props
+		})
+	});
+});
+FormItem.displayName = "FormItem";
+var FormLabel = import_react.forwardRef(({ className, ...props }, ref) => {
+	const { error, formItemId } = useFormField();
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
+		"data-uid": "src/components/ui/form.tsx:90:5",
+		"data-prohibitions": "[editContent]",
+		ref,
+		className: cn(error && "text-destructive", className),
+		htmlFor: formItemId,
+		...props
+	});
+});
+FormLabel.displayName = "FormLabel";
+var FormControl = import_react.forwardRef(({ ...props }, ref) => {
+	const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Slot, {
+		"data-uid": "src/components/ui/form.tsx:107:5",
+		"data-prohibitions": "[editContent]",
+		ref,
+		id: formItemId,
+		"aria-describedby": !error ? `${formDescriptionId}` : `${formDescriptionId} ${formMessageId}`,
+		"aria-invalid": !!error,
+		...props
+	});
+});
+FormControl.displayName = "FormControl";
+var FormDescription = import_react.forwardRef(({ className, ...props }, ref) => {
+	const { formDescriptionId } = useFormField();
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+		"data-uid": "src/components/ui/form.tsx:125:5",
+		"data-prohibitions": "[editContent]",
+		ref,
+		id: formDescriptionId,
+		className: cn("text-sm text-muted-foreground", className),
+		...props
+	});
+});
+FormDescription.displayName = "FormDescription";
+var FormMessage = import_react.forwardRef(({ className, children, ...props }, ref) => {
+	const { error, formMessageId } = useFormField();
+	const body = error ? String(error?.message ?? "") : children;
+	if (!body) return null;
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+		"data-uid": "src/components/ui/form.tsx:147:5",
+		"data-prohibitions": "[editContent]",
+		ref,
+		id: formMessageId,
+		className: cn("text-sm font-medium text-destructive", className),
+		...props,
+		children: body
+	});
+});
+FormMessage.displayName = "FormMessage";
+//#endregion
+//#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/@radix-ui+react-tooltip@1.2.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+reac_9074d9fb06315b089b2bee17c4c65951/node_modules/@radix-ui/react-tooltip/dist/index.mjs
+var [createTooltipContext, createTooltipScope] = createContextScope("Tooltip", [createPopperScope]);
+var usePopperScope = createPopperScope();
+var PROVIDER_NAME = "TooltipProvider";
+var DEFAULT_DELAY_DURATION = 700;
+var TOOLTIP_OPEN = "tooltip.open";
+var [TooltipProviderContextProvider, useTooltipProviderContext] = createTooltipContext(PROVIDER_NAME);
+var TooltipProvider$1 = (props) => {
+	const { __scopeTooltip, delayDuration = DEFAULT_DELAY_DURATION, skipDelayDuration = 300, disableHoverableContent = false, children } = props;
+	const isOpenDelayedRef = import_react.useRef(true);
+	const isPointerInTransitRef = import_react.useRef(false);
+	const skipDelayTimerRef = import_react.useRef(0);
+	import_react.useEffect(() => {
+		const skipDelayTimer = skipDelayTimerRef.current;
+		return () => window.clearTimeout(skipDelayTimer);
+	}, []);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipProviderContextProvider, {
+		scope: __scopeTooltip,
+		isOpenDelayedRef,
+		delayDuration,
+		onOpen: import_react.useCallback(() => {
+			window.clearTimeout(skipDelayTimerRef.current);
+			isOpenDelayedRef.current = false;
+		}, []),
+		onClose: import_react.useCallback(() => {
+			window.clearTimeout(skipDelayTimerRef.current);
+			skipDelayTimerRef.current = window.setTimeout(() => isOpenDelayedRef.current = true, skipDelayDuration);
+		}, [skipDelayDuration]),
+		isPointerInTransitRef,
+		onPointerInTransitChange: import_react.useCallback((inTransit) => {
+			isPointerInTransitRef.current = inTransit;
+		}, []),
+		disableHoverableContent,
+		children
+	});
+};
+TooltipProvider$1.displayName = PROVIDER_NAME;
+var TOOLTIP_NAME = "Tooltip";
+var [TooltipContextProvider, useTooltipContext] = createTooltipContext(TOOLTIP_NAME);
+var Tooltip$1 = (props) => {
+	const { __scopeTooltip, children, open: openProp, defaultOpen, onOpenChange, disableHoverableContent: disableHoverableContentProp, delayDuration: delayDurationProp } = props;
+	const providerContext = useTooltipProviderContext(TOOLTIP_NAME, props.__scopeTooltip);
+	const popperScope = usePopperScope(__scopeTooltip);
+	const [trigger, setTrigger] = import_react.useState(null);
+	const contentId = useId();
+	const openTimerRef = import_react.useRef(0);
+	const disableHoverableContent = disableHoverableContentProp ?? providerContext.disableHoverableContent;
+	const delayDuration = delayDurationProp ?? providerContext.delayDuration;
+	const wasOpenDelayedRef = import_react.useRef(false);
+	const [open, setOpen] = useControllableState({
+		prop: openProp,
+		defaultProp: defaultOpen ?? false,
+		onChange: (open2) => {
+			if (open2) {
+				providerContext.onOpen();
+				document.dispatchEvent(new CustomEvent(TOOLTIP_OPEN));
+			} else providerContext.onClose();
+			onOpenChange?.(open2);
+		},
+		caller: TOOLTIP_NAME
+	});
+	const stateAttribute = import_react.useMemo(() => {
+		return open ? wasOpenDelayedRef.current ? "delayed-open" : "instant-open" : "closed";
+	}, [open]);
+	const handleOpen = import_react.useCallback(() => {
+		window.clearTimeout(openTimerRef.current);
+		openTimerRef.current = 0;
+		wasOpenDelayedRef.current = false;
+		setOpen(true);
+	}, [setOpen]);
+	const handleClose = import_react.useCallback(() => {
+		window.clearTimeout(openTimerRef.current);
+		openTimerRef.current = 0;
+		setOpen(false);
+	}, [setOpen]);
+	const handleDelayedOpen = import_react.useCallback(() => {
+		window.clearTimeout(openTimerRef.current);
+		openTimerRef.current = window.setTimeout(() => {
+			wasOpenDelayedRef.current = true;
+			setOpen(true);
+			openTimerRef.current = 0;
+		}, delayDuration);
+	}, [delayDuration, setOpen]);
+	import_react.useEffect(() => {
+		return () => {
+			if (openTimerRef.current) {
+				window.clearTimeout(openTimerRef.current);
+				openTimerRef.current = 0;
+			}
+		};
+	}, []);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root2, {
+		...popperScope,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipContextProvider, {
+			scope: __scopeTooltip,
+			contentId,
+			open,
+			stateAttribute,
+			trigger,
+			onTriggerChange: setTrigger,
+			onTriggerEnter: import_react.useCallback(() => {
+				if (providerContext.isOpenDelayedRef.current) handleDelayedOpen();
+				else handleOpen();
+			}, [
+				providerContext.isOpenDelayedRef,
+				handleDelayedOpen,
+				handleOpen
+			]),
+			onTriggerLeave: import_react.useCallback(() => {
+				if (disableHoverableContent) handleClose();
+				else {
+					window.clearTimeout(openTimerRef.current);
+					openTimerRef.current = 0;
+				}
+			}, [handleClose, disableHoverableContent]),
+			onOpen: handleOpen,
+			onClose: handleClose,
+			disableHoverableContent,
+			children
+		})
+	});
+};
+Tooltip$1.displayName = TOOLTIP_NAME;
+var TRIGGER_NAME = "TooltipTrigger";
+var TooltipTrigger$1 = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeTooltip, ...triggerProps } = props;
+	const context = useTooltipContext(TRIGGER_NAME, __scopeTooltip);
+	const providerContext = useTooltipProviderContext(TRIGGER_NAME, __scopeTooltip);
+	const popperScope = usePopperScope(__scopeTooltip);
+	const composedRefs = useComposedRefs(forwardedRef, import_react.useRef(null), context.onTriggerChange);
+	const isPointerDownRef = import_react.useRef(false);
+	const hasPointerMoveOpenedRef = import_react.useRef(false);
+	const handlePointerUp = import_react.useCallback(() => isPointerDownRef.current = false, []);
+	import_react.useEffect(() => {
+		return () => document.removeEventListener("pointerup", handlePointerUp);
+	}, [handlePointerUp]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Anchor, {
+		asChild: true,
+		...popperScope,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
+			"aria-describedby": context.open ? context.contentId : void 0,
+			"data-state": context.stateAttribute,
+			...triggerProps,
+			ref: composedRefs,
+			onPointerMove: composeEventHandlers(props.onPointerMove, (event) => {
+				if (event.pointerType === "touch") return;
+				if (!hasPointerMoveOpenedRef.current && !providerContext.isPointerInTransitRef.current) {
+					context.onTriggerEnter();
+					hasPointerMoveOpenedRef.current = true;
+				}
+			}),
+			onPointerLeave: composeEventHandlers(props.onPointerLeave, () => {
+				context.onTriggerLeave();
+				hasPointerMoveOpenedRef.current = false;
+			}),
+			onPointerDown: composeEventHandlers(props.onPointerDown, () => {
+				if (context.open) context.onClose();
+				isPointerDownRef.current = true;
+				document.addEventListener("pointerup", handlePointerUp, { once: true });
+			}),
+			onFocus: composeEventHandlers(props.onFocus, () => {
+				if (!isPointerDownRef.current) context.onOpen();
+			}),
+			onBlur: composeEventHandlers(props.onBlur, context.onClose),
+			onClick: composeEventHandlers(props.onClick, context.onClose)
+		})
+	});
+});
+TooltipTrigger$1.displayName = TRIGGER_NAME;
+var PORTAL_NAME = "TooltipPortal";
+var [PortalProvider, usePortalContext] = createTooltipContext(PORTAL_NAME, { forceMount: void 0 });
+var TooltipPortal = (props) => {
+	const { __scopeTooltip, forceMount, children, container } = props;
+	const context = useTooltipContext(PORTAL_NAME, __scopeTooltip);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PortalProvider, {
+		scope: __scopeTooltip,
+		forceMount,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+			present: forceMount || context.open,
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Portal, {
+				asChild: true,
+				container,
+				children
+			})
+		})
+	});
+};
+TooltipPortal.displayName = PORTAL_NAME;
+var CONTENT_NAME = "TooltipContent";
+var TooltipContent$1 = import_react.forwardRef((props, forwardedRef) => {
+	const portalContext = usePortalContext(CONTENT_NAME, props.__scopeTooltip);
+	const { forceMount = portalContext.forceMount, side = "top", ...contentProps } = props;
+	const context = useTooltipContext(CONTENT_NAME, props.__scopeTooltip);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Presence, {
+		present: forceMount || context.open,
+		children: context.disableHoverableContent ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipContentImpl, {
+			side,
+			...contentProps,
+			ref: forwardedRef
+		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipContentHoverable, {
+			side,
+			...contentProps,
+			ref: forwardedRef
+		})
+	});
+});
+var TooltipContentHoverable = import_react.forwardRef((props, forwardedRef) => {
+	const context = useTooltipContext(CONTENT_NAME, props.__scopeTooltip);
+	const providerContext = useTooltipProviderContext(CONTENT_NAME, props.__scopeTooltip);
+	const ref = import_react.useRef(null);
+	const composedRefs = useComposedRefs(forwardedRef, ref);
+	const [pointerGraceArea, setPointerGraceArea] = import_react.useState(null);
+	const { trigger, onClose } = context;
+	const content = ref.current;
+	const { onPointerInTransitChange } = providerContext;
+	const handleRemoveGraceArea = import_react.useCallback(() => {
+		setPointerGraceArea(null);
+		onPointerInTransitChange(false);
+	}, [onPointerInTransitChange]);
+	const handleCreateGraceArea = import_react.useCallback((event, hoverTarget) => {
+		const currentTarget = event.currentTarget;
+		const exitPoint = {
+			x: event.clientX,
+			y: event.clientY
+		};
+		const paddedExitPoints = getPaddedExitPoints(exitPoint, getExitSideFromRect(exitPoint, currentTarget.getBoundingClientRect()));
+		const hoverTargetPoints = getPointsFromRect(hoverTarget.getBoundingClientRect());
+		setPointerGraceArea(getHull([...paddedExitPoints, ...hoverTargetPoints]));
+		onPointerInTransitChange(true);
+	}, [onPointerInTransitChange]);
+	import_react.useEffect(() => {
+		return () => handleRemoveGraceArea();
+	}, [handleRemoveGraceArea]);
+	import_react.useEffect(() => {
+		if (trigger && content) {
+			const handleTriggerLeave = (event) => handleCreateGraceArea(event, content);
+			const handleContentLeave = (event) => handleCreateGraceArea(event, trigger);
+			trigger.addEventListener("pointerleave", handleTriggerLeave);
+			content.addEventListener("pointerleave", handleContentLeave);
+			return () => {
+				trigger.removeEventListener("pointerleave", handleTriggerLeave);
+				content.removeEventListener("pointerleave", handleContentLeave);
+			};
+		}
+	}, [
+		trigger,
+		content,
+		handleCreateGraceArea,
+		handleRemoveGraceArea
+	]);
+	import_react.useEffect(() => {
+		if (pointerGraceArea) {
+			const handleTrackPointerGrace = (event) => {
+				const target = event.target;
+				const pointerPosition = {
+					x: event.clientX,
+					y: event.clientY
+				};
+				const hasEnteredTarget = trigger?.contains(target) || content?.contains(target);
+				const isPointerOutsideGraceArea = !isPointInPolygon(pointerPosition, pointerGraceArea);
+				if (hasEnteredTarget) handleRemoveGraceArea();
+				else if (isPointerOutsideGraceArea) {
+					handleRemoveGraceArea();
+					onClose();
+				}
+			};
+			document.addEventListener("pointermove", handleTrackPointerGrace);
+			return () => document.removeEventListener("pointermove", handleTrackPointerGrace);
+		}
+	}, [
+		trigger,
+		content,
+		pointerGraceArea,
+		onClose,
+		handleRemoveGraceArea
+	]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipContentImpl, {
+		...props,
+		ref: composedRefs
+	});
+});
+var [VisuallyHiddenContentContextProvider, useVisuallyHiddenContentContext] = createTooltipContext(TOOLTIP_NAME, { isInside: false });
+var Slottable = createSlottable("TooltipContent");
+var TooltipContentImpl = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeTooltip, children, "aria-label": ariaLabel, onEscapeKeyDown, onPointerDownOutside, ...contentProps } = props;
+	const context = useTooltipContext(CONTENT_NAME, __scopeTooltip);
+	const popperScope = usePopperScope(__scopeTooltip);
+	const { onClose } = context;
+	import_react.useEffect(() => {
+		document.addEventListener(TOOLTIP_OPEN, onClose);
+		return () => document.removeEventListener(TOOLTIP_OPEN, onClose);
+	}, [onClose]);
+	import_react.useEffect(() => {
+		if (context.trigger) {
+			const handleScroll = (event) => {
+				if (event.target?.contains(context.trigger)) onClose();
+			};
+			window.addEventListener("scroll", handleScroll, { capture: true });
+			return () => window.removeEventListener("scroll", handleScroll, { capture: true });
+		}
+	}, [context.trigger, onClose]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DismissableLayer, {
+		asChild: true,
+		disableOutsidePointerEvents: false,
+		onEscapeKeyDown,
+		onPointerDownOutside,
+		onFocusOutside: (event) => event.preventDefault(),
+		onDismiss: onClose,
+		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Content, {
+			"data-state": context.stateAttribute,
+			...popperScope,
+			...contentProps,
+			ref: forwardedRef,
+			style: {
+				...contentProps.style,
+				"--radix-tooltip-content-transform-origin": "var(--radix-popper-transform-origin)",
+				"--radix-tooltip-content-available-width": "var(--radix-popper-available-width)",
+				"--radix-tooltip-content-available-height": "var(--radix-popper-available-height)",
+				"--radix-tooltip-trigger-width": "var(--radix-popper-anchor-width)",
+				"--radix-tooltip-trigger-height": "var(--radix-popper-anchor-height)"
+			},
+			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Slottable, { children }), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(VisuallyHiddenContentContextProvider, {
+				scope: __scopeTooltip,
+				isInside: true,
+				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root, {
+					id: context.contentId,
+					role: "tooltip",
+					children: ariaLabel || children
+				})
+			})]
+		})
+	});
+});
+TooltipContent$1.displayName = CONTENT_NAME;
+var ARROW_NAME = "TooltipArrow";
+var TooltipArrow = import_react.forwardRef((props, forwardedRef) => {
+	const { __scopeTooltip, ...arrowProps } = props;
+	const popperScope = usePopperScope(__scopeTooltip);
+	return useVisuallyHiddenContentContext(ARROW_NAME, __scopeTooltip).isInside ? null : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Arrow, {
+		...popperScope,
+		...arrowProps,
+		ref: forwardedRef
+	});
+});
+TooltipArrow.displayName = ARROW_NAME;
+function getExitSideFromRect(point, rect) {
+	const top = Math.abs(rect.top - point.y);
+	const bottom = Math.abs(rect.bottom - point.y);
+	const right = Math.abs(rect.right - point.x);
+	const left = Math.abs(rect.left - point.x);
+	switch (Math.min(top, bottom, right, left)) {
+		case left: return "left";
+		case right: return "right";
+		case top: return "top";
+		case bottom: return "bottom";
+		default: throw new Error("unreachable");
+	}
+}
+function getPaddedExitPoints(exitPoint, exitSide, padding = 5) {
+	const paddedExitPoints = [];
+	switch (exitSide) {
+		case "top":
+			paddedExitPoints.push({
+				x: exitPoint.x - padding,
+				y: exitPoint.y + padding
+			}, {
+				x: exitPoint.x + padding,
+				y: exitPoint.y + padding
+			});
+			break;
+		case "bottom":
+			paddedExitPoints.push({
+				x: exitPoint.x - padding,
+				y: exitPoint.y - padding
+			}, {
+				x: exitPoint.x + padding,
+				y: exitPoint.y - padding
+			});
+			break;
+		case "left":
+			paddedExitPoints.push({
+				x: exitPoint.x + padding,
+				y: exitPoint.y - padding
+			}, {
+				x: exitPoint.x + padding,
+				y: exitPoint.y + padding
+			});
+			break;
+		case "right":
+			paddedExitPoints.push({
+				x: exitPoint.x - padding,
+				y: exitPoint.y - padding
+			}, {
+				x: exitPoint.x - padding,
+				y: exitPoint.y + padding
+			});
+			break;
+	}
+	return paddedExitPoints;
+}
+function getPointsFromRect(rect) {
+	const { top, right, bottom, left } = rect;
+	return [
+		{
+			x: left,
+			y: top
+		},
+		{
+			x: right,
+			y: top
+		},
+		{
+			x: right,
+			y: bottom
+		},
+		{
+			x: left,
+			y: bottom
+		}
+	];
+}
+function isPointInPolygon(point, polygon) {
+	const { x, y } = point;
+	let inside = false;
+	for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+		const ii = polygon[i];
+		const jj = polygon[j];
+		const xi = ii.x;
+		const yi = ii.y;
+		const xj = jj.x;
+		const yj = jj.y;
+		if (yi > y !== yj > y && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
+	}
+	return inside;
+}
+function getHull(points) {
+	const newPoints = points.slice();
+	newPoints.sort((a, b) => {
+		if (a.x < b.x) return -1;
+		else if (a.x > b.x) return 1;
+		else if (a.y < b.y) return -1;
+		else if (a.y > b.y) return 1;
+		else return 0;
+	});
+	return getHullPresorted(newPoints);
+}
+function getHullPresorted(points) {
+	if (points.length <= 1) return points.slice();
+	const upperHull = [];
+	for (let i = 0; i < points.length; i++) {
+		const p = points[i];
+		while (upperHull.length >= 2) {
+			const q = upperHull[upperHull.length - 1];
+			const r = upperHull[upperHull.length - 2];
+			if ((q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x)) upperHull.pop();
+			else break;
+		}
+		upperHull.push(p);
+	}
+	upperHull.pop();
+	const lowerHull = [];
+	for (let i = points.length - 1; i >= 0; i--) {
+		const p = points[i];
+		while (lowerHull.length >= 2) {
+			const q = lowerHull[lowerHull.length - 1];
+			const r = lowerHull[lowerHull.length - 2];
+			if ((q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x)) lowerHull.pop();
+			else break;
+		}
+		lowerHull.push(p);
+	}
+	lowerHull.pop();
+	if (upperHull.length === 1 && lowerHull.length === 1 && upperHull[0].x === lowerHull[0].x && upperHull[0].y === lowerHull[0].y) return upperHull;
+	else return upperHull.concat(lowerHull);
+}
+var Root3 = Tooltip$1;
+var Trigger = TooltipTrigger$1;
+var Content2 = TooltipContent$1;
+var Tooltip = Root3;
+var TooltipTrigger = Trigger;
+var TooltipContent = import_react.forwardRef(({ className, sideOffset = 4, ...props }, ref) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content2, {
+	"data-uid": "src/components/ui/tooltip.tsx:17:3",
+	"data-prohibitions": "[editContent]",
+	ref,
+	sideOffset,
+	className: cn("z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-[--radix-tooltip-content-transform-origin]", className),
+	...props
+}));
+TooltipContent.displayName = Content2.displayName;
+//#endregion
+//#region src/components/agentes/FormHelpers.tsx
+var ImportedFieldsContext = (0, import_react.createContext)([]);
+function FInput({ name, label, placeholder, type = "text" }) {
+	const { control } = useFormContext();
+	const isImported = (0, import_react.useContext)(ImportedFieldsContext).includes(name);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
+		"data-uid": "src/components/agentes/FormHelpers.tsx:46:5",
+		"data-prohibitions": "[editContent]",
+		control,
+		name,
+		render: ({ field }) => {
+			const inputNode = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Input, {
+				"data-uid": "src/components/agentes/FormHelpers.tsx:51:11",
+				"data-prohibitions": "[editContent]",
+				placeholder,
+				type,
+				...field,
+				value: field.value ?? "",
+				className: cn(isImported && "border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in")
+			});
+			return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
+				"data-uid": "src/components/agentes/FormHelpers.tsx:63:11",
+				"data-prohibitions": "[editContent]",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:64:13",
+						"data-prohibitions": "[editContent]",
+						children: label
+					}),
+					isImported ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tooltip, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:66:15",
+						"data-prohibitions": "[editContent]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipTrigger, {
+							"data-uid": "src/components/agentes/FormHelpers.tsx:67:17",
+							"data-prohibitions": "[editContent]",
+							asChild: true,
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:68:19",
+								"data-prohibitions": "[editContent]",
+								className: "relative w-full",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
+									"data-uid": "src/components/agentes/FormHelpers.tsx:69:21",
+									"data-prohibitions": "[editContent]",
+									children: inputNode
+								})
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipContent, {
+							"data-uid": "src/components/agentes/FormHelpers.tsx:72:17",
+							"data-prohibitions": "[]",
+							className: "bg-foreground text-background text-[11px] rounded-md px-[8px] py-[4px]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:73:19",
+								"data-prohibitions": "[]",
+								children: "Preenchido automaticamente via planilha"
+							})
+						})]
+					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:77:15",
+						"data-prohibitions": "[editContent]",
+						children: inputNode
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:79:13",
+						"data-prohibitions": "[editContent]"
+					})
+				]
+			});
+		}
+	});
+}
+function FSelect({ name, label, options }) {
+	const { control } = useFormContext();
+	const isImported = (0, import_react.useContext)(ImportedFieldsContext).includes(name);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
+		"data-uid": "src/components/agentes/FormHelpers.tsx:97:5",
+		"data-prohibitions": "[editContent]",
+		control,
+		name,
+		render: ({ field }) => {
+			return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
+				"data-uid": "src/components/agentes/FormHelpers.tsx:102:11",
+				"data-prohibitions": "[editContent]",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:103:13",
+						"data-prohibitions": "[editContent]",
+						children: label
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:104:13",
+						"data-prohibitions": "[editContent]",
+						onValueChange: field.onChange,
+						defaultValue: field.value,
+						children: [isImported ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tooltip, {
+							"data-uid": "src/components/agentes/FormHelpers.tsx:106:17",
+							"data-prohibitions": "[]",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipTrigger, {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:107:19",
+								"data-prohibitions": "[]",
+								asChild: true,
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+									"data-uid": "src/components/agentes/FormHelpers.tsx:108:21",
+									"data-prohibitions": "[]",
+									className: "relative w-full",
+									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
+										"data-uid": "src/components/agentes/FormHelpers.tsx:109:23",
+										"data-prohibitions": "[]",
+										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
+											"data-uid": "src/components/agentes/FormHelpers.tsx:110:25",
+											"data-prohibitions": "[]",
+											className: "border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in",
+											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
+												"data-uid": "src/components/agentes/FormHelpers.tsx:111:27",
+												"data-prohibitions": "[editContent]",
+												placeholder: "Selecione..."
+											})
+										})
+									})
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipContent, {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:116:19",
+								"data-prohibitions": "[]",
+								className: "bg-foreground text-background text-[11px] rounded-md px-[8px] py-[4px]",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+									"data-uid": "src/components/agentes/FormHelpers.tsx:117:21",
+									"data-prohibitions": "[]",
+									children: "Preenchido automaticamente via planilha"
+								})
+							})]
+						}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
+							"data-uid": "src/components/agentes/FormHelpers.tsx:121:17",
+							"data-prohibitions": "[]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:122:19",
+								"data-prohibitions": "[]",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
+									"data-uid": "src/components/agentes/FormHelpers.tsx:123:21",
+									"data-prohibitions": "[editContent]",
+									placeholder: "Selecione..."
+								})
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
+							"data-uid": "src/components/agentes/FormHelpers.tsx:127:15",
+							"data-prohibitions": "[editContent]",
+							children: options.map((opt) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:129:19",
+								"data-prohibitions": "[editContent]",
+								value: opt.value,
+								children: opt.label
+							}, opt.value))
+						})]
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:135:13",
+						"data-prohibitions": "[editContent]"
+					})
+				]
+			});
+		}
+	});
+}
+function FCombobox({ name, label, options }) {
+	const { control } = useFormContext();
+	const isImported = (0, import_react.useContext)(ImportedFieldsContext).includes(name);
+	const [open, setOpen] = import_react.useState(false);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
+		"data-uid": "src/components/agentes/FormHelpers.tsx:154:5",
+		"data-prohibitions": "[editContent]",
+		control,
+		name,
+		render: ({ field }) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
+			"data-uid": "src/components/agentes/FormHelpers.tsx:158:9",
+			"data-prohibitions": "[editContent]",
+			className: "flex flex-col",
+			children: [
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
+					"data-uid": "src/components/agentes/FormHelpers.tsx:159:11",
+					"data-prohibitions": "[editContent]",
+					className: "mt-1",
+					children: label
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Popover, {
+					"data-uid": "src/components/agentes/FormHelpers.tsx:160:11",
+					"data-prohibitions": "[editContent]",
+					open,
+					onOpenChange: setOpen,
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(PopoverTrigger, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:161:13",
+						"data-prohibitions": "[editContent]",
+						asChild: true,
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
+							"data-uid": "src/components/agentes/FormHelpers.tsx:162:15",
+							"data-prohibitions": "[editContent]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:163:17",
+								"data-prohibitions": "[editContent]",
+								variant: "outline",
+								role: "combobox",
+								className: cn("justify-between font-normal w-full border-border", !field.value && "text-muted-foreground", isImported && "border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in"),
+								children: [field.value ? options.find((opt) => opt.value === field.value)?.label : "Selecione...", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronsUpDown, {
+									"data-uid": "src/components/agentes/FormHelpers.tsx:176:19",
+									"data-prohibitions": "[editContent]",
+									className: "ml-2 h-4 w-4 shrink-0 opacity-50"
+								})]
+							})
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PopoverContent, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:180:13",
+						"data-prohibitions": "[editContent]",
+						className: "w-[--radix-popover-trigger-width] p-0",
+						align: "start",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Command, {
+							"data-uid": "src/components/agentes/FormHelpers.tsx:181:15",
+							"data-prohibitions": "[editContent]",
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CommandInput, {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:182:17",
+								"data-prohibitions": "[editContent]",
+								placeholder: `Buscar ${label.toLowerCase()}...`
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CommandList, {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:183:17",
+								"data-prohibitions": "[editContent]",
+								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CommandEmpty, {
+									"data-uid": "src/components/agentes/FormHelpers.tsx:184:19",
+									"data-prohibitions": "[]",
+									children: "Nenhum resultado encontrado."
+								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CommandGroup, {
+									"data-uid": "src/components/agentes/FormHelpers.tsx:185:19",
+									"data-prohibitions": "[editContent]",
+									children: options.map((opt) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CommandItem, {
+										"data-uid": "src/components/agentes/FormHelpers.tsx:187:23",
+										"data-prohibitions": "[editContent]",
+										value: opt.label,
+										onSelect: () => {
+											field.onChange(opt.value);
+											setOpen(false);
+										},
+										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Check, {
+											"data-uid": "src/components/agentes/FormHelpers.tsx:195:25",
+											"data-prohibitions": "[editContent]",
+											className: cn("mr-2 h-4 w-4", opt.value === field.value ? "opacity-100" : "opacity-0")
+										}), opt.label]
+									}, opt.value))
+								})]
+							})]
+						})
+					})]
+				}),
+				/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
+					"data-uid": "src/components/agentes/FormHelpers.tsx:209:11",
+					"data-prohibitions": "[editContent]"
+				})
+			]
+		})
+	});
+}
+function FSimNao({ name, label }) {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
+		"data-uid": "src/components/agentes/FormHelpers.tsx:218:5",
+		"data-prohibitions": "[editContent]",
+		name,
+		label,
+		options: [{
+			label: "Sim",
+			value: "Sim"
+		}, {
+			label: "Não",
+			value: "Não"
+		}]
+	});
+}
+function FTextarea({ name, label, placeholder }) {
+	const { control } = useFormContext();
+	const isImported = (0, import_react.useContext)(ImportedFieldsContext).includes(name);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormField, {
+		"data-uid": "src/components/agentes/FormHelpers.tsx:235:5",
+		"data-prohibitions": "[editContent]",
+		control,
+		name,
+		render: ({ field }) => {
+			const textareaNode = /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
+				"data-uid": "src/components/agentes/FormHelpers.tsx:240:11",
+				"data-prohibitions": "[editContent]",
+				placeholder,
+				...field,
+				value: field.value ?? "",
+				className: cn(isImported && "border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in")
+			});
+			return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
+				"data-uid": "src/components/agentes/FormHelpers.tsx:251:11",
+				"data-prohibitions": "[editContent]",
+				children: [
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormLabel, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:252:13",
+						"data-prohibitions": "[editContent]",
+						children: label
+					}),
+					isImported ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Tooltip, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:254:15",
+						"data-prohibitions": "[editContent]",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipTrigger, {
+							"data-uid": "src/components/agentes/FormHelpers.tsx:255:17",
+							"data-prohibitions": "[editContent]",
+							asChild: true,
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:256:19",
+								"data-prohibitions": "[editContent]",
+								className: "relative w-full",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
+									"data-uid": "src/components/agentes/FormHelpers.tsx:257:21",
+									"data-prohibitions": "[editContent]",
+									children: textareaNode
+								})
+							})
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(TooltipContent, {
+							"data-uid": "src/components/agentes/FormHelpers.tsx:260:17",
+							"data-prohibitions": "[]",
+							className: "bg-foreground text-background text-[11px] rounded-md px-[8px] py-[4px]",
+							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+								"data-uid": "src/components/agentes/FormHelpers.tsx:261:19",
+								"data-prohibitions": "[]",
+								children: "Preenchido automaticamente via planilha"
+							})
+						})]
+					}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormControl, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:265:15",
+						"data-prohibitions": "[editContent]",
+						children: textareaNode
+					}),
+					/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormMessage, {
+						"data-uid": "src/components/agentes/FormHelpers.tsx:267:13",
+						"data-prohibitions": "[editContent]"
+					})
+				]
+			});
+		}
+	});
+}
+//#endregion
+//#region src/pages/agentes/FormContent.tsx
+var QUALIDADE_OPTIONS = [
+	{
+		label: "NÍVEL 1 - Insatisfatório/Abaixo do Esperado",
+		value: "NIVEL 1 - Insatisfatorio/Abaixo do Esperado"
+	},
+	{
+		label: "NÍVEL 2 - Básico/Regular",
+		value: "NIVEL 2 - Basico/Regular"
+	},
+	{
+		label: "NÍVEL 3 - Alto/Esperado",
+		value: "NIVEL 3 - Alto/Esperado"
+	},
+	{
+		label: "NÍVEL 4 - Excede as Expectativas/Excelente",
+		value: "NIVEL 4 - Excede as Expectativas/Excelente"
+	}
+];
+var EXPERIENCIA_OPTIONS = [
+	{
+		label: "SÊNIOR: Atende todos os ramos",
+		value: "SENIOR: Atende todos os ramos"
+	},
+	{
+		label: "PLENO: Atende 1-2 ramos",
+		value: "PLENO: Atende 1-2 ramos"
+	},
+	{
+		label: "JÚNIOR: Atende 1 ramo com supervisão",
+		value: "JUNIOR: Atende 1 ramo com supervisao"
+	},
+	{
+		label: "EM TREINAMENTO: Executa etapas",
+		value: "EM TREINAMENTO: Executa etapas"
+	}
+];
+var COMPLIANCE_OPTIONS = [
+	{
+		label: "COMPLIANCE TOTAL (BAIXO RISCO)",
+		value: "COMPLIANCE TOTAL (BAIXO RISCO)"
+	},
+	{
+		label: "COMPLIANCE PARCIAL (MÉDIO RISCO)",
+		value: "COMPLIANCE PARCIAL (MEDIO RISCO)"
+	},
+	{
+		label: "COMPLIANCE ZERO (ALTO RISCO)",
+		value: "COMPLIANCE ZERO (ALTO RISCO)"
+	}
+];
+function FormContent() {
+	const { watch } = useFormContext();
+	const { toast } = useToast();
+	const { states, getCitiesByState } = useMunicipios();
+	const numeroControle = watch("numero_controle");
+	const notaTerceiros = watch("notaTerceiros");
+	const dadosBancariosTerceiros = watch("dadosBancariosTerceiros");
+	const naBlackList = watch("naBlackList");
+	const estadoSelecionado = watch("base_atendimento_estado");
+	const handleCopy = (e) => {
+		e.preventDefault();
+		if (numeroControle) {
+			navigator.clipboard.writeText(numeroControle);
+			toast({
+				title: "Número copiado!",
+				description: "O número de controle foi copiado.",
+				className: "bg-emerald-600 text-white border-none"
+			});
+		}
+	};
+	const cidadesOptions = estadoSelecionado ? getCitiesByState(estadoSelecionado).map((c) => ({
+		label: c.nome,
+		value: c.nome
+	})) : [];
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+		"data-uid": "src/pages/agentes/FormContent.tsx:63:5",
+		"data-prohibitions": "[editContent]",
+		className: "grid gap-6",
+		children: [
+			numeroControle && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/agentes/FormContent.tsx:65:9",
+				"data-prohibitions": "[editContent]",
+				className: "bg-primary text-primary-foreground p-[12px] rounded-xl flex justify-between items-center font-bold shadow-sm",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
+					"data-uid": "src/pages/agentes/FormContent.tsx:66:11",
+					"data-prohibitions": "[editContent]",
+					children: ["Número de Controle: ", numeroControle]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
+					"data-uid": "src/pages/agentes/FormContent.tsx:67:11",
+					"data-prohibitions": "[]",
+					variant: "ghost",
+					size: "sm",
+					onClick: handleCopy,
+					className: "text-primary-foreground hover:text-primary hover:bg-white font-semibold rounded-lg h-9",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:73:13",
+						"data-prohibitions": "[editContent]",
+						className: "w-4 h-4 mr-2"
+					}), " Copiar"]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+				"data-uid": "src/pages/agentes/FormContent.tsx:78:7",
+				"data-prohibitions": "[editContent]",
+				className: "rounded-2xl shadow-sm border-none bg-card",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+					"data-uid": "src/pages/agentes/FormContent.tsx:79:9",
+					"data-prohibitions": "[]",
+					className: "border-b border-border pb-4 mb-4",
+					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:80:11",
+						"data-prohibitions": "[]",
+						className: "text-lg font-semibold text-primary",
+						children: "Dados Cadastrais do Agente"
+					})
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+					"data-uid": "src/pages/agentes/FormContent.tsx:84:9",
+					"data-prohibitions": "[editContent]",
+					className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+					children: [
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:85:11",
+							"data-prohibitions": "[editContent]",
+							name: "nomeCompleto",
+							label: "Nome completo"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:86:11",
+							"data-prohibitions": "[editContent]",
+							name: "dataNascimento",
+							label: "Data de nascimento",
+							type: "date"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:87:11",
+							"data-prohibitions": "[editContent]",
+							name: "cpf",
+							label: "CPF"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:88:11",
+							"data-prohibitions": "[editContent]",
+							name: "rg",
+							label: "RG"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:89:11",
+							"data-prohibitions": "[editContent]",
+							name: "cnpj",
+							label: "CNPJ"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSimNao, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:90:11",
+							"data-prohibitions": "[editContent]",
+							name: "possuiCnpj",
+							label: "Possui CNPJ?"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSimNao, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:91:11",
+							"data-prohibitions": "[editContent]",
+							name: "emiteNotaFiscal",
+							label: "Emite nota fiscal?"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSimNao, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:92:11",
+							"data-prohibitions": "[editContent]",
+							name: "notaTerceiros",
+							label: "Dados da nota fiscal são de terceiros?"
+						}),
+						notaTerceiros === "Sim" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:94:13",
+							"data-prohibitions": "[editContent]",
+							name: "vinculoTerceiroNf",
+							label: "Qual o vínculo do terceiro (NF)?"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/agentes/FormContent.tsx:97:11",
+							"data-prohibitions": "[editContent]",
+							className: "col-span-full border-t border-border my-2"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/agentes/FormContent.tsx:98:11",
+							"data-prohibitions": "[]",
+							className: "col-span-full font-semibold text-primary text-sm -mb-2",
+							children: "Localização e Contato"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FCombobox, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:101:11",
+							"data-prohibitions": "[editContent]",
+							name: "base_atendimento_estado",
+							label: "Estado (Base)",
+							options: states.map((s) => ({
+								label: s,
+								value: s
+							}))
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FCombobox, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:106:11",
+							"data-prohibitions": "[editContent]",
+							name: "base_atendimento_cidade",
+							label: "Cidade (Base)",
+							options: cidadesOptions
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:112:11",
+							"data-prohibitions": "[editContent]",
+							name: "baseAtendimento",
+							label: "Endereço da Base / Bairro"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:113:11",
+							"data-prohibitions": "[editContent]",
+							name: "regiaoAbrangencia",
+							label: "Região de abrangência"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:114:11",
+							"data-prohibitions": "[editContent]",
+							name: "cepBase",
+							label: "CEP de saída da base"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:115:11",
+							"data-prohibitions": "[editContent]",
+							name: "telefone",
+							label: "Telefone"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:116:11",
+							"data-prohibitions": "[editContent]",
+							name: "email",
+							label: "E-mail",
+							type: "email"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/agentes/FormContent.tsx:118:11",
+							"data-prohibitions": "[editContent]",
+							className: "col-span-full border-t border-border my-2"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							"data-uid": "src/pages/agentes/FormContent.tsx:119:11",
+							"data-prohibitions": "[]",
+							className: "col-span-full font-semibold text-primary text-sm -mb-2",
+							children: "Métricas de Avaliação (KPIs)"
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:122:11",
+							"data-prohibitions": "[editContent]",
+							name: "qualidade_nivel",
+							label: "Nível de Qualidade",
+							options: QUALIDADE_OPTIONS
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:123:11",
+							"data-prohibitions": "[editContent]",
+							name: "experiencia_nivel",
+							label: "Nível de Experiência",
+							options: EXPERIENCIA_OPTIONS
+						}),
+						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:128:11",
+							"data-prohibitions": "[editContent]",
+							name: "compliance_nivel",
+							label: "Nível de Compliance",
+							options: COMPLIANCE_OPTIONS
+						})
+					]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/agentes/FormContent.tsx:136:7",
+				"data-prohibitions": "[editContent]",
+				className: "grid grid-cols-1 lg:grid-cols-2 gap-6",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/agentes/FormContent.tsx:137:9",
+					"data-prohibitions": "[editContent]",
+					className: "rounded-2xl shadow-sm border-none bg-card",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:138:11",
+						"data-prohibitions": "[]",
+						className: "border-b border-border pb-4 mb-4",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:139:13",
+							"data-prohibitions": "[]",
+							className: "text-lg font-semibold text-primary",
+							children: "Dados Bancários"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:141:11",
+						"data-prohibitions": "[editContent]",
+						className: "grid grid-cols-1 sm:grid-cols-2 gap-6",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:142:13",
+								"data-prohibitions": "[editContent]",
+								name: "banco",
+								label: "Banco"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:143:13",
+								"data-prohibitions": "[editContent]",
+								name: "agencia",
+								label: "Agência"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:144:13",
+								"data-prohibitions": "[editContent]",
+								name: "conta",
+								label: "Conta"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:145:13",
+								"data-prohibitions": "[editContent]",
+								name: "titularConta",
+								label: "Titular da conta"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/agentes/FormContent.tsx:146:13",
+								"data-prohibitions": "[]",
+								className: "sm:col-span-2",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+									"data-uid": "src/pages/agentes/FormContent.tsx:147:15",
+									"data-prohibitions": "[editContent]",
+									name: "chavePix",
+									label: "Chave Pix"
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSimNao, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:149:13",
+								"data-prohibitions": "[editContent]",
+								name: "dadosBancariosTerceiros",
+								label: "Bancários de terceiros?"
+							}),
+							dadosBancariosTerceiros === "Sim" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:151:15",
+								"data-prohibitions": "[editContent]",
+								name: "vinculoTerceiroBanco",
+								label: "Qual o vínculo?"
+							})
+						]
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/agentes/FormContent.tsx:156:9",
+					"data-prohibitions": "[]",
+					className: "rounded-2xl shadow-sm border-none bg-card",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:157:11",
+						"data-prohibitions": "[]",
+						className: "border-b border-border pb-4 mb-4",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:158:13",
+							"data-prohibitions": "[]",
+							className: "text-lg font-semibold text-primary",
+							children: "Condições Comerciais"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:162:11",
+						"data-prohibitions": "[]",
+						className: "grid grid-cols-1 sm:grid-cols-2 gap-6",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:163:13",
+								"data-prohibitions": "[editContent]",
+								name: "valorHonorario",
+								label: "Valor do honorário Fixo (R$)",
+								type: "number"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:164:13",
+								"data-prohibitions": "[editContent]",
+								name: "valorKm",
+								label: "Valor do km (R$)",
+								type: "number"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:165:13",
+								"data-prohibitions": "[editContent]",
+								name: "valor_hora",
+								label: "Valor por Hora (R$)",
+								type: "number"
+							})
+						]
+					})]
+				})]
+			}),
+			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+				"data-uid": "src/pages/agentes/FormContent.tsx:170:7",
+				"data-prohibitions": "[editContent]",
+				className: "grid grid-cols-1 lg:grid-cols-2 gap-6",
+				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/agentes/FormContent.tsx:171:9",
+					"data-prohibitions": "[editContent]",
+					className: "rounded-2xl shadow-sm border-none bg-card",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:172:11",
+						"data-prohibitions": "[]",
+						className: "border-b border-border pb-4 mb-4",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:173:13",
+							"data-prohibitions": "[]",
+							className: "text-lg font-semibold text-primary",
+							children: "Status do Agente"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:175:11",
+						"data-prohibitions": "[editContent]",
+						className: "grid grid-cols-1 sm:grid-cols-2 gap-6",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSimNao, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:176:13",
+								"data-prohibitions": "[editContent]",
+								name: "ativo",
+								label: "Agente ativo?"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:177:13",
+								"data-prohibitions": "[editContent]",
+								name: "dataAtivacao",
+								label: "Data de ativação",
+								type: "date"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:178:13",
+								"data-prohibitions": "[editContent]",
+								name: "dataInativacao",
+								label: "Data de inativação",
+								type: "date"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSimNao, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:179:13",
+								"data-prohibitions": "[editContent]",
+								name: "naBlackList",
+								label: "Está na Black List?"
+							}),
+							naBlackList === "Sim" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/agentes/FormContent.tsx:181:15",
+								"data-prohibitions": "[]",
+								className: "col-span-full",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+									"data-uid": "src/pages/agentes/FormContent.tsx:182:17",
+									"data-prohibitions": "[editContent]",
+									name: "motivoBlackList",
+									label: "Motivo da inclusão"
+								})
+							})
+						]
+					})]
+				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
+					"data-uid": "src/pages/agentes/FormContent.tsx:188:9",
+					"data-prohibitions": "[]",
+					className: "rounded-2xl shadow-sm border-none bg-card",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:189:11",
+						"data-prohibitions": "[]",
+						className: "border-b border-border pb-4 mb-4",
+						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
+							"data-uid": "src/pages/agentes/FormContent.tsx:190:13",
+							"data-prohibitions": "[]",
+							className: "text-lg font-semibold text-primary",
+							children: "Outras Informações"
+						})
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+						"data-uid": "src/pages/agentes/FormContent.tsx:192:11",
+						"data-prohibitions": "[]",
+						className: "grid grid-cols-1 gap-6",
+						children: [
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:193:13",
+								"data-prohibitions": "[editContent]",
+								name: "origemIndicacao",
+								label: "De onde veio a indicação"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FTextarea, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:194:13",
+								"data-prohibitions": "[editContent]",
+								name: "outrasEmpresas",
+								label: "Outras empresas onde presta serviço"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FTextarea, {
+								"data-uid": "src/pages/agentes/FormContent.tsx:195:13",
+								"data-prohibitions": "[editContent]",
+								name: "observacoes",
+								label: "Observações"
+							})
+						]
+					})]
+				})]
+			})
+		]
+	});
+}
+//#endregion
+export { Copy as a, agenteSchema as i, ImportedFieldsContext as n, ChevronLeft as o, Form as r, FormContent as t };
+
+//# sourceMappingURL=FormContent-D4PPPZhd.js.map

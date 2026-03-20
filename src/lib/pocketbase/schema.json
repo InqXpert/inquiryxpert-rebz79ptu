@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-03-20T16:57:12.942Z",
+  "generatedAt": "2026-03-20T17:49:30.587Z",
   "collections": [
     {
       "name": "users",
       "type": "auth",
       "apiRules": {
-        "list": "id = @request.auth.id",
-        "view": "id = @request.auth.id",
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || id = @request.auth.id",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || id = @request.auth.id",
         "create": "",
-        "update": "id = @request.auth.id",
-        "delete": "id = @request.auth.id"
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || id = @request.auth.id",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
       },
       "fields": [
         {
@@ -37,11 +37,58 @@
           "required": false,
           "system": false,
           "autodateTriggers": ["onCreate", "onUpdate"]
+        },
+        {
+          "name": "role",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["c-level", "admin", "supervisor", "analista"]
+        },
+        {
+          "name": "status_conta",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["ativo", "suspenso", "bloqueado"]
+        },
+        {
+          "name": "ultimo_login",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "tempo_uso_total",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "foto_perfil",
+          "type": "file",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "two_fa_enabled",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "two_fa_secret",
+          "type": "text",
+          "required": false,
+          "system": false
         }
       ],
       "indexes": [
         "CREATE UNIQUE INDEX `idx_tokenKey__pb_users_auth_` ON `users` (`tokenKey`)",
-        "CREATE UNIQUE INDEX `idx_email__pb_users_auth_` ON `users` (`email`) WHERE `email` != ''"
+        "CREATE UNIQUE INDEX `idx_email__pb_users_auth_` ON `users` (`email`) WHERE `email` != ''",
+        "CREATE INDEX `idx_users_role` ON `users` (role)",
+        "CREATE INDEX `idx_users_status_conta` ON `users` (status_conta)",
+        "CREATE INDEX `idx_users_ultimo_login` ON `users` (ultimo_login)"
       ]
     },
     {
@@ -662,6 +709,134 @@
         "CREATE INDEX idx_municipios_nome ON municipios (nome)",
         "CREATE INDEX idx_municipios_uf ON municipios (uf)"
       ]
+    },
+    {
+      "name": "usuarios_historico",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
+        "create": "@request.auth.id != ''",
+        "update": null,
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "acao",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": [
+            "login",
+            "logout",
+            "cadastro_agente",
+            "edicao_agente",
+            "sindicancia_enviada",
+            "alteracao_perfil",
+            "senha_reset",
+            "configuracao_app"
+          ]
+        },
+        {
+          "name": "descricao",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ip_address",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "user_agent",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE INDEX idx_ushist_user_acao ON usuarios_historico (user_id, acao)"]
+    },
+    {
+      "name": "usuarios_sessoes",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || user_id = @request.auth.id",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "token",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "ip_address",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "duracao_minutos",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "expirada",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE UNIQUE INDEX idx_usess_token ON usuarios_sessoes (token)"]
     }
   ]
 }

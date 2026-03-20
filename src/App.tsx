@@ -4,6 +4,7 @@ import { ThemeProvider } from '@/components/ThemeProvider'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Layout from '@/components/Layout'
 import { AuthProvider } from '@/hooks/use-auth'
+import { Toaster } from '@/components/ui/sonner'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Processos = lazy(() => import('./pages/Processos'))
@@ -13,6 +14,7 @@ const ProfileAgente = lazy(() => import('./pages/agentes/Profile'))
 const SindicanciaAgente = lazy(() => import('./pages/agentes/Sindicancia'))
 const Configuracoes = lazy(() => import('./pages/Configuracoes'))
 const Ajuda = lazy(() => import('./pages/Ajuda'))
+const GestaoUsuarios = lazy(() => import('./pages/GestaoUsuarios'))
 
 export default function App() {
   return (
@@ -29,12 +31,14 @@ export default function App() {
                 <Route path="/agentes/novo" element={<NovoAgente />} />
                 <Route path="/agentes/:id" element={<ProfileAgente />} />
                 <Route path="/agentes/:id/sindicancia" element={<SindicanciaAgente />} />
+                <Route path="/gestao-usuarios" element={<GestaoUsuarios />} />
                 <Route path="/configuracoes" element={<Configuracoes />} />
                 <Route path="/ajuda" element={<Ajuda />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />
               </Route>
             </Routes>
           </BrowserRouter>
+          <Toaster />
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>

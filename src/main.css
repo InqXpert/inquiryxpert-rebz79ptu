@@ -1,77 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Pure White */
-    --background: 0 0% 100%;
-    /* Dark Navy #262845 */
-    --foreground: 236 28% 21%;
-
+    --background: 210 33% 98%;
+    --foreground: 210 29% 24%;
     --card: 0 0% 100%;
-    --card-foreground: 236 28% 21%;
-
+    --card-foreground: 210 29% 24%;
     --popover: 0 0% 100%;
-    --popover-foreground: 236 28% 21%;
-
-    /* Dominant: Dark Navy #262845 */
-    --primary: 236 28% 21%;
+    --popover-foreground: 210 29% 24%;
+    --primary: 12 100% 67%;
     --primary-foreground: 0 0% 100%;
-
-    /* Accent: Bright Teal #28c2c8 */
-    --secondary: 182 65% 47%;
-    /* High contrast text for Bright Teal background */
-    --secondary-foreground: 236 28% 21%;
-
-    /* Neutral: Very light Grey-Purple */
-    --muted: 240 20% 96%;
-    /* Neutral text: Grey-Purple #7a7a93 */
-    --muted-foreground: 240 11% 53%;
-
-    --accent: 182 65% 47%;
-    --accent-foreground: 236 28% 21%;
-
-    /* Destructive: Coral Red #ef4355 */
-    --destructive: 354 83% 60%;
+    --secondary: 210 29% 24%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 210 15% 45%;
+    --accent: 210 20% 94%;
+    --accent-foreground: 210 29% 24%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-
-    /* Neutral border */
-    --border: 240 15% 85%;
-    --input: 240 15% 85%;
-    --ring: 182 65% 47%;
-
-    --radius: 0.25rem;
-
-    /* Custom variables for the top nav (Dark Navy) */
-    --nav-bg: 236 28% 21%;
-    --nav-fg: 240 15% 85%;
-    --nav-active: 0 0% 100%;
-  }
-
-  .dark {
-    /* Falling back to a clean dark theme, synced with the palette where possible */
-    --background: 236 28% 16%;
-    --foreground: 240 20% 96%;
-    --card: 236 28% 20%;
-    --card-foreground: 240 20% 96%;
-    --popover: 236 28% 20%;
-    --popover-foreground: 240 20% 96%;
-    --primary: 240 20% 96%;
-    --primary-foreground: 236 28% 21%;
-    --secondary: 182 65% 47%;
-    --secondary-foreground: 236 28% 21%;
-    --muted: 236 28% 24%;
-    --muted-foreground: 240 11% 70%;
-    --accent: 236 28% 24%;
-    --accent-foreground: 240 20% 96%;
-    --destructive: 354 83% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 236 28% 28%;
-    --input: 236 28% 28%;
-    --ring: 182 65% 47%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 12 100% 67%;
+    --radius: 0rem;
   }
 }
 
@@ -80,12 +32,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-sans;
   }
-}
-
-@layer components {
-  .leaflet-marker-glow {
-    filter: drop-shadow(0 0 10px rgba(40, 194, 200, 0.8));
+  html {
+    font-family: 'Inter', sans-serif;
   }
 }

@@ -1,11 +1,47 @@
 export type SimNao = 'Sim' | 'Não'
 
+export type UserRole = 'c-level' | 'admin' | 'supervisor' | 'analista'
+export type UserStatus = 'ativo' | 'suspenso' | 'bloqueado'
+
+export interface User {
+  id: string
+  email: string
+  name: string
+  role: UserRole
+  status_conta: UserStatus
+  ultimo_login?: string
+  tempo_uso_total: number
+  foto_perfil?: string
+  two_fa_enabled: boolean
+  created: string
+  updated: string
+}
+
+export interface UsuarioHistorico {
+  id: string
+  user_id: string
+  acao: string
+  descricao: string
+  ip_address: string
+  user_agent: string
+  created: string
+}
+
+export interface UsuarioSessao {
+  id: string
+  user_id: string
+  token: string
+  ip_address: string
+  duracao_minutos: number
+  expirada: boolean
+  created: string
+}
+
 export interface Agente {
   id: string
   created?: string
   updated?: string
   numero_controle?: string
-  // 1. Dados Cadastrais
   nomeCompleto: string
   dataNascimento: string
   cpf: string
@@ -22,7 +58,6 @@ export interface Agente {
   cepBase: string
   telefone: string
   email: string
-  // 2. Dados Bancários
   banco: string
   agencia: string
   conta: string
@@ -30,22 +65,17 @@ export interface Agente {
   chavePix: string
   dadosBancariosTerceiros: SimNao
   vinculoTerceiroBanco?: string
-  // 3. Condições Comerciais
   valorHonorario: number
   valorKm: number
   valor_hora?: number
-  // 4. Status
   ativo: SimNao
   dataAtivacao: string
   dataInativacao?: string
   naBlackList: SimNao
   motivoBlackList?: string
-  // 5. Outras Informações
   outrasEmpresas: string
   origemIndicacao: string
   observacoes: string
-
-  // 6. KPIs
   qualidade_nivel?: string
   experiencia_nivel?: string
   compliance_nivel?: string
