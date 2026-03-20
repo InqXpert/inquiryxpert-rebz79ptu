@@ -148,47 +148,47 @@ export default function Sindicancia() {
 
   if (loading)
     return (
-      <div className="max-w-4xl mx-auto space-y-6 animate-pulse">
-        <Skeleton className="h-10 w-64" />
+      <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8 animate-pulse">
+        <Skeleton className="h-12 w-64" />
         <Skeleton className="h-[400px] w-full rounded-2xl" />
       </div>
     )
 
   return (
-    <div className="max-w-5xl mx-auto pb-20 space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8 animate-in fade-in duration-500">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
         <div>
           <Button
             variant="ghost"
             size="sm"
-            className="gap-2 text-muted-foreground hover:text-primary hover:bg-transparent px-0 mb-2"
+            className="gap-2 text-[15px] font-semibold text-muted-foreground hover:text-primary hover:bg-transparent px-0 mb-4"
             onClick={() => navigate(-1)}
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-5 h-5" />
             Voltar para Perfil
           </Button>
-          <h1 className="text-3xl font-bold text-primary tracking-tight">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-3">
             Orientações para Sindicância
           </h1>
-          <p className="text-muted-foreground mt-1 font-medium">
+          <p className="text-base text-muted-foreground font-medium">
             Agente: <span className="text-primary font-bold">{agente?.nomeCompleto}</span>
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="rounded-2xl border-none shadow-sm bg-card">
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="orientacoes" className="text-base font-semibold text-primary">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+          <Card className="rounded-2xl border border-border/50 shadow-sm bg-card">
+            <CardContent className="p-8">
+              <div className="space-y-5">
+                <div className="space-y-3">
+                  <Label htmlFor="orientacoes" className="text-lg font-bold text-primary">
                     Orientações de Execução <span className="text-destructive">*</span>
                   </Label>
                   <Textarea
                     id="orientacoes"
                     placeholder="Descreva detalhadamente o que o agente deve realizar nesta sindicância..."
-                    className="min-h-[240px] resize-y rounded-xl p-4 text-[15px] leading-relaxed border-border focus-visible:ring-secondary/50"
+                    className="min-h-[260px] resize-y rounded-2xl p-5 text-[15px] leading-relaxed border-border focus-visible:ring-secondary/50 shadow-sm"
                     value={orientacoes}
                     onChange={(e) => setOrientacoes(e.target.value)}
                   />
@@ -197,20 +197,20 @@ export default function Sindicancia() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-none shadow-sm bg-card">
-            <CardContent className="p-6">
-              <Label className="text-base font-semibold text-primary mb-4 block">
+          <Card className="rounded-2xl border border-border/50 shadow-sm bg-card">
+            <CardContent className="p-8">
+              <Label className="text-lg font-bold text-primary mb-5 block">
                 Anexos & Documentos
               </Label>
               <div
-                className="border-2 border-dashed border-border rounded-xl p-10 flex flex-col items-center justify-center text-center hover:bg-muted/30 transition-colors cursor-pointer"
+                className="border-2 border-dashed border-border rounded-2xl p-12 flex flex-col items-center justify-center text-center hover:bg-muted/30 transition-colors cursor-pointer bg-muted/10"
                 onClick={() => fileInputRef.current?.click()}
               >
-                <UploadCloud className="w-12 h-12 text-muted-foreground mb-4 opacity-50" />
-                <h4 className="text-sm font-bold text-primary mb-1">
+                <UploadCloud className="w-14 h-14 text-muted-foreground mb-5 opacity-60" />
+                <h4 className="text-base font-bold text-primary mb-2">
                   Arraste arquivos ou clique para selecionar
                 </h4>
-                <p className="text-xs text-muted-foreground max-w-xs">
+                <p className="text-[14px] text-muted-foreground max-w-sm font-medium">
                   Suporta PDF, DOCX, JPG e PNG. Tamanho máximo: 10MB total.
                 </p>
                 <input
@@ -224,24 +224,24 @@ export default function Sindicancia() {
               </div>
 
               {files.length > 0 && (
-                <div className="mt-6 space-y-2">
-                  <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">
+                <div className="mt-8 space-y-3">
+                  <h5 className="text-[13px] font-bold text-muted-foreground uppercase tracking-wider mb-4">
                     Arquivos Selecionados
                   </h5>
                   {files.map((f, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border group"
+                      className="flex items-center justify-between p-4 bg-background rounded-xl border border-border group shadow-sm"
                     >
-                      <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="w-8 h-8 rounded-md bg-white flex items-center justify-center shrink-0 shadow-sm border border-border">
-                          <FileText className="w-4 h-4 text-primary" />
+                      <div className="flex items-center gap-4 overflow-hidden">
+                        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center shrink-0 border border-border/50">
+                          <FileText className="w-5 h-5 text-primary" />
                         </div>
                         <div className="flex flex-col truncate">
-                          <span className="text-sm font-semibold text-foreground truncate">
+                          <span className="text-[15px] font-bold text-foreground truncate">
                             {f.name}
                           </span>
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-[13px] font-medium text-muted-foreground mt-0.5">
                             {(f.size / 1024 / 1024).toFixed(2)} MB
                           </span>
                         </div>
@@ -249,10 +249,10 @@ export default function Sindicancia() {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
+                        className="text-destructive opacity-0 group-hover:opacity-100 transition-opacity h-10 w-10"
                         onClick={() => removeFile(idx)}
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-5 h-5" />
                       </Button>
                     </div>
                   ))}
@@ -262,59 +262,59 @@ export default function Sindicancia() {
           </Card>
         </div>
 
-        <div className="space-y-6">
-          <Card className="rounded-2xl border-none shadow-sm sticky top-24 bg-card">
-            <CardContent className="p-6 space-y-4">
-              <h3 className="font-bold text-primary mb-2">Ações da Sindicância</h3>
+        <div className="space-y-8">
+          <Card className="rounded-2xl border border-border/50 shadow-sm sticky top-24 bg-card">
+            <CardContent className="p-8 space-y-5">
+              <h3 className="font-bold text-primary text-xl mb-4">Ações da Sindicância</h3>
 
               <Button
                 onClick={saveDraft}
                 disabled={saving}
                 variant="outline"
-                className="w-full h-12 rounded-xl justify-start font-semibold text-primary border-primary hover:bg-primary/5"
+                className="w-full h-14 rounded-xl justify-start font-bold text-primary border-primary hover:bg-primary/5 text-[15px]"
               >
                 {saving ? (
                   'Salvando...'
                 ) : (
                   <>
-                    <Save className="w-4 h-4 mr-3" /> Salvar Rascunho
+                    <Save className="w-5 h-5 mr-3" /> Salvar Rascunho
                   </>
                 )}
               </Button>
 
-              <div className="h-px bg-border my-2" />
+              <div className="h-px bg-border my-4" />
 
               <Button
                 onClick={handleEmail}
                 disabled={saving}
-                className="w-full h-12 rounded-xl justify-start font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
+                className="w-full h-14 rounded-xl justify-start font-bold bg-primary hover:bg-primary/90 text-primary-foreground text-[15px] shadow-sm"
               >
-                <Mail className="w-4 h-4 mr-3" /> Enviar por E-mail
+                <Mail className="w-5 h-5 mr-3" /> Enviar por E-mail
               </Button>
 
               <Button
                 onClick={handleWhatsapp}
                 disabled={saving}
-                className="w-full h-12 rounded-xl justify-start font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
+                className="w-full h-14 rounded-xl justify-start font-bold bg-emerald-600 hover:bg-emerald-700 text-white text-[15px] shadow-sm"
               >
-                <MessageCircle className="w-4 h-4 mr-3" /> Enviar por WhatsApp
+                <MessageCircle className="w-5 h-5 mr-3" /> Enviar por WhatsApp
               </Button>
 
-              <div className="h-px bg-border my-2" />
+              <div className="h-px bg-border my-4" />
 
               <Button
                 onClick={() => navigate(-1)}
                 variant="ghost"
-                className="w-full h-12 rounded-xl text-muted-foreground hover:text-foreground"
+                className="w-full h-14 rounded-xl text-[15px] font-bold text-muted-foreground hover:text-foreground"
               >
                 Cancelar
               </Button>
 
               {draftProcess && (
-                <div className="mt-6 p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col items-center text-center animate-in zoom-in-95">
-                  <CheckCircle className="w-8 h-8 text-emerald-500 mb-2" />
-                  <span className="text-sm font-bold text-emerald-800">Rascunho Criado</span>
-                  <span className="text-xs text-emerald-600 mt-1 font-medium">
+                <div className="mt-8 p-6 bg-emerald-50 rounded-2xl border border-emerald-200 flex flex-col items-center text-center animate-in zoom-in-95">
+                  <CheckCircle className="w-10 h-10 text-emerald-500 mb-3" />
+                  <span className="text-base font-bold text-emerald-800">Rascunho Criado</span>
+                  <span className="text-[14px] text-emerald-600 mt-1.5 font-bold">
                     {draftProcess.numero_controle}
                   </span>
                 </div>

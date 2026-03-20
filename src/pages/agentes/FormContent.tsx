@@ -60,28 +60,28 @@ export function FormContent() {
     : []
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-8">
       {numeroControle && (
-        <div className="bg-primary text-primary-foreground p-[12px] rounded-xl flex justify-between items-center font-bold shadow-sm">
-          <span>Número de Controle: {numeroControle}</span>
+        <div className="bg-primary text-primary-foreground p-5 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center font-bold shadow-sm gap-4">
+          <span className="text-[15px] tracking-wide">Número de Controle: {numeroControle}</span>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCopy}
-            className="text-primary-foreground hover:text-primary hover:bg-white font-semibold rounded-lg h-9"
+            className="text-primary-foreground hover:text-primary hover:bg-white font-bold rounded-xl h-10 px-4 w-full sm:w-auto"
           >
             <Copy className="w-4 h-4 mr-2" /> Copiar
           </Button>
         </div>
       )}
 
-      <Card className="rounded-2xl shadow-sm border-none bg-card">
-        <CardHeader className="border-b border-border pb-4 mb-4">
-          <CardTitle className="text-lg font-semibold text-primary">
+      <Card className="rounded-2xl shadow-sm border border-border/50 bg-card overflow-hidden">
+        <CardHeader className="border-b border-border bg-muted/20 pb-5 pt-6 px-6 sm:px-8">
+          <CardTitle className="text-xl font-bold text-primary">
             Dados Cadastrais do Agente
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 sm:p-8">
           <FInput name="nomeCompleto" label="Nome completo" />
           <FInput name="dataNascimento" label="Data de nascimento" type="date" />
           <FInput name="cpf" label="CPF" />
@@ -95,7 +95,7 @@ export function FormContent() {
           )}
 
           <div className="col-span-full border-t border-border my-2" />
-          <div className="col-span-full font-semibold text-primary text-sm -mb-2">
+          <div className="col-span-full font-bold text-primary text-[15px] uppercase tracking-wider mb-2">
             Localização e Contato
           </div>
           <FCombobox
@@ -116,7 +116,7 @@ export function FormContent() {
           <FInput name="email" label="E-mail" type="email" />
 
           <div className="col-span-full border-t border-border my-2" />
-          <div className="col-span-full font-semibold text-primary text-sm -mb-2">
+          <div className="col-span-full font-bold text-primary text-[15px] uppercase tracking-wider mb-2">
             Métricas de Avaliação (KPIs)
           </div>
           <FSelect name="qualidade_nivel" label="Nível de Qualidade" options={QUALIDADE_OPTIONS} />
@@ -133,12 +133,12 @@ export function FormContent() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="rounded-2xl shadow-sm border-none bg-card">
-          <CardHeader className="border-b border-border pb-4 mb-4">
-            <CardTitle className="text-lg font-semibold text-primary">Dados Bancários</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="rounded-2xl shadow-sm border border-border/50 bg-card overflow-hidden">
+          <CardHeader className="border-b border-border bg-muted/20 pb-5 pt-6 px-6 sm:px-8">
+            <CardTitle className="text-xl font-bold text-primary">Dados Bancários</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-6 sm:p-8">
             <FInput name="banco" label="Banco" />
             <FInput name="agencia" label="Agência" />
             <FInput name="conta" label="Conta" />
@@ -153,13 +153,11 @@ export function FormContent() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl shadow-sm border-none bg-card">
-          <CardHeader className="border-b border-border pb-4 mb-4">
-            <CardTitle className="text-lg font-semibold text-primary">
-              Condições Comerciais
-            </CardTitle>
+        <Card className="rounded-2xl shadow-sm border border-border/50 bg-card overflow-hidden">
+          <CardHeader className="border-b border-border bg-muted/20 pb-5 pt-6 px-6 sm:px-8">
+            <CardTitle className="text-xl font-bold text-primary">Condições Comerciais</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-6 sm:p-8">
             <FInput name="valorHonorario" label="Valor do honorário Fixo (R$)" type="number" />
             <FInput name="valorKm" label="Valor do km (R$)" type="number" />
             <FInput name="valor_hora" label="Valor por Hora (R$)" type="number" />
@@ -167,12 +165,12 @@ export function FormContent() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="rounded-2xl shadow-sm border-none bg-card">
-          <CardHeader className="border-b border-border pb-4 mb-4">
-            <CardTitle className="text-lg font-semibold text-primary">Status do Agente</CardTitle>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="rounded-2xl shadow-sm border border-border/50 bg-card overflow-hidden">
+          <CardHeader className="border-b border-border bg-muted/20 pb-5 pt-6 px-6 sm:px-8">
+            <CardTitle className="text-xl font-bold text-primary">Status do Agente</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-6 sm:p-8">
             <FSimNao name="ativo" label="Agente ativo?" />
             <FInput name="dataAtivacao" label="Data de ativação" type="date" />
             <FInput name="dataInativacao" label="Data de inativação" type="date" />
@@ -185,11 +183,11 @@ export function FormContent() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl shadow-sm border-none bg-card">
-          <CardHeader className="border-b border-border pb-4 mb-4">
-            <CardTitle className="text-lg font-semibold text-primary">Outras Informações</CardTitle>
+        <Card className="rounded-2xl shadow-sm border border-border/50 bg-card overflow-hidden">
+          <CardHeader className="border-b border-border bg-muted/20 pb-5 pt-6 px-6 sm:px-8">
+            <CardTitle className="text-xl font-bold text-primary">Outras Informações</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-6">
+          <CardContent className="grid grid-cols-1 gap-6 p-6 sm:p-8">
             <FInput name="origemIndicacao" label="De onde veio a indicação" />
             <FTextarea name="outrasEmpresas" label="Outras empresas onde presta serviço" />
             <FTextarea name="observacoes" label="Observações" />

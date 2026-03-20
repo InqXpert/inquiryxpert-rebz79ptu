@@ -72,23 +72,23 @@ export default function UsuariosTable({ users }: { users: User[] }) {
 
   return (
     <div className="space-y-0 relative">
-      <div className="flex justify-between items-center p-4 bg-muted/20 border-b">
-        <div className="flex gap-2 items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 bg-muted/20 border-b gap-4">
+        <div className="flex gap-3 items-center">
           <Button
             variant="outline"
             size="sm"
             onClick={() => handleBulkAction('suspenso')}
-            className="rounded-none text-xs"
+            className="rounded-xl text-[13px] font-semibold h-10 px-4"
           >
-            <Ban className="w-3 h-3 mr-2" /> Suspender Lote
+            <Ban className="w-4 h-4 mr-2" /> Suspender Lote
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => handleBulkAction('ativo')}
-            className="rounded-none text-xs"
+            className="rounded-xl text-[13px] font-semibold h-10 px-4"
           >
-            <CheckCircle className="w-3 h-3 mr-2" /> Ativar Lote
+            <CheckCircle className="w-4 h-4 mr-2" /> Ativar Lote
           </Button>
         </div>
         <Button
@@ -96,7 +96,7 @@ export default function UsuariosTable({ users }: { users: User[] }) {
             setEditingUser(null)
             setIsDialogOpen(true)
           }}
-          className="rounded-none shadow-sm text-xs"
+          className="rounded-xl shadow-sm text-[13px] font-semibold h-10 px-5"
         >
           Novo Usuário
         </Button>
@@ -105,9 +105,9 @@ export default function UsuariosTable({ users }: { users: User[] }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-12">
+            <TableHead className="w-12 px-6">
               <Checkbox
-                className="rounded-none"
+                className="rounded-md"
                 checked={selected.length === users.length && users.length > 0}
                 onCheckedChange={toggleAll}
               />
@@ -123,26 +123,26 @@ export default function UsuariosTable({ users }: { users: User[] }) {
         <TableBody>
           {users.map((u) => (
             <TableRow key={u.id} className="group">
-              <TableCell>
+              <TableCell className="px-6">
                 <Checkbox
-                  className="rounded-none"
+                  className="rounded-md"
                   checked={selected.includes(u.id)}
                   onCheckedChange={() => toggleSelect(u.id)}
                 />
               </TableCell>
-              <TableCell className="font-medium">{u.name}</TableCell>
-              <TableCell className="text-muted-foreground">{u.email}</TableCell>
+              <TableCell className="font-semibold text-[14px]">{u.name}</TableCell>
+              <TableCell className="text-muted-foreground text-[14px]">{u.email}</TableCell>
               <TableCell>
                 <Badge
                   variant="outline"
-                  className="rounded-none uppercase text-[10px] tracking-wider font-semibold border-secondary/20 text-secondary"
+                  className="uppercase text-[11px] tracking-wider font-bold border-secondary/30 text-secondary bg-secondary/5 px-3 py-1"
                 >
                   {u.role}
                 </Badge>
               </TableCell>
               <TableCell>
                 <Badge
-                  className="rounded-none capitalize text-[10px]"
+                  className="capitalize text-[12px] px-3 py-1 font-bold"
                   variant={
                     u.status_conta === 'ativo'
                       ? 'default'
@@ -154,7 +154,7 @@ export default function UsuariosTable({ users }: { users: User[] }) {
                   {u.status_conta}
                 </Badge>
               </TableCell>
-              <TableCell className="text-xs text-muted-foreground">
+              <TableCell className="text-[13px] text-muted-foreground font-medium">
                 {u.ultimo_login
                   ? format(new Date(u.ultimo_login), 'dd/MM/yyyy HH:mm', { locale: ptBR })
                   : 'Nunca acessou'}
@@ -165,38 +165,42 @@ export default function UsuariosTable({ users }: { users: User[] }) {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="rounded-none h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="rounded-full h-9 w-9 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground"
                     >
-                      <MoreHorizontal className="w-4 h-4" />
+                      <MoreHorizontal className="w-5 h-5" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="rounded-none min-w-[180px]">
+                  <DropdownMenuContent align="end" className="rounded-xl min-w-[200px]">
                     <DropdownMenuItem
-                      className="rounded-none cursor-pointer"
+                      className="rounded-lg cursor-pointer py-2.5"
                       onClick={() => {
                         setEditingUser(u)
                         setIsDialogOpen(true)
                       }}
                     >
-                      <Edit className="w-4 h-4 mr-2" /> Editar Perfil
+                      <Edit className="w-4 h-4 mr-3 text-muted-foreground" />
+                      <span className="font-medium text-[13px]">Editar Perfil</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      className="rounded-none cursor-pointer"
+                      className="rounded-lg cursor-pointer py-2.5"
                       onClick={() => setHistoryUser(u)}
                     >
-                      <History className="w-4 h-4 mr-2" /> Ver Histórico
+                      <History className="w-4 h-4 mr-3 text-muted-foreground" />
+                      <span className="font-medium text-[13px]">Ver Histórico</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      className="rounded-none cursor-pointer"
+                      className="rounded-lg cursor-pointer py-2.5"
                       onClick={() => handlePasswordReset(u.email)}
                     >
-                      <Key className="w-4 h-4 mr-2" /> Resetar Senha
+                      <Key className="w-4 h-4 mr-3 text-muted-foreground" />
+                      <span className="font-medium text-[13px]">Resetar Senha</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      className="rounded-none cursor-pointer text-destructive focus:bg-destructive/10"
+                      className="rounded-lg cursor-pointer text-destructive focus:bg-destructive/10 py-2.5 mt-1"
                       onClick={() => handleDisable2FA(u.id)}
                     >
-                      <ShieldOff className="w-4 h-4 mr-2" /> Desabilitar 2FA
+                      <ShieldOff className="w-4 h-4 mr-3" />
+                      <span className="font-medium text-[13px]">Desabilitar 2FA</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -205,7 +209,7 @@ export default function UsuariosTable({ users }: { users: User[] }) {
           ))}
           {users.length === 0 && (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
+              <TableCell colSpan={7} className="h-32 text-center text-muted-foreground text-[14px]">
                 Nenhum usuário cadastrado.
               </TableCell>
             </TableRow>

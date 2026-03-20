@@ -107,18 +107,18 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
   }, [nearestId, distances, mappedAgents])
 
   if (agentsLoading || muniLoading) {
-    return <Skeleton className="w-full h-[500px] rounded-none" />
+    return <Skeleton className="w-full h-[600px] rounded-2xl mt-8" />
   }
 
   return (
-    <Card className="rounded-none shadow-sm border-none overflow-hidden flex flex-col mt-6 animate-in fade-in zoom-in duration-300">
-      <div className="p-4 sm:p-6 bg-muted/30 border-b border-border/50">
-        <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
-          <MapPin className="w-5 h-5 text-secondary" /> Inteligência Logística
+    <Card className="rounded-2xl shadow-sm border border-border/50 overflow-hidden flex flex-col mt-8 animate-in fade-in zoom-in duration-300 bg-card">
+      <div className="p-6 sm:p-8 bg-muted/20 border-b border-border/50">
+        <h3 className="text-xl font-bold text-primary mb-6 flex items-center gap-3">
+          <MapPin className="w-6 h-6 text-secondary" /> Inteligência Logística
         </h3>
-        <div className="flex flex-col sm:flex-row gap-4 items-end">
+        <div className="flex flex-col sm:flex-row gap-6 items-end">
           <div className="flex-1 w-full">
-            <label className="text-sm font-medium text-muted-foreground mb-1.5 block">
+            <label className="text-[14px] font-bold text-muted-foreground mb-2 block">
               Estado da Investigação
             </label>
             <Popover open={openState} onOpenChange={setOpenState}>
@@ -128,7 +128,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                   role="combobox"
                   aria-expanded={openState}
                   className={cn(
-                    'w-full justify-between h-12 rounded-xl font-normal border-border',
+                    'w-full justify-between h-12 rounded-xl font-semibold border-border text-[15px]',
                     !invState && 'text-muted-foreground',
                   )}
                 >
@@ -136,9 +136,12 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+              <PopoverContent
+                className="w-[--radix-popover-trigger-width] p-0 rounded-xl"
+                align="start"
+              >
                 <Command>
-                  <CommandInput placeholder="Buscar estado..." />
+                  <CommandInput placeholder="Buscar estado..." className="h-11" />
                   <CommandList>
                     <CommandEmpty>Nenhum estado encontrado.</CommandEmpty>
                     <CommandGroup>
@@ -146,6 +149,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                         <CommandItem
                           key={s}
                           value={s}
+                          className="font-medium cursor-pointer"
                           onSelect={(currentValue) => {
                             const actualValue =
                               states.find(
@@ -158,7 +162,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                         >
                           <Check
                             className={cn(
-                              'mr-2 h-4 w-4',
+                              'mr-3 h-4 w-4',
                               invState === s ? 'opacity-100' : 'opacity-0',
                             )}
                           />
@@ -172,7 +176,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
             </Popover>
           </div>
           <div className="flex-1 w-full">
-            <label className="text-sm font-medium text-muted-foreground mb-1.5 block">
+            <label className="text-[14px] font-bold text-muted-foreground mb-2 block">
               Cidade da Investigação
             </label>
             <Popover open={openCity} onOpenChange={setOpenCity}>
@@ -183,7 +187,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                   aria-expanded={openCity}
                   disabled={!invState}
                   className={cn(
-                    'w-full justify-between h-12 rounded-xl font-normal border-border',
+                    'w-full justify-between h-12 rounded-xl font-semibold border-border text-[15px]',
                     !invCity && 'text-muted-foreground',
                   )}
                 >
@@ -191,9 +195,12 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+              <PopoverContent
+                className="w-[--radix-popover-trigger-width] p-0 rounded-xl"
+                align="start"
+              >
                 <Command>
-                  <CommandInput placeholder="Buscar cidade..." />
+                  <CommandInput placeholder="Buscar cidade..." className="h-11" />
                   <CommandList>
                     <CommandEmpty>Nenhuma cidade encontrada.</CommandEmpty>
                     <CommandGroup>
@@ -201,6 +208,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                         <CommandItem
                           key={c.nome}
                           value={c.nome}
+                          className="font-medium cursor-pointer"
                           onSelect={(currentValue) => {
                             const actualValue =
                               cities.find(
@@ -212,7 +220,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                         >
                           <Check
                             className={cn(
-                              'mr-2 h-4 w-4',
+                              'mr-3 h-4 w-4',
                               invCity === c.nome ? 'opacity-100' : 'opacity-0',
                             )}
                           />
@@ -228,16 +236,16 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
         </div>
       </div>
 
-      <div className="relative w-full h-[400px] md:h-[500px] bg-muted/30">
+      <div className="relative w-full h-[450px] md:h-[550px] bg-muted/30">
         {!invCity ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/30 backdrop-blur-[1px]">
-            <MapPin className="w-10 h-10 mb-3 opacity-50" />
-            <p className="font-medium">Selecione estado e cidade para buscar agentes</p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-background/50 backdrop-blur-[2px]">
+            <MapPin className="w-12 h-12 mb-4 opacity-40 text-primary" />
+            <p className="font-bold text-[15px]">Selecione estado e cidade para buscar agentes</p>
           </div>
         ) : mappedAgents.length === 0 ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/30 backdrop-blur-[1px] pointer-events-none">
-            <AlertTriangle className="w-10 h-10 mb-3 opacity-50 text-yellow-600" />
-            <p className="font-medium">Nenhum agente ativo encontrado nesta região.</p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-background/50 backdrop-blur-[2px] pointer-events-none">
+            <AlertTriangle className="w-12 h-12 mb-4 opacity-50 text-yellow-600" />
+            <p className="font-bold text-[15px]">Nenhum agente ativo encontrado nesta região.</p>
           </div>
         ) : null}
         <InteractiveMapBrazil
@@ -250,19 +258,24 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
       </div>
 
       {selectedAgentInfo && (
-        <div className="p-4 sm:p-6 bg-secondary/10 border-t border-secondary/20 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in slide-in-from-bottom-4">
+        <div className="p-6 sm:p-8 bg-secondary/10 border-t border-secondary/20 flex flex-col sm:flex-row items-center justify-between gap-6 animate-in slide-in-from-bottom-4">
           <div>
-            <h4 className="font-bold text-primary text-lg flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-secondary" />
+            <h4 className="font-bold text-primary text-xl flex items-center gap-3">
+              <CheckCircle2 className="w-6 h-6 text-secondary" />
               Agente sugerido: {selectedAgentInfo.name}
             </h4>
-            <div className="flex gap-4 mt-2 text-sm text-primary/80 font-medium">
-              <span>Distância: {selectedAgentInfo.distance.toFixed(1)} km</span>
-              <span>Custo Estimado: R$ {selectedAgentInfo.estimatedCost.toFixed(2)}</span>
+            <div className="flex flex-wrap gap-5 mt-3 text-[15px] text-primary/80 font-semibold bg-white/50 px-4 py-2 rounded-lg border border-secondary/20 w-fit">
+              <span className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" /> Distância: {selectedAgentInfo.distance.toFixed(1)} km
+              </span>
+              <span className="text-secondary/20 hidden sm:inline">|</span>
+              <span className="flex items-center gap-2 text-emerald-700">
+                Custo Estimado: R$ {selectedAgentInfo.estimatedCost.toFixed(2)}
+              </span>
             </div>
           </div>
           <Button
-            className="rounded-xl h-11 px-8 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold w-full sm:w-auto shadow-sm"
+            className="rounded-xl h-12 px-8 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold w-full sm:w-auto shadow-sm text-[15px]"
             onClick={() => navigate(`/agentes/${selectedAgentInfo.id}`)}
           >
             Acessar Perfil

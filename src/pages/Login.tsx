@@ -37,12 +37,12 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <Card className="w-full max-w-md rounded-3xl shadow-xl border-none bg-card">
-        <CardHeader className="text-center pb-8">
-          <div className="mx-auto w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-muted/30 p-6 sm:p-8">
+      <Card className="w-full max-w-md rounded-[24px] shadow-2xl border-none bg-card overflow-hidden">
+        <CardHeader className="text-center pb-8 pt-10 px-8 bg-gradient-to-b from-primary/5 to-transparent">
+          <div className="mx-auto w-20 h-20 bg-primary rounded-[20px] flex items-center justify-center mb-8 shadow-md">
             <svg
-              className="w-8 h-8 text-primary-foreground"
+              className="w-10 h-10 text-primary-foreground"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -55,36 +55,44 @@ export default function Login() {
               />
             </svg>
           </div>
-          <CardTitle className="text-2xl font-bold text-primary">Acesso ao Sistema</CardTitle>
-          <CardDescription>Insira suas credenciais para gerenciar a operação</CardDescription>
+          <CardTitle className="text-3xl font-bold text-primary tracking-tight mb-2">
+            Acesso ao Sistema
+          </CardTitle>
+          <CardDescription className="text-[15px] font-medium">
+            Insira suas credenciais para gerenciar a operação
+          </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">E-mail</label>
+        <CardContent className="p-8 pt-0">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2.5">
+              <label className="text-[14px] font-bold text-muted-foreground uppercase tracking-wider">
+                E-mail
+              </label>
               <Input
                 type="email"
                 placeholder="nome@empresa.com.br"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-border"
+                className="border-border h-12 rounded-xl text-[15px] focus-visible:ring-primary focus-visible:border-primary bg-muted/20"
               />
             </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Senha</label>
+            <div className="space-y-2.5">
+              <label className="text-[14px] font-bold text-muted-foreground uppercase tracking-wider">
+                Senha
+              </label>
               <Input
                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="border-border"
+                className="border-border h-12 rounded-xl text-[15px] focus-visible:ring-primary focus-visible:border-primary bg-muted/20"
               />
             </div>
             <Button
               type="submit"
-              className="w-full rounded-full h-12 mt-4 text-primary-foreground font-semibold"
+              className="w-full rounded-xl h-14 mt-6 text-primary-foreground font-bold text-[16px] shadow-md transition-all hover:-translate-y-0.5"
               disabled={isSubmitting}
             >
               {isSubmitting ? 'Entrando...' : 'Entrar'}

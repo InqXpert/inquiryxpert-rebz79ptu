@@ -58,48 +58,57 @@ export default function GestaoUsuarios() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-primary tracking-tight">Gestão de Usuários</h1>
-          <p className="text-muted-foreground text-sm">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-3">
+            Gestão de Usuários
+          </h1>
+          <p className="text-base text-muted-foreground">
             Controle de acessos, papéis (RBAC) e auditoria de sessões.
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleExport} className="rounded-none shadow-sm">
+        <div className="flex gap-3 w-full sm:w-auto">
+          <Button
+            variant="outline"
+            onClick={handleExport}
+            className="rounded-xl shadow-sm h-12 px-6 flex-1 sm:flex-none border-border"
+          >
             <Download className="w-4 h-4 mr-2" /> Exportar CSV
           </Button>
-          <Button variant="outline" className="rounded-none shadow-sm">
+          <Button
+            variant="outline"
+            className="rounded-xl shadow-sm h-12 px-6 flex-1 sm:flex-none border-border"
+          >
             <Upload className="w-4 h-4 mr-2" /> Importar
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
           title="Total Usuários"
           value={users.length}
-          icon={<Users className="w-4 h-4 text-muted-foreground" />}
+          icon={<Users className="w-5 h-5 text-muted-foreground" />}
         />
         <MetricCard
           title="Ativos Hoje"
           value={ativos}
-          icon={<UserCheck className="w-4 h-4 text-primary" />}
+          icon={<UserCheck className="w-5 h-5 text-primary" />}
         />
         <MetricCard
           title="Contas Suspensas"
           value={suspensos}
-          icon={<UserX className="w-4 h-4 text-destructive" />}
+          icon={<UserX className="w-5 h-5 text-destructive" />}
         />
         <MetricCard
           title="Uso Médio (min)"
           value={avgTime}
-          icon={<Clock className="w-4 h-4 text-muted-foreground" />}
+          icon={<Clock className="w-5 h-5 text-muted-foreground" />}
         />
       </div>
 
-      <Card className="rounded-none border shadow-sm">
+      <Card className="rounded-2xl border border-border/50 shadow-sm mt-8 overflow-hidden bg-card">
         <CardContent className="p-0">
           <UsuariosTable users={users} />
         </CardContent>
@@ -118,13 +127,15 @@ function MetricCard({
   icon: React.ReactNode
 }) {
   return (
-    <Card className="rounded-none border shadow-sm">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        {icon}
+    <Card className="rounded-2xl border-none shadow-sm bg-card">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <CardTitle className="text-sm font-semibold text-muted-foreground">{title}</CardTitle>
+        <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center">
+          {icon}
+        </div>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
+        <div className="text-4xl font-bold text-primary">{value}</div>
       </CardContent>
     </Card>
   )

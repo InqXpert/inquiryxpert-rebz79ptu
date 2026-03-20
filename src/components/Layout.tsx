@@ -36,7 +36,7 @@ export default function Layout() {
       <header className="flex h-14 items-center justify-between px-4 bg-[#2A3B4C] text-white shadow-md z-30 shrink-0">
         <div className="flex items-center h-full overflow-hidden">
           <Link to="/" className="flex items-center gap-2 mr-2 sm:mr-6 shrink-0">
-            <div className="w-8 h-8 rounded bg-[#FF7A59] flex items-center justify-center font-bold text-sm text-white shadow-sm">
+            <div className="w-8 h-8 rounded bg-[#F2485C] flex items-center justify-center font-bold text-sm text-white shadow-sm">
               IX
             </div>
             <span className="font-bold text-lg tracking-tight hidden md:block">InquiryXperty</span>
@@ -91,7 +91,7 @@ export default function Layout() {
             className="text-white/80 hover:text-white hover:bg-white/10 h-8 w-8 relative"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#FF7A59] rounded-full"></span>
+            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#F2485C] rounded-full"></span>
           </Button>
 
           <DropdownMenu>

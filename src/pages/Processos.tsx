@@ -54,11 +54,13 @@ export default function Processos() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+    <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-primary">Processos</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-primary mb-3">
+            Processos
+          </h1>
+          <p className="text-base text-muted-foreground">
             Gerenciamento operacional de solicitações e andamentos.
           </p>
         </div>
@@ -73,7 +75,7 @@ export default function Processos() {
         </Button>
       </div>
 
-      <Card className="p-4 shadow-sm border-none rounded-2xl bg-card">
+      <Card className="p-5 shadow-sm border border-border/50 rounded-2xl bg-card">
         <DashboardFilters
           filters={filters}
           setFilters={setFilters}
@@ -85,8 +87,7 @@ export default function Processos() {
         />
       </Card>
 
-      {/* Table wrapper with square corners per AC */}
-      <Card className="shadow-sm border-none rounded-none overflow-hidden pt-2 bg-card">
+      <Card className="shadow-sm border border-border/50 rounded-2xl overflow-hidden bg-card mt-6">
         <ProcessosOperacionaisTable
           processos={processos}
           loading={loading}

@@ -65,9 +65,9 @@ export function ProcessosOperacionaisTable({
 
   if (loading) {
     return (
-      <div className="space-y-4 p-4">
+      <div className="space-y-4 p-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-16 bg-muted animate-pulse rounded-none" />
+          <div key={i} className="h-16 bg-muted animate-pulse rounded-xl" />
         ))}
       </div>
     )
@@ -75,97 +75,100 @@ export function ProcessosOperacionaisTable({
 
   if (processos.length === 0) {
     return (
-      <div className="py-20 text-center flex flex-col items-center justify-center p-4">
+      <div className="py-24 text-center flex flex-col items-center justify-center p-6">
         <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
           <FolderOpen className="w-8 h-8 text-muted-foreground" />
         </div>
-        <h3 className="text-xl font-bold text-primary mb-1">Nenhum processo encontrado</h3>
-        <p className="text-sm text-muted-foreground">Ajuste os filtros para encontrar registros.</p>
+        <h3 className="text-xl font-bold text-primary mb-2">Nenhum processo encontrado</h3>
+        <p className="text-base text-muted-foreground">
+          Ajuste os filtros para encontrar registros.
+        </p>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col w-full bg-card rounded-none">
-      <div className="overflow-x-auto rounded-none">
+    <div className="flex flex-col w-full bg-card">
+      <div className="overflow-x-auto">
         <table className="w-full text-left whitespace-nowrap">
-          {/* Header background uses neutral muted color */}
-          <thead className="bg-muted border-b border-border text-muted-foreground">
+          <thead className="bg-muted/50 border-b border-border text-muted-foreground">
             <tr>
               <th
-                className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
+                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
                 onClick={() => handleSort('numero_controle')}
               >
                 Controle <SortIcon colKey="numero_controle" />
               </th>
               <th
-                className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
+                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
                 onClick={() => handleSort('status')}
               >
                 Status <SortIcon colKey="status" />
               </th>
               <th
-                className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
+                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
                 onClick={() => handleSort('cia')}
               >
                 Seguradora <SortIcon colKey="cia" />
               </th>
               <th
-                className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
+                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
                 onClick={() => handleSort('nome_segurado')}
               >
                 Segurado <SortIcon colKey="nome_segurado" />
               </th>
               <th
-                className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
+                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
                 onClick={() => handleSort('agente_prestador')}
               >
                 Prestador <SortIcon colKey="agente_prestador" />
               </th>
               <th
-                className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
+                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
                 onClick={() => handleSort('data_entrada')}
               >
                 Data Entrada <SortIcon colKey="data_entrada" />
               </th>
               <th
-                className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
+                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
                 onClick={() => handleSort('analista_solicitante')}
               >
                 Analista <SortIcon colKey="analista_solicitante" />
               </th>
-              <th className="py-4 px-6 text-sm font-semibold text-right">Ação</th>
+              <th className="py-5 px-6 text-sm font-semibold text-right">Ação</th>
             </tr>
           </thead>
           <tbody>
-            {pageData.map((p, i) => (
+            {pageData.map((p) => (
               <tr
                 key={p.id}
-                className="border-b border-border/50 hover:bg-muted/30 cursor-pointer transition-colors group rounded-none"
+                className="border-b border-border/50 hover:bg-muted/30 cursor-pointer transition-colors group"
                 onClick={() => onViewDetail(p.id)}
               >
-                <td className="py-4 px-6 text-sm font-semibold text-primary">
+                <td className="py-5 px-6 text-[15px] font-semibold text-primary">
                   {p.numero_controle || '-'}
                 </td>
-                <td className="py-4 px-6 text-sm">
+                <td className="py-5 px-6 text-[15px]">
                   <StatusBadge status={p.status} />
                 </td>
-                <td className="py-4 px-6 text-sm text-muted-foreground">{p.cia || '-'}</td>
-                <td className="py-4 px-6 text-sm font-medium text-foreground">
+                <td className="py-5 px-6 text-[15px] text-muted-foreground">{p.cia || '-'}</td>
+                <td className="py-5 px-6 text-[15px] font-medium text-foreground">
                   {p.nome_segurado || '-'}
                 </td>
-                <td className="py-4 px-6 text-sm text-muted-foreground">
+                <td className="py-5 px-6 text-[15px] text-muted-foreground">
                   {p.agente_prestador || '-'}
                 </td>
-                <td className="py-4 px-6 text-sm text-muted-foreground">{p.data_entrada || '-'}</td>
-                <td className="py-4 px-6 text-sm text-muted-foreground">
+                <td className="py-5 px-6 text-[15px] text-muted-foreground">
+                  {p.data_entrada || '-'}
+                </td>
+                <td className="py-5 px-6 text-[15px] text-muted-foreground">
                   {p.analista_solicitante || '-'}
                 </td>
-                <td className="py-4 px-6 text-right">
+                <td className="py-5 px-6 text-right">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-muted-foreground group-hover:text-secondary group-hover:bg-secondary/10 rounded-full h-8 w-8"
+                    className="text-muted-foreground group-hover:text-secondary group-hover:bg-secondary/10 rounded-full h-9 w-9"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </Button>
@@ -176,11 +179,11 @@ export function ProcessosOperacionaisTable({
         </table>
       </div>
 
-      <div className="flex justify-center items-center gap-4 py-6 border-t border-border rounded-none">
+      <div className="flex justify-center items-center gap-4 py-6 border-t border-border bg-card">
         <Button
           variant="outline"
           size="sm"
-          className="rounded-xl px-4 font-semibold"
+          className="rounded-xl px-5 font-semibold"
           disabled={pagination.currentPage === 1}
           onClick={() =>
             setPagination((prev: any) => ({ ...prev, currentPage: prev.currentPage - 1 }))
@@ -194,7 +197,7 @@ export function ProcessosOperacionaisTable({
         <Button
           variant="outline"
           size="sm"
-          className="rounded-xl px-4 font-semibold"
+          className="rounded-xl px-5 font-semibold"
           disabled={pagination.currentPage >= totalPages}
           onClick={() =>
             setPagination((prev: any) => ({ ...prev, currentPage: prev.currentPage + 1 }))
@@ -238,7 +241,7 @@ function StatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`inline-flex px-3 py-1 rounded-full text-xs font-bold ${colors[key] || 'bg-muted text-muted-foreground'}`}
+      className={`inline-flex px-3 py-1.5 rounded-full text-[12px] font-bold ${colors[key] || 'bg-muted text-muted-foreground'}`}
     >
       {labels[key] || status || 'N/A'}
     </span>

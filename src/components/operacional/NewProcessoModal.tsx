@@ -106,15 +106,15 @@ export function NewProcessoModal({ isOpen, onClose, defaultProvider, onCreated }
 
   return (
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-[700px] p-[24px] !rounded-[8px]">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-primary">Novo Processo</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-[800px] p-6 sm:p-8 !rounded-2xl border-none shadow-2xl">
+        <DialogHeader className="mb-6">
+          <DialogTitle className="text-2xl font-bold text-primary">Novo Processo</DialogTitle>
+          <DialogDescription className="text-[15px] font-medium text-muted-foreground mt-2">
             Preencha os dados manualmente ou faça upload de uma apólice para extração automática.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-4">
+        <div className="mt-2 space-y-6">
           <input
             type="file"
             accept="application/pdf"
@@ -125,46 +125,52 @@ export function NewProcessoModal({ isOpen, onClose, defaultProvider, onCreated }
           {!pdfFile ? (
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-primary hover:bg-muted/30 transition-colors mb-6 flex flex-col items-center justify-center group"
+              className="border-2 border-dashed border-border rounded-2xl p-10 text-center cursor-pointer hover:border-primary hover:bg-primary/5 transition-colors flex flex-col items-center justify-center group bg-muted/10"
             >
               {isExtracting ? (
-                <Loader2 className="w-8 h-8 animate-spin text-primary mb-2" />
+                <Loader2 className="w-10 h-10 animate-spin text-primary mb-3" />
               ) : (
-                <UploadCloud className="w-8 h-8 text-muted-foreground mb-2 group-hover:text-primary transition-colors" />
+                <UploadCloud className="w-10 h-10 text-muted-foreground mb-3 group-hover:text-primary transition-colors opacity-60" />
               )}
-              <p className="text-sm font-medium text-foreground">
+              <p className="text-[15px] font-bold text-foreground mb-1">
                 {isExtracting ? 'Extraindo dados...' : 'Extração via Apólice (PDF)'}
               </p>
               {!isExtracting && (
-                <p className="text-xs text-muted-foreground">Clique para selecionar</p>
+                <p className="text-[13px] font-medium text-muted-foreground">
+                  Clique para selecionar
+                </p>
               )}
             </div>
           ) : (
-            <div className="flex items-center justify-between p-4 bg-muted/50 border border-border rounded-xl mb-6">
-              <div className="flex items-center gap-3">
-                <FileText className="w-6 h-6 text-primary" />
-                <div>
-                  <p className="text-sm font-medium text-foreground">{pdfFile.name}</p>
-                  <p className="text-xs text-muted-foreground">Arquivo pronto para anexo.</p>
+            <div className="flex items-center justify-between p-5 bg-background border border-border rounded-2xl shadow-sm">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                  <FileText className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-[15px] font-bold text-foreground">{pdfFile.name}</p>
+                  <p className="text-[13px] font-medium text-muted-foreground mt-0.5">
+                    Arquivo pronto para anexo.
+                  </p>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setPdfFile(null)}
-                className="text-muted-foreground hover:text-destructive"
+                className="text-destructive hover:bg-destructive/10 hover:text-destructive h-10 w-10"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </Button>
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {fields.map((f) => (
-              <div key={f.key} className="flex flex-col gap-1.5">
-                <label className="text-[13px] font-medium text-muted-foreground">{f.label}</label>
+              <div key={f.key} className="flex flex-col gap-2">
+                <label className="text-[14px] font-bold text-muted-foreground">{f.label}</label>
                 <Input
-                  className={`h-10 text-[13px] rounded-lg ${f.readOnly ? 'bg-muted/50 cursor-not-allowed font-semibold' : ''}`}
+                  className={`h-12 text-[14px] rounded-xl border-border ${f.readOnly ? 'bg-muted/50 cursor-not-allowed font-semibold text-primary' : 'focus-visible:ring-2 focus-visible:ring-primary/50'}`}
                   value={(formData as any)[f.key] || ''}
                   onChange={(e) => setFormData((p) => ({ ...p, [f.key]: e.target.value }))}
                   readOnly={f.readOnly}
@@ -174,16 +180,21 @@ export function NewProcessoModal({ isOpen, onClose, defaultProvider, onCreated }
             ))}
           </div>
 
-          <div className="flex justify-end gap-3 mt-8 pt-4 border-t border-border">
-            <Button variant="outline" onClick={onClose} disabled={isSaving || isExtracting}>
+          <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-border">
+            <Button
+              variant="outline"
+              onClick={onClose}
+              disabled={isSaving || isExtracting}
+              className="rounded-xl h-12 px-6 font-bold"
+            >
               Cancelar
             </Button>
             <Button
               onClick={handleSave}
               disabled={isSaving || isExtracting}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px]"
+              className="rounded-xl h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground min-w-[140px] font-bold shadow-sm"
             >
-              {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              {isSaving ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
               Salvar Processo
             </Button>
           </div>

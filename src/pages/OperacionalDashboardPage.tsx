@@ -7,6 +7,7 @@ import { ProcessoDetailModal } from '@/components/operacional/ProcessoDetailModa
 import { ImportOperacionalDataModal } from '@/components/operacional/ImportOperacionalDataModal'
 import { exportToExcel } from '@/services/procesosOperacionais'
 import { useToast } from '@/hooks/use-toast'
+import { Card } from '@/components/ui/card'
 
 export default function OperacionalDashboardPage() {
   const {
@@ -50,35 +51,39 @@ export default function OperacionalDashboardPage() {
 
   return (
     <div className="bg-background min-h-full">
-      <div className="max-w-[1400px] mx-auto px-6 py-6 space-y-[20px]">
-        <div className="mb-0">
-          <h1 className="text-[28px] font-bold text-foreground mb-[4px]">
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8">
+        <div className="mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-primary mb-3">
             Visão Geral Operacional
           </h1>
-          <p className="text-[14px] text-muted-foreground mb-[24px]">
+          <p className="text-base text-muted-foreground">
             Acompanhamento de todos os processos em andamento
           </p>
         </div>
 
-        <DashboardFilters
-          filters={filters}
-          setFilters={setFilters}
-          clearFilters={clearFilters}
-          onExport={handleExport}
-          onImport={handleImportClick}
-          canExport={canExport()}
-          canImport={canImport()}
-        />
+        <Card className="p-5 shadow-sm border border-border/50 rounded-2xl bg-card">
+          <DashboardFilters
+            filters={filters}
+            setFilters={setFilters}
+            clearFilters={clearFilters}
+            onExport={handleExport}
+            onImport={handleImportClick}
+            canExport={canExport()}
+            canImport={canImport()}
+          />
+        </Card>
 
         <DashboardKPIs processos={processos} loading={loading} />
 
-        <ProcessosOperacionaisTable
-          processos={processos}
-          loading={loading}
-          onViewDetail={setSelectedProcessoId}
-          pagination={pagination}
-          setPagination={setPagination}
-        />
+        <Card className="shadow-sm border border-border/50 rounded-2xl overflow-hidden bg-card mt-6">
+          <ProcessosOperacionaisTable
+            processos={processos}
+            loading={loading}
+            onViewDetail={setSelectedProcessoId}
+            pagination={pagination}
+            setPagination={setPagination}
+          />
+        </Card>
 
         <ProcessoDetailModal
           processoId={selectedProcessoId}

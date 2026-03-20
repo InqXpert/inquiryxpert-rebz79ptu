@@ -121,15 +121,17 @@ export function ImportAgenteModal({ open, onOpenChange }: ImportAgenteModalProps
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-[520px] p-[24px]">
-        <DialogHeader>
-          <DialogTitle>Importar Dados do Agente</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-[600px] p-6 sm:p-8 !rounded-2xl border-none shadow-2xl">
+        <DialogHeader className="mb-4">
+          <DialogTitle className="text-2xl font-bold text-primary">
+            Importar Dados do Agente
+          </DialogTitle>
+          <DialogDescription className="text-[15px] font-medium text-muted-foreground mt-2">
             Selecione uma planilha .xlsx ou .csv com os dados do agente.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-2">
+        <div className="mt-2 space-y-6">
           <input
             type="file"
             accept=".xlsx,.csv"
@@ -143,13 +145,15 @@ export function ImportAgenteModal({ open, onOpenChange }: ImportAgenteModalProps
           />
 
           {file ? (
-            <div className="border-2 border-dashed border-secondary bg-secondary/5 rounded-[12px] p-[24px] text-center transition-colors duration-200">
-              <div className="flex flex-row justify-between items-center bg-white p-[12px] rounded-lg border border-border shadow-sm">
-                <div className="flex items-center gap-[12px]">
-                  <FileSpreadsheet className="w-[20px] h-[20px] text-secondary" />
+            <div className="border-2 border-dashed border-secondary bg-secondary/5 rounded-2xl p-6 text-center transition-colors duration-200">
+              <div className="flex flex-row justify-between items-center bg-background p-4 rounded-xl border border-border shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center shrink-0">
+                    <FileSpreadsheet className="w-5 h-5 text-secondary" />
+                  </div>
                   <div className="flex flex-col text-left">
-                    <span className="text-[14px] text-foreground font-medium">{file.name}</span>
-                    <span className="text-[12px] text-muted-foreground">
+                    <span className="text-[15px] text-foreground font-bold">{file.name}</span>
+                    <span className="text-[13px] text-muted-foreground font-medium mt-0.5">
                       {(file.size / 1024 / 1024).toFixed(2)} MB
                     </span>
                   </div>
@@ -165,46 +169,49 @@ export function ImportAgenteModal({ open, onOpenChange }: ImportAgenteModalProps
                   }}
                   disabled={status === 'loading'}
                   aria-label="Remover arquivo selecionado"
+                  className="hover:text-destructive h-10 w-10"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </Button>
               </div>
 
               {status === 'loading' ? (
-                <div className="mt-[24px] flex flex-col items-center justify-center">
-                  <Loader2 className="w-6 h-6 animate-spin text-secondary mb-2" />
-                  <span className="text-[13px] text-muted-foreground">Analisando planilha...</span>
+                <div className="mt-8 flex flex-col items-center justify-center">
+                  <Loader2 className="w-8 h-8 animate-spin text-secondary mb-3" />
+                  <span className="text-[15px] font-semibold text-muted-foreground">
+                    Analisando planilha...
+                  </span>
                 </div>
               ) : analysis ? (
-                <div className="mt-[24px] text-left">
-                  <div className="flex flex-col gap-[8px]">
+                <div className="mt-6 text-left bg-background p-5 rounded-xl border border-border/50 shadow-sm">
+                  <div className="flex flex-col gap-3">
                     {analysis.matched.length > 0 && (
-                      <div className="flex flex-row gap-[8px] items-start">
-                        <CheckCircle2 className="w-[14px] h-[14px] text-secondary mt-0.5 shrink-0" />
-                        <span className="text-[13px] text-foreground">
+                      <div className="flex flex-row gap-3 items-start">
+                        <CheckCircle2 className="w-5 h-5 text-secondary shrink-0 mt-0.5" />
+                        <span className="text-[14px] text-foreground">
                           <strong>{analysis.matched.length}</strong> colunas mapeadas com sucesso.
                         </span>
                       </div>
                     )}
                     {analysis.missing.length > 0 && (
-                      <div className="flex flex-row gap-[8px] items-start">
-                        <AlertTriangle className="w-[14px] h-[14px] text-yellow-600 mt-0.5 shrink-0" />
-                        <span className="text-[13px] text-muted-foreground">
+                      <div className="flex flex-row gap-3 items-start">
+                        <AlertTriangle className="w-5 h-5 text-yellow-600 shrink-0 mt-0.5" />
+                        <span className="text-[14px] text-muted-foreground font-medium">
                           Ausentes: {analysis.missing.join(', ')}
                         </span>
                       </div>
                     )}
                     {analysis.unmatched.length > 0 && (
-                      <div className="flex flex-row gap-[8px] items-start">
-                        <AlertTriangle className="w-[14px] h-[14px] text-blue-500 mt-0.5 shrink-0" />
-                        <span className="text-[13px] text-muted-foreground">
+                      <div className="flex flex-row gap-3 items-start">
+                        <AlertTriangle className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                        <span className="text-[14px] text-muted-foreground font-medium">
                           Extras (nas observações): {analysis.unmatched.join(', ')}
                         </span>
                       </div>
                     )}
                   </div>
-                  <div className="border-t border-border/50 my-[12px]" />
-                  <p className="text-[12px] text-muted-foreground italic">
+                  <div className="border-t border-border/50 my-4" />
+                  <p className="text-[13px] text-muted-foreground font-semibold italic">
                     Os dados serão preenchidos automaticamente no formulário a seguir.
                   </p>
                 </div>
@@ -228,46 +235,53 @@ export function ImportAgenteModal({ open, onOpenChange }: ImportAgenteModalProps
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
               className={cn(
-                'border-2 border-dashed rounded-[12px] p-[40px_24px] text-center transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary',
+                'border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary',
                 dragOver
-                  ? 'border-primary bg-accent/10'
-                  : 'border-border bg-transparent hover:border-primary hover:bg-accent/10',
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border bg-muted/10 hover:border-primary hover:bg-primary/5',
                 status === 'loading' && 'opacity-50 pointer-events-none',
               )}
             >
-              <UploadCloud className="w-[40px] h-[40px] text-muted-foreground mx-auto mb-[16px]" />
-              <p className="text-[15px] font-medium text-foreground mb-[4px]">
+              <UploadCloud className="w-12 h-12 text-muted-foreground mx-auto mb-5 opacity-60" />
+              <p className="text-base font-bold text-foreground mb-2">
                 Arraste o arquivo aqui ou clique para selecionar
               </p>
-              <p className="text-[13px] text-muted-foreground">Apenas .xlsx e .csv (Máx. 5MB)</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Apenas .xlsx e .csv (Máx. 5MB)
+              </p>
             </div>
           )}
 
           {inlineError && (
-            <p className="text-sm font-medium text-destructive mt-3">{inlineError}</p>
+            <p className="text-[14px] font-bold text-destructive mt-4">{inlineError}</p>
           )}
 
-          <div className="mt-[16px]">
+          <div className="mt-4">
             <button
               type="button"
               onClick={downloadTemplate}
-              className="text-[13px] text-primary hover:text-secondary hover:underline font-medium flex flex-row gap-[6px] items-center"
+              className="text-[14px] text-primary hover:text-primary/80 hover:underline font-bold flex flex-row gap-2 items-center px-1 rounded-md transition-colors"
             >
-              <Download className="w-[14px] h-[14px]" /> Baixar modelo de planilha
+              <Download className="w-4 h-4" /> Baixar modelo de planilha
             </button>
           </div>
         </div>
 
-        <DialogFooter className="mt-6">
+        <DialogFooter className="mt-8 pt-6 border-t border-border gap-3 flex-col sm:flex-row">
           <Button
             variant="outline"
             onClick={() => handleOpenChange(false)}
             disabled={status === 'loading'}
+            className="rounded-xl h-12 px-6 font-bold w-full sm:w-auto"
           >
             Cancelar
           </Button>
-          <Button onClick={handleImport} disabled={!file || status === 'loading'}>
-            {status === 'loading' && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+          <Button
+            onClick={handleImport}
+            disabled={!file || status === 'loading'}
+            className="rounded-xl h-12 px-8 font-bold shadow-sm w-full sm:w-auto"
+          >
+            {status === 'loading' && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
             Importar e Preencher
           </Button>
         </DialogFooter>

@@ -111,17 +111,17 @@ export default function ProfileAgente() {
 
   if (loading)
     return (
-      <div className="space-y-6 pb-10 max-w-[1400px] w-full">
-        <Skeleton className="h-10 w-48" />
-        <Skeleton className="h-64 w-full rounded-2xl" />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8">
+        <Skeleton className="h-12 w-64" />
+        <Skeleton className="h-72 w-full rounded-2xl" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-28 rounded-2xl" />
+            <Skeleton key={i} className="h-32 rounded-2xl" />
           ))}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-32 rounded-2xl" />
+            <Skeleton key={i} className="h-40 rounded-2xl" />
           ))}
         </div>
       </div>
@@ -129,11 +129,13 @@ export default function ProfileAgente() {
 
   if (!p)
     return (
-      <div className="p-8 text-center text-xl text-muted-foreground">Agente não encontrado.</div>
+      <div className="p-12 text-center text-xl text-muted-foreground w-full">
+        Agente não encontrado.
+      </div>
     )
 
   const getBadgeClass = (status: string) => {
-    const base = 'text-[11px] font-bold px-[8px] py-[4px] rounded-full'
+    const base = 'text-[12px] font-bold px-[10px] py-[4px] rounded-full'
     const s = status.toLowerCase()
     if (s.includes('concluíd') || s.includes('concluid') || s.includes('finaliz'))
       return cn(base, 'bg-emerald-100 text-emerald-800')
@@ -141,7 +143,7 @@ export default function ProfileAgente() {
       return cn(base, 'bg-blue-100 text-blue-800')
     if (s.includes('pendent') || s.includes('aguardando'))
       return cn(base, 'bg-yellow-100 text-yellow-800')
-    if (s.includes('pendencia')) return cn(base, 'bg-orange-100 text-orange-800')
+    if (s.includes('pendencia')) return cn(base, 'bg-[#F2485C]/10 text-[#F2485C]')
     return cn(base, 'bg-muted text-muted-foreground')
   }
 
@@ -150,7 +152,7 @@ export default function ProfileAgente() {
     if (val.includes('NIVEL 1') || val.includes('ZERO') || val.includes('TREINAMENTO'))
       return 'text-destructive'
     if (val.includes('NIVEL 2') || val.includes('PARCIAL') || val.includes('JUNIOR'))
-      return 'text-orange-600'
+      return 'text-[#F2485C]'
     if (val.includes('NIVEL 3') || val.includes('ALTO') || val.includes('PLENO'))
       return 'text-blue-600'
     if (val.includes('NIVEL 4') || val.includes('TOTAL') || val.includes('SENIOR'))
@@ -161,16 +163,16 @@ export default function ProfileAgente() {
   const recentes = processos.slice(0, 3)
 
   return (
-    <div className="space-y-6 pb-10">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-4">
         <Button
           variant="ghost"
           size="sm"
-          className="gap-2 text-[14px] text-muted-foreground hover:text-primary hover:bg-transparent px-0"
+          className="gap-2 text-[15px] font-semibold text-muted-foreground hover:text-primary hover:bg-transparent px-0"
           asChild
         >
           <Link to="/agentes">
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-5 h-5" />
             Voltar para Agentes
           </Link>
         </Button>
@@ -178,7 +180,7 @@ export default function ProfileAgente() {
           <Button
             variant="ghost"
             onClick={handleDelete}
-            className="text-destructive hover:bg-destructive/10 hover:text-destructive h-10 px-3 rounded-xl flex-1 sm:flex-none font-medium"
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive h-11 px-4 rounded-xl flex-1 sm:flex-none font-semibold"
             title="Remover"
           >
             <Trash className="w-4 h-4 sm:mr-2" /> <span className="sm:hidden">Remover</span>
@@ -186,13 +188,13 @@ export default function ProfileAgente() {
           <Button
             variant="outline"
             onClick={() => setEditModalOpen(true)}
-            className="h-10 px-4 rounded-xl gap-2 font-medium flex-1 sm:flex-none border-border"
+            className="h-11 px-6 rounded-xl gap-2 font-semibold flex-1 sm:flex-none border-border"
           >
             <Edit className="w-4 h-4" /> Editar
           </Button>
           <Button
             variant="secondary"
-            className="rounded-xl h-10 px-4 gap-2 font-semibold shadow-sm w-full sm:w-auto"
+            className="rounded-xl h-11 px-6 gap-2 font-semibold shadow-sm w-full sm:w-auto"
             onClick={() => navigate(`/agentes/${p.id}/sindicancia`)}
           >
             <Briefcase className="w-4 h-4" />
@@ -201,22 +203,22 @@ export default function ProfileAgente() {
         </div>
       </div>
 
-      <Card className="border-none shadow-sm rounded-2xl overflow-hidden animate-in fade-in duration-300 ease-out bg-card">
-        <CardContent className="p-8 grid grid-cols-1 lg:grid-cols-[220px_1fr_1fr_1fr] gap-8 md:items-start">
+      <Card className="border border-border/50 shadow-sm rounded-2xl overflow-hidden animate-in fade-in duration-300 ease-out bg-card">
+        <CardContent className="p-8 md:p-10 grid grid-cols-1 lg:grid-cols-[240px_1fr_1fr_1fr] gap-10 md:items-start">
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
             <img
               src={`https://img.usecurling.com/ppl/large?gender=male&seed=${p.id}`}
-              className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-sm"
+              className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md"
               alt="Profile"
             />
-            <h2 className="text-2xl font-bold text-primary mt-4 leading-tight">{p.nomeCompleto}</h2>
+            <h2 className="text-3xl font-bold text-primary mt-5 leading-tight">{p.nomeCompleto}</h2>
             {p.numero_controle && (
-              <div className="flex items-center gap-2 mt-2 bg-primary/5 text-primary px-3 py-1.5 rounded-lg border border-primary/10">
+              <div className="flex items-center gap-2 mt-3 bg-primary/5 text-primary px-4 py-2 rounded-xl border border-primary/10">
                 <span className="text-sm font-bold">Nº: {p.numero_controle}</span>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-6 w-6 text-primary hover:bg-primary/20 rounded-md ml-1"
+                  className="h-7 w-7 text-primary hover:bg-primary/20 rounded-md ml-1"
                   onClick={() => {
                     navigator.clipboard.writeText(p.numero_controle!)
                     toast({
@@ -225,64 +227,68 @@ export default function ProfileAgente() {
                     })
                   }}
                 >
-                  <Copy className="w-3 h-3" />
+                  <Copy className="w-3.5 h-3.5" />
                 </Button>
               </div>
             )}
             <Badge
               variant="outline"
-              className="text-xs mt-3 bg-muted text-muted-foreground font-medium border-none"
+              className="text-[13px] mt-4 bg-muted text-muted-foreground font-semibold border-none px-4 py-1.5 rounded-full"
             >
               {p.regiaoAbrangencia || 'Sem Especialidade'}
             </Badge>
-            <div className="flex flex-wrap justify-center lg:justify-start gap-2 mt-4">
+            <div className="flex flex-wrap justify-center lg:justify-start gap-2 mt-5">
               {p.naBlackList === 'Sim' && (
-                <div className="bg-destructive/10 text-destructive text-xs font-bold px-3 py-1 rounded-full flex gap-1.5 items-center">
-                  <AlertTriangle className="w-3.5 h-3.5" /> Blacklist
+                <div className="bg-destructive/10 text-destructive text-[13px] font-bold px-4 py-1.5 rounded-full flex gap-2 items-center">
+                  <AlertTriangle className="w-4 h-4" /> Blacklist
                 </div>
               )}
               {p.ativo === 'Sim' && (
-                <div className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full flex gap-1.5 items-center">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Ativo
+                <div className="bg-emerald-100 text-emerald-800 text-[13px] font-bold px-4 py-1.5 rounded-full flex gap-2 items-center">
+                  <CheckCircle2 className="w-4 h-4" /> Ativo
                 </div>
               )}
             </div>
           </div>
 
-          <div className="flex flex-col justify-center space-y-4 lg:pt-2">
-            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+          <div className="flex flex-col justify-center space-y-5 lg:pt-3">
+            <h3 className="text-[13px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
               Informações de Contato
             </h3>
-            <div className="grid grid-cols-1 gap-3">
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/50">
                   <Mail className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col overflow-hidden">
-                  <span className="text-xs text-muted-foreground font-medium">E-mail</span>
-                  <span className="text-sm text-foreground font-semibold truncate">
+                  <span className="text-[13px] text-muted-foreground font-medium mb-0.5">
+                    E-mail
+                  </span>
+                  <span className="text-[15px] text-foreground font-semibold truncate">
                     {p.email || '-'}
                   </span>
                 </div>
               </div>
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <div className="flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/50">
                   <Phone className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground font-medium">Telefone</span>
-                  <span className="text-sm text-foreground font-semibold truncate">
+                  <span className="text-[13px] text-muted-foreground font-medium mb-0.5">
+                    Telefone
+                  </span>
+                  <span className="text-[15px] text-foreground font-semibold truncate">
                     {p.telefone || '-'}
                   </span>
                 </div>
               </div>
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <div className="flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/50">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground font-medium">Base</span>
-                  <span className="text-sm text-foreground font-semibold truncate">
+                  <span className="text-[13px] text-muted-foreground font-medium mb-0.5">Base</span>
+                  <span className="text-[15px] text-foreground font-semibold truncate">
                     {p.baseAtendimento || '-'}
                   </span>
                 </div>
@@ -290,41 +296,47 @@ export default function ProfileAgente() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-center space-y-4 lg:pt-2">
-            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+          <div className="flex flex-col justify-center space-y-5 lg:pt-3">
+            <h3 className="text-[13px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
               Financeiro & Comercial
             </h3>
-            <div className="grid grid-cols-1 gap-3">
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/50">
                   <DollarSign className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground font-medium">Honorário</span>
-                  <span className="text-sm text-foreground font-semibold">
+                  <span className="text-[13px] text-muted-foreground font-medium mb-0.5">
+                    Honorário
+                  </span>
+                  <span className="text-[15px] text-foreground font-semibold">
                     R$ {Number(p.valorHonorario || 0).toFixed(2)}
                   </span>
                 </div>
               </div>
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <div className="flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/50">
                   <Car className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground font-medium">Valor KM</span>
-                  <span className="text-sm text-foreground font-semibold">
+                  <span className="text-[13px] text-muted-foreground font-medium mb-0.5">
+                    Valor KM
+                  </span>
+                  <span className="text-[15px] text-foreground font-semibold">
                     R$ {Number(p.valorKm || 0).toFixed(2)}
                   </span>
                 </div>
               </div>
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <div className="flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/50">
                   <Key className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground font-medium">Chave Pix</span>
+                  <span className="text-[13px] text-muted-foreground font-medium mb-0.5">
+                    Chave Pix
+                  </span>
                   <span
-                    className="text-sm text-foreground font-semibold truncate max-w-[150px]"
+                    className="text-[15px] text-foreground font-semibold truncate max-w-[150px]"
                     title={p.chavePix}
                   >
                     {p.chavePix || '-'}
@@ -334,20 +346,22 @@ export default function ProfileAgente() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-center space-y-4 lg:pt-2">
-            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+          <div className="flex flex-col justify-center space-y-5 lg:pt-3">
+            <h3 className="text-[13px] font-bold text-muted-foreground uppercase tracking-wider mb-2">
               Performance & Qualidade
             </h3>
-            <div className="grid grid-cols-1 gap-3">
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/50">
                   <Star className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col overflow-hidden">
-                  <span className="text-xs text-muted-foreground font-medium">Qualidade</span>
+                  <span className="text-[13px] text-muted-foreground font-medium mb-0.5">
+                    Qualidade
+                  </span>
                   <span
                     className={cn(
-                      'text-sm font-semibold truncate',
+                      'text-[14px] font-bold truncate',
                       getKPITextColor(p.qualidade_nivel),
                     )}
                   >
@@ -355,15 +369,17 @@ export default function ProfileAgente() {
                   </span>
                 </div>
               </div>
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <div className="flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/50">
                   <Award className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col overflow-hidden">
-                  <span className="text-xs text-muted-foreground font-medium">Experiência</span>
+                  <span className="text-[13px] text-muted-foreground font-medium mb-0.5">
+                    Experiência
+                  </span>
                   <span
                     className={cn(
-                      'text-sm font-semibold truncate',
+                      'text-[14px] font-bold truncate',
                       getKPITextColor(p.experiencia_nivel),
                     )}
                   >
@@ -371,15 +387,17 @@ export default function ProfileAgente() {
                   </span>
                 </div>
               </div>
-              <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
+              <div className="flex gap-4 items-center">
+                <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center shrink-0 border border-border/50">
                   <ShieldCheck className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col overflow-hidden">
-                  <span className="text-xs text-muted-foreground font-medium">Compliance</span>
+                  <span className="text-[13px] text-muted-foreground font-medium mb-0.5">
+                    Compliance
+                  </span>
                   <span
                     className={cn(
-                      'text-sm font-semibold truncate',
+                      'text-[14px] font-bold truncate',
                       getKPITextColor(p.compliance_nivel),
                     )}
                   >
@@ -392,9 +410,9 @@ export default function ProfileAgente() {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {statsLoading
-          ? [1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-[104px] rounded-2xl bg-card" />)
+          ? [1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-[120px] rounded-2xl bg-card" />)
           : [
               {
                 title: 'Total Processos',
@@ -423,17 +441,17 @@ export default function ProfileAgente() {
             ].map((kpi, i) => (
               <Card
                 key={i}
-                className="border-none shadow-sm rounded-2xl overflow-hidden relative bg-card animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both"
+                className="border border-border/50 shadow-sm rounded-2xl overflow-hidden relative bg-card animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both"
                 style={{ animationDelay: kpi.delay, animationDuration: '400ms' }}
               >
-                <CardContent className="p-5">
-                  <h4 className="text-sm font-semibold text-muted-foreground mb-2 relative z-10">
+                <CardContent className="p-6">
+                  <h4 className="text-[15px] font-semibold text-muted-foreground mb-3 relative z-10">
                     {kpi.title}
                   </h4>
-                  <div className="text-3xl font-bold text-primary leading-none relative z-10">
+                  <div className="text-4xl font-bold text-primary leading-none relative z-10">
                     {kpi.number}
                   </div>
-                  <p className="text-xs text-muted-foreground font-medium mt-2 relative z-10">
+                  <p className="text-[13px] text-muted-foreground font-medium mt-3 relative z-10">
                     {kpi.subtitle}
                   </p>
                 </CardContent>
@@ -441,14 +459,14 @@ export default function ProfileAgente() {
             ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-6">
-        <Card className="border-none shadow-sm rounded-2xl p-6 bg-card">
-          <div className="flex flex-row justify-between items-center mb-6">
-            <h3 className="text-lg font-bold text-primary">Processos Recentes</h3>
+      <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-8">
+        <Card className="border border-border/50 shadow-sm rounded-2xl p-8 bg-card">
+          <div className="flex flex-row justify-between items-center mb-8">
+            <h3 className="text-xl font-bold text-primary">Processos Recentes</h3>
             <Button
               variant="outline"
               size="sm"
-              className="font-semibold rounded-xl text-primary"
+              className="font-bold rounded-xl text-primary h-10 px-5 border-border"
               asChild
             >
               <Link to={`/agentes/${p.id}/sindicancia`}>Nova Sindicância</Link>
@@ -456,29 +474,29 @@ export default function ProfileAgente() {
           </div>
           <div className="flex flex-col divide-y divide-border/50">
             {recentes.length === 0 ? (
-              <div className="text-sm text-muted-foreground py-4 text-center">
+              <div className="text-[15px] text-muted-foreground py-6 text-center font-medium">
                 Nenhum processo vinculado.
               </div>
             ) : (
               recentes.map((proc, i) => (
                 <div
                   key={proc.id}
-                  className="py-4 hover:bg-muted/20 transition-colors animate-in fade-in slide-in-from-bottom-2 ease-out fill-mode-both flex flex-row items-center justify-between group"
+                  className="py-5 hover:bg-muted/20 transition-colors animate-in fade-in slide-in-from-bottom-2 ease-out fill-mode-both flex flex-row items-center justify-between group"
                   style={{ animationDelay: `${i * 40}ms`, animationDuration: '250ms' }}
                 >
                   <div className="flex flex-col">
-                    <span className="text-xs text-muted-foreground font-semibold">
+                    <span className="text-[13px] text-muted-foreground font-bold tracking-wide">
                       {proc.numero_controle || proc.id}
                     </span>
-                    <span className="text-sm text-foreground font-bold mt-1 group-hover:text-primary transition-colors">
+                    <span className="text-[16px] text-foreground font-bold mt-1.5 group-hover:text-primary transition-colors">
                       {proc.tipo_servico || 'Sindicância'}
                     </span>
                   </div>
-                  <div className="flex flex-col items-end gap-2">
+                  <div className="flex flex-col items-end gap-2.5">
                     <div className={getBadgeClass(proc.status || 'Pendente')}>
                       {proc.status || 'Pendente'}
                     </div>
-                    <span className="text-xs text-muted-foreground font-medium">
+                    <span className="text-[13px] text-muted-foreground font-semibold">
                       {proc.data_entrada?.split(' ')[0] || '-'}
                     </span>
                   </div>
@@ -488,22 +506,24 @@ export default function ProfileAgente() {
           </div>
         </Card>
 
-        <Card className="border-none shadow-sm rounded-2xl p-6 bg-card">
-          <h3 className="text-lg font-bold text-primary mb-6">Atividade Recente</h3>
+        <Card className="border border-border/50 shadow-sm rounded-2xl p-8 bg-card">
+          <h3 className="text-xl font-bold text-primary mb-8">Atividade Recente</h3>
           <div className="flex flex-col">
             {[
               { text: 'Documento CNH atualizado', time: 'Hoje, 14:30' },
               { text: 'Novo processo atribuído', time: 'Ontem, 09:15' },
               { text: 'Status alterado para Ativo', time: '10 Out 2023' },
             ].map((act, i, arr) => (
-              <div key={i} className="flex flex-row gap-4 pb-6 relative">
+              <div key={i} className="flex flex-row gap-5 pb-8 relative">
                 {i !== arr.length - 1 && (
-                  <div className="absolute left-[7px] top-4 w-px h-[calc(100%-8px)] bg-border" />
+                  <div className="absolute left-[7px] top-4 w-[2px] h-[calc(100%-8px)] bg-border/50" />
                 )}
-                <div className="w-4 h-4 rounded-full bg-secondary/20 border-2 border-secondary mt-0.5 shrink-0 relative z-10" />
-                <div className="flex flex-col -mt-1">
-                  <span className="text-sm font-semibold text-foreground">{act.text}</span>
-                  <span className="text-xs text-muted-foreground font-medium mt-1">{act.time}</span>
+                <div className="w-4 h-4 rounded-full bg-secondary/20 border-2 border-secondary mt-1 shrink-0 relative z-10" />
+                <div className="flex flex-col -mt-1.5">
+                  <span className="text-[15px] font-bold text-foreground">{act.text}</span>
+                  <span className="text-[13px] text-muted-foreground font-medium mt-1">
+                    {act.time}
+                  </span>
                 </div>
               </div>
             ))}

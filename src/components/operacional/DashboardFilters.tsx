@@ -29,23 +29,23 @@ export function DashboardFilters({
   canImport,
 }: Props) {
   return (
-    <div className="flex flex-col md:flex-row gap-4 w-full">
-      <div className="relative flex-1">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+    <div className="flex flex-col md:flex-row gap-5 w-full items-start md:items-center">
+      <div className="relative flex-1 w-full">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
         <Input
           placeholder="Buscar processos..."
-          className="pl-11 h-12 bg-muted/30 border border-border rounded-xl text-sm focus-visible:ring-2 focus-visible:ring-primary/50"
+          className="pl-12 h-12 bg-muted/30 border border-border rounded-xl text-[14px] focus-visible:ring-2 focus-visible:ring-primary/50"
           value={filters.search}
           onChange={(e) => setFilters({ search: e.target.value })}
         />
       </div>
 
-      <div className="flex flex-wrap sm:flex-nowrap gap-3 items-center">
+      <div className="flex flex-wrap sm:flex-nowrap gap-4 items-center w-full md:w-auto">
         <Select value={filters.status} onValueChange={(v) => setFilters({ status: v })}>
-          <SelectTrigger className="h-12 w-full sm:w-[180px] bg-muted/30 border border-border rounded-xl">
+          <SelectTrigger className="h-12 w-full sm:w-[190px] bg-muted/30 border border-border rounded-xl font-medium">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-xl">
             <SelectItem value="Todos">Todos os Status</SelectItem>
             <SelectItem value="em_elaboracao">Em Elaboração</SelectItem>
             <SelectItem value="em_execucao">Em Execução</SelectItem>
@@ -58,18 +58,18 @@ export function DashboardFilters({
         <Button
           variant="ghost"
           size="icon"
-          className="h-12 w-12 rounded-xl text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+          className="h-12 w-12 rounded-xl text-muted-foreground hover:bg-destructive/10 hover:text-destructive shrink-0"
           onClick={clearFilters}
           title="Limpar Filtros"
         >
           <X className="w-5 h-5" />
         </Button>
 
-        <div className="flex gap-2 w-full sm:w-auto">
+        <div className="flex gap-3 w-full sm:w-auto">
           {canExport && (
             <Button
               variant="outline"
-              className="h-12 flex-1 sm:flex-none rounded-xl border-border text-foreground hover:bg-muted/50"
+              className="h-12 flex-1 sm:flex-none rounded-xl border-border text-foreground font-semibold hover:bg-muted/50 px-5"
               onClick={onExport}
             >
               <Download className="w-4 h-4 sm:mr-2" />{' '}
@@ -78,7 +78,7 @@ export function DashboardFilters({
           )}
           {canImport && (
             <Button
-              className="h-12 flex-1 sm:flex-none rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold shadow-sm"
+              className="h-12 flex-1 sm:flex-none rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold shadow-sm px-5"
               onClick={onImport}
             >
               <Upload className="w-4 h-4 sm:mr-2" />{' '}

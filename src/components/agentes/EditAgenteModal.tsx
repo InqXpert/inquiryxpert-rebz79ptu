@@ -60,34 +60,36 @@ export function EditAgenteModal({ open, onOpenChange, agente, onSuccess }: EditA
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto w-11/12 rounded-xl p-0 gap-0 border-none bg-muted/30">
-        <div className="bg-white p-6 border-b border-border sticky top-0 z-10 flex flex-col gap-1">
-          <DialogTitle className="text-2xl font-bold text-primary">Editar Cadastro</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto w-11/12 rounded-2xl p-0 gap-0 border-none bg-muted/10 shadow-2xl">
+        <div className="bg-white p-6 sm:p-8 border-b border-border sticky top-0 z-10 flex flex-col gap-2">
+          <DialogTitle className="text-2xl sm:text-3xl font-bold text-primary">
+            Editar Cadastro
+          </DialogTitle>
+          <DialogDescription className="text-[15px] font-medium text-muted-foreground">
             Atualize as informações cadastrais do agente prestador.
           </DialogDescription>
         </div>
-        <div className="p-6">
+        <div className="p-6 sm:p-8 bg-background flex-1">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <ImportedFieldsContext.Provider value={[]}>
                 <FormContent />
               </ImportedFieldsContext.Provider>
 
-              <div className="flex justify-end gap-3 pt-6 border-t border-border mt-6">
+              <div className="flex justify-end gap-3 pt-6 mt-8">
                 <Button
                   variant="outline"
                   type="button"
                   onClick={() => onOpenChange(false)}
                   disabled={saving}
-                  className="rounded-xl h-11"
+                  className="rounded-xl h-12 px-6 font-bold"
                 >
                   Cancelar
                 </Button>
                 <Button
                   type="submit"
                   disabled={saving}
-                  className="rounded-xl h-11 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-sm"
+                  className="rounded-xl h-12 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-sm"
                 >
                   {saving ? 'Salvando...' : 'Salvar Alterações'}
                 </Button>

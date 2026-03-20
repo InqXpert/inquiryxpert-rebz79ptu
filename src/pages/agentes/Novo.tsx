@@ -77,19 +77,21 @@ export default function NovoAgente() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto pb-20 space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 mb-8">
         <div>
           <Button
             variant="ghost"
             size="sm"
-            className="gap-2 text-muted-foreground hover:text-primary hover:bg-transparent px-0 mb-2"
+            className="gap-2 text-[15px] font-semibold text-muted-foreground hover:text-primary hover:bg-transparent px-0 mb-4"
             onClick={() => navigate(-1)}
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-5 h-5" />
             Voltar
           </Button>
-          <h1 className="text-3xl font-bold text-primary tracking-tight">Cadastro de Agente</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-primary tracking-tight mb-2">
+            Cadastro de Agente
+          </h1>
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
           <Button
@@ -97,7 +99,7 @@ export default function NovoAgente() {
             type="button"
             onClick={() => setIsImportModalOpen(true)}
             disabled={saving}
-            className="flex-1 sm:flex-none h-12 rounded-xl"
+            className="flex-1 sm:flex-none h-12 rounded-xl px-5 border-border"
           >
             <Upload className="w-4 h-4 mr-2" /> Importar e Preencher
           </Button>
@@ -106,21 +108,21 @@ export default function NovoAgente() {
             type="button"
             onClick={() => navigate(-1)}
             disabled={saving}
-            className="flex-1 sm:flex-none h-12 rounded-xl border-border text-foreground hover:bg-muted/50"
+            className="flex-1 sm:flex-none h-12 rounded-xl px-5 border-border text-foreground hover:bg-muted/50"
           >
             Cancelar
           </Button>
           <Button
             onClick={form.handleSubmit(onSubmit)}
             variant="secondary"
-            className="flex-1 sm:flex-none h-12 px-8 rounded-xl font-semibold shadow-sm"
+            className="flex-1 sm:flex-none h-12 px-8 rounded-xl font-bold shadow-sm text-[15px]"
             disabled={saving}
           >
             {saving ? (
               'Salvando...'
             ) : (
               <>
-                <Save className="w-4 h-4 mr-2" /> Salvar Agente
+                <Save className="w-5 h-5 mr-2" /> Salvar Agente
               </>
             )}
           </Button>
