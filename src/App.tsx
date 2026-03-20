@@ -5,6 +5,9 @@ import { ErrorBoundary } from '@/components/ErrorBoundary'
 import Layout from '@/components/Layout'
 import { AuthProvider } from '@/hooks/use-auth'
 import { Toaster } from '@/components/ui/sonner'
+import { AuthGuard } from '@/components/AuthGuard'
+import { GuestGuard } from '@/components/GuestGuard'
+import Login from '@/pages/Login'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Processos = lazy(() => import('./pages/Processos'))
@@ -24,19 +27,27 @@ export default function App() {
         <AuthProvider>
           <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
             <Routes>
-              <Route element={<Layout />}>
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/processos" element={<Processos />} />
-                <Route path="/agentes" element={<AgentesList />} />
-                <Route path="/agentes/novo" element={<NovoAgente />} />
-                <Route path="/agentes/:id" element={<ProfileAgente />} />
-                <Route path="/agentes/:id/sindicancia" element={<SindicanciaAgente />} />
-                <Route path="/gestao-usuarios" element={<GestaoUsuarios />} />
-                <Route path="/perfil" element={<Perfil />} />
-                <Route path="/configuracoes" element={<Configuracoes />} />
-                <Route path="/ajuda" element={<Ajuda />} />
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+              {/* Unauthenticated / Login Route */}
+              <Route element={<GuestGuard />}>
+                <Route path="/login" element={<Login />} />
+              </Route>
+
+              {/* Protected Routes */}
+              <Route element={<AuthGuard />}>
+                <Route element={<Layout />}>
+                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/processos" element={<Processos />} />
+                  <Route path="/agentes" element={<AgentesList />} />
+                  <Route path="/agentes/novo" element={<NovoAgente />} />
+                  <Route path="/agentes/:id" element={<ProfileAgente />} />
+                  <Route path="/agentes/:id/sindicancia" element={<SindicanciaAgente />} />
+                  <Route path="/gestao-usuarios" element={<GestaoUsuarios />} />
+                  <Route path="/perfil" element={<Perfil />} />
+                  <Route path="/configuracoes" element={<Configuracoes />} />
+                  <Route path="/ajuda" element={<Ajuda />} />
+                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                </Route>
               </Route>
             </Routes>
           </BrowserRouter>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/hooks/use-auth'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,10 @@ export default function Login() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { signIn } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const { toast } = useToast()
+
+  const from = location.state?.from?.pathname || '/dashboard'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,7 +32,7 @@ export default function Login() {
       })
     } else {
       toast({ title: 'Bem-vindo!' })
-      navigate('/')
+      navigate(from, { replace: true })
     }
   }
 
