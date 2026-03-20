@@ -7,10 +7,10 @@ import { AuthProvider } from '@/hooks/use-auth'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const Processos = lazy(() => import('./pages/Processos'))
-const PrestadoresList = lazy(() => import('./pages/prestadores/List'))
-const NovoPrestador = lazy(() => import('./pages/prestadores/Novo'))
-const ProfilePrestador = lazy(() => import('./pages/prestadores/Profile'))
-const EditPrestador = lazy(() => import('./pages/prestadores/Editar'))
+const AgentesList = lazy(() => import('./pages/agentes/List'))
+const NovoAgente = lazy(() => import('./pages/agentes/Novo'))
+const ProfileAgente = lazy(() => import('./pages/agentes/Profile'))
+const EditarAgente = lazy(() => import('./pages/agentes/Editar'))
 const Configuracoes = lazy(() => import('./pages/Configuracoes'))
 const Ajuda = lazy(() => import('./pages/Ajuda'))
 
@@ -25,10 +25,10 @@ export default function App() {
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/processos" element={<Processos />} />
-                <Route path="/prestadores" element={<PrestadoresList />} />
-                <Route path="/prestadores/novo" element={<NovoPrestador />} />
-                <Route path="/prestadores/:id" element={<ProfilePrestador />} />
-                <Route path="/prestadores/:id/edit" element={<EditPrestador />} />
+                <Route path="/agentes" element={<AgentesList />} />
+                <Route path="/agentes/novo" element={<NovoAgente />} />
+                <Route path="/agentes/:id" element={<ProfileAgente />} />
+                <Route path="/agentes/:id/editar" element={<EditarAgente />} />
                 <Route path="/configuracoes" element={<Configuracoes />} />
                 <Route path="/ajuda" element={<Ajuda />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />

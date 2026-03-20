@@ -1,9 +1,10 @@
 export type SimNao = 'Sim' | 'Não'
 
-export interface Prestador {
+export interface Agente {
   id: string
   created?: string
   updated?: string
+  numero_controle?: string
   // 1. Dados Cadastrais
   nomeCompleto: string
   dataNascimento: string

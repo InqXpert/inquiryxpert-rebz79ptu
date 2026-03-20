@@ -31,7 +31,7 @@ import { useAuth } from '@/hooks/use-auth'
 const navItems = [
   { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
   { title: 'Processos', url: '/processos', icon: ClipboardList },
-  { title: 'Prestadores', url: '/prestadores', icon: Users },
+  { title: 'Agentes', url: '/agentes', icon: Users },
   { title: 'Configurações', url: '/configuracoes', icon: Settings },
   { title: 'Ajuda', url: '/ajuda', icon: HelpCircle },
 ]

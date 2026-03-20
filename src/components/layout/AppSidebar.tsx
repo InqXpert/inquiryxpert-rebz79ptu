@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 const items = [
   { title: 'Dashboard', url: '/', icon: LayoutDashboard },
-  { title: 'Prestadores', url: '/prestadores', icon: Users },
+  { title: 'Agentes', url: '/agentes', icon: Users },
   { title: 'Financeiro', url: '#', icon: CreditCard },
   { title: 'Analytics', url: '#', icon: BarChart },
   { title: 'Configurações', url: '#', icon: Settings },

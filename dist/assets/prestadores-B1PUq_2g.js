@@ -1,0 +1,1 @@
+import{t as e}from"./client-jNT8WYFB.js";var t=()=>e.collection(`prestadores`).getFullList({sort:`-created`}),n=t=>e.collection(`prestadores`).getOne(t),r=t=>e.collection(`prestadores`).create(t),i=(t,n)=>e.collection(`prestadores`).update(t,n),a=t=>e.collection(`prestadores`).delete(t);export{i as a,t as i,a as n,n as r,r as t};
