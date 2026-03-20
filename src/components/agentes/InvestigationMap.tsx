@@ -10,18 +10,18 @@ import {
 import { Button } from '@/components/ui/button'
 import { MapPin, Calculator, CheckCircle2, AlertTriangle } from 'lucide-react'
 import { Agente } from '@/types'
-import { BR_STATES, getCitiesByState, getCityCoords } from '@/services/brazilCities'
 import { useGeoDistance, Coords, AgentGeoInfo } from '@/hooks/use-geo-distance'
 import { InteractiveMapBrazil } from '@/components/InteractiveMapBrazil'
 import { useNavigate } from 'react-router-dom'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useMunicipios } from '@/hooks/use-municipios'
 
 interface Props {
   agentes: Agente[]
   loading: boolean
 }
 
-export function InvestigationMap({ agentes, loading }: Props) {
+export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
   const [invState, setInvState] = useState<string>('')
   const [invCity, setInvCity] = useState<string>('')
   const [invCoords, setInvCoords] = useState<Coords | null>(null)
@@ -29,15 +29,20 @@ export function InvestigationMap({ agentes, loading }: Props) {
   const [distances, setDistances] = useState<Record<string, number>>({})
 
   const { calculateDistance, findNearestAgent } = useGeoDistance()
+  const { states, getCitiesByState, getCoords, loading: muniLoading } = useMunicipios()
   const navigate = useNavigate()
 
-  const cities = useMemo(() => (invState ? getCitiesByState(invState) : []), [invState])
+  const cities = useMemo(
+    () => (invState ? getCitiesByState(invState) : []),
+    [invState, getCitiesByState],
+  )
 
   const mappedAgents: AgentGeoInfo[] = useMemo(() => {
+    if (muniLoading) return []
     return agentes
       .filter((a) => a.ativo === 'Sim' && a.base_atendimento_cidade && a.base_atendimento_estado)
       .map((a) => {
-        const coords = getCityCoords(a.base_atendimento_cidade, a.base_atendimento_estado)
+        const coords = getCoords(a.base_atendimento_estado!, a.base_atendimento_cidade!)
         if (!coords) return null
         return {
           id: a.id,
@@ -48,10 +53,10 @@ export function InvestigationMap({ agentes, loading }: Props) {
         }
       })
       .filter(Boolean) as AgentGeoInfo[]
-  }, [agentes])
+  }, [agentes, getCoords, muniLoading])
 
   const handleCalculate = () => {
-    const coords = getCityCoords(invCity, invState)
+    const coords = getCoords(invState, invCity)
     if (!coords) {
       setInvCoords(null)
       setNearestId(null)
@@ -85,7 +90,7 @@ export function InvestigationMap({ agentes, loading }: Props) {
     }
   }, [nearestId, distances, mappedAgents])
 
-  if (loading) {
+  if (agentsLoading || muniLoading) {
     return <Skeleton className="w-full h-[500px] rounded-2xl" />
   }
 
@@ -111,7 +116,7 @@ export function InvestigationMap({ agentes, loading }: Props) {
                 <SelectValue placeholder="Selecione o estado..." />
               </SelectTrigger>
               <SelectContent>
-                {BR_STATES.map((s) => (
+                {states.map((s) => (
                   <SelectItem key={s} value={s}>
                     {s}
                   </SelectItem>
@@ -129,8 +134,8 @@ export function InvestigationMap({ agentes, loading }: Props) {
               </SelectTrigger>
               <SelectContent>
                 {cities.map((c) => (
-                  <SelectItem key={c.name} value={c.name}>
-                    {c.name}
+                  <SelectItem key={c.nome} value={c.nome}>
+                    {c.nome}
                   </SelectItem>
                 ))}
               </SelectContent>

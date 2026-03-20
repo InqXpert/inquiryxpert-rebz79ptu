@@ -1,8 +1,7 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import {
   ChevronLeft,
-  Plus,
   AlertTriangle,
   CheckCircle2,
   Mail,
@@ -39,7 +38,7 @@ export default function ProfileAgente() {
   const [processos, setProcessos] = useState<ProcessoOperacional[]>([])
   const [editModalOpen, setEditModalOpen] = useState(false)
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     if (!id) return
     setStatsLoading(true)
     try {
@@ -63,11 +62,11 @@ export default function ProfileAgente() {
       setLoading(false)
       setStatsLoading(false)
     }
-  }
+  }, [id, navigate, toast])
 
   useEffect(() => {
     loadData()
-  }, [id])
+  }, [loadData])
 
   useRealtime('agentes', (e) => {
     if (e.record.id === id) {
@@ -76,7 +75,7 @@ export default function ProfileAgente() {
     }
   })
 
-  useRealtime('processos_operacionais', (e) => {
+  useRealtime('processos_operacionais', () => {
     loadData()
   })
 
@@ -98,10 +97,12 @@ export default function ProfileAgente() {
       pendentes = 0
     processos.forEach((pr) => {
       const s = pr.status?.toLowerCase() || ''
-      if (s.includes('concluíd') || s.includes('concluid') || s.includes('finaliz')) concluidos++
-      else if (s.includes('andamento') || s.includes('execuç') || s.includes('execuc'))
+      if (['concluído', 'concluido', 'finalizado'].includes(s)) concluidos++
+      else if (
+        ['em andamento', 'execução', 'execucao', 'em elaboracao', 'analise_inicial'].includes(s)
+      )
         emAndamento++
-      else if (s.includes('pendent') || s.includes('aguardando')) pendentes++
+      else pendentes++
     })
     return { total: processos.length, concluidos, emAndamento, pendentes }
   }, [processos])

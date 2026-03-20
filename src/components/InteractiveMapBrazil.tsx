@@ -38,7 +38,6 @@ export function InteractiveMapBrazil({
 
     const map = mapRef.current
 
-    // Clear previous dynamic layers
     map.eachLayer((layer: any) => {
       if (layer instanceof L.Marker || layer instanceof L.Polyline) {
         map.removeLayer(layer)
@@ -56,7 +55,6 @@ export function InteractiveMapBrazil({
         popupAnchor: [0, -8],
       })
 
-    // 1. Draw all agents
     agents.forEach((agent) => {
       const isNearest = agent.id === nearestAgentId
       const icon = createIcon(isNearest ? '#22c55e' : '#3b82f6', isNearest)
@@ -85,7 +83,6 @@ export function InteractiveMapBrazil({
       }
     })
 
-    // 2. Draw investigation point
     if (investigationCoords) {
       const invIcon = createIcon('#ef4444')
       const invMarker = L.marker([investigationCoords.lat, investigationCoords.lon], {

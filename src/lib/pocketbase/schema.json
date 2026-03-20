@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-20T05:49:19.123Z",
+  "generatedAt": "2026-03-20T14:14:51.301Z",
   "collections": [
     {
       "name": "users",
@@ -607,6 +607,61 @@
         }
       ],
       "indexes": []
+    },
+    {
+      "name": "municipios",
+      "type": "base",
+      "apiRules": {
+        "list": "",
+        "view": "",
+        "create": null,
+        "update": null,
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "nome",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "uf",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "latitude",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "longitude",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE INDEX idx_municipios_nome ON municipios (nome)",
+        "CREATE INDEX idx_municipios_uf ON municipios (uf)"
+      ]
     }
   ]
 }

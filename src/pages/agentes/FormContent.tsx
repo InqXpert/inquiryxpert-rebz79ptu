@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Copy } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
-import { BR_STATES, getCitiesByState } from '@/services/brazilCities'
+import { useMunicipios } from '@/hooks/use-municipios'
 
 const QUALIDADE_OPTIONS = [
   {
@@ -35,6 +35,7 @@ const COMPLIANCE_OPTIONS = [
 export function FormContent() {
   const { watch } = useFormContext()
   const { toast } = useToast()
+  const { states, getCitiesByState } = useMunicipios()
 
   const numeroControle = watch('numero_controle')
   const notaTerceiros = watch('notaTerceiros')
@@ -55,7 +56,7 @@ export function FormContent() {
   }
 
   const cidadesOptions = estadoSelecionado
-    ? getCitiesByState(estadoSelecionado).map((c) => ({ label: c.name, value: c.name }))
+    ? getCitiesByState(estadoSelecionado).map((c) => ({ label: c.nome, value: c.nome }))
     : []
 
   return (
@@ -94,11 +95,10 @@ export function FormContent() {
           )}
           <div className="col-span-full border-t border-muted/50 my-2" />
 
-          {/* New Geo Fields */}
           <FSelect
             name="base_atendimento_estado"
             label="Estado (Base)"
-            options={BR_STATES.map((s) => ({ label: s, value: s }))}
+            options={states.map((s) => ({ label: s, value: s }))}
           />
           <FSelect name="base_atendimento_cidade" label="Cidade (Base)" options={cidadesOptions} />
 
