@@ -94,7 +94,7 @@ export function InteractiveMapBrazil({
 
     if (markers.length > 0) {
       const group = L.featureGroup(markers)
-      map.fitBounds(group.getBounds(), { padding: [50, 50] })
+      map.fitBounds(group.getBounds(), { padding: [50, 50], maxZoom: 10 })
     } else {
       map.setView([-14.235, -51.9253], 4)
     }

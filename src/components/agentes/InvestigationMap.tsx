@@ -1,14 +1,17 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { MapPin, CheckCircle2, AlertTriangle } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import { MapPin, CheckCircle2, AlertTriangle, ChevronsUpDown, Check } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import { Agente } from '@/types'
 import { useGeoDistance, Coords, AgentGeoInfo } from '@/hooks/use-geo-distance'
 import { InteractiveMapBrazil } from '@/components/InteractiveMapBrazil'
@@ -27,6 +30,9 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
   const [invCoords, setInvCoords] = useState<Coords | null>(null)
   const [nearestId, setNearestId] = useState<string | null>(null)
   const [distances, setDistances] = useState<Record<string, number>>({})
+
+  const [openState, setOpenState] = useState(false)
+  const [openCity, setOpenCity] = useState(false)
 
   const { calculateDistance, findNearestAgent } = useGeoDistance()
   const { states, getCitiesByState, getCoords, loading: muniLoading } = useMunicipios()
@@ -79,7 +85,6 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
     }
   }, [invState, invCity, getCoords, findNearestAgent, mappedAgents, calculateDistance])
 
-  // Automatically calculate when city changes
   useEffect(() => {
     if (invState && invCity) {
       handleCalculate()
@@ -116,41 +121,109 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
             <label className="text-sm font-medium text-muted-foreground mb-1.5 block">
               Estado da Investigação
             </label>
-            <Select
-              value={invState}
-              onValueChange={(v) => {
-                setInvState(v)
-                setInvCity('')
-              }}
-            >
-              <SelectTrigger className="h-12 rounded-xl">
-                <SelectValue placeholder="Selecione o estado..." />
-              </SelectTrigger>
-              <SelectContent>
-                {states.map((s) => (
-                  <SelectItem key={s} value={s}>
-                    {s}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Popover open={openState} onOpenChange={setOpenState}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openState}
+                  className={cn(
+                    'w-full justify-between h-12 rounded-xl font-normal',
+                    !invState && 'text-muted-foreground',
+                  )}
+                >
+                  {invState || 'Selecione o estado...'}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Buscar estado..." />
+                  <CommandList>
+                    <CommandEmpty>Nenhum estado encontrado.</CommandEmpty>
+                    <CommandGroup>
+                      {states.map((s) => (
+                        <CommandItem
+                          key={s}
+                          value={s}
+                          onSelect={(currentValue) => {
+                            const actualValue =
+                              states.find(
+                                (st) => st.toLowerCase() === currentValue.toLowerCase(),
+                              ) || currentValue
+                            setInvState(actualValue === invState ? '' : actualValue)
+                            setInvCity('')
+                            setOpenState(false)
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              'mr-2 h-4 w-4',
+                              invState === s ? 'opacity-100' : 'opacity-0',
+                            )}
+                          />
+                          {s}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
           <div className="flex-1 w-full">
             <label className="text-sm font-medium text-muted-foreground mb-1.5 block">
               Cidade da Investigação
             </label>
-            <Select value={invCity} onValueChange={setInvCity} disabled={!invState}>
-              <SelectTrigger className="h-12 rounded-xl">
-                <SelectValue placeholder="Selecione a cidade..." />
-              </SelectTrigger>
-              <SelectContent>
-                {cities.map((c) => (
-                  <SelectItem key={c.nome} value={c.nome}>
-                    {c.nome}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Popover open={openCity} onOpenChange={setOpenCity}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={openCity}
+                  disabled={!invState}
+                  className={cn(
+                    'w-full justify-between h-12 rounded-xl font-normal',
+                    !invCity && 'text-muted-foreground',
+                  )}
+                >
+                  {invCity || 'Selecione a cidade...'}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+                <Command>
+                  <CommandInput placeholder="Buscar cidade..." />
+                  <CommandList>
+                    <CommandEmpty>Nenhuma cidade encontrada.</CommandEmpty>
+                    <CommandGroup>
+                      {cities.map((c) => (
+                        <CommandItem
+                          key={c.nome}
+                          value={c.nome}
+                          onSelect={(currentValue) => {
+                            const actualValue =
+                              cities.find(
+                                (ct) => ct.nome.toLowerCase() === currentValue.toLowerCase(),
+                              )?.nome || currentValue
+                            setInvCity(actualValue === invCity ? '' : actualValue)
+                            setOpenCity(false)
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              'mr-2 h-4 w-4',
+                              invCity === c.nome ? 'opacity-100' : 'opacity-0',
+                            )}
+                          />
+                          {c.nome}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </div>
@@ -162,9 +235,9 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
             <p className="font-medium">Selecione estado e cidade para buscar agentes</p>
           </div>
         ) : mappedAgents.length === 0 ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px]">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px] pointer-events-none">
             <AlertTriangle className="w-10 h-10 mb-3 opacity-50 text-yellow-600" />
-            <p className="font-medium">Nenhum agente cadastrado ou próximo o suficiente.</p>
+            <p className="font-medium">Nenhum agente ativo encontrado nesta região.</p>
           </div>
         ) : null}
         <InteractiveMapBrazil

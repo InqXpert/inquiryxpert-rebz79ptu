@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form'
-import { FInput, FSimNao, FTextarea, FSelect } from '@/components/agentes/FormHelpers'
+import { FInput, FSimNao, FTextarea, FSelect, FCombobox } from '@/components/agentes/FormHelpers'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Copy } from 'lucide-react'
@@ -93,20 +93,43 @@ export function FormContent() {
           {notaTerceiros === 'Sim' && (
             <FInput name="vinculoTerceiroNf" label="Qual o vínculo do terceiro (NF)?" />
           )}
-          <div className="col-span-full border-t border-muted/50 my-2" />
 
-          <FSelect
+          <div className="col-span-full border-t border-muted/50 my-2" />
+          <div className="col-span-full font-semibold text-primary text-sm -mb-2">
+            Localização e Contato
+          </div>
+          <FCombobox
             name="base_atendimento_estado"
             label="Estado (Base)"
             options={states.map((s) => ({ label: s, value: s }))}
           />
-          <FSelect name="base_atendimento_cidade" label="Cidade (Base)" options={cidadesOptions} />
+          <FCombobox
+            name="base_atendimento_cidade"
+            label="Cidade (Base)"
+            options={cidadesOptions}
+          />
 
           <FInput name="baseAtendimento" label="Endereço da Base / Bairro" />
           <FInput name="regiaoAbrangencia" label="Região de abrangência" />
           <FInput name="cepBase" label="CEP de saída da base" />
           <FInput name="telefone" label="Telefone" />
           <FInput name="email" label="E-mail" type="email" />
+
+          <div className="col-span-full border-t border-muted/50 my-2" />
+          <div className="col-span-full font-semibold text-primary text-sm -mb-2">
+            Métricas de Avaliação (KPIs)
+          </div>
+          <FSelect name="qualidade_nivel" label="Nível de Qualidade" options={QUALIDADE_OPTIONS} />
+          <FSelect
+            name="experiencia_nivel"
+            label="Nível de Experiência"
+            options={EXPERIENCIA_OPTIONS}
+          />
+          <FSelect
+            name="compliance_nivel"
+            label="Nível de Compliance"
+            options={COMPLIANCE_OPTIONS}
+          />
         </CardContent>
       </Card>
 
@@ -147,9 +170,7 @@ export function FormContent() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="rounded-2xl shadow-sm border-none">
           <CardHeader className="border-b border-muted/50 pb-4 mb-4">
-            <CardTitle className="text-lg font-semibold text-primary">
-              Status e Performance do Agente
-            </CardTitle>
+            <CardTitle className="text-lg font-semibold text-primary">Status do Agente</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <FSimNao name="ativo" label="Agente ativo?" />
@@ -161,31 +182,6 @@ export function FormContent() {
                 <FInput name="motivoBlackList" label="Motivo da inclusão" />
               </div>
             )}
-            <div className="col-span-full border-t border-muted/50 my-2" />
-            <div className="col-span-full font-semibold text-primary text-sm -mb-2">
-              Métricas de Avaliação (KPIs)
-            </div>
-            <div className="col-span-full">
-              <FSelect
-                name="qualidade_nivel"
-                label="Nível de Qualidade"
-                options={QUALIDADE_OPTIONS}
-              />
-            </div>
-            <div className="col-span-full">
-              <FSelect
-                name="experiencia_nivel"
-                label="Nível de Experiência"
-                options={EXPERIENCIA_OPTIONS}
-              />
-            </div>
-            <div className="col-span-full">
-              <FSelect
-                name="compliance_nivel"
-                label="Nível de Compliance"
-                options={COMPLIANCE_OPTIONS}
-              />
-            </div>
           </CardContent>
         </Card>
 
