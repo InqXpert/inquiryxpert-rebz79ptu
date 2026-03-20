@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import {
   ChevronLeft,
@@ -20,7 +20,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { getAgente, deleteAgente } from '@/services/agentes'
-import { Agente } from '@/types'
+import { fetchProcessos } from '@/services/procesosOperacionais'
+import { Agente, ProcessoOperacional } from '@/types'
 import { useToast } from '@/hooks/use-toast'
 import { useRealtime } from '@/hooks/use-realtime'
 import { cn } from '@/lib/utils'
@@ -34,13 +35,23 @@ export default function ProfileAgente() {
   const { toast } = useToast()
   const [p, setP] = useState<Agente | null>(null)
   const [loading, setLoading] = useState(true)
+  const [statsLoading, setStatsLoading] = useState(true)
+  const [processos, setProcessos] = useState<ProcessoOperacional[]>([])
   const [editModalOpen, setEditModalOpen] = useState(false)
 
   const loadData = async () => {
     if (!id) return
+    setStatsLoading(true)
     try {
       const data = await getAgente(id)
       setP(data)
+      try {
+        const procs = await fetchProcessos({ agente_prestador: data.nomeCompleto })
+        setProcessos(procs)
+      } catch (e) {
+        toast({ title: 'Erro ao carregar estatísticas', variant: 'destructive' })
+        setProcessos([])
+      }
     } catch (err) {
       toast({
         title: 'Erro ao carregar KPIs.',
@@ -50,6 +61,7 @@ export default function ProfileAgente() {
       navigate('/agentes')
     } finally {
       setLoading(false)
+      setStatsLoading(false)
     }
   }
 
@@ -64,6 +76,10 @@ export default function ProfileAgente() {
     }
   })
 
+  useRealtime('processos_operacionais', (e) => {
+    loadData()
+  })
+
   const handleDelete = async () => {
     if (confirm('Tem certeza que deseja remover este agente?')) {
       try {
@@ -75,6 +91,20 @@ export default function ProfileAgente() {
       }
     }
   }
+
+  const stats = useMemo(() => {
+    let concluidos = 0,
+      emAndamento = 0,
+      pendentes = 0
+    processos.forEach((pr) => {
+      const s = pr.status?.toLowerCase() || ''
+      if (s.includes('concluíd') || s.includes('concluid') || s.includes('finaliz')) concluidos++
+      else if (s.includes('andamento') || s.includes('execuç') || s.includes('execuc'))
+        emAndamento++
+      else if (s.includes('pendent') || s.includes('aguardando')) pendentes++
+    })
+    return { total: processos.length, concluidos, emAndamento, pendentes }
+  }, [processos])
 
   if (loading)
     return (
@@ -101,12 +131,18 @@ export default function ProfileAgente() {
 
   const getBadgeClass = (status: string) => {
     const base = 'text-[11px] font-bold px-[8px] py-[4px] rounded-full'
-    if (status === 'Concluido') return cn(base, 'bg-green-100 text-green-700')
-    if (status === 'Em Andamento') return cn(base, 'bg-blue-100 text-blue-700')
-    if (status === 'Pendente') return cn(base, 'bg-yellow-100 text-yellow-700')
-    if (status === 'Entregue com Pendencia') return cn(base, 'bg-orange-100 text-orange-700')
-    return base
+    const s = status.toLowerCase()
+    if (s.includes('concluíd') || s.includes('concluid') || s.includes('finaliz'))
+      return cn(base, 'bg-green-100 text-green-700')
+    if (s.includes('andamento') || s.includes('execuç'))
+      return cn(base, 'bg-blue-100 text-blue-700')
+    if (s.includes('pendent') || s.includes('aguardando'))
+      return cn(base, 'bg-yellow-100 text-yellow-700')
+    if (s.includes('pendencia')) return cn(base, 'bg-orange-100 text-orange-700')
+    return cn(base, 'bg-muted text-muted-foreground')
   }
+
+  const recentes = processos.slice(0, 3)
 
   return (
     <div className="space-y-6 pb-10">
@@ -284,30 +320,52 @@ export default function ProfileAgente() {
       </Card>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { title: 'Total Processos', number: '142', subtitle: '+12 esse mês', delay: '0ms' },
-          { title: 'Concluídos', number: '98', subtitle: '69% de sucesso', delay: '80ms' },
-          { title: 'Em Andamento', number: '41', subtitle: 'No prazo', delay: '160ms' },
-          { title: 'Pendências', number: '3', subtitle: 'Atenção necessária', delay: '240ms' },
-        ].map((kpi, i) => (
-          <Card
-            key={i}
-            className="border-none shadow-sm rounded-2xl overflow-hidden relative bg-white animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both"
-            style={{ animationDelay: kpi.delay, animationDuration: '400ms' }}
-          >
-            <CardContent className="p-5">
-              <h4 className="text-sm font-semibold text-muted-foreground mb-2 relative z-10">
-                {kpi.title}
-              </h4>
-              <div className="text-3xl font-bold text-primary leading-none relative z-10">
-                {kpi.number}
-              </div>
-              <p className="text-xs text-secondary font-medium mt-2 relative z-10">
-                {kpi.subtitle}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+        {statsLoading
+          ? [1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-[104px] rounded-2xl bg-white" />)
+          : [
+              {
+                title: 'Total Processos',
+                number: stats.total.toString(),
+                subtitle: 'Registrados',
+                delay: '0ms',
+              },
+              {
+                title: 'Concluídos',
+                number: stats.concluidos.toString(),
+                subtitle: 'Finalizados',
+                delay: '80ms',
+              },
+              {
+                title: 'Em Andamento',
+                number: stats.emAndamento.toString(),
+                subtitle: 'Em execução',
+                delay: '160ms',
+              },
+              {
+                title: 'Pendências',
+                number: stats.pendentes.toString(),
+                subtitle: 'Aguardando',
+                delay: '240ms',
+              },
+            ].map((kpi, i) => (
+              <Card
+                key={i}
+                className="border-none shadow-sm rounded-2xl overflow-hidden relative bg-white animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both"
+                style={{ animationDelay: kpi.delay, animationDuration: '400ms' }}
+              >
+                <CardContent className="p-5">
+                  <h4 className="text-sm font-semibold text-muted-foreground mb-2 relative z-10">
+                    {kpi.title}
+                  </h4>
+                  <div className="text-3xl font-bold text-primary leading-none relative z-10">
+                    {kpi.number}
+                  </div>
+                  <p className="text-xs text-secondary font-medium mt-2 relative z-10">
+                    {kpi.subtitle}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
       </div>
 
       <AgentePerformanceKPIs agente={p} onRefresh={loadData} />
@@ -326,43 +384,36 @@ export default function ProfileAgente() {
             </Button>
           </div>
           <div className="flex flex-col divide-y divide-border/50">
-            {[
-              {
-                id: 'PRC-2023-001',
-                title: 'Investigação Patrimonial',
-                status: 'Concluido',
-                date: '10 Out 2023',
-              },
-              {
-                id: 'PRC-2023-002',
-                title: 'Busca de Veículos',
-                status: 'Em Andamento',
-                date: '15 Out 2023',
-              },
-              {
-                id: 'PRC-2023-003',
-                title: 'Diligência Presencial',
-                status: 'Pendente',
-                date: '18 Out 2023',
-              },
-            ].map((proc, i) => (
-              <div
-                key={proc.id}
-                className="py-4 hover:bg-muted/20 transition-colors animate-in fade-in slide-in-from-bottom-2 ease-out fill-mode-both flex flex-row items-center justify-between group"
-                style={{ animationDelay: `${i * 40}ms`, animationDuration: '250ms' }}
-              >
-                <div className="flex flex-col">
-                  <span className="text-xs text-muted-foreground font-semibold">{proc.id}</span>
-                  <span className="text-sm text-foreground font-bold mt-1 group-hover:text-primary transition-colors">
-                    {proc.title}
-                  </span>
-                </div>
-                <div className="flex flex-col items-end gap-2">
-                  <div className={getBadgeClass(proc.status)}>{proc.status}</div>
-                  <span className="text-xs text-muted-foreground font-medium">{proc.date}</span>
-                </div>
+            {recentes.length === 0 ? (
+              <div className="text-sm text-muted-foreground py-4 text-center">
+                Nenhum processo vinculado.
               </div>
-            ))}
+            ) : (
+              recentes.map((proc, i) => (
+                <div
+                  key={proc.id}
+                  className="py-4 hover:bg-muted/20 transition-colors animate-in fade-in slide-in-from-bottom-2 ease-out fill-mode-both flex flex-row items-center justify-between group"
+                  style={{ animationDelay: `${i * 40}ms`, animationDuration: '250ms' }}
+                >
+                  <div className="flex flex-col">
+                    <span className="text-xs text-muted-foreground font-semibold">
+                      {proc.numero_controle || proc.id}
+                    </span>
+                    <span className="text-sm text-foreground font-bold mt-1 group-hover:text-primary transition-colors">
+                      {proc.tipo_servico || 'Sindicância'}
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-end gap-2">
+                    <div className={getBadgeClass(proc.status || 'Pendente')}>
+                      {proc.status || 'Pendente'}
+                    </div>
+                    <span className="text-xs text-muted-foreground font-medium">
+                      {proc.data_entrada?.split(' ')[0] || '-'}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </Card>
 
@@ -371,7 +422,7 @@ export default function ProfileAgente() {
           <div className="flex flex-col">
             {[
               { text: 'Documento CNH atualizado', time: 'Hoje, 14:30' },
-              { text: 'Novo processo atribuído: PRC-2023-005', time: 'Ontem, 09:15' },
+              { text: 'Novo processo atribuído', time: 'Ontem, 09:15' },
               { text: 'Status alterado para Ativo', time: '10 Out 2023' },
             ].map((act, i, arr) => (
               <div key={i} className="flex flex-row gap-4 pb-6 relative">

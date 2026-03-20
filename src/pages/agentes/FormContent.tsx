@@ -6,6 +6,32 @@ import { Copy } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { BR_STATES, getCitiesByState } from '@/services/brazilCities'
 
+const QUALIDADE_OPTIONS = [
+  {
+    label: 'NIVEL 1 - Insatisfatorio/Abaixo do Esperado',
+    value: 'NIVEL 1 - Insatisfatorio/Abaixo do Esperado',
+  },
+  { label: 'NIVEL 2 - Basico/Regular', value: 'NIVEL 2 - Basico/Regular' },
+  { label: 'NIVEL 3 - Alto/Esperado', value: 'NIVEL 3 - Alto/Esperado' },
+  {
+    label: 'NIVEL 4 - Excede as Expectativas/Excelente',
+    value: 'NIVEL 4 - Excede as Expectativas/Excelente',
+  },
+]
+
+const EXPERIENCIA_OPTIONS = [
+  { label: 'SENIOR: Atende todos os ramos', value: 'SENIOR: Atende todos os ramos' },
+  { label: 'PLENO: Atende 1-2 ramos', value: 'PLENO: Atende 1-2 ramos' },
+  { label: 'JUNIOR: Atende 1 ramo com supervisao', value: 'JUNIOR: Atende 1 ramo com supervisao' },
+  { label: 'EM TREINAMENTO: Executa etapas', value: 'EM TREINAMENTO: Executa etapas' },
+]
+
+const COMPLIANCE_OPTIONS = [
+  { label: 'COMPLIANCE TOTAL (BAIXO RISCO)', value: 'COMPLIANCE TOTAL (BAIXO RISCO)' },
+  { label: 'COMPLIANCE PARCIAL (MEDIO RISCO)', value: 'COMPLIANCE PARCIAL (MEDIO RISCO)' },
+  { label: 'COMPLIANCE ZERO (ALTO RISCO)', value: 'COMPLIANCE ZERO (ALTO RISCO)' },
+]
+
 export function FormContent() {
   const { watch } = useFormContext()
   const { toast } = useToast()
@@ -147,6 +173,27 @@ export function FormContent() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="rounded-2xl shadow-sm border-none md:col-span-2">
+        <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+          <CardTitle className="text-lg font-semibold text-primary">
+            Performance e Compliance (KPIs)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <FSelect name="qualidade_nivel" label="Nível de Qualidade" options={QUALIDADE_OPTIONS} />
+          <FSelect
+            name="experiencia_nivel"
+            label="Nível de Experiência"
+            options={EXPERIENCIA_OPTIONS}
+          />
+          <FSelect
+            name="compliance_nivel"
+            label="Nível de Compliance"
+            options={COMPLIANCE_OPTIONS}
+          />
+        </CardContent>
+      </Card>
     </div>
   )
 }

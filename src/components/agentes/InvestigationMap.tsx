@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { MapPin, Calculator, CheckCircle2 } from 'lucide-react'
+import { MapPin, Calculator, CheckCircle2, AlertTriangle } from 'lucide-react'
 import { Agente } from '@/types'
 import { BR_STATES, getCitiesByState, getCityCoords } from '@/services/brazilCities'
 import { useGeoDistance, Coords, AgentGeoInfo } from '@/hooks/use-geo-distance'
@@ -52,7 +52,12 @@ export function InvestigationMap({ agentes, loading }: Props) {
 
   const handleCalculate = () => {
     const coords = getCityCoords(invCity, invState)
-    if (!coords) return
+    if (!coords) {
+      setInvCoords(null)
+      setNearestId(null)
+      setDistances({})
+      return
+    }
     setInvCoords(coords)
 
     const result = findNearestAgent(coords, mappedAgents)
@@ -63,6 +68,9 @@ export function InvestigationMap({ agentes, loading }: Props) {
         newDistances[a.id] = calculateDistance(coords.lat, coords.lon, a.lat, a.lon)
       })
       setDistances(newDistances)
+    } else {
+      setNearestId(null)
+      setDistances({})
     }
   }
 
@@ -143,6 +151,11 @@ export function InvestigationMap({ agentes, loading }: Props) {
           <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px]">
             <MapPin className="w-10 h-10 mb-3 opacity-50" />
             <p className="font-medium">Selecione estado/cidade da investigação</p>
+          </div>
+        ) : mappedAgents.length === 0 ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px]">
+            <AlertTriangle className="w-10 h-10 mb-3 opacity-50 text-yellow-600" />
+            <p className="font-medium">Nenhum agente ativo com base cadastrada.</p>
           </div>
         ) : null}
         <InteractiveMapBrazil

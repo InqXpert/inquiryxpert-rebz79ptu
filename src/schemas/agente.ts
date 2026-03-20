@@ -42,6 +42,10 @@ export const agenteSchema = z.object({
   outrasEmpresas: z.string().optional(),
   origemIndicacao: z.string().optional(),
   observacoes: z.string().optional(),
+
+  qualidade_nivel: z.string().optional(),
+  experiencia_nivel: z.string().optional(),
+  compliance_nivel: z.string().optional(),
 })
 
 export type AgenteFormValues = z.infer<typeof agenteSchema>
