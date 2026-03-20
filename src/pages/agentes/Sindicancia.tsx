@@ -101,13 +101,11 @@ export default function Sindicancia() {
         setDraftProcess(proc)
       }
 
-      // Upload remaining unlinked files (simplified logic for demo)
       for (const file of files) {
-        // In a real app, track which files are already uploaded to avoid duplicates
         await uploadDocumento(proc.id, file)
       }
 
-      setFiles([]) // Clear local files since they are uploaded
+      setFiles([])
       toast({ title: 'Rascunho Salvo', description: 'Processo e arquivos vinculados com sucesso.' })
       return proc
     } catch (err) {
@@ -180,7 +178,7 @@ export default function Sindicancia() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <Card className="rounded-2xl border-none shadow-sm">
+          <Card className="rounded-2xl border-none shadow-sm bg-card">
             <CardContent className="p-6">
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -190,7 +188,7 @@ export default function Sindicancia() {
                   <Textarea
                     id="orientacoes"
                     placeholder="Descreva detalhadamente o que o agente deve realizar nesta sindicância..."
-                    className="min-h-[240px] resize-y rounded-xl p-4 text-[15px] leading-relaxed border-muted focus-visible:ring-secondary/30"
+                    className="min-h-[240px] resize-y rounded-xl p-4 text-[15px] leading-relaxed border-border focus-visible:ring-secondary/50"
                     value={orientacoes}
                     onChange={(e) => setOrientacoes(e.target.value)}
                   />
@@ -199,13 +197,13 @@ export default function Sindicancia() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-2xl border-none shadow-sm">
+          <Card className="rounded-2xl border-none shadow-sm bg-card">
             <CardContent className="p-6">
               <Label className="text-base font-semibold text-primary mb-4 block">
                 Anexos & Documentos
               </Label>
               <div
-                className="border-2 border-dashed border-muted rounded-xl p-10 flex flex-col items-center justify-center text-center hover:bg-muted/10 transition-colors cursor-pointer"
+                className="border-2 border-dashed border-border rounded-xl p-10 flex flex-col items-center justify-center text-center hover:bg-muted/30 transition-colors cursor-pointer"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <UploadCloud className="w-12 h-12 text-muted-foreground mb-4 opacity-50" />
@@ -233,11 +231,11 @@ export default function Sindicancia() {
                   {files.map((f, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-muted/50 group"
+                      className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border group"
                     >
                       <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="w-8 h-8 rounded-md bg-white flex items-center justify-center shrink-0 shadow-sm">
-                          <FileText className="w-4 h-4 text-secondary" />
+                        <div className="w-8 h-8 rounded-md bg-white flex items-center justify-center shrink-0 shadow-sm border border-border">
+                          <FileText className="w-4 h-4 text-primary" />
                         </div>
                         <div className="flex flex-col truncate">
                           <span className="text-sm font-semibold text-foreground truncate">
@@ -265,7 +263,7 @@ export default function Sindicancia() {
         </div>
 
         <div className="space-y-6">
-          <Card className="rounded-2xl border-none shadow-sm sticky top-24">
+          <Card className="rounded-2xl border-none shadow-sm sticky top-24 bg-card">
             <CardContent className="p-6 space-y-4">
               <h3 className="font-bold text-primary mb-2">Ações da Sindicância</h3>
 
@@ -273,7 +271,7 @@ export default function Sindicancia() {
                 onClick={saveDraft}
                 disabled={saving}
                 variant="outline"
-                className="w-full h-12 rounded-xl justify-start font-semibold text-primary border-primary/20 hover:bg-primary/5"
+                className="w-full h-12 rounded-xl justify-start font-semibold text-primary border-primary hover:bg-primary/5"
               >
                 {saving ? (
                   'Salvando...'
@@ -289,7 +287,7 @@ export default function Sindicancia() {
               <Button
                 onClick={handleEmail}
                 disabled={saving}
-                className="w-full h-12 rounded-xl justify-start font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full h-12 rounded-xl justify-start font-semibold bg-primary hover:bg-primary/90 text-primary-foreground"
               >
                 <Mail className="w-4 h-4 mr-3" /> Enviar por E-mail
               </Button>
@@ -297,7 +295,7 @@ export default function Sindicancia() {
               <Button
                 onClick={handleWhatsapp}
                 disabled={saving}
-                className="w-full h-12 rounded-xl justify-start font-semibold bg-green-600 hover:bg-green-700 text-white"
+                className="w-full h-12 rounded-xl justify-start font-semibold bg-emerald-600 hover:bg-emerald-700 text-white"
               >
                 <MessageCircle className="w-4 h-4 mr-3" /> Enviar por WhatsApp
               </Button>
@@ -313,10 +311,10 @@ export default function Sindicancia() {
               </Button>
 
               {draftProcess && (
-                <div className="mt-6 p-4 bg-green-50 rounded-xl border border-green-200 flex flex-col items-center text-center animate-in zoom-in-95">
-                  <CheckCircle className="w-8 h-8 text-green-500 mb-2" />
-                  <span className="text-sm font-bold text-green-800">Rascunho Criado</span>
-                  <span className="text-xs text-green-600 mt-1 font-medium">
+                <div className="mt-6 p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col items-center text-center animate-in zoom-in-95">
+                  <CheckCircle className="w-8 h-8 text-emerald-500 mb-2" />
+                  <span className="text-sm font-bold text-emerald-800">Rascunho Criado</span>
+                  <span className="text-xs text-emerald-600 mt-1 font-medium">
                     {draftProcess.numero_controle}
                   </span>
                 </div>

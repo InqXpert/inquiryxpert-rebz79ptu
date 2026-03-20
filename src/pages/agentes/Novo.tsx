@@ -106,13 +106,14 @@ export default function NovoAgente() {
             type="button"
             onClick={() => navigate(-1)}
             disabled={saving}
-            className="flex-1 sm:flex-none h-12 rounded-xl"
+            className="flex-1 sm:flex-none h-12 rounded-xl border-border text-foreground hover:bg-muted/50"
           >
             Cancelar
           </Button>
           <Button
             onClick={form.handleSubmit(onSubmit)}
-            className="flex-1 sm:flex-none h-12 px-8 bg-secondary text-white hover:bg-secondary/90 rounded-xl font-semibold shadow-sm"
+            variant="secondary"
+            className="flex-1 sm:flex-none h-12 px-8 rounded-xl font-semibold shadow-sm"
             disabled={saving}
           >
             {saving ? (

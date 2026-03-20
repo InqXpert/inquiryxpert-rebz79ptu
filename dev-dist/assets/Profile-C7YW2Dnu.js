@@ -1,10 +1,10 @@
 import { i as require_react, r as require_jsx_runtime, s as __toESM, t as cn } from "./utils-B9zKDa3a.js";
-import { g as useParams, h as useNavigate, i as cva, l as Link, n as Button } from "./dist-CfDxfQ0w.js";
+import { g as useParams, h as useNavigate, i as cva, l as Link, n as Button } from "./dist-dHjiV_RN.js";
 import { r as createLucideIcon } from "./client-riYRmEzR.js";
-import "./Combination-BCvivIoG.js";
-import { n as DialogContent, o as DialogTitle, r as DialogDescription, t as Dialog, w as TriangleAlert } from "./dialog-DFkf6MNN.js";
-import { a, c as ChevronLeft, i as agenteSchema, n as ImportedFieldsContext, o as useForm, r as Form, s as Copy, t as FormContent } from "./FormContent-DHuMzupe.js";
-import "./use-municipios-BuS1LL5w.js";
+import "./Combination-CEhCbsmr.js";
+import { n as DialogContent, o as DialogTitle, r as DialogDescription, t as Dialog, w as TriangleAlert } from "./dialog-CVmeRvqj.js";
+import { a, c as ChevronLeft, i as agenteSchema, n as ImportedFieldsContext, o as useForm, r as Form, s as Copy, t as FormContent } from "./FormContent-Bf2krv0v.js";
+import "./use-municipios-DSVUM1s_.js";
 import { t as CircleCheck } from "./circle-check-BCIjbSwe.js";
 import { t as Mail } from "./mail-DNsT85PH.js";
 import { t as MapPin } from "./map-pin-DZZt6SAm.js";
@@ -14,7 +14,7 @@ import { t as useRealtime } from "./use-realtime-DOgwlv09.js";
 import { d as fetchProcessos } from "./procesosOperacionais-DeOfYZQQ.js";
 import { t as Skeleton } from "./skeleton-D_PnG1bN.js";
 import { a as updateAgente, n as deleteAgente, r as getAgente } from "./agentes-CRY-zTvE.js";
-import "./textarea-DLzpCiCU.js";
+import "./textarea-D1JkN-BV.js";
 var Award = createLucideIcon("award", [["path", {
 	d: "m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526",
 	key: "1yiouv"
@@ -185,11 +185,11 @@ function EditAgenteModal({ open, onOpenChange, agente, onSuccess }) {
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(DialogContent, {
 			"data-uid": "src/components/agentes/EditAgenteModal.tsx:63:7",
 			"data-prohibitions": "[editContent]",
-			className: "max-w-4xl max-h-[90vh] overflow-y-auto w-11/12 rounded-xl p-0 gap-0 border-none bg-[#F5F6FA]",
+			className: "max-w-4xl max-h-[90vh] overflow-y-auto w-11/12 rounded-xl p-0 gap-0 border-none bg-muted/30",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/components/agentes/EditAgenteModal.tsx:64:9",
 				"data-prohibitions": "[]",
-				className: "bg-white p-6 border-b sticky top-0 z-10 flex flex-col gap-1",
+				className: "bg-white p-6 border-b border-border sticky top-0 z-10 flex flex-col gap-1",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(DialogTitle, {
 					"data-uid": "src/components/agentes/EditAgenteModal.tsx:65:11",
 					"data-prohibitions": "[]",
@@ -224,7 +224,7 @@ function EditAgenteModal({ open, onOpenChange, agente, onSuccess }) {
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							"data-uid": "src/components/agentes/EditAgenteModal.tsx:77:15",
 							"data-prohibitions": "[editContent]",
-							className: "flex justify-end gap-3 pt-6 border-t mt-6",
+							className: "flex justify-end gap-3 pt-6 border-t border-border mt-6",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 								"data-uid": "src/components/agentes/EditAgenteModal.tsx:78:17",
 								"data-prohibitions": "[]",
@@ -239,7 +239,7 @@ function EditAgenteModal({ open, onOpenChange, agente, onSuccess }) {
 								"data-prohibitions": "[editContent]",
 								type: "submit",
 								disabled: saving,
-								className: "rounded-xl h-11 px-8 bg-secondary hover:bg-secondary/90 text-white font-semibold",
+								className: "rounded-xl h-11 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-sm",
 								children: saving ? "Salvando..." : "Salvar Alterações"
 							})]
 						})]
@@ -397,18 +397,18 @@ function ProfileAgente() {
 	const getBadgeClass = (status) => {
 		const base = "text-[11px] font-bold px-[8px] py-[4px] rounded-full";
 		const s = status.toLowerCase();
-		if (s.includes("concluíd") || s.includes("concluid") || s.includes("finaliz")) return cn(base, "bg-green-100 text-green-700");
-		if (s.includes("andamento") || s.includes("execuç")) return cn(base, "bg-blue-100 text-blue-700");
-		if (s.includes("pendent") || s.includes("aguardando")) return cn(base, "bg-yellow-100 text-yellow-700");
-		if (s.includes("pendencia")) return cn(base, "bg-orange-100 text-orange-700");
+		if (s.includes("concluíd") || s.includes("concluid") || s.includes("finaliz")) return cn(base, "bg-emerald-100 text-emerald-800");
+		if (s.includes("andamento") || s.includes("execuç")) return cn(base, "bg-blue-100 text-blue-800");
+		if (s.includes("pendent") || s.includes("aguardando")) return cn(base, "bg-yellow-100 text-yellow-800");
+		if (s.includes("pendencia")) return cn(base, "bg-orange-100 text-orange-800");
 		return cn(base, "bg-muted text-muted-foreground");
 	};
 	const getKPITextColor = (val) => {
 		if (!val) return "text-muted-foreground";
-		if (val.includes("NIVEL 1") || val.includes("ZERO") || val.includes("TREINAMENTO")) return "text-red-600";
+		if (val.includes("NIVEL 1") || val.includes("ZERO") || val.includes("TREINAMENTO")) return "text-destructive";
 		if (val.includes("NIVEL 2") || val.includes("PARCIAL") || val.includes("JUNIOR")) return "text-orange-600";
 		if (val.includes("NIVEL 3") || val.includes("ALTO") || val.includes("PLENO")) return "text-blue-600";
-		if (val.includes("NIVEL 4") || val.includes("TOTAL") || val.includes("SENIOR")) return "text-green-600";
+		if (val.includes("NIVEL 4") || val.includes("TOTAL") || val.includes("SENIOR")) return "text-emerald-600";
 		return "text-muted-foreground";
 	};
 	const recentes = processos.slice(0, 3);
@@ -448,7 +448,7 @@ function ProfileAgente() {
 							"data-prohibitions": "[]",
 							variant: "ghost",
 							onClick: handleDelete,
-							className: "text-destructive hover:bg-destructive/10 hover:text-destructive h-10 px-3 rounded-xl flex-1 sm:flex-none",
+							className: "text-destructive hover:bg-destructive/10 hover:text-destructive h-10 px-3 rounded-xl flex-1 sm:flex-none font-medium",
 							title: "Remover",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Trash, {
@@ -470,7 +470,7 @@ function ProfileAgente() {
 							"data-prohibitions": "[]",
 							variant: "outline",
 							onClick: () => setEditModalOpen(true),
-							className: "h-10 px-4 rounded-xl gap-2 font-medium flex-1 sm:flex-none",
+							className: "h-10 px-4 rounded-xl gap-2 font-medium flex-1 sm:flex-none border-border",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SquarePen, {
 								"data-uid": "src/pages/agentes/Profile.tsx:191:13",
 								"data-prohibitions": "[editContent]",
@@ -480,10 +480,11 @@ function ProfileAgente() {
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
 							"data-uid": "src/pages/agentes/Profile.tsx:193:11",
 							"data-prohibitions": "[]",
-							className: "bg-secondary text-white rounded-xl h-10 px-4 gap-2 hover:bg-secondary/90 font-semibold shadow-sm w-full sm:w-auto",
+							variant: "secondary",
+							className: "rounded-xl h-10 px-4 gap-2 font-semibold shadow-sm w-full sm:w-auto",
 							onClick: () => navigate(`/agentes/${p.id}/sindicancia`),
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Briefcase, {
-								"data-uid": "src/pages/agentes/Profile.tsx:197:13",
+								"data-uid": "src/pages/agentes/Profile.tsx:198:13",
 								"data-prohibitions": "[editContent]",
 								className: "w-4 h-4"
 							}), "Encaminhar sindicância"]
@@ -492,43 +493,43 @@ function ProfileAgente() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-				"data-uid": "src/pages/agentes/Profile.tsx:203:7",
+				"data-uid": "src/pages/agentes/Profile.tsx:204:7",
 				"data-prohibitions": "[editContent]",
-				className: "border-none shadow-sm rounded-2xl overflow-hidden animate-in fade-in duration-300 ease-out",
+				className: "border-none shadow-sm rounded-2xl overflow-hidden animate-in fade-in duration-300 ease-out bg-card",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-					"data-uid": "src/pages/agentes/Profile.tsx:204:9",
+					"data-uid": "src/pages/agentes/Profile.tsx:205:9",
 					"data-prohibitions": "[editContent]",
 					className: "p-8 grid grid-cols-1 lg:grid-cols-[220px_1fr_1fr_1fr] gap-8 md:items-start",
 					children: [
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/agentes/Profile.tsx:205:11",
+							"data-uid": "src/pages/agentes/Profile.tsx:206:11",
 							"data-prohibitions": "[editContent]",
 							className: "flex flex-col items-center lg:items-start text-center lg:text-left",
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("img", {
-									"data-uid": "src/pages/agentes/Profile.tsx:206:13",
+									"data-uid": "src/pages/agentes/Profile.tsx:207:13",
 									"data-prohibitions": "[editContent]",
 									src: `https://img.usecurling.com/ppl/large?gender=male&seed=${p.id}`,
 									className: "w-24 h-24 rounded-full object-cover border-4 border-white shadow-sm",
 									alt: "Profile"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h2", {
-									"data-uid": "src/pages/agentes/Profile.tsx:211:13",
+									"data-uid": "src/pages/agentes/Profile.tsx:212:13",
 									"data-prohibitions": "[editContent]",
 									className: "text-2xl font-bold text-primary mt-4 leading-tight",
 									children: p.nomeCompleto
 								}),
 								p.numero_controle && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/agentes/Profile.tsx:213:15",
+									"data-uid": "src/pages/agentes/Profile.tsx:214:15",
 									"data-prohibitions": "[editContent]",
 									className: "flex items-center gap-2 mt-2 bg-primary/5 text-primary px-3 py-1.5 rounded-lg border border-primary/10",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-										"data-uid": "src/pages/agentes/Profile.tsx:214:17",
+										"data-uid": "src/pages/agentes/Profile.tsx:215:17",
 										"data-prohibitions": "[editContent]",
 										className: "text-sm font-bold",
 										children: ["Nº: ", p.numero_controle]
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/agentes/Profile.tsx:215:17",
+										"data-uid": "src/pages/agentes/Profile.tsx:216:17",
 										"data-prohibitions": "[]",
 										variant: "ghost",
 										size: "icon",
@@ -537,42 +538,42 @@ function ProfileAgente() {
 											navigator.clipboard.writeText(p.numero_controle);
 											toast({
 												title: "Número copiado!",
-												className: "bg-green-500 text-white border-none"
+												className: "bg-emerald-600 text-white border-none"
 											});
 										},
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, {
-											"data-uid": "src/pages/agentes/Profile.tsx:227:19",
+											"data-uid": "src/pages/agentes/Profile.tsx:228:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-3 h-3"
 										})
 									})]
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Badge, {
-									"data-uid": "src/pages/agentes/Profile.tsx:231:13",
+									"data-uid": "src/pages/agentes/Profile.tsx:232:13",
 									"data-prohibitions": "[editContent]",
 									variant: "outline",
-									className: "text-xs mt-3 bg-muted/50 text-muted-foreground font-medium border-none",
+									className: "text-xs mt-3 bg-muted text-muted-foreground font-medium border-none",
 									children: p.regiaoAbrangencia || "Sem Especialidade"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/agentes/Profile.tsx:237:13",
+									"data-uid": "src/pages/agentes/Profile.tsx:238:13",
 									"data-prohibitions": "[editContent]",
 									className: "flex flex-wrap justify-center lg:justify-start gap-2 mt-4",
 									children: [p.naBlackList === "Sim" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:239:17",
+										"data-uid": "src/pages/agentes/Profile.tsx:240:17",
 										"data-prohibitions": "[]",
 										className: "bg-destructive/10 text-destructive text-xs font-bold px-3 py-1 rounded-full flex gap-1.5 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TriangleAlert, {
-											"data-uid": "src/pages/agentes/Profile.tsx:240:19",
+											"data-uid": "src/pages/agentes/Profile.tsx:241:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-3.5 h-3.5"
 										}), " Blacklist"]
 									}), p.ativo === "Sim" && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:244:17",
+										"data-uid": "src/pages/agentes/Profile.tsx:245:17",
 										"data-prohibitions": "[]",
-										className: "bg-secondary/10 text-secondary text-xs font-bold px-3 py-1 rounded-full flex gap-1.5 items-center",
+										className: "bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full flex gap-1.5 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
-											"data-uid": "src/pages/agentes/Profile.tsx:245:19",
+											"data-uid": "src/pages/agentes/Profile.tsx:246:19",
 											"data-prohibitions": "[editContent]",
 											className: "w-3.5 h-3.5"
 										}), " Ativo"]
@@ -581,43 +582,43 @@ function ProfileAgente() {
 							]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/agentes/Profile.tsx:251:11",
+							"data-uid": "src/pages/agentes/Profile.tsx:252:11",
 							"data-prohibitions": "[editContent]",
 							className: "flex flex-col justify-center space-y-4 lg:pt-2",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/pages/agentes/Profile.tsx:252:13",
+								"data-uid": "src/pages/agentes/Profile.tsx:253:13",
 								"data-prohibitions": "[]",
 								className: "text-xs font-bold text-muted-foreground uppercase tracking-wider",
 								children: "Informações de Contato"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/agentes/Profile.tsx:255:13",
+								"data-uid": "src/pages/agentes/Profile.tsx:256:13",
 								"data-prohibitions": "[editContent]",
 								className: "grid grid-cols-1 gap-3",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:256:15",
+										"data-uid": "src/pages/agentes/Profile.tsx:257:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex gap-3 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:257:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:258:17",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0",
+											className: "w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, {
-												"data-uid": "src/pages/agentes/Profile.tsx:258:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:259:19",
 												"data-prohibitions": "[editContent]",
 												className: "w-4 h-4 text-muted-foreground"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:260:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:261:17",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col overflow-hidden",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:261:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:262:19",
 												"data-prohibitions": "[]",
 												className: "text-xs text-muted-foreground font-medium",
-												children: "Email"
+												children: "E-mail"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:262:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:263:19",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm text-foreground font-semibold truncate",
 												children: p.email || "-"
@@ -625,29 +626,29 @@ function ProfileAgente() {
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:267:15",
+										"data-uid": "src/pages/agentes/Profile.tsx:268:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex gap-3 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:268:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:269:17",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0",
+											className: "w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Phone, {
-												"data-uid": "src/pages/agentes/Profile.tsx:269:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:270:19",
 												"data-prohibitions": "[editContent]",
 												className: "w-4 h-4 text-muted-foreground"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:271:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:272:17",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:272:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:273:19",
 												"data-prohibitions": "[]",
 												className: "text-xs text-muted-foreground font-medium",
 												children: "Telefone"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:273:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:274:19",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm text-foreground font-semibold truncate",
 												children: p.telefone || "-"
@@ -655,29 +656,29 @@ function ProfileAgente() {
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:278:15",
+										"data-uid": "src/pages/agentes/Profile.tsx:279:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex gap-3 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:279:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:280:17",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0",
+											className: "w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(MapPin, {
-												"data-uid": "src/pages/agentes/Profile.tsx:280:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:281:19",
 												"data-prohibitions": "[editContent]",
 												className: "w-4 h-4 text-muted-foreground"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:282:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:283:17",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:283:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:284:19",
 												"data-prohibitions": "[]",
 												className: "text-xs text-muted-foreground font-medium",
 												children: "Base"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:284:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:285:19",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm text-foreground font-semibold truncate",
 												children: p.baseAtendimento || "-"
@@ -688,43 +689,43 @@ function ProfileAgente() {
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/agentes/Profile.tsx:292:11",
+							"data-uid": "src/pages/agentes/Profile.tsx:293:11",
 							"data-prohibitions": "[editContent]",
 							className: "flex flex-col justify-center space-y-4 lg:pt-2",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/pages/agentes/Profile.tsx:293:13",
+								"data-uid": "src/pages/agentes/Profile.tsx:294:13",
 								"data-prohibitions": "[]",
 								className: "text-xs font-bold text-muted-foreground uppercase tracking-wider",
 								children: "Financeiro & Comercial"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/agentes/Profile.tsx:296:13",
+								"data-uid": "src/pages/agentes/Profile.tsx:297:13",
 								"data-prohibitions": "[editContent]",
 								className: "grid grid-cols-1 gap-3",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:297:15",
+										"data-uid": "src/pages/agentes/Profile.tsx:298:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex gap-3 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:298:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:299:17",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0",
+											className: "w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(DollarSign, {
-												"data-uid": "src/pages/agentes/Profile.tsx:299:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:300:19",
 												"data-prohibitions": "[editContent]",
 												className: "w-4 h-4 text-muted-foreground"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:301:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:302:17",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:302:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:303:19",
 												"data-prohibitions": "[]",
 												className: "text-xs text-muted-foreground font-medium",
 												children: "Honorário"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:303:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:304:19",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm text-foreground font-semibold",
 												children: ["R$ ", Number(p.valorHonorario || 0).toFixed(2)]
@@ -732,29 +733,29 @@ function ProfileAgente() {
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:308:15",
+										"data-uid": "src/pages/agentes/Profile.tsx:309:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex gap-3 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:309:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:310:17",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0",
+											className: "w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Car, {
-												"data-uid": "src/pages/agentes/Profile.tsx:310:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:311:19",
 												"data-prohibitions": "[editContent]",
 												className: "w-4 h-4 text-muted-foreground"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:312:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:313:17",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:313:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:314:19",
 												"data-prohibitions": "[]",
 												className: "text-xs text-muted-foreground font-medium",
 												children: "Valor KM"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:314:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:315:19",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm text-foreground font-semibold",
 												children: ["R$ ", Number(p.valorKm || 0).toFixed(2)]
@@ -762,29 +763,29 @@ function ProfileAgente() {
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:319:15",
+										"data-uid": "src/pages/agentes/Profile.tsx:320:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex gap-3 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:320:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:321:17",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0",
+											className: "w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Key, {
-												"data-uid": "src/pages/agentes/Profile.tsx:321:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:322:19",
 												"data-prohibitions": "[editContent]",
 												className: "w-4 h-4 text-muted-foreground"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:323:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:324:17",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:324:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:325:19",
 												"data-prohibitions": "[]",
 												className: "text-xs text-muted-foreground font-medium",
 												children: "Chave Pix"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:325:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:326:19",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm text-foreground font-semibold truncate max-w-[150px]",
 												title: p.chavePix,
@@ -796,43 +797,43 @@ function ProfileAgente() {
 							})]
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/agentes/Profile.tsx:336:11",
+							"data-uid": "src/pages/agentes/Profile.tsx:337:11",
 							"data-prohibitions": "[editContent]",
 							className: "flex flex-col justify-center space-y-4 lg:pt-2",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/pages/agentes/Profile.tsx:337:13",
+								"data-uid": "src/pages/agentes/Profile.tsx:338:13",
 								"data-prohibitions": "[]",
 								className: "text-xs font-bold text-muted-foreground uppercase tracking-wider",
 								children: "Performance & Qualidade"
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/agentes/Profile.tsx:340:13",
+								"data-uid": "src/pages/agentes/Profile.tsx:341:13",
 								"data-prohibitions": "[editContent]",
 								className: "grid grid-cols-1 gap-3",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:341:15",
+										"data-uid": "src/pages/agentes/Profile.tsx:342:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex gap-3 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:342:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:343:17",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0",
+											className: "w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Star, {
-												"data-uid": "src/pages/agentes/Profile.tsx:343:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:344:19",
 												"data-prohibitions": "[editContent]",
 												className: "w-4 h-4 text-muted-foreground"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:345:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:346:17",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col overflow-hidden",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:346:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:347:19",
 												"data-prohibitions": "[]",
 												className: "text-xs text-muted-foreground font-medium",
 												children: "Qualidade"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:347:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:348:19",
 												"data-prohibitions": "[editContent]",
 												className: cn("text-sm font-semibold truncate", getKPITextColor(p.qualidade_nivel)),
 												children: p.qualidade_nivel || "Não Avaliado"
@@ -840,29 +841,29 @@ function ProfileAgente() {
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:357:15",
+										"data-uid": "src/pages/agentes/Profile.tsx:358:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex gap-3 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:358:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:359:17",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0",
+											className: "w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Award, {
-												"data-uid": "src/pages/agentes/Profile.tsx:359:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:360:19",
 												"data-prohibitions": "[editContent]",
 												className: "w-4 h-4 text-muted-foreground"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:361:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:362:17",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col overflow-hidden",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:362:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:363:19",
 												"data-prohibitions": "[]",
 												className: "text-xs text-muted-foreground font-medium",
 												children: "Experiência"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:363:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:364:19",
 												"data-prohibitions": "[editContent]",
 												className: cn("text-sm font-semibold truncate", getKPITextColor(p.experiencia_nivel)),
 												children: p.experiencia_nivel || "Não Avaliado"
@@ -870,29 +871,29 @@ function ProfileAgente() {
 										})]
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Profile.tsx:373:15",
+										"data-uid": "src/pages/agentes/Profile.tsx:374:15",
 										"data-prohibitions": "[editContent]",
 										className: "flex gap-3 items-center",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:374:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:375:17",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0",
+											className: "w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ShieldCheck, {
-												"data-uid": "src/pages/agentes/Profile.tsx:375:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:376:19",
 												"data-prohibitions": "[editContent]",
 												className: "w-4 h-4 text-muted-foreground"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Profile.tsx:377:17",
+											"data-uid": "src/pages/agentes/Profile.tsx:378:17",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col overflow-hidden",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:378:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:379:19",
 												"data-prohibitions": "[]",
 												className: "text-xs text-muted-foreground font-medium",
 												children: "Compliance"
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Profile.tsx:379:19",
+												"data-uid": "src/pages/agentes/Profile.tsx:380:19",
 												"data-prohibitions": "[editContent]",
 												className: cn("text-sm font-semibold truncate", getKPITextColor(p.compliance_nivel)),
 												children: p.compliance_nivel || "Não Avaliado"
@@ -906,7 +907,7 @@ function ProfileAgente() {
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/agentes/Profile.tsx:394:7",
+				"data-uid": "src/pages/agentes/Profile.tsx:395:7",
 				"data-prohibitions": "[editContent]",
 				className: "grid grid-cols-2 md:grid-cols-4 gap-4",
 				children: statsLoading ? [
@@ -915,9 +916,9 @@ function ProfileAgente() {
 					3,
 					4
 				].map((i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
-					"data-uid": "src/pages/agentes/Profile.tsx:396:37",
+					"data-uid": "src/pages/agentes/Profile.tsx:397:37",
 					"data-prohibitions": "[editContent]",
-					className: "h-[104px] rounded-2xl bg-white"
+					className: "h-[104px] rounded-2xl bg-card"
 				}, i)) : [
 					{
 						title: "Total Processos",
@@ -944,34 +945,34 @@ function ProfileAgente() {
 						delay: "240ms"
 					}
 				].map((kpi, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-					"data-uid": "src/pages/agentes/Profile.tsx:423:15",
+					"data-uid": "src/pages/agentes/Profile.tsx:424:15",
 					"data-prohibitions": "[editContent]",
-					className: "border-none shadow-sm rounded-2xl overflow-hidden relative bg-white animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both",
+					className: "border-none shadow-sm rounded-2xl overflow-hidden relative bg-card animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both",
 					style: {
 						animationDelay: kpi.delay,
 						animationDuration: "400ms"
 					},
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/agentes/Profile.tsx:428:17",
+						"data-uid": "src/pages/agentes/Profile.tsx:429:17",
 						"data-prohibitions": "[editContent]",
 						className: "p-5",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-								"data-uid": "src/pages/agentes/Profile.tsx:429:19",
+								"data-uid": "src/pages/agentes/Profile.tsx:430:19",
 								"data-prohibitions": "[editContent]",
 								className: "text-sm font-semibold text-muted-foreground mb-2 relative z-10",
 								children: kpi.title
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/agentes/Profile.tsx:432:19",
+								"data-uid": "src/pages/agentes/Profile.tsx:433:19",
 								"data-prohibitions": "[editContent]",
 								className: "text-3xl font-bold text-primary leading-none relative z-10",
 								children: kpi.number
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-								"data-uid": "src/pages/agentes/Profile.tsx:435:19",
+								"data-uid": "src/pages/agentes/Profile.tsx:436:19",
 								"data-prohibitions": "[editContent]",
-								className: "text-xs text-secondary font-medium mt-2 relative z-10",
+								className: "text-xs text-muted-foreground font-medium mt-2 relative z-10",
 								children: kpi.subtitle
 							})
 						]
@@ -979,47 +980,47 @@ function ProfileAgente() {
 				}, i))
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/agentes/Profile.tsx:443:7",
+				"data-uid": "src/pages/agentes/Profile.tsx:444:7",
 				"data-prohibitions": "[editContent]",
 				className: "grid grid-cols-1 md:grid-cols-[65%_35%] gap-6",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/agentes/Profile.tsx:444:9",
+					"data-uid": "src/pages/agentes/Profile.tsx:445:9",
 					"data-prohibitions": "[editContent]",
-					className: "border-none shadow-sm rounded-2xl p-6",
+					className: "border-none shadow-sm rounded-2xl p-6 bg-card",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/pages/agentes/Profile.tsx:445:11",
+						"data-uid": "src/pages/agentes/Profile.tsx:446:11",
 						"data-prohibitions": "[]",
 						className: "flex flex-row justify-between items-center mb-6",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-							"data-uid": "src/pages/agentes/Profile.tsx:446:13",
+							"data-uid": "src/pages/agentes/Profile.tsx:447:13",
 							"data-prohibitions": "[]",
 							className: "text-lg font-bold text-primary",
 							children: "Processos Recentes"
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-							"data-uid": "src/pages/agentes/Profile.tsx:447:13",
+							"data-uid": "src/pages/agentes/Profile.tsx:448:13",
 							"data-prohibitions": "[]",
 							variant: "outline",
 							size: "sm",
 							className: "font-semibold rounded-xl text-primary",
 							asChild: true,
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Link, {
-								"data-uid": "src/pages/agentes/Profile.tsx:453:15",
+								"data-uid": "src/pages/agentes/Profile.tsx:454:15",
 								"data-prohibitions": "[]",
 								to: `/agentes/${p.id}/sindicancia`,
 								children: "Nova Sindicância"
 							})
 						})]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/agentes/Profile.tsx:456:11",
+						"data-uid": "src/pages/agentes/Profile.tsx:457:11",
 						"data-prohibitions": "[editContent]",
 						className: "flex flex-col divide-y divide-border/50",
 						children: recentes.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/agentes/Profile.tsx:458:15",
+							"data-uid": "src/pages/agentes/Profile.tsx:459:15",
 							"data-prohibitions": "[]",
 							className: "text-sm text-muted-foreground py-4 text-center",
 							children: "Nenhum processo vinculado."
 						}) : recentes.map((proc, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/agentes/Profile.tsx:463:17",
+							"data-uid": "src/pages/agentes/Profile.tsx:464:17",
 							"data-prohibitions": "[editContent]",
 							className: "py-4 hover:bg-muted/20 transition-colors animate-in fade-in slide-in-from-bottom-2 ease-out fill-mode-both flex flex-row items-center justify-between group",
 							style: {
@@ -1027,31 +1028,31 @@ function ProfileAgente() {
 								animationDuration: "250ms"
 							},
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/agentes/Profile.tsx:468:19",
+								"data-uid": "src/pages/agentes/Profile.tsx:469:19",
 								"data-prohibitions": "[editContent]",
 								className: "flex flex-col",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/pages/agentes/Profile.tsx:469:21",
+									"data-uid": "src/pages/agentes/Profile.tsx:470:21",
 									"data-prohibitions": "[editContent]",
 									className: "text-xs text-muted-foreground font-semibold",
 									children: proc.numero_controle || proc.id
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/pages/agentes/Profile.tsx:472:21",
+									"data-uid": "src/pages/agentes/Profile.tsx:473:21",
 									"data-prohibitions": "[editContent]",
 									className: "text-sm text-foreground font-bold mt-1 group-hover:text-primary transition-colors",
 									children: proc.tipo_servico || "Sindicância"
 								})]
 							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/agentes/Profile.tsx:476:19",
+								"data-uid": "src/pages/agentes/Profile.tsx:477:19",
 								"data-prohibitions": "[editContent]",
 								className: "flex flex-col items-end gap-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/agentes/Profile.tsx:477:21",
+									"data-uid": "src/pages/agentes/Profile.tsx:478:21",
 									"data-prohibitions": "[editContent]",
 									className: getBadgeClass(proc.status || "Pendente"),
 									children: proc.status || "Pendente"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-									"data-uid": "src/pages/agentes/Profile.tsx:480:21",
+									"data-uid": "src/pages/agentes/Profile.tsx:481:21",
 									"data-prohibitions": "[editContent]",
 									className: "text-xs text-muted-foreground font-medium",
 									children: proc.data_entrada?.split(" ")[0] || "-"
@@ -1060,16 +1061,16 @@ function ProfileAgente() {
 						}, proc.id))
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/agentes/Profile.tsx:490:9",
+					"data-uid": "src/pages/agentes/Profile.tsx:491:9",
 					"data-prohibitions": "[editContent]",
-					className: "border-none shadow-sm rounded-2xl p-6",
+					className: "border-none shadow-sm rounded-2xl p-6 bg-card",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-						"data-uid": "src/pages/agentes/Profile.tsx:491:11",
+						"data-uid": "src/pages/agentes/Profile.tsx:492:11",
 						"data-prohibitions": "[]",
 						className: "text-lg font-bold text-primary mb-6",
 						children: "Atividade Recente"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						"data-uid": "src/pages/agentes/Profile.tsx:492:11",
+						"data-uid": "src/pages/agentes/Profile.tsx:493:11",
 						"data-prohibitions": "[editContent]",
 						className: "flex flex-col",
 						children: [
@@ -1086,31 +1087,31 @@ function ProfileAgente() {
 								time: "10 Out 2023"
 							}
 						].map((act, i, arr) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/pages/agentes/Profile.tsx:498:15",
+							"data-uid": "src/pages/agentes/Profile.tsx:499:15",
 							"data-prohibitions": "[editContent]",
 							className: "flex flex-row gap-4 pb-6 relative",
 							children: [
 								i !== arr.length - 1 && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/agentes/Profile.tsx:500:19",
+									"data-uid": "src/pages/agentes/Profile.tsx:501:19",
 									"data-prohibitions": "[editContent]",
 									className: "absolute left-[7px] top-4 w-px h-[calc(100%-8px)] bg-border"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-									"data-uid": "src/pages/agentes/Profile.tsx:502:17",
+									"data-uid": "src/pages/agentes/Profile.tsx:503:17",
 									"data-prohibitions": "[editContent]",
 									className: "w-4 h-4 rounded-full bg-secondary/20 border-2 border-secondary mt-0.5 shrink-0 relative z-10"
 								}),
 								/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/agentes/Profile.tsx:503:17",
+									"data-uid": "src/pages/agentes/Profile.tsx:504:17",
 									"data-prohibitions": "[editContent]",
 									className: "flex flex-col -mt-1",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/agentes/Profile.tsx:504:19",
+										"data-uid": "src/pages/agentes/Profile.tsx:505:19",
 										"data-prohibitions": "[editContent]",
 										className: "text-sm font-semibold text-foreground",
 										children: act.text
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/agentes/Profile.tsx:505:19",
+										"data-uid": "src/pages/agentes/Profile.tsx:506:19",
 										"data-prohibitions": "[editContent]",
 										className: "text-xs text-muted-foreground font-medium mt-1",
 										children: act.time
@@ -1122,7 +1123,7 @@ function ProfileAgente() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(EditAgenteModal, {
-				"data-uid": "src/pages/agentes/Profile.tsx:513:7",
+				"data-uid": "src/pages/agentes/Profile.tsx:514:7",
 				"data-prohibitions": "[editContent]",
 				open: editModalOpen,
 				onOpenChange: setEditModalOpen,
@@ -1135,4 +1136,4 @@ function ProfileAgente() {
 //#endregion
 export { ProfileAgente as default };
 
-//# sourceMappingURL=Profile-gmZx1QqR.js.map
+//# sourceMappingURL=Profile-C7YW2Dnu.js.map

@@ -24,16 +24,13 @@ function TopNav() {
   const navigate = useNavigate()
 
   return (
-    <header className="h-[56px] bg-[#2d3e50] text-white flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30 shadow-sm border-b border-[#202c39]">
+    <header className="h-[56px] bg-[hsl(var(--primary))] text-primary-foreground flex items-center justify-between px-4 lg:px-6 sticky top-0 z-30 shadow-sm border-b border-primary-foreground/10">
       <div className="flex items-center gap-6 h-full">
         <Link to="/" className="flex items-center gap-2 mr-4 group">
-          <div
-            className="w-7 h-7 rounded-[4px] text-white flex items-center justify-center font-bold text-xs"
-            style={{ backgroundColor: '#ff7a59' }}
-          >
+          <div className="w-7 h-7 rounded-[4px] bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-xs">
             IX
           </div>
-          <span className="font-semibold text-[16px] tracking-tight hidden sm:block group-hover:text-white text-[#cbd6e2] transition-colors">
+          <span className="font-semibold text-[16px] tracking-tight hidden sm:block group-hover:text-white text-primary-foreground/90 transition-colors">
             InquiryXperty
           </span>
         </Link>
@@ -48,8 +45,8 @@ function TopNav() {
                 className={cn(
                   'px-4 h-full flex items-center text-[14px] font-medium transition-colors border-b-[3px]',
                   isActive
-                    ? 'border-primary text-white bg-[#ffffff10]'
-                    : 'border-transparent text-[#cbd6e2] hover:bg-[#ffffff10] hover:text-white',
+                    ? 'border-secondary text-primary-foreground bg-white/5'
+                    : 'border-transparent text-primary-foreground/70 hover:bg-white/5 hover:text-primary-foreground',
                 )}
               >
                 {item.title}
@@ -63,14 +60,14 @@ function TopNav() {
         <Button
           variant="ghost"
           size="icon"
-          className="text-[#cbd6e2] hover:text-white hover:bg-[#ffffff1a] rounded-full h-9 w-9 focus-visible:ring-0"
+          className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 rounded-full h-9 w-9 focus-visible:ring-0"
         >
           <Search className="w-[18px] h-[18px]" />
         </Button>
         <Button
           variant="ghost"
           size="icon"
-          className="text-[#cbd6e2] hover:text-white hover:bg-[#ffffff1a] rounded-full h-9 w-9 focus-visible:ring-0"
+          className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 rounded-full h-9 w-9 focus-visible:ring-0"
           onClick={() => navigate('/configuracoes')}
         >
           <Settings className="w-[18px] h-[18px]" />
@@ -78,7 +75,7 @@ function TopNav() {
         <Button
           variant="ghost"
           size="icon"
-          className="text-[#cbd6e2] hover:text-white hover:bg-[#ffffff1a] rounded-full h-9 w-9 relative focus-visible:ring-0"
+          className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 rounded-full h-9 w-9 relative focus-visible:ring-0"
           onClick={() => navigate('/ajuda')}
         >
           <HelpCircle className="w-[18px] h-[18px]" />
@@ -86,17 +83,19 @@ function TopNav() {
         <Button
           variant="ghost"
           size="icon"
-          className="text-[#cbd6e2] hover:text-white hover:bg-[#ffffff1a] rounded-full h-9 w-9 relative focus-visible:ring-0"
+          className="text-primary-foreground/70 hover:text-primary-foreground hover:bg-white/10 rounded-full h-9 w-9 relative focus-visible:ring-0"
         >
           <Bell className="w-[18px] h-[18px]" />
-          <span className="absolute top-[6px] right-[6px] w-[8px] h-[8px] bg-primary rounded-full"></span>
+          <span className="absolute top-[6px] right-[6px] w-[8px] h-[8px] bg-secondary rounded-full"></span>
         </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Avatar className="w-8 h-8 ml-2 cursor-pointer border border-[#cbd6e2]/30 hover:border-[#cbd6e2] transition-colors bg-[#ffffff1a]">
+            <Avatar className="w-8 h-8 ml-2 cursor-pointer border border-primary-foreground/30 hover:border-primary-foreground transition-colors bg-white/10">
               <AvatarImage src="https://img.usecurling.com/ppl/thumbnail?gender=female&seed=12" />
-              <AvatarFallback className="bg-transparent text-xs text-[#cbd6e2]">AD</AvatarFallback>
+              <AvatarFallback className="bg-transparent text-xs text-primary-foreground">
+                AD
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -121,14 +120,14 @@ function TopNav() {
 
 export default function Layout() {
   return (
-    <div className="flex flex-col min-h-screen w-full bg-secondary font-sans text-foreground">
+    <div className="flex flex-col min-h-screen w-full bg-muted/30 font-sans text-foreground">
       <TopNav />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-[1400px] mx-auto w-full p-6 md:p-8 animate-in fade-in duration-500">
           <Suspense
             fallback={
               <div className="py-20 flex flex-col items-center justify-center text-muted-foreground animate-pulse gap-3">
-                <div className="w-6 h-6 rounded-full border-[3px] border-primary border-t-transparent animate-spin" />
+                <div className="w-6 h-6 rounded-full border-[3px] border-secondary border-t-transparent animate-spin" />
                 <span className="text-[13px] font-medium">Carregando...</span>
               </div>
             }

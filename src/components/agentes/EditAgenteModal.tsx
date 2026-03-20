@@ -60,8 +60,8 @@ export function EditAgenteModal({ open, onOpenChange, agente, onSuccess }: EditA
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto w-11/12 rounded-xl p-0 gap-0 border-none bg-[#F5F6FA]">
-        <div className="bg-white p-6 border-b sticky top-0 z-10 flex flex-col gap-1">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto w-11/12 rounded-xl p-0 gap-0 border-none bg-muted/30">
+        <div className="bg-white p-6 border-b border-border sticky top-0 z-10 flex flex-col gap-1">
           <DialogTitle className="text-2xl font-bold text-primary">Editar Cadastro</DialogTitle>
           <DialogDescription>
             Atualize as informações cadastrais do agente prestador.
@@ -74,7 +74,7 @@ export function EditAgenteModal({ open, onOpenChange, agente, onSuccess }: EditA
                 <FormContent />
               </ImportedFieldsContext.Provider>
 
-              <div className="flex justify-end gap-3 pt-6 border-t mt-6">
+              <div className="flex justify-end gap-3 pt-6 border-t border-border mt-6">
                 <Button
                   variant="outline"
                   type="button"
@@ -87,7 +87,7 @@ export function EditAgenteModal({ open, onOpenChange, agente, onSuccess }: EditA
                 <Button
                   type="submit"
                   disabled={saving}
-                  className="rounded-xl h-11 px-8 bg-secondary hover:bg-secondary/90 text-white font-semibold"
+                  className="rounded-xl h-11 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-sm"
                 >
                   {saving ? 'Salvando...' : 'Salvar Alterações'}
                 </Button>

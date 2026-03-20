@@ -34,7 +34,7 @@ export function DashboardFilters({
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           placeholder="Buscar processos..."
-          className="pl-11 h-12 bg-muted/30 border-none rounded-xl text-sm focus-visible:ring-2 focus-visible:ring-secondary/50"
+          className="pl-11 h-12 bg-muted/30 border border-border rounded-xl text-sm focus-visible:ring-2 focus-visible:ring-primary/50"
           value={filters.search}
           onChange={(e) => setFilters({ search: e.target.value })}
         />
@@ -42,7 +42,7 @@ export function DashboardFilters({
 
       <div className="flex flex-wrap sm:flex-nowrap gap-3 items-center">
         <Select value={filters.status} onValueChange={(v) => setFilters({ status: v })}>
-          <SelectTrigger className="h-12 w-full sm:w-[180px] bg-muted/30 border-none rounded-xl">
+          <SelectTrigger className="h-12 w-full sm:w-[180px] bg-muted/30 border border-border rounded-xl">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -78,7 +78,7 @@ export function DashboardFilters({
           )}
           {canImport && (
             <Button
-              className="h-12 flex-1 sm:flex-none rounded-xl bg-secondary text-white hover:bg-secondary/90 font-semibold shadow-sm"
+              className="h-12 flex-1 sm:flex-none rounded-xl bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold shadow-sm"
               onClick={onImport}
             >
               <Upload className="w-4 h-4 sm:mr-2" />{' '}

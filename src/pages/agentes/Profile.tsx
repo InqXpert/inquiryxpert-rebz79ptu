@@ -136,25 +136,25 @@ export default function ProfileAgente() {
     const base = 'text-[11px] font-bold px-[8px] py-[4px] rounded-full'
     const s = status.toLowerCase()
     if (s.includes('concluíd') || s.includes('concluid') || s.includes('finaliz'))
-      return cn(base, 'bg-green-100 text-green-700')
+      return cn(base, 'bg-emerald-100 text-emerald-800')
     if (s.includes('andamento') || s.includes('execuç'))
-      return cn(base, 'bg-blue-100 text-blue-700')
+      return cn(base, 'bg-blue-100 text-blue-800')
     if (s.includes('pendent') || s.includes('aguardando'))
-      return cn(base, 'bg-yellow-100 text-yellow-700')
-    if (s.includes('pendencia')) return cn(base, 'bg-orange-100 text-orange-700')
+      return cn(base, 'bg-yellow-100 text-yellow-800')
+    if (s.includes('pendencia')) return cn(base, 'bg-orange-100 text-orange-800')
     return cn(base, 'bg-muted text-muted-foreground')
   }
 
   const getKPITextColor = (val?: string) => {
     if (!val) return 'text-muted-foreground'
     if (val.includes('NIVEL 1') || val.includes('ZERO') || val.includes('TREINAMENTO'))
-      return 'text-red-600'
+      return 'text-destructive'
     if (val.includes('NIVEL 2') || val.includes('PARCIAL') || val.includes('JUNIOR'))
       return 'text-orange-600'
     if (val.includes('NIVEL 3') || val.includes('ALTO') || val.includes('PLENO'))
       return 'text-blue-600'
     if (val.includes('NIVEL 4') || val.includes('TOTAL') || val.includes('SENIOR'))
-      return 'text-green-600'
+      return 'text-emerald-600'
     return 'text-muted-foreground'
   }
 
@@ -178,7 +178,7 @@ export default function ProfileAgente() {
           <Button
             variant="ghost"
             onClick={handleDelete}
-            className="text-destructive hover:bg-destructive/10 hover:text-destructive h-10 px-3 rounded-xl flex-1 sm:flex-none"
+            className="text-destructive hover:bg-destructive/10 hover:text-destructive h-10 px-3 rounded-xl flex-1 sm:flex-none font-medium"
             title="Remover"
           >
             <Trash className="w-4 h-4 sm:mr-2" /> <span className="sm:hidden">Remover</span>
@@ -186,12 +186,13 @@ export default function ProfileAgente() {
           <Button
             variant="outline"
             onClick={() => setEditModalOpen(true)}
-            className="h-10 px-4 rounded-xl gap-2 font-medium flex-1 sm:flex-none"
+            className="h-10 px-4 rounded-xl gap-2 font-medium flex-1 sm:flex-none border-border"
           >
             <Edit className="w-4 h-4" /> Editar
           </Button>
           <Button
-            className="bg-secondary text-white rounded-xl h-10 px-4 gap-2 hover:bg-secondary/90 font-semibold shadow-sm w-full sm:w-auto"
+            variant="secondary"
+            className="rounded-xl h-10 px-4 gap-2 font-semibold shadow-sm w-full sm:w-auto"
             onClick={() => navigate(`/agentes/${p.id}/sindicancia`)}
           >
             <Briefcase className="w-4 h-4" />
@@ -200,7 +201,7 @@ export default function ProfileAgente() {
         </div>
       </div>
 
-      <Card className="border-none shadow-sm rounded-2xl overflow-hidden animate-in fade-in duration-300 ease-out">
+      <Card className="border-none shadow-sm rounded-2xl overflow-hidden animate-in fade-in duration-300 ease-out bg-card">
         <CardContent className="p-8 grid grid-cols-1 lg:grid-cols-[220px_1fr_1fr_1fr] gap-8 md:items-start">
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
             <img
@@ -220,7 +221,7 @@ export default function ProfileAgente() {
                     navigator.clipboard.writeText(p.numero_controle!)
                     toast({
                       title: 'Número copiado!',
-                      className: 'bg-green-500 text-white border-none',
+                      className: 'bg-emerald-600 text-white border-none',
                     })
                   }}
                 >
@@ -230,7 +231,7 @@ export default function ProfileAgente() {
             )}
             <Badge
               variant="outline"
-              className="text-xs mt-3 bg-muted/50 text-muted-foreground font-medium border-none"
+              className="text-xs mt-3 bg-muted text-muted-foreground font-medium border-none"
             >
               {p.regiaoAbrangencia || 'Sem Especialidade'}
             </Badge>
@@ -241,7 +242,7 @@ export default function ProfileAgente() {
                 </div>
               )}
               {p.ativo === 'Sim' && (
-                <div className="bg-secondary/10 text-secondary text-xs font-bold px-3 py-1 rounded-full flex gap-1.5 items-center">
+                <div className="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full flex gap-1.5 items-center">
                   <CheckCircle2 className="w-3.5 h-3.5" /> Ativo
                 </div>
               )}
@@ -254,18 +255,18 @@ export default function ProfileAgente() {
             </h3>
             <div className="grid grid-cols-1 gap-3">
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col overflow-hidden">
-                  <span className="text-xs text-muted-foreground font-medium">Email</span>
+                  <span className="text-xs text-muted-foreground font-medium">E-mail</span>
                   <span className="text-sm text-foreground font-semibold truncate">
                     {p.email || '-'}
                   </span>
                 </div>
               </div>
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                   <Phone className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
@@ -276,7 +277,7 @@ export default function ProfileAgente() {
                 </div>
               </div>
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
@@ -295,7 +296,7 @@ export default function ProfileAgente() {
             </h3>
             <div className="grid grid-cols-1 gap-3">
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                   <DollarSign className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
@@ -306,7 +307,7 @@ export default function ProfileAgente() {
                 </div>
               </div>
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                   <Car className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
@@ -317,7 +318,7 @@ export default function ProfileAgente() {
                 </div>
               </div>
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                   <Key className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col">
@@ -339,7 +340,7 @@ export default function ProfileAgente() {
             </h3>
             <div className="grid grid-cols-1 gap-3">
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                   <Star className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col overflow-hidden">
@@ -355,7 +356,7 @@ export default function ProfileAgente() {
                 </div>
               </div>
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                   <Award className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col overflow-hidden">
@@ -371,7 +372,7 @@ export default function ProfileAgente() {
                 </div>
               </div>
               <div className="flex gap-3 items-center">
-                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center shrink-0">
                   <ShieldCheck className="w-4 h-4 text-muted-foreground" />
                 </div>
                 <div className="flex flex-col overflow-hidden">
@@ -393,7 +394,7 @@ export default function ProfileAgente() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {statsLoading
-          ? [1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-[104px] rounded-2xl bg-white" />)
+          ? [1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-[104px] rounded-2xl bg-card" />)
           : [
               {
                 title: 'Total Processos',
@@ -422,7 +423,7 @@ export default function ProfileAgente() {
             ].map((kpi, i) => (
               <Card
                 key={i}
-                className="border-none shadow-sm rounded-2xl overflow-hidden relative bg-white animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both"
+                className="border-none shadow-sm rounded-2xl overflow-hidden relative bg-card animate-in fade-in slide-in-from-bottom-4 ease-out fill-mode-both"
                 style={{ animationDelay: kpi.delay, animationDuration: '400ms' }}
               >
                 <CardContent className="p-5">
@@ -432,7 +433,7 @@ export default function ProfileAgente() {
                   <div className="text-3xl font-bold text-primary leading-none relative z-10">
                     {kpi.number}
                   </div>
-                  <p className="text-xs text-secondary font-medium mt-2 relative z-10">
+                  <p className="text-xs text-muted-foreground font-medium mt-2 relative z-10">
                     {kpi.subtitle}
                   </p>
                 </CardContent>
@@ -441,7 +442,7 @@ export default function ProfileAgente() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-6">
-        <Card className="border-none shadow-sm rounded-2xl p-6">
+        <Card className="border-none shadow-sm rounded-2xl p-6 bg-card">
           <div className="flex flex-row justify-between items-center mb-6">
             <h3 className="text-lg font-bold text-primary">Processos Recentes</h3>
             <Button
@@ -487,7 +488,7 @@ export default function ProfileAgente() {
           </div>
         </Card>
 
-        <Card className="border-none shadow-sm rounded-2xl p-6">
+        <Card className="border-none shadow-sm rounded-2xl p-6 bg-card">
           <h3 className="text-lg font-bold text-primary mb-6">Atividade Recente</h3>
           <div className="flex flex-col">
             {[

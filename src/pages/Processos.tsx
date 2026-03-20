@@ -73,7 +73,7 @@ export default function Processos() {
         </Button>
       </div>
 
-      <Card className="p-4 shadow-sm border-none rounded-2xl">
+      <Card className="p-4 shadow-sm border-none rounded-2xl bg-card">
         <DashboardFilters
           filters={filters}
           setFilters={setFilters}
@@ -85,7 +85,8 @@ export default function Processos() {
         />
       </Card>
 
-      <Card className="shadow-sm border-none rounded-2xl overflow-hidden pt-2">
+      {/* Table wrapper with square corners per AC */}
+      <Card className="shadow-sm border-none rounded-none overflow-hidden pt-2 bg-card">
         <ProcessosOperacionaisTable
           processos={processos}
           loading={loading}

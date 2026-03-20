@@ -1,12 +1,12 @@
 import { i as require_react, r as require_jsx_runtime, s as __toESM, t as cn } from "./utils-B9zKDa3a.js";
-import { a as Slot, n as Button, s as useComposedRefs } from "./dist-CfDxfQ0w.js";
+import { a as Slot, n as Button, s as useComposedRefs } from "./dist-dHjiV_RN.js";
 import { r as createLucideIcon } from "./client-riYRmEzR.js";
-import { C as composeEventHandlers, D as Check, S as createContextScope, a as Anchor, b as useControllableState, c as Root2, g as Primitive, i as Portal, l as createPopperScope, o as Arrow, p as DismissableLayer, r as Presence, s as Content, u as useId, y as createSlottable } from "./Combination-BCvivIoG.js";
-import { C as Input, S as Root, _ as Select, b as SelectTrigger, v as SelectContent, x as SelectValue, y as SelectItem } from "./dialog-DFkf6MNN.js";
-import { a as CommandInput, c as Popover, d as ChevronsUpDown, i as CommandGroup, l as PopoverContent, n as Command, o as CommandItem, r as CommandEmpty, s as CommandList, t as useMunicipios, u as PopoverTrigger } from "./use-municipios-BuS1LL5w.js";
+import { C as composeEventHandlers, D as Check, S as createContextScope, a as Anchor, b as useControllableState, c as Root2, g as Primitive, i as Portal, l as createPopperScope, o as Arrow, p as DismissableLayer, r as Presence, s as Content, u as useId, y as createSlottable } from "./Combination-CEhCbsmr.js";
+import { C as Input, S as Root, _ as Select, b as SelectTrigger, v as SelectContent, x as SelectValue, y as SelectItem } from "./dialog-CVmeRvqj.js";
+import { a as CommandInput, c as Popover, d as ChevronsUpDown, i as CommandGroup, l as PopoverContent, n as Command, o as CommandItem, r as CommandEmpty, s as CommandList, t as useMunicipios, u as PopoverTrigger } from "./use-municipios-DSVUM1s_.js";
 import { n as useToast } from "./use-toast-H4SPgTyl.js";
 import { i as CardTitle, n as CardContent, r as CardHeader, t as Card } from "./card-CYPuk1-X.js";
-import { n as Label, t as Textarea } from "./textarea-DLzpCiCU.js";
+import { n as Label, t as Textarea } from "./textarea-D1JkN-BV.js";
 var ChevronLeft = createLucideIcon("chevron-left", [["path", {
 	d: "m15 18-6-6 6-6",
 	key: "1wnfg3"
@@ -6339,7 +6339,7 @@ function FInput({ name, label, placeholder, type = "text" }) {
 				type,
 				...field,
 				value: field.value ?? "",
-				className: cn(isImported && "border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in")
+				className: cn(isImported && "border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in")
 			});
 			return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
 				"data-uid": "src/components/agentes/FormHelpers.tsx:63:11",
@@ -6431,7 +6431,7 @@ function FSelect({ name, label, options }) {
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
 											"data-uid": "src/components/agentes/FormHelpers.tsx:110:25",
 											"data-prohibitions": "[]",
-											className: "border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in",
+											className: "border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
 												"data-uid": "src/components/agentes/FormHelpers.tsx:111:27",
 												"data-prohibitions": "[editContent]",
@@ -6519,7 +6519,7 @@ function FCombobox({ name, label, options }) {
 								"data-prohibitions": "[editContent]",
 								variant: "outline",
 								role: "combobox",
-								className: cn("justify-between font-normal w-full", !field.value && "text-muted-foreground", isImported && "border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in"),
+								className: cn("justify-between font-normal w-full border-border", !field.value && "text-muted-foreground", isImported && "border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in"),
 								children: [field.value ? options.find((opt) => opt.value === field.value)?.label : "Selecione...", /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ChevronsUpDown, {
 									"data-uid": "src/components/agentes/FormHelpers.tsx:176:19",
 									"data-prohibitions": "[editContent]",
@@ -6606,7 +6606,7 @@ function FTextarea({ name, label, placeholder }) {
 				placeholder,
 				...field,
 				value: field.value ?? "",
-				className: cn(isImported && "border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in")
+				className: cn(isImported && "border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in")
 			});
 			return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(FormItem, {
 				"data-uid": "src/components/agentes/FormHelpers.tsx:251:11",
@@ -6662,25 +6662,25 @@ function FTextarea({ name, label, placeholder }) {
 //#region src/pages/agentes/FormContent.tsx
 var QUALIDADE_OPTIONS = [
 	{
-		label: "NIVEL 1 - Insatisfatorio/Abaixo do Esperado",
+		label: "NÍVEL 1 - Insatisfatório/Abaixo do Esperado",
 		value: "NIVEL 1 - Insatisfatorio/Abaixo do Esperado"
 	},
 	{
-		label: "NIVEL 2 - Basico/Regular",
+		label: "NÍVEL 2 - Básico/Regular",
 		value: "NIVEL 2 - Basico/Regular"
 	},
 	{
-		label: "NIVEL 3 - Alto/Esperado",
+		label: "NÍVEL 3 - Alto/Esperado",
 		value: "NIVEL 3 - Alto/Esperado"
 	},
 	{
-		label: "NIVEL 4 - Excede as Expectativas/Excelente",
+		label: "NÍVEL 4 - Excede as Expectativas/Excelente",
 		value: "NIVEL 4 - Excede as Expectativas/Excelente"
 	}
 ];
 var EXPERIENCIA_OPTIONS = [
 	{
-		label: "SENIOR: Atende todos os ramos",
+		label: "SÊNIOR: Atende todos os ramos",
 		value: "SENIOR: Atende todos os ramos"
 	},
 	{
@@ -6688,7 +6688,7 @@ var EXPERIENCIA_OPTIONS = [
 		value: "PLENO: Atende 1-2 ramos"
 	},
 	{
-		label: "JUNIOR: Atende 1 ramo com supervisao",
+		label: "JÚNIOR: Atende 1 ramo com supervisão",
 		value: "JUNIOR: Atende 1 ramo com supervisao"
 	},
 	{
@@ -6702,7 +6702,7 @@ var COMPLIANCE_OPTIONS = [
 		value: "COMPLIANCE TOTAL (BAIXO RISCO)"
 	},
 	{
-		label: "COMPLIANCE PARCIAL (MEDIO RISCO)",
+		label: "COMPLIANCE PARCIAL (MÉDIO RISCO)",
 		value: "COMPLIANCE PARCIAL (MEDIO RISCO)"
 	},
 	{
@@ -6726,7 +6726,7 @@ function FormContent() {
 			toast({
 				title: "Número copiado!",
 				description: "O número de controle foi copiado.",
-				className: "bg-green-500 text-white border-none"
+				className: "bg-emerald-600 text-white border-none"
 			});
 		}
 	};
@@ -6742,7 +6742,7 @@ function FormContent() {
 			numeroControle && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 				"data-uid": "src/pages/agentes/FormContent.tsx:65:9",
 				"data-prohibitions": "[editContent]",
-				className: "bg-primary text-white p-[12px] rounded-xl flex justify-between items-center font-bold shadow-sm",
+				className: "bg-primary text-primary-foreground p-[12px] rounded-xl flex justify-between items-center font-bold shadow-sm",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
 					"data-uid": "src/pages/agentes/FormContent.tsx:66:11",
 					"data-prohibitions": "[editContent]",
@@ -6753,7 +6753,7 @@ function FormContent() {
 					variant: "ghost",
 					size: "sm",
 					onClick: handleCopy,
-					className: "text-white hover:text-primary hover:bg-white font-semibold rounded-lg h-9",
+					className: "text-primary-foreground hover:text-primary hover:bg-white font-semibold rounded-lg h-9",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Copy, {
 						"data-uid": "src/pages/agentes/FormContent.tsx:73:13",
 						"data-prohibitions": "[editContent]",
@@ -6764,11 +6764,11 @@ function FormContent() {
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
 				"data-uid": "src/pages/agentes/FormContent.tsx:78:7",
 				"data-prohibitions": "[editContent]",
-				className: "rounded-2xl shadow-sm border-none",
+				className: "rounded-2xl shadow-sm border-none bg-card",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
 					"data-uid": "src/pages/agentes/FormContent.tsx:79:9",
 					"data-prohibitions": "[]",
-					className: "border-b border-muted/50 pb-4 mb-4",
+					className: "border-b border-border pb-4 mb-4",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
 						"data-uid": "src/pages/agentes/FormContent.tsx:80:11",
 						"data-prohibitions": "[]",
@@ -6838,7 +6838,7 @@ function FormContent() {
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							"data-uid": "src/pages/agentes/FormContent.tsx:97:11",
 							"data-prohibitions": "[editContent]",
-							className: "col-span-full border-t border-muted/50 my-2"
+							className: "col-span-full border-t border-border my-2"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							"data-uid": "src/pages/agentes/FormContent.tsx:98:11",
@@ -6897,7 +6897,7 @@ function FormContent() {
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							"data-uid": "src/pages/agentes/FormContent.tsx:118:11",
 							"data-prohibitions": "[editContent]",
-							className: "col-span-full border-t border-muted/50 my-2"
+							className: "col-span-full border-t border-border my-2"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
 							"data-uid": "src/pages/agentes/FormContent.tsx:119:11",
@@ -6936,11 +6936,11 @@ function FormContent() {
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
 					"data-uid": "src/pages/agentes/FormContent.tsx:137:9",
 					"data-prohibitions": "[editContent]",
-					className: "rounded-2xl shadow-sm border-none",
+					className: "rounded-2xl shadow-sm border-none bg-card",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
 						"data-uid": "src/pages/agentes/FormContent.tsx:138:11",
 						"data-prohibitions": "[]",
-						className: "border-b border-muted/50 pb-4 mb-4",
+						className: "border-b border-border pb-4 mb-4",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
 							"data-uid": "src/pages/agentes/FormContent.tsx:139:13",
 							"data-prohibitions": "[]",
@@ -7004,11 +7004,11 @@ function FormContent() {
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
 					"data-uid": "src/pages/agentes/FormContent.tsx:156:9",
 					"data-prohibitions": "[]",
-					className: "rounded-2xl shadow-sm border-none",
+					className: "rounded-2xl shadow-sm border-none bg-card",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
 						"data-uid": "src/pages/agentes/FormContent.tsx:157:11",
 						"data-prohibitions": "[]",
-						className: "border-b border-muted/50 pb-4 mb-4",
+						className: "border-b border-border pb-4 mb-4",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
 							"data-uid": "src/pages/agentes/FormContent.tsx:158:13",
 							"data-prohibitions": "[]",
@@ -7052,11 +7052,11 @@ function FormContent() {
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
 					"data-uid": "src/pages/agentes/FormContent.tsx:171:9",
 					"data-prohibitions": "[editContent]",
-					className: "rounded-2xl shadow-sm border-none",
+					className: "rounded-2xl shadow-sm border-none bg-card",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
 						"data-uid": "src/pages/agentes/FormContent.tsx:172:11",
 						"data-prohibitions": "[]",
-						className: "border-b border-muted/50 pb-4 mb-4",
+						className: "border-b border-border pb-4 mb-4",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
 							"data-uid": "src/pages/agentes/FormContent.tsx:173:13",
 							"data-prohibitions": "[]",
@@ -7110,11 +7110,11 @@ function FormContent() {
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
 					"data-uid": "src/pages/agentes/FormContent.tsx:188:9",
 					"data-prohibitions": "[]",
-					className: "rounded-2xl shadow-sm border-none",
+					className: "rounded-2xl shadow-sm border-none bg-card",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
 						"data-uid": "src/pages/agentes/FormContent.tsx:189:11",
 						"data-prohibitions": "[]",
-						className: "border-b border-muted/50 pb-4 mb-4",
+						className: "border-b border-border pb-4 mb-4",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
 							"data-uid": "src/pages/agentes/FormContent.tsx:190:13",
 							"data-prohibitions": "[]",
@@ -7154,4 +7154,4 @@ function FormContent() {
 //#endregion
 export { a, ChevronLeft as c, agenteSchema as i, ImportedFieldsContext as n, useForm as o, Form as r, Copy as s, FormContent as t };
 
-//# sourceMappingURL=FormContent-DHuMzupe.js.map
+//# sourceMappingURL=FormContent-Bf2krv0v.js.map

@@ -8,27 +8,27 @@ import { useMunicipios } from '@/hooks/use-municipios'
 
 const QUALIDADE_OPTIONS = [
   {
-    label: 'NIVEL 1 - Insatisfatorio/Abaixo do Esperado',
+    label: 'NÍVEL 1 - Insatisfatório/Abaixo do Esperado',
     value: 'NIVEL 1 - Insatisfatorio/Abaixo do Esperado',
   },
-  { label: 'NIVEL 2 - Basico/Regular', value: 'NIVEL 2 - Basico/Regular' },
-  { label: 'NIVEL 3 - Alto/Esperado', value: 'NIVEL 3 - Alto/Esperado' },
+  { label: 'NÍVEL 2 - Básico/Regular', value: 'NIVEL 2 - Basico/Regular' },
+  { label: 'NÍVEL 3 - Alto/Esperado', value: 'NIVEL 3 - Alto/Esperado' },
   {
-    label: 'NIVEL 4 - Excede as Expectativas/Excelente',
+    label: 'NÍVEL 4 - Excede as Expectativas/Excelente',
     value: 'NIVEL 4 - Excede as Expectativas/Excelente',
   },
 ]
 
 const EXPERIENCIA_OPTIONS = [
-  { label: 'SENIOR: Atende todos os ramos', value: 'SENIOR: Atende todos os ramos' },
+  { label: 'SÊNIOR: Atende todos os ramos', value: 'SENIOR: Atende todos os ramos' },
   { label: 'PLENO: Atende 1-2 ramos', value: 'PLENO: Atende 1-2 ramos' },
-  { label: 'JUNIOR: Atende 1 ramo com supervisao', value: 'JUNIOR: Atende 1 ramo com supervisao' },
+  { label: 'JÚNIOR: Atende 1 ramo com supervisão', value: 'JUNIOR: Atende 1 ramo com supervisao' },
   { label: 'EM TREINAMENTO: Executa etapas', value: 'EM TREINAMENTO: Executa etapas' },
 ]
 
 const COMPLIANCE_OPTIONS = [
   { label: 'COMPLIANCE TOTAL (BAIXO RISCO)', value: 'COMPLIANCE TOTAL (BAIXO RISCO)' },
-  { label: 'COMPLIANCE PARCIAL (MEDIO RISCO)', value: 'COMPLIANCE PARCIAL (MEDIO RISCO)' },
+  { label: 'COMPLIANCE PARCIAL (MÉDIO RISCO)', value: 'COMPLIANCE PARCIAL (MEDIO RISCO)' },
   { label: 'COMPLIANCE ZERO (ALTO RISCO)', value: 'COMPLIANCE ZERO (ALTO RISCO)' },
 ]
 
@@ -50,7 +50,7 @@ export function FormContent() {
       toast({
         title: 'Número copiado!',
         description: 'O número de controle foi copiado.',
-        className: 'bg-green-500 text-white border-none',
+        className: 'bg-emerald-600 text-white border-none',
       })
     }
   }
@@ -62,21 +62,21 @@ export function FormContent() {
   return (
     <div className="grid gap-6">
       {numeroControle && (
-        <div className="bg-primary text-white p-[12px] rounded-xl flex justify-between items-center font-bold shadow-sm">
+        <div className="bg-primary text-primary-foreground p-[12px] rounded-xl flex justify-between items-center font-bold shadow-sm">
           <span>Número de Controle: {numeroControle}</span>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCopy}
-            className="text-white hover:text-primary hover:bg-white font-semibold rounded-lg h-9"
+            className="text-primary-foreground hover:text-primary hover:bg-white font-semibold rounded-lg h-9"
           >
             <Copy className="w-4 h-4 mr-2" /> Copiar
           </Button>
         </div>
       )}
 
-      <Card className="rounded-2xl shadow-sm border-none">
-        <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+      <Card className="rounded-2xl shadow-sm border-none bg-card">
+        <CardHeader className="border-b border-border pb-4 mb-4">
           <CardTitle className="text-lg font-semibold text-primary">
             Dados Cadastrais do Agente
           </CardTitle>
@@ -94,7 +94,7 @@ export function FormContent() {
             <FInput name="vinculoTerceiroNf" label="Qual o vínculo do terceiro (NF)?" />
           )}
 
-          <div className="col-span-full border-t border-muted/50 my-2" />
+          <div className="col-span-full border-t border-border my-2" />
           <div className="col-span-full font-semibold text-primary text-sm -mb-2">
             Localização e Contato
           </div>
@@ -115,7 +115,7 @@ export function FormContent() {
           <FInput name="telefone" label="Telefone" />
           <FInput name="email" label="E-mail" type="email" />
 
-          <div className="col-span-full border-t border-muted/50 my-2" />
+          <div className="col-span-full border-t border-border my-2" />
           <div className="col-span-full font-semibold text-primary text-sm -mb-2">
             Métricas de Avaliação (KPIs)
           </div>
@@ -134,8 +134,8 @@ export function FormContent() {
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="rounded-2xl shadow-sm border-none">
-          <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+        <Card className="rounded-2xl shadow-sm border-none bg-card">
+          <CardHeader className="border-b border-border pb-4 mb-4">
             <CardTitle className="text-lg font-semibold text-primary">Dados Bancários</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -153,8 +153,8 @@ export function FormContent() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl shadow-sm border-none">
-          <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+        <Card className="rounded-2xl shadow-sm border-none bg-card">
+          <CardHeader className="border-b border-border pb-4 mb-4">
             <CardTitle className="text-lg font-semibold text-primary">
               Condições Comerciais
             </CardTitle>
@@ -168,8 +168,8 @@ export function FormContent() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="rounded-2xl shadow-sm border-none">
-          <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+        <Card className="rounded-2xl shadow-sm border-none bg-card">
+          <CardHeader className="border-b border-border pb-4 mb-4">
             <CardTitle className="text-lg font-semibold text-primary">Status do Agente</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -185,8 +185,8 @@ export function FormContent() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl shadow-sm border-none">
-          <CardHeader className="border-b border-muted/50 pb-4 mb-4">
+        <Card className="rounded-2xl shadow-sm border-none bg-card">
+          <CardHeader className="border-b border-border pb-4 mb-4">
             <CardTitle className="text-lg font-semibold text-primary">Outras Informações</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 gap-6">

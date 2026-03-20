@@ -143,10 +143,10 @@ export function ImportAgenteModal({ open, onOpenChange }: ImportAgenteModalProps
           />
 
           {file ? (
-            <div className="border-2 border-dashed border-green-400 bg-green-50 rounded-[12px] p-[24px] text-center transition-colors duration-200">
-              <div className="flex flex-row justify-between items-center bg-white p-[12px] rounded-lg border border-green-200 shadow-sm">
+            <div className="border-2 border-dashed border-secondary bg-secondary/5 rounded-[12px] p-[24px] text-center transition-colors duration-200">
+              <div className="flex flex-row justify-between items-center bg-white p-[12px] rounded-lg border border-border shadow-sm">
                 <div className="flex items-center gap-[12px]">
-                  <FileSpreadsheet className="w-[20px] h-[20px] text-green-600" />
+                  <FileSpreadsheet className="w-[20px] h-[20px] text-secondary" />
                   <div className="flex flex-col text-left">
                     <span className="text-[14px] text-foreground font-medium">{file.name}</span>
                     <span className="text-[12px] text-muted-foreground">
@@ -172,7 +172,7 @@ export function ImportAgenteModal({ open, onOpenChange }: ImportAgenteModalProps
 
               {status === 'loading' ? (
                 <div className="mt-[24px] flex flex-col items-center justify-center">
-                  <Loader2 className="w-6 h-6 animate-spin text-green-600 mb-2" />
+                  <Loader2 className="w-6 h-6 animate-spin text-secondary mb-2" />
                   <span className="text-[13px] text-muted-foreground">Analisando planilha...</span>
                 </div>
               ) : analysis ? (
@@ -180,7 +180,7 @@ export function ImportAgenteModal({ open, onOpenChange }: ImportAgenteModalProps
                   <div className="flex flex-col gap-[8px]">
                     {analysis.matched.length > 0 && (
                       <div className="flex flex-row gap-[8px] items-start">
-                        <CheckCircle2 className="w-[14px] h-[14px] text-green-600 mt-0.5 shrink-0" />
+                        <CheckCircle2 className="w-[14px] h-[14px] text-secondary mt-0.5 shrink-0" />
                         <span className="text-[13px] text-foreground">
                           <strong>{analysis.matched.length}</strong> colunas mapeadas com sucesso.
                         </span>
@@ -230,8 +230,8 @@ export function ImportAgenteModal({ open, onOpenChange }: ImportAgenteModalProps
               className={cn(
                 'border-2 border-dashed rounded-[12px] p-[40px_24px] text-center transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary',
                 dragOver
-                  ? 'border-primary bg-accent/30'
-                  : 'border-border bg-transparent hover:border-primary hover:bg-accent/30',
+                  ? 'border-primary bg-accent/10'
+                  : 'border-border bg-transparent hover:border-primary hover:bg-accent/10',
                 status === 'loading' && 'opacity-50 pointer-events-none',
               )}
             >
@@ -251,7 +251,7 @@ export function ImportAgenteModal({ open, onOpenChange }: ImportAgenteModalProps
             <button
               type="button"
               onClick={downloadTemplate}
-              className="text-[13px] text-primary hover:underline font-medium flex flex-row gap-[6px] items-center"
+              className="text-[13px] text-primary hover:text-secondary hover:underline font-medium flex flex-row gap-[6px] items-center"
             >
               <Download className="w-[14px] h-[14px]" /> Baixar modelo de planilha
             </button>

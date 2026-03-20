@@ -1,6 +1,6 @@
 import { i as require_react, r as require_jsx_runtime, s as __toESM, t as cn } from "./utils-B9zKDa3a.js";
-import { C as composeEventHandlers, S as createContextScope, b as useControllableState, g as Primitive, m as useDirection, r as Presence, u as useId } from "./Combination-BCvivIoG.js";
-import { n as Root, r as createRovingFocusGroupScope, t as Item } from "./index-fsq4WBn3.js";
+import { C as composeEventHandlers, S as createContextScope, b as useControllableState, g as Primitive, m as useDirection, r as Presence, u as useId } from "./Combination-CEhCbsmr.js";
+import { n as Root, r as createRovingFocusGroupScope, t as Item } from "./index-Dn3ljv-x.js";
 //#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/@radix-ui+react-tabs@1.1.13_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react@_2ad0945e3cb98dc5bbfaaf29c105e977/node_modules/@radix-ui/react-tabs/dist/index.mjs
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
@@ -151,7 +151,7 @@ var TabsTrigger = import_react.forwardRef(({ className, ...props }, ref) => /* @
 	"data-uid": "src/components/ui/tabs.tsx:27:3",
 	"data-prohibitions": "[editContent]",
 	ref,
-	className: cn("inline-flex items-center justify-center whitespace-nowrap px-6 py-3.5 text-[14px] font-semibold transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground bg-transparent border-b-2 border-transparent hover:text-foreground hover:bg-muted/30 -mb-[1px]", className),
+	className: cn("inline-flex items-center justify-center whitespace-nowrap px-6 py-3.5 text-[14px] font-semibold transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary bg-transparent border-b-2 border-transparent hover:text-primary hover:bg-muted/30 -mb-[1px]", className),
 	...props
 }));
 TabsTrigger.displayName = Trigger.displayName;
@@ -166,4 +166,4 @@ TabsContent.displayName = Content.displayName;
 //#endregion
 export { TabsTrigger as i, TabsContent as n, TabsList as r, Tabs as t };
 
-//# sourceMappingURL=tabs-DCR8MQ3z.js.map
+//# sourceMappingURL=tabs-yFu_Gxp_.js.map

@@ -27,7 +27,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAgentes } from '@/hooks/use-agentes'
 import { ImportAgenteModal } from '@/components/agentes/ImportAgenteModal'
@@ -70,34 +69,34 @@ export default function AgentesList() {
   })
 
   return (
-    <div className="flex flex-col h-full bg-card border shadow-sm rounded-md">
+    <div className="flex flex-col h-full bg-card border shadow-sm rounded-none">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 py-6 pb-4 bg-white rounded-t-md">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-6 py-6 pb-4 bg-white rounded-none">
         <div>
           <h1 className="text-[24px] font-bold tracking-tight text-foreground flex items-center gap-3">
             Agentes
             <ChevronDown className="w-[18px] h-[18px] text-muted-foreground mt-1 cursor-pointer hover:text-foreground transition-colors" />
           </h1>
           <p className="text-[13px] font-medium text-muted-foreground mt-1">
-            {filtered.length} records
+            {filtered.length} registros
           </p>
         </div>
         <div className="flex items-center gap-3 mt-4 md:mt-0">
           <Button variant="outline" className="text-foreground h-9 font-semibold text-[13px]">
-            Actions <ChevronDown className="w-[14px] h-[14px] ml-2 text-muted-foreground" />
+            Ações <ChevronDown className="w-[14px] h-[14px] ml-2 text-muted-foreground" />
           </Button>
           <Button
             variant="outline"
             className="text-primary font-semibold border-primary/30 hover:bg-primary/5 h-9 text-[13px]"
             onClick={() => setIsImportModalOpen(true)}
           >
-            Import
+            Importar
           </Button>
           <Button
-            className="bg-primary hover:bg-primary/90 text-white shadow-none h-9 font-semibold text-[13px] px-5"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-none h-9 font-semibold text-[13px] px-5"
             onClick={() => navigate('/agentes/novo')}
           >
-            Create agente
+            Novo Agente
           </Button>
         </div>
       </div>
@@ -105,22 +104,22 @@ export default function AgentesList() {
       <Tabs defaultValue="list" className="w-full flex flex-col flex-1">
         <div className="px-6 border-b border-border bg-white">
           <TabsList className="w-auto border-none h-auto">
-            <TabsTrigger value="list">All agentes</TabsTrigger>
-            <TabsTrigger value="map">Map view</TabsTrigger>
+            <TabsTrigger value="list">Todos os agentes</TabsTrigger>
+            <TabsTrigger value="map">Visão do mapa</TabsTrigger>
           </TabsList>
         </div>
 
         <TabsContent value="list" className="m-0 border-none outline-none flex flex-col flex-1">
           {/* Tag Filters Area */}
-          <div className="px-6 py-2.5 flex flex-wrap gap-2 items-center border-b border-border bg-[#f5f8fa]">
+          <div className="px-6 py-2.5 flex flex-wrap gap-2 items-center border-b border-border bg-muted/30">
             <Select value={searchMode} onValueChange={setSearchMode}>
               <SelectTrigger className="h-8 w-auto min-w-[140px] border-transparent hover:bg-muted/60 bg-transparent shadow-none font-medium text-[13px] text-foreground focus:ring-0">
-                <span className="text-muted-foreground mr-1.5 font-normal">Filter by:</span>{' '}
+                <span className="text-muted-foreground mr-1.5 font-normal">Filtrar por:</span>{' '}
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Nome">Name/Doc</SelectItem>
-                <SelectItem value="Região">Region</SelectItem>
+                <SelectItem value="Nome">Nome/Doc</SelectItem>
+                <SelectItem value="Região">Região</SelectItem>
                 <SelectItem value="Status/Blacklist">Status</SelectItem>
               </SelectContent>
             </Select>
@@ -130,13 +129,13 @@ export default function AgentesList() {
                 <div className="h-4 w-[1px] bg-border mx-1"></div>
                 <Select value={status} onValueChange={setStatus}>
                   <SelectTrigger className="h-8 w-auto min-w-[120px] border-transparent hover:bg-muted/60 bg-transparent shadow-none font-medium text-[13px] text-foreground focus:ring-0">
-                    <span className="text-muted-foreground mr-1.5 font-normal">Active:</span>{' '}
+                    <span className="text-muted-foreground mr-1.5 font-normal">Ativo:</span>{' '}
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Todos">All</SelectItem>
-                    <SelectItem value="Sim">Yes</SelectItem>
-                    <SelectItem value="Não">No</SelectItem>
+                    <SelectItem value="Todos">Todos</SelectItem>
+                    <SelectItem value="Sim">Sim</SelectItem>
+                    <SelectItem value="Não">Não</SelectItem>
                   </SelectContent>
                 </Select>
                 <Select value={blacklist} onValueChange={setBlacklist}>
@@ -145,9 +144,9 @@ export default function AgentesList() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Todos">All</SelectItem>
-                    <SelectItem value="Sim">Blacklisted</SelectItem>
-                    <SelectItem value="Não">Clean</SelectItem>
+                    <SelectItem value="Todos">Todos</SelectItem>
+                    <SelectItem value="Sim">Na Blacklist</SelectItem>
+                    <SelectItem value="Não">Normal</SelectItem>
                   </SelectContent>
                 </Select>
               </>
@@ -157,7 +156,7 @@ export default function AgentesList() {
               variant="ghost"
               className="h-8 text-primary font-semibold text-[13px] px-3 ml-auto hover:bg-primary/5 hover:text-primary"
             >
-              Advanced filters (0)
+              Filtros avançados (0)
             </Button>
           </div>
 
@@ -168,10 +167,10 @@ export default function AgentesList() {
               <Input
                 placeholder={
                   searchMode === 'Nome'
-                    ? 'Search name, doc, phone...'
+                    ? 'Pesquisar nome, doc, telefone...'
                     : searchMode === 'Região'
-                      ? 'Search city, state...'
-                      : 'Search...'
+                      ? 'Pesquisar cidade, estado...'
+                      : 'Pesquisar...'
                 }
                 className="pl-9 h-8 text-[13px] border-border bg-white rounded-[3px] shadow-none focus-visible:ring-1 focus-visible:ring-primary/40 focus-visible:border-primary/40"
                 value={search}
@@ -185,20 +184,20 @@ export default function AgentesList() {
                 size="sm"
                 className="h-8 text-[12px] font-semibold text-foreground border-border"
               >
-                Export
+                Exportar
               </Button>
               <Button
                 variant="outline"
                 size="sm"
                 className="h-8 text-[12px] font-semibold text-foreground border-border"
               >
-                Edit columns
+                Editar colunas
               </Button>
             </div>
           </div>
 
-          {/* Table Container */}
-          <div className="overflow-auto flex-1 bg-white rounded-b-md">
+          {/* Table Container - Square Corners */}
+          <div className="overflow-auto flex-1 bg-white rounded-none">
             {loading ? (
               <div className="flex flex-col gap-2 p-6">
                 {[...Array(5)].map((_, i) => (
@@ -208,20 +207,22 @@ export default function AgentesList() {
             ) : filtered.length === 0 ? (
               <div className="flex-1 flex flex-col items-center justify-center py-24 text-muted-foreground bg-white">
                 <Search className="w-10 h-10 text-muted-foreground/40 mb-4" />
-                <h3 className="text-lg font-semibold text-foreground mb-1">No agents found</h3>
-                <p className="text-[13px]">Try adjusting your search or filter criteria.</p>
+                <h3 className="text-lg font-semibold text-foreground mb-1">
+                  Nenhum agente encontrado
+                </h3>
+                <p className="text-[13px]">Tente ajustar seus critérios de busca ou filtros.</p>
               </div>
             ) : (
               <Table>
                 <TableHeader>
-                  <TableRow className="hover:bg-[#f5f8fa]">
+                  <TableRow className="hover:bg-muted/30">
                     <TableHead className="w-[40px] px-6">
                       <div className="w-3.5 h-3.5 rounded-[2px] border border-muted-foreground/40 bg-white"></div>
                     </TableHead>
-                    <TableHead>NAME</TableHead>
-                    <TableHead>EMAIL</TableHead>
-                    <TableHead>PHONE NUMBER</TableHead>
-                    <TableHead>REGION</TableHead>
+                    <TableHead>NOME</TableHead>
+                    <TableHead>E-MAIL</TableHead>
+                    <TableHead>TELEFONE</TableHead>
+                    <TableHead>REGIÃO</TableHead>
                     <TableHead>STATUS</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -229,14 +230,14 @@ export default function AgentesList() {
                   {filtered.map((p) => (
                     <TableRow
                       key={p.id}
-                      className="cursor-pointer group"
+                      className="cursor-pointer group rounded-none"
                       onClick={() => navigate(`/agentes/${p.id}`)}
                     >
                       <TableCell className="px-6 py-3 w-[40px]">
                         <div className="w-3.5 h-3.5 rounded-[2px] border border-muted-foreground/40 bg-white group-hover:border-primary"></div>
                       </TableCell>
                       <TableCell className="py-3 font-semibold flex items-center gap-3">
-                        <div className="w-[30px] h-[30px] rounded-full bg-[#f5f8fa] border border-border flex items-center justify-center text-[#516f90] font-bold text-[11px] shrink-0">
+                        <div className="w-[30px] h-[30px] rounded-full bg-muted border border-border flex items-center justify-center text-muted-foreground font-bold text-[11px] shrink-0">
                           {p.nomeCompleto.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex flex-col overflow-hidden">
@@ -270,15 +271,15 @@ export default function AgentesList() {
                       <TableCell className="py-3">
                         {p.naBlackList === 'Sim' ? (
                           <div className="flex items-center gap-1.5 text-destructive font-semibold text-[12px]">
-                            <Lock className="w-3.5 h-3.5" /> Blacklisted
+                            <Lock className="w-3.5 h-3.5" /> Na Blacklist
                           </div>
                         ) : p.ativo === 'Sim' ? (
                           <div className="flex items-center gap-1.5 text-emerald-600 font-semibold text-[12px]">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Active
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Ativo
                           </div>
                         ) : (
                           <div className="flex items-center gap-1.5 text-muted-foreground font-semibold text-[12px]">
-                            <Unlock className="w-3.5 h-3.5" /> Inactive
+                            <Unlock className="w-3.5 h-3.5" /> Inativo
                           </div>
                         )}
                       </TableCell>
@@ -289,25 +290,25 @@ export default function AgentesList() {
             )}
           </div>
 
-          {/* Pagination Footer (Mocked visually to match HubSpot) */}
-          <div className="px-6 py-3 border-t border-border bg-white flex items-center justify-between text-[12px] font-medium text-muted-foreground rounded-b-md">
-            <span>{filtered.length} records</span>
+          {/* Pagination Footer */}
+          <div className="px-6 py-3 border-t border-border bg-white flex items-center justify-between text-[12px] font-medium text-muted-foreground rounded-none">
+            <span>{filtered.length} registros</span>
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-2">
-                <span className="opacity-50 cursor-not-allowed text-primary">Prev</span>
+                <span className="opacity-50 cursor-not-allowed text-primary">Anterior</span>
                 <span className="w-6 h-6 rounded flex items-center justify-center bg-primary/10 text-primary font-bold">
                   1
                 </span>
-                <span className="opacity-50 cursor-not-allowed text-primary">Next</span>
+                <span className="opacity-50 cursor-not-allowed text-primary">Próxima</span>
               </div>
               <span>
-                25 per page <ChevronDown className="inline w-3 h-3 ml-1" />
+                25 por página <ChevronDown className="inline w-3 h-3 ml-1" />
               </span>
             </div>
           </div>
         </TabsContent>
 
-        <TabsContent value="map" className="m-0 bg-white p-6 rounded-b-md flex-1 outline-none">
+        <TabsContent value="map" className="m-0 bg-white p-6 rounded-none flex-1 outline-none">
           <InvestigationMap agentes={agentes} loading={loading} />
         </TabsContent>
       </Tabs>

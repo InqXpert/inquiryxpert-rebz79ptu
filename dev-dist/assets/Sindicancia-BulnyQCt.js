@@ -1,5 +1,5 @@
 import { i as require_react, r as require_jsx_runtime, s as __toESM } from "./utils-B9zKDa3a.js";
-import { g as useParams, h as useNavigate, n as Button } from "./dist-CfDxfQ0w.js";
+import { g as useParams, h as useNavigate, n as Button } from "./dist-dHjiV_RN.js";
 import { r as createLucideIcon } from "./client-riYRmEzR.js";
 import { t as CircleCheckBig } from "./circle-check-big-DI1rpziZ.js";
 import { t as CloudUpload } from "./cloud-upload-3R6IcAUB.js";
@@ -7,12 +7,12 @@ import { t as FileText } from "./file-text-DJNMni87.js";
 import { t as Mail } from "./mail-DNsT85PH.js";
 import { t as Save } from "./save-BUBJ1k9z.js";
 import { n as useToast, r as X } from "./use-toast-H4SPgTyl.js";
-import { i as useAuth } from "./index-fsq4WBn3.js";
+import { i as useAuth } from "./index-Dn3ljv-x.js";
 import { n as CardContent, t as Card } from "./card-CYPuk1-X.js";
 import { f as getNextNumeroControle, m as uploadDocumento, r as createProcesso } from "./procesosOperacionais-DeOfYZQQ.js";
 import { t as Skeleton } from "./skeleton-D_PnG1bN.js";
 import { r as getAgente } from "./agentes-CRY-zTvE.js";
-import { n as Label, t as Textarea } from "./textarea-DLzpCiCU.js";
+import { n as Label, t as Textarea } from "./textarea-D1JkN-BV.js";
 var ArrowLeft = createLucideIcon("arrow-left", [["path", {
 	d: "m12 19-7-7 7-7",
 	key: "1l729n"
@@ -136,56 +136,56 @@ function Sindicancia() {
 		});
 	};
 	if (loading) return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/agentes/Sindicancia.tsx:153:7",
+		"data-uid": "src/pages/agentes/Sindicancia.tsx:151:7",
 		"data-prohibitions": "[]",
 		className: "max-w-4xl mx-auto space-y-6 animate-pulse",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
-			"data-uid": "src/pages/agentes/Sindicancia.tsx:154:9",
+			"data-uid": "src/pages/agentes/Sindicancia.tsx:152:9",
 			"data-prohibitions": "[editContent]",
 			className: "h-10 w-64"
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
-			"data-uid": "src/pages/agentes/Sindicancia.tsx:155:9",
+			"data-uid": "src/pages/agentes/Sindicancia.tsx:153:9",
 			"data-prohibitions": "[editContent]",
 			className: "h-[400px] w-full rounded-2xl"
 		})]
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-		"data-uid": "src/pages/agentes/Sindicancia.tsx:160:5",
+		"data-uid": "src/pages/agentes/Sindicancia.tsx:158:5",
 		"data-prohibitions": "[editContent]",
 		className: "max-w-5xl mx-auto pb-20 space-y-6 animate-in fade-in duration-500",
 		children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			"data-uid": "src/pages/agentes/Sindicancia.tsx:161:7",
+			"data-uid": "src/pages/agentes/Sindicancia.tsx:159:7",
 			"data-prohibitions": "[editContent]",
 			className: "flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4",
 			children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/agentes/Sindicancia.tsx:162:9",
+				"data-uid": "src/pages/agentes/Sindicancia.tsx:160:9",
 				"data-prohibitions": "[editContent]",
 				children: [
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-						"data-uid": "src/pages/agentes/Sindicancia.tsx:163:11",
+						"data-uid": "src/pages/agentes/Sindicancia.tsx:161:11",
 						"data-prohibitions": "[]",
 						variant: "ghost",
 						size: "sm",
 						className: "gap-2 text-muted-foreground hover:text-primary hover:bg-transparent px-0 mb-2",
 						onClick: () => navigate(-1),
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ArrowLeft, {
-							"data-uid": "src/pages/agentes/Sindicancia.tsx:169:13",
+							"data-uid": "src/pages/agentes/Sindicancia.tsx:167:13",
 							"data-prohibitions": "[editContent]",
 							className: "w-4 h-4"
 						}), "Voltar para Perfil"]
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h1", {
-						"data-uid": "src/pages/agentes/Sindicancia.tsx:172:11",
+						"data-uid": "src/pages/agentes/Sindicancia.tsx:170:11",
 						"data-prohibitions": "[]",
 						className: "text-3xl font-bold text-primary tracking-tight",
 						children: "Orientações para Sindicância"
 					}),
 					/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("p", {
-						"data-uid": "src/pages/agentes/Sindicancia.tsx:175:11",
+						"data-uid": "src/pages/agentes/Sindicancia.tsx:173:11",
 						"data-prohibitions": "[editContent]",
 						className: "text-muted-foreground mt-1 font-medium",
 						children: ["Agente: ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-							"data-uid": "src/pages/agentes/Sindicancia.tsx:176:21",
+							"data-uid": "src/pages/agentes/Sindicancia.tsx:174:21",
 							"data-prohibitions": "[editContent]",
 							className: "text-primary font-bold",
 							children: agente?.nomeCompleto
@@ -194,46 +194,46 @@ function Sindicancia() {
 				]
 			})
 		}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-			"data-uid": "src/pages/agentes/Sindicancia.tsx:181:7",
+			"data-uid": "src/pages/agentes/Sindicancia.tsx:179:7",
 			"data-prohibitions": "[editContent]",
 			className: "grid grid-cols-1 lg:grid-cols-3 gap-6",
 			children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/pages/agentes/Sindicancia.tsx:182:9",
+				"data-uid": "src/pages/agentes/Sindicancia.tsx:180:9",
 				"data-prohibitions": "[editContent]",
 				className: "lg:col-span-2 space-y-6",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-					"data-uid": "src/pages/agentes/Sindicancia.tsx:183:11",
+					"data-uid": "src/pages/agentes/Sindicancia.tsx:181:11",
 					"data-prohibitions": "[]",
-					className: "rounded-2xl border-none shadow-sm",
+					className: "rounded-2xl border-none shadow-sm bg-card",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardContent, {
-						"data-uid": "src/pages/agentes/Sindicancia.tsx:184:13",
+						"data-uid": "src/pages/agentes/Sindicancia.tsx:182:13",
 						"data-prohibitions": "[]",
 						className: "p-6",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-							"data-uid": "src/pages/agentes/Sindicancia.tsx:185:15",
+							"data-uid": "src/pages/agentes/Sindicancia.tsx:183:15",
 							"data-prohibitions": "[]",
 							className: "space-y-4",
 							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:186:17",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:184:17",
 								"data-prohibitions": "[]",
 								className: "space-y-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Label, {
-									"data-uid": "src/pages/agentes/Sindicancia.tsx:187:19",
+									"data-uid": "src/pages/agentes/Sindicancia.tsx:185:19",
 									"data-prohibitions": "[]",
 									htmlFor: "orientacoes",
 									className: "text-base font-semibold text-primary",
 									children: ["Orientações de Execução ", /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:188:45",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:186:45",
 										"data-prohibitions": "[]",
 										className: "text-destructive",
 										children: "*"
 									})]
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Textarea, {
-									"data-uid": "src/pages/agentes/Sindicancia.tsx:190:19",
+									"data-uid": "src/pages/agentes/Sindicancia.tsx:188:19",
 									"data-prohibitions": "[editContent]",
 									id: "orientacoes",
 									placeholder: "Descreva detalhadamente o que o agente deve realizar nesta sindicância...",
-									className: "min-h-[240px] resize-y rounded-xl p-4 text-[15px] leading-relaxed border-muted focus-visible:ring-secondary/30",
+									className: "min-h-[240px] resize-y rounded-xl p-4 text-[15px] leading-relaxed border-border focus-visible:ring-secondary/50",
 									value: orientacoes,
 									onChange: (e) => setOrientacoes(e.target.value)
 								})]
@@ -241,45 +241,45 @@ function Sindicancia() {
 						})
 					})
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-					"data-uid": "src/pages/agentes/Sindicancia.tsx:202:11",
+					"data-uid": "src/pages/agentes/Sindicancia.tsx:200:11",
 					"data-prohibitions": "[editContent]",
-					className: "rounded-2xl border-none shadow-sm",
+					className: "rounded-2xl border-none shadow-sm bg-card",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/agentes/Sindicancia.tsx:203:13",
+						"data-uid": "src/pages/agentes/Sindicancia.tsx:201:13",
 						"data-prohibitions": "[editContent]",
 						className: "p-6",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Label, {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:204:15",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:202:15",
 								"data-prohibitions": "[]",
 								className: "text-base font-semibold text-primary mb-4 block",
 								children: "Anexos & Documentos"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:207:15",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:205:15",
 								"data-prohibitions": "[]",
-								className: "border-2 border-dashed border-muted rounded-xl p-10 flex flex-col items-center justify-center text-center hover:bg-muted/10 transition-colors cursor-pointer",
+								className: "border-2 border-dashed border-border rounded-xl p-10 flex flex-col items-center justify-center text-center hover:bg-muted/30 transition-colors cursor-pointer",
 								onClick: () => fileInputRef.current?.click(),
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CloudUpload, {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:211:17",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:209:17",
 										"data-prohibitions": "[editContent]",
 										className: "w-12 h-12 text-muted-foreground mb-4 opacity-50"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h4", {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:212:17",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:210:17",
 										"data-prohibitions": "[]",
 										className: "text-sm font-bold text-primary mb-1",
 										children: "Arraste arquivos ou clique para selecionar"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:215:17",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:213:17",
 										"data-prohibitions": "[]",
 										className: "text-xs text-muted-foreground max-w-xs",
 										children: "Suporta PDF, DOCX, JPG e PNG. Tamanho máximo: 10MB total."
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("input", {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:218:17",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:216:17",
 										"data-prohibitions": "[editContent]",
 										type: "file",
 										ref: fileInputRef,
@@ -291,56 +291,56 @@ function Sindicancia() {
 								]
 							}),
 							files.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:229:17",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:227:17",
 								"data-prohibitions": "[editContent]",
 								className: "mt-6 space-y-2",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h5", {
-									"data-uid": "src/pages/agentes/Sindicancia.tsx:230:19",
+									"data-uid": "src/pages/agentes/Sindicancia.tsx:228:19",
 									"data-prohibitions": "[]",
 									className: "text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3",
 									children: "Arquivos Selecionados"
 								}), files.map((f, idx) => /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-									"data-uid": "src/pages/agentes/Sindicancia.tsx:234:21",
+									"data-uid": "src/pages/agentes/Sindicancia.tsx:232:21",
 									"data-prohibitions": "[editContent]",
-									className: "flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-muted/50 group",
+									className: "flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border group",
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:238:23",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:236:23",
 										"data-prohibitions": "[editContent]",
 										className: "flex items-center gap-3 overflow-hidden",
 										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-											"data-uid": "src/pages/agentes/Sindicancia.tsx:239:25",
+											"data-uid": "src/pages/agentes/Sindicancia.tsx:237:25",
 											"data-prohibitions": "[]",
-											className: "w-8 h-8 rounded-md bg-white flex items-center justify-center shrink-0 shadow-sm",
+											className: "w-8 h-8 rounded-md bg-white flex items-center justify-center shrink-0 shadow-sm border border-border",
 											children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FileText, {
-												"data-uid": "src/pages/agentes/Sindicancia.tsx:240:27",
+												"data-uid": "src/pages/agentes/Sindicancia.tsx:238:27",
 												"data-prohibitions": "[editContent]",
-												className: "w-4 h-4 text-secondary"
+												className: "w-4 h-4 text-primary"
 											})
 										}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-											"data-uid": "src/pages/agentes/Sindicancia.tsx:242:25",
+											"data-uid": "src/pages/agentes/Sindicancia.tsx:240:25",
 											"data-prohibitions": "[editContent]",
 											className: "flex flex-col truncate",
 											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-												"data-uid": "src/pages/agentes/Sindicancia.tsx:243:27",
+												"data-uid": "src/pages/agentes/Sindicancia.tsx:241:27",
 												"data-prohibitions": "[editContent]",
 												className: "text-sm font-semibold text-foreground truncate",
 												children: f.name
 											}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-												"data-uid": "src/pages/agentes/Sindicancia.tsx:246:27",
+												"data-uid": "src/pages/agentes/Sindicancia.tsx:244:27",
 												"data-prohibitions": "[editContent]",
 												className: "text-xs text-muted-foreground",
 												children: [(f.size / 1024 / 1024).toFixed(2), " MB"]
 											})]
 										})]
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:251:23",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:249:23",
 										"data-prohibitions": "[]",
 										variant: "ghost",
 										size: "icon",
 										className: "text-destructive opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8",
 										onClick: () => removeFile(idx),
 										children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(X, {
-											"data-uid": "src/pages/agentes/Sindicancia.tsx:257:25",
+											"data-uid": "src/pages/agentes/Sindicancia.tsx:255:25",
 											"data-prohibitions": "[editContent]",
 											className: "w-4 h-4"
 										})
@@ -351,73 +351,73 @@ function Sindicancia() {
 					})
 				})]
 			}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-				"data-uid": "src/pages/agentes/Sindicancia.tsx:267:9",
+				"data-uid": "src/pages/agentes/Sindicancia.tsx:265:9",
 				"data-prohibitions": "[editContent]",
 				className: "space-y-6",
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-					"data-uid": "src/pages/agentes/Sindicancia.tsx:268:11",
+					"data-uid": "src/pages/agentes/Sindicancia.tsx:266:11",
 					"data-prohibitions": "[editContent]",
-					className: "rounded-2xl border-none shadow-sm sticky top-24",
+					className: "rounded-2xl border-none shadow-sm sticky top-24 bg-card",
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/agentes/Sindicancia.tsx:269:13",
+						"data-uid": "src/pages/agentes/Sindicancia.tsx:267:13",
 						"data-prohibitions": "[editContent]",
 						className: "p-6 space-y-4",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("h3", {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:270:15",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:268:15",
 								"data-prohibitions": "[]",
 								className: "font-bold text-primary mb-2",
 								children: "Ações da Sindicância"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:272:15",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:270:15",
 								"data-prohibitions": "[editContent]",
 								onClick: saveDraft,
 								disabled: saving,
 								variant: "outline",
-								className: "w-full h-12 rounded-xl justify-start font-semibold text-primary border-primary/20 hover:bg-primary/5",
+								className: "w-full h-12 rounded-xl justify-start font-semibold text-primary border-primary hover:bg-primary/5",
 								children: saving ? "Salvando..." : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Save, {
-									"data-uid": "src/pages/agentes/Sindicancia.tsx:282:21",
+									"data-uid": "src/pages/agentes/Sindicancia.tsx:280:21",
 									"data-prohibitions": "[editContent]",
 									className: "w-4 h-4 mr-3"
 								}), " Salvar Rascunho"] })
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:287:15",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:285:15",
 								"data-prohibitions": "[editContent]",
 								className: "h-px bg-border my-2"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:289:15",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:287:15",
 								"data-prohibitions": "[]",
 								onClick: handleEmail,
 								disabled: saving,
-								className: "w-full h-12 rounded-xl justify-start font-semibold bg-blue-600 hover:bg-blue-700 text-white",
+								className: "w-full h-12 rounded-xl justify-start font-semibold bg-primary hover:bg-primary/90 text-primary-foreground",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Mail, {
-									"data-uid": "src/pages/agentes/Sindicancia.tsx:294:17",
+									"data-uid": "src/pages/agentes/Sindicancia.tsx:292:17",
 									"data-prohibitions": "[editContent]",
 									className: "w-4 h-4 mr-3"
 								}), " Enviar por E-mail"]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:297:15",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:295:15",
 								"data-prohibitions": "[]",
 								onClick: handleWhatsapp,
 								disabled: saving,
-								className: "w-full h-12 rounded-xl justify-start font-semibold bg-green-600 hover:bg-green-700 text-white",
+								className: "w-full h-12 rounded-xl justify-start font-semibold bg-emerald-600 hover:bg-emerald-700 text-white",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MessageCircle, {
-									"data-uid": "src/pages/agentes/Sindicancia.tsx:302:17",
+									"data-uid": "src/pages/agentes/Sindicancia.tsx:300:17",
 									"data-prohibitions": "[editContent]",
 									className: "w-4 h-4 mr-3"
 								}), " Enviar por WhatsApp"]
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:305:15",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:303:15",
 								"data-prohibitions": "[editContent]",
 								className: "h-px bg-border my-2"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:307:15",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:305:15",
 								"data-prohibitions": "[]",
 								onClick: () => navigate(-1),
 								variant: "ghost",
@@ -425,25 +425,25 @@ function Sindicancia() {
 								children: "Cancelar"
 							}),
 							draftProcess && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-								"data-uid": "src/pages/agentes/Sindicancia.tsx:316:17",
+								"data-uid": "src/pages/agentes/Sindicancia.tsx:314:17",
 								"data-prohibitions": "[editContent]",
-								className: "mt-6 p-4 bg-green-50 rounded-xl border border-green-200 flex flex-col items-center text-center animate-in zoom-in-95",
+								className: "mt-6 p-4 bg-emerald-50 rounded-xl border border-emerald-200 flex flex-col items-center text-center animate-in zoom-in-95",
 								children: [
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheckBig, {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:317:19",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:315:19",
 										"data-prohibitions": "[editContent]",
-										className: "w-8 h-8 text-green-500 mb-2"
+										className: "w-8 h-8 text-emerald-500 mb-2"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:318:19",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:316:19",
 										"data-prohibitions": "[]",
-										className: "text-sm font-bold text-green-800",
+										className: "text-sm font-bold text-emerald-800",
 										children: "Rascunho Criado"
 									}),
 									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
-										"data-uid": "src/pages/agentes/Sindicancia.tsx:319:19",
+										"data-uid": "src/pages/agentes/Sindicancia.tsx:317:19",
 										"data-prohibitions": "[editContent]",
-										className: "text-xs text-green-600 mt-1 font-medium",
+										className: "text-xs text-emerald-600 mt-1 font-medium",
 										children: draftProcess.numero_controle
 									})
 								]
@@ -458,4 +458,4 @@ function Sindicancia() {
 //#endregion
 export { Sindicancia as default };
 
-//# sourceMappingURL=Sindicancia-DVR7ozQy.js.map
+//# sourceMappingURL=Sindicancia-BulnyQCt.js.map

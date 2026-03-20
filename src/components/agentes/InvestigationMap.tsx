@@ -107,12 +107,12 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
   }, [nearestId, distances, mappedAgents])
 
   if (agentsLoading || muniLoading) {
-    return <Skeleton className="w-full h-[500px] rounded-2xl" />
+    return <Skeleton className="w-full h-[500px] rounded-none" />
   }
 
   return (
-    <Card className="rounded-2xl shadow-sm border-none overflow-hidden flex flex-col mt-6 animate-in fade-in zoom-in duration-300">
-      <div className="p-4 sm:p-6 bg-muted/10 border-b border-border/50">
+    <Card className="rounded-none shadow-sm border-none overflow-hidden flex flex-col mt-6 animate-in fade-in zoom-in duration-300">
+      <div className="p-4 sm:p-6 bg-muted/30 border-b border-border/50">
         <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
           <MapPin className="w-5 h-5 text-secondary" /> Inteligência Logística
         </h3>
@@ -128,7 +128,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                   role="combobox"
                   aria-expanded={openState}
                   className={cn(
-                    'w-full justify-between h-12 rounded-xl font-normal',
+                    'w-full justify-between h-12 rounded-xl font-normal border-border',
                     !invState && 'text-muted-foreground',
                   )}
                 >
@@ -183,7 +183,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
                   aria-expanded={openCity}
                   disabled={!invState}
                   className={cn(
-                    'w-full justify-between h-12 rounded-xl font-normal',
+                    'w-full justify-between h-12 rounded-xl font-normal border-border',
                     !invCity && 'text-muted-foreground',
                   )}
                 >
@@ -230,12 +230,12 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
 
       <div className="relative w-full h-[400px] md:h-[500px] bg-muted/30">
         {!invCity ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px]">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/30 backdrop-blur-[1px]">
             <MapPin className="w-10 h-10 mb-3 opacity-50" />
             <p className="font-medium">Selecione estado e cidade para buscar agentes</p>
           </div>
         ) : mappedAgents.length === 0 ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px] pointer-events-none">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/30 backdrop-blur-[1px] pointer-events-none">
             <AlertTriangle className="w-10 h-10 mb-3 opacity-50 text-yellow-600" />
             <p className="font-medium">Nenhum agente ativo encontrado nesta região.</p>
           </div>
@@ -250,19 +250,19 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
       </div>
 
       {selectedAgentInfo && (
-        <div className="p-4 sm:p-6 bg-green-50 border-t border-green-100 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in slide-in-from-bottom-4">
+        <div className="p-4 sm:p-6 bg-secondary/10 border-t border-secondary/20 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in slide-in-from-bottom-4">
           <div>
-            <h4 className="font-bold text-green-900 text-lg flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
+            <h4 className="font-bold text-primary text-lg flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-secondary" />
               Agente sugerido: {selectedAgentInfo.name}
             </h4>
-            <div className="flex gap-4 mt-2 text-sm text-green-800 font-medium">
+            <div className="flex gap-4 mt-2 text-sm text-primary/80 font-medium">
               <span>Distância: {selectedAgentInfo.distance.toFixed(1)} km</span>
               <span>Custo Estimado: R$ {selectedAgentInfo.estimatedCost.toFixed(2)}</span>
             </div>
           </div>
           <Button
-            className="rounded-xl h-11 px-8 bg-green-600 hover:bg-green-700 text-white font-bold w-full sm:w-auto shadow-sm"
+            className="rounded-xl h-11 px-8 bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold w-full sm:w-auto shadow-sm"
             onClick={() => navigate(`/agentes/${selectedAgentInfo.id}`)}
           >
             Acessar Perfil

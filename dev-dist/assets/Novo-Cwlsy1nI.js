@@ -1,17 +1,17 @@
 import { i as require_react, r as require_jsx_runtime, s as __toESM } from "./utils-B9zKDa3a.js";
-import { h as useNavigate, m as useLocation, n as Button } from "./dist-CfDxfQ0w.js";
+import { h as useNavigate, m as useLocation, n as Button } from "./dist-dHjiV_RN.js";
 import "./client-riYRmEzR.js";
-import "./Combination-BCvivIoG.js";
-import "./dialog-DFkf6MNN.js";
-import { a, c as ChevronLeft, i as agenteSchema, n as ImportedFieldsContext, o as useForm, r as Form, t as FormContent } from "./FormContent-DHuMzupe.js";
-import "./use-municipios-BuS1LL5w.js";
+import "./Combination-CEhCbsmr.js";
+import "./dialog-CVmeRvqj.js";
+import { a, c as ChevronLeft, i as agenteSchema, n as ImportedFieldsContext, o as useForm, r as Form, t as FormContent } from "./FormContent-Bf2krv0v.js";
+import "./use-municipios-DSVUM1s_.js";
 import { t as Save } from "./save-BUBJ1k9z.js";
 import { n as Upload, t as getErrorMessage } from "./errors-DlyOxgbH.js";
 import { n as useToast } from "./use-toast-H4SPgTyl.js";
 import "./card-CYPuk1-X.js";
 import { t as createAgente } from "./agentes-CRY-zTvE.js";
-import { t as ImportAgenteModal } from "./ImportAgenteModal-DgdtfPmh.js";
-import "./textarea-DLzpCiCU.js";
+import { t as ImportAgenteModal } from "./ImportAgenteModal-CSe1bI_T.js";
+import "./textarea-D1JkN-BV.js";
 //#region src/pages/agentes/Novo.tsx
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
@@ -140,17 +140,18 @@ function NovoAgente() {
 							type: "button",
 							onClick: () => navigate(-1),
 							disabled: saving,
-							className: "flex-1 sm:flex-none h-12 rounded-xl",
+							className: "flex-1 sm:flex-none h-12 rounded-xl border-border text-foreground hover:bg-muted/50",
 							children: "Cancelar"
 						}),
 						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
 							"data-uid": "src/pages/agentes/Novo.tsx:113:11",
 							"data-prohibitions": "[editContent]",
 							onClick: form.handleSubmit(onSubmit),
-							className: "flex-1 sm:flex-none h-12 px-8 bg-secondary text-white hover:bg-secondary/90 rounded-xl font-semibold shadow-sm",
+							variant: "secondary",
+							className: "flex-1 sm:flex-none h-12 px-8 rounded-xl font-semibold shadow-sm",
 							disabled: saving,
 							children: saving ? "Salvando..." : /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(import_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Save, {
-								"data-uid": "src/pages/agentes/Novo.tsx:122:17",
+								"data-uid": "src/pages/agentes/Novo.tsx:123:17",
 								"data-prohibitions": "[editContent]",
 								className: "w-4 h-4 mr-2"
 							}), " Salvar Agente"] })
@@ -159,26 +160,26 @@ function NovoAgente() {
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Form, {
-				"data-uid": "src/pages/agentes/Novo.tsx:129:7",
+				"data-uid": "src/pages/agentes/Novo.tsx:130:7",
 				"data-prohibitions": "[]",
 				...form,
 				children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("form", {
-					"data-uid": "src/pages/agentes/Novo.tsx:130:9",
+					"data-uid": "src/pages/agentes/Novo.tsx:131:9",
 					"data-prohibitions": "[]",
 					onSubmit: form.handleSubmit(onSubmit),
 					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ImportedFieldsContext.Provider, {
-						"data-uid": "src/pages/agentes/Novo.tsx:131:11",
+						"data-uid": "src/pages/agentes/Novo.tsx:132:11",
 						"data-prohibitions": "[]",
 						value: importedFields,
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FormContent, {
-							"data-uid": "src/pages/agentes/Novo.tsx:132:13",
+							"data-uid": "src/pages/agentes/Novo.tsx:133:13",
 							"data-prohibitions": "[editContent]"
 						})
 					})
 				})
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsx)(ImportAgenteModal, {
-				"data-uid": "src/pages/agentes/Novo.tsx:137:7",
+				"data-uid": "src/pages/agentes/Novo.tsx:138:7",
 				"data-prohibitions": "[editContent]",
 				open: isImportModalOpen,
 				onOpenChange: setIsImportModalOpen
@@ -189,4 +190,4 @@ function NovoAgente() {
 //#endregion
 export { NovoAgente as default };
 
-//# sourceMappingURL=Novo-B4wnOpHB.js.map
+//# sourceMappingURL=Novo-Cwlsy1nI.js.map

@@ -61,7 +61,8 @@ export function DashboardKPIs({ processos, loading }: Props) {
           key={kpi.title}
           className="relative overflow-hidden rounded-[8px] p-[20px] min-h-[120px] flex flex-col justify-center animate-in slide-in-from-bottom-4 fade-in duration-400 ease-out fill-mode-both"
           style={{
-            background: 'linear-gradient(135deg, hsl(210 60% 25%) 0%, hsl(210 60% 35%) 100%)',
+            background:
+              'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.85) 100%)',
             animationDelay: `${i * 80}ms`,
           }}
         >

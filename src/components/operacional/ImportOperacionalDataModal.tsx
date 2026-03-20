@@ -102,7 +102,7 @@ export function ImportOperacionalDataModal({ isOpen, onClose, onComplete }: Prop
               tabIndex={0}
               className={cn(
                 'border-2 border-dashed border-border rounded-[6px] p-[40px] text-center cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2',
-                'hover:border-[hsl(210_60%_25%)] hover:bg-[hsl(210_60%_25%)]/5 focus-visible:ring-[hsl(210_60%_25%)]',
+                'hover:border-primary hover:bg-primary/5 focus-visible:ring-primary',
               )}
             >
               <input
@@ -127,7 +127,7 @@ export function ImportOperacionalDataModal({ isOpen, onClose, onComplete }: Prop
         {file && state !== 'idle' && (
           <div className="bg-muted p-4 rounded-[6px] flex items-center justify-between border border-border">
             <div className="flex items-center gap-3">
-              <FileSpreadsheet className="w-8 h-8 text-[hsl(210_60%_25%)]" />
+              <FileSpreadsheet className="w-8 h-8 text-primary" />
               <div>
                 <p className="text-[13px] font-medium text-foreground">{file.name}</p>
                 <p className="text-[11px] text-muted-foreground">
@@ -154,7 +154,7 @@ export function ImportOperacionalDataModal({ isOpen, onClose, onComplete }: Prop
 
         {state === 'loading' && (
           <div className="text-center py-8">
-            <Loader2 className="w-8 h-8 mx-auto animate-spin text-[hsl(210_60%_25%)]" />
+            <Loader2 className="w-8 h-8 mx-auto animate-spin text-primary" />
             <p className="mt-4 text-[13px] text-muted-foreground">Lendo arquivo...</p>
           </div>
         )}
@@ -178,7 +178,7 @@ export function ImportOperacionalDataModal({ isOpen, onClose, onComplete }: Prop
         )}
 
         {state === 'error' && errorMsg && (
-          <p className="text-[13px] text-destructive mt-4 p-3 bg-red-50 rounded-[6px] border border-red-200">
+          <p className="text-[13px] text-destructive mt-4 p-3 bg-destructive/10 rounded-[6px] border border-destructive/20">
             {errorMsg}
           </p>
         )}
@@ -187,7 +187,7 @@ export function ImportOperacionalDataModal({ isOpen, onClose, onComplete }: Prop
           <button
             type="button"
             onClick={downloadTemplate}
-            className="text-[13px] text-[hsl(210_60%_25%)] hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(210_60%_25%)] rounded px-1"
+            className="text-[13px] text-primary hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded px-1"
           >
             Baixar modelo de planilha
           </button>
@@ -202,7 +202,7 @@ export function ImportOperacionalDataModal({ isOpen, onClose, onComplete }: Prop
             <Button
               onClick={confirmImport}
               disabled={state !== 'parsed'}
-              className="bg-[hsl(210_60%_25%)] hover:bg-[hsl(210_60%_35%)] text-white"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
             >
               {state === 'importing' && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Confirmar e Importar

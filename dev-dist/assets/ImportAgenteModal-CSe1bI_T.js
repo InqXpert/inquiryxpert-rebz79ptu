@@ -1,6 +1,6 @@
 import { i as require_react, r as require_jsx_runtime, s as __toESM, t as cn } from "./utils-B9zKDa3a.js";
-import { h as useNavigate, n as Button } from "./dist-CfDxfQ0w.js";
-import { a as DialogHeader, i as DialogFooter, n as DialogContent, o as DialogTitle, r as DialogDescription, t as Dialog, w as TriangleAlert } from "./dialog-DFkf6MNN.js";
+import { h as useNavigate, n as Button } from "./dist-dHjiV_RN.js";
+import { a as DialogHeader, i as DialogFooter, n as DialogContent, o as DialogTitle, r as DialogDescription, t as Dialog, w as TriangleAlert } from "./dialog-CVmeRvqj.js";
 import { t as CircleCheck } from "./circle-check-BCIjbSwe.js";
 import { t as CloudUpload } from "./cloud-upload-3R6IcAUB.js";
 import { n as FileSpreadsheet, r as Download, t as LoaderCircle } from "./loader-circle-DVpdx8Tk.js";
@@ -260,11 +260,11 @@ function ImportAgenteModal({ open, onOpenChange }) {
 						file ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 							"data-uid": "src/components/agentes/ImportAgenteModal.tsx:146:13",
 							"data-prohibitions": "[editContent]",
-							className: "border-2 border-dashed border-green-400 bg-green-50 rounded-[12px] p-[24px] text-center transition-colors duration-200",
+							className: "border-2 border-dashed border-secondary bg-secondary/5 rounded-[12px] p-[24px] text-center transition-colors duration-200",
 							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 								"data-uid": "src/components/agentes/ImportAgenteModal.tsx:147:15",
 								"data-prohibitions": "[editContent]",
-								className: "flex flex-row justify-between items-center bg-white p-[12px] rounded-lg border border-green-200 shadow-sm",
+								className: "flex flex-row justify-between items-center bg-white p-[12px] rounded-lg border border-border shadow-sm",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 									"data-uid": "src/components/agentes/ImportAgenteModal.tsx:148:17",
 									"data-prohibitions": "[editContent]",
@@ -272,7 +272,7 @@ function ImportAgenteModal({ open, onOpenChange }) {
 									children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FileSpreadsheet, {
 										"data-uid": "src/components/agentes/ImportAgenteModal.tsx:149:19",
 										"data-prohibitions": "[editContent]",
-										className: "w-[20px] h-[20px] text-green-600"
+										className: "w-[20px] h-[20px] text-secondary"
 									}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
 										"data-uid": "src/components/agentes/ImportAgenteModal.tsx:150:19",
 										"data-prohibitions": "[editContent]",
@@ -315,7 +315,7 @@ function ImportAgenteModal({ open, onOpenChange }) {
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(LoaderCircle, {
 									"data-uid": "src/components/agentes/ImportAgenteModal.tsx:175:19",
 									"data-prohibitions": "[editContent]",
-									className: "w-6 h-6 animate-spin text-green-600 mb-2"
+									className: "w-6 h-6 animate-spin text-secondary mb-2"
 								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
 									"data-uid": "src/components/agentes/ImportAgenteModal.tsx:176:19",
 									"data-prohibitions": "[]",
@@ -339,7 +339,7 @@ function ImportAgenteModal({ open, onOpenChange }) {
 												children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
 													"data-uid": "src/components/agentes/ImportAgenteModal.tsx:183:25",
 													"data-prohibitions": "[editContent]",
-													className: "w-[14px] h-[14px] text-green-600 mt-0.5 shrink-0"
+													className: "w-[14px] h-[14px] text-secondary mt-0.5 shrink-0"
 												}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
 													"data-uid": "src/components/agentes/ImportAgenteModal.tsx:184:25",
 													"data-prohibitions": "[editContent]",
@@ -414,7 +414,7 @@ function ImportAgenteModal({ open, onOpenChange }) {
 							},
 							onDragLeave: () => setDragOver(false),
 							onDrop: handleDrop,
-							className: cn("border-2 border-dashed rounded-[12px] p-[40px_24px] text-center transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary", dragOver ? "border-primary bg-accent/30" : "border-border bg-transparent hover:border-primary hover:bg-accent/30", status === "loading" && "opacity-50 pointer-events-none"),
+							className: cn("border-2 border-dashed rounded-[12px] p-[40px_24px] text-center transition-colors duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary", dragOver ? "border-primary bg-accent/10" : "border-border bg-transparent hover:border-primary hover:bg-accent/10", status === "loading" && "opacity-50 pointer-events-none"),
 							children: [
 								/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CloudUpload, {
 									"data-uid": "src/components/agentes/ImportAgenteModal.tsx:238:15",
@@ -450,7 +450,7 @@ function ImportAgenteModal({ open, onOpenChange }) {
 								"data-prohibitions": "[]",
 								type: "button",
 								onClick: downloadTemplate,
-								className: "text-[13px] text-primary hover:underline font-medium flex flex-row gap-[6px] items-center",
+								className: "text-[13px] text-primary hover:text-secondary hover:underline font-medium flex flex-row gap-[6px] items-center",
 								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Download, {
 									"data-uid": "src/components/agentes/ImportAgenteModal.tsx:256:15",
 									"data-prohibitions": "[editContent]",
@@ -490,4 +490,4 @@ function ImportAgenteModal({ open, onOpenChange }) {
 //#endregion
 export { ImportAgenteModal as t };
 
-//# sourceMappingURL=ImportAgenteModal-DgdtfPmh.js.map
+//# sourceMappingURL=ImportAgenteModal-CSe1bI_T.js.map

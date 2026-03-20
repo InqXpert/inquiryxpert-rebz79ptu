@@ -35,11 +35,11 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-      <Card className="w-full max-w-md rounded-3xl shadow-xl border-none">
+      <Card className="w-full max-w-md rounded-3xl shadow-xl border-none bg-card">
         <CardHeader className="text-center pb-8">
           <div className="mx-auto w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-6">
             <svg
-              className="w-8 h-8 text-white"
+              className="w-8 h-8 text-primary-foreground"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -52,32 +52,38 @@ export default function Login() {
               />
             </svg>
           </div>
-          <CardTitle className="text-2xl font-bold">Acesso ao Sistema</CardTitle>
-          <CardDescription>Insira suas credenciais para gerenciar prestadores</CardDescription>
+          <CardTitle className="text-2xl font-bold text-primary">Acesso ao Sistema</CardTitle>
+          <CardDescription>Insira suas credenciais para gerenciar a operação</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">E-mail</label>
+              <label className="text-sm font-medium text-foreground">E-mail</label>
               <Input
                 type="email"
                 placeholder="nome@empresa.com.br"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="border-border"
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Senha</label>
+              <label className="text-sm font-medium text-foreground">Senha</label>
               <Input
                 type="password"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="border-border"
               />
             </div>
-            <Button type="submit" className="w-full rounded-full h-12 mt-4" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full rounded-full h-12 mt-4 text-primary-foreground font-semibold"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? 'Entrando...' : 'Entrar'}
             </Button>
           </form>

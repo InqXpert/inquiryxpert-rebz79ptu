@@ -29,14 +29,14 @@ export default function Dashboard() {
   return (
     <div className="grid gap-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold tracking-tight">Visão Geral</h1>
-        <Button asChild className="rounded-full shadow-elevation">
+        <h1 className="text-3xl font-bold tracking-tight text-primary">Visão Geral</h1>
+        <Button asChild className="rounded-full shadow-sm">
           <Link to="/prestadores/novo">Novo Prestador</Link>
         </Button>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <Card className="rounded-2xl border-none shadow-elevation bg-card">
+        <Card className="rounded-2xl border-none shadow-sm bg-card">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground uppercase">
               Total de Prestadores
@@ -44,11 +44,11 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-5xl font-bold text-primary">{totalCount}</div>
-            <p className="mt-2 text-sm text-secondary font-semibold">+12% este mês</p>
+            <p className="mt-2 text-sm text-emerald-600 font-semibold">+12% este mês</p>
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-none shadow-elevation bg-card flex flex-col">
+        <Card className="rounded-2xl border-none shadow-sm bg-card flex flex-col">
           <CardHeader className="pb-0">
             <CardTitle className="text-sm font-medium text-muted-foreground uppercase">
               Prestadores Ativos
@@ -78,19 +78,21 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-2xl border-none shadow-elevation bg-gradient-to-br from-[#f43b53] to-[#d6283e] text-white">
+        <Card className="rounded-2xl border-none shadow-sm bg-destructive text-destructive-foreground">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium uppercase text-white/80">
+            <CardTitle className="text-sm font-medium uppercase text-destructive-foreground/80">
               Em Black List
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-5xl font-bold">{blackListCount}</div>
-            <p className="mt-2 text-sm text-white/90 font-medium">Requer atenção imediata</p>
+            <p className="mt-2 text-sm text-destructive-foreground/90 font-medium">
+              Requer atenção imediata
+            </p>
             <Button
               variant="secondary"
               size="sm"
-              className="mt-4 bg-white text-[#f43b53] hover:bg-white/90 rounded-full w-full"
+              className="mt-4 bg-white text-destructive hover:bg-white/90 rounded-full w-full font-bold"
             >
               Ver Detalhes <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
@@ -99,27 +101,37 @@ export default function Dashboard() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card className="rounded-2xl border-none shadow-elevation bg-card h-full">
+        <Card className="rounded-2xl border-none shadow-sm bg-card h-full">
           <CardHeader className="flex flex-row items-center justify-between pb-2 border-b">
-            <CardTitle className="text-lg font-bold">Onboarding Tasks</CardTitle>
-            <span className="text-2xl font-bold text-primary">98%</span>
+            <CardTitle className="text-lg font-bold text-primary">Tarefas de Onboarding</CardTitle>
+            <span className="text-2xl font-bold text-secondary">98%</span>
           </CardHeader>
           <CardContent className="p-0">
             <div className="flex flex-col gap-4 p-6">
               {[
                 {
-                  title: 'Onboarding Session',
-                  date: 'Mon, Feb 3 | 10:00',
+                  title: 'Sessão de Integração',
+                  date: 'Seg, 3 Fev | 10:00',
                   done: true,
                   img: 'meeting',
                 },
-                { title: 'Interview', date: 'Mon, Feb 3 | 14:00', done: true, img: 'interview' },
-                { title: 'Project Update', date: 'Tue, Feb 4 | 14:30', done: true, img: 'office' },
-                { title: 'Team Meeting', date: 'Mon, Feb 5 | 17:00', done: false, img: 'team' },
+                { title: 'Entrevista', date: 'Seg, 3 Fev | 14:00', done: true, img: 'interview' },
+                {
+                  title: 'Atualização do Projeto',
+                  date: 'Ter, 4 Fev | 14:30',
+                  done: true,
+                  img: 'office',
+                },
+                {
+                  title: 'Reunião de Equipe',
+                  date: 'Seg, 5 Fev | 17:00',
+                  done: false,
+                  img: 'team',
+                },
               ].map((task, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-4 justify-between bg-background p-3 rounded-xl border"
+                  className="flex items-center gap-4 justify-between bg-muted/20 p-3 rounded-xl border border-border/50"
                 >
                   <div className="flex items-center gap-4">
                     <img
@@ -128,12 +140,12 @@ export default function Dashboard() {
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                     <div>
-                      <h4 className="font-semibold text-sm">{task.title}</h4>
+                      <h4 className="font-semibold text-sm text-foreground">{task.title}</h4>
                       <p className="text-xs text-muted-foreground">{task.date}</p>
                     </div>
                   </div>
                   {task.done ? (
-                    <CheckCircle2 className="text-secondary w-5 h-5" />
+                    <CheckCircle2 className="text-emerald-500 w-5 h-5" />
                   ) : (
                     <Circle className="text-muted-foreground w-5 h-5" />
                   )}
@@ -144,32 +156,44 @@ export default function Dashboard() {
         </Card>
 
         <div className="grid grid-cols-2 gap-6">
-          <Card className="rounded-2xl border-none shadow-elevation bg-card flex flex-col justify-center p-6 items-start">
-            <div className="text-4xl font-bold">38</div>
-            <div className="text-sm font-semibold uppercase mt-1">Projetos Concluídos</div>
-            <div className="text-xs text-muted-foreground mt-1">+4 Mês Passado</div>
-            <Button variant="link" className="mt-4 px-0 text-primary">
+          <Card className="rounded-2xl border-none shadow-sm bg-card flex flex-col justify-center p-6 items-start">
+            <div className="text-4xl font-bold text-primary">38</div>
+            <div className="text-sm font-semibold uppercase mt-1 text-muted-foreground">
+              Projetos Concluídos
+            </div>
+            <div className="text-xs text-emerald-600 font-medium mt-1">+4 Mês Passado</div>
+            <Button
+              variant="link"
+              className="mt-4 px-0 text-secondary hover:text-secondary/80 font-bold"
+            >
               Ver Tudo
             </Button>
           </Card>
-          <Card className="rounded-2xl border-none shadow-elevation bg-card flex flex-col justify-center p-6 items-start">
-            <div className="text-4xl font-bold">8</div>
-            <div className="text-sm font-semibold uppercase mt-1">Projetos em Andamento</div>
-            <div className="text-xs text-muted-foreground mt-1">+2 Mês Passado</div>
-            <Button variant="link" className="mt-4 px-0 text-primary">
+          <Card className="rounded-2xl border-none shadow-sm bg-card flex flex-col justify-center p-6 items-start">
+            <div className="text-4xl font-bold text-primary">8</div>
+            <div className="text-sm font-semibold uppercase mt-1 text-muted-foreground">
+              Projetos em Andamento
+            </div>
+            <div className="text-xs text-emerald-600 font-medium mt-1">+2 Mês Passado</div>
+            <Button
+              variant="link"
+              className="mt-4 px-0 text-secondary hover:text-secondary/80 font-bold"
+            >
               Ver Tudo
             </Button>
           </Card>
-          <Card className="rounded-2xl border-none shadow-elevation bg-gradient-to-tr from-accent to-background col-span-2 flex justify-between items-center p-6">
+          <Card className="rounded-2xl border-none shadow-sm bg-muted/30 col-span-2 flex justify-between items-center p-6">
             <div>
-              <div className="text-4xl font-bold">$6,110</div>
-              <div className="text-sm font-semibold uppercase mt-1">Pagamentos Estimados</div>
-              <div className="text-xs text-primary/70 mt-1">+40% Mês Passado</div>
+              <div className="text-4xl font-bold text-primary">$6,110</div>
+              <div className="text-sm font-semibold uppercase mt-1 text-muted-foreground">
+                Pagamentos Estimados
+              </div>
+              <div className="text-xs text-emerald-600 font-medium mt-1">+40% Mês Passado</div>
             </div>
             <img
               src="https://img.usecurling.com/p/120/120?q=finance"
               alt="Finance"
-              className="rounded-xl w-24 h-24 object-cover"
+              className="rounded-xl w-24 h-24 object-cover shadow-sm"
             />
           </Card>
         </div>

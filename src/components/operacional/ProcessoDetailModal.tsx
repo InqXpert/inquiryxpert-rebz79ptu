@@ -87,7 +87,7 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
         ) : (
           <>
             <DialogHeader className="mb-0 space-y-0">
-              <DialogTitle className="text-[20px] font-bold text-foreground">
+              <DialogTitle className="text-[20px] font-bold text-primary">
                 Detalhes do Processo
               </DialogTitle>
               <DialogDescription className="text-[13px] text-muted-foreground mb-[16px] mt-[4px]">
@@ -99,31 +99,31 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
               <TabsList className="flex flex-row gap-[16px] border-b border-border mb-[20px] bg-transparent h-auto p-0 justify-start rounded-none">
                 <TabsTrigger
                   value="gerais"
-                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(var(--primary))] data-[state=active]:text-primary text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(var(--primary))] hover:text-primary transition-colors text-[13px] font-medium"
                 >
                   Informações Gerais
                 </TabsTrigger>
                 <TabsTrigger
                   value="posicoes"
-                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(var(--primary))] data-[state=active]:text-primary text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(var(--primary))] hover:text-primary transition-colors text-[13px] font-medium"
                 >
                   Posições Preliminares
                 </TabsTrigger>
                 <TabsTrigger
                   value="observacoes"
-                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(var(--primary))] data-[state=active]:text-primary text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(var(--primary))] hover:text-primary transition-colors text-[13px] font-medium"
                 >
                   Observações
                 </TabsTrigger>
                 <TabsTrigger
                   value="documentos"
-                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(var(--primary))] data-[state=active]:text-primary text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(var(--primary))] hover:text-primary transition-colors text-[13px] font-medium"
                 >
                   Documentos
                 </TabsTrigger>
                 <TabsTrigger
                   value="historico"
-                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(210_60%_25%)] data-[state=active]:text-foreground text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(210_60%_25%)] transition-colors text-[13px] font-medium"
+                  className="px-0 py-[8px] border-b-2 border-transparent data-[state=active]:border-[hsl(var(--primary))] data-[state=active]:text-primary text-muted-foreground rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none hover:border-[hsl(var(--primary))] hover:text-primary transition-colors text-[13px] font-medium"
                 >
                   Histórico
                 </TabsTrigger>

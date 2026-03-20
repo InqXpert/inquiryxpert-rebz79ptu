@@ -67,7 +67,7 @@ export function ProcessosOperacionaisTable({
     return (
       <div className="space-y-4 p-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-16 bg-muted/50 animate-pulse rounded-xl" />
+          <div key={i} className="h-16 bg-muted animate-pulse rounded-none" />
         ))}
       </div>
     )
@@ -86,10 +86,11 @@ export function ProcessosOperacionaisTable({
   }
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="overflow-x-auto">
+    <div className="flex flex-col w-full bg-card rounded-none">
+      <div className="overflow-x-auto rounded-none">
         <table className="w-full text-left whitespace-nowrap">
-          <thead className="bg-muted/30 border-b border-border text-muted-foreground">
+          {/* Header background uses neutral muted color */}
+          <thead className="bg-muted border-b border-border text-muted-foreground">
             <tr>
               <th
                 className="py-4 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
@@ -140,7 +141,7 @@ export function ProcessosOperacionaisTable({
             {pageData.map((p, i) => (
               <tr
                 key={p.id}
-                className="border-b border-border/50 hover:bg-muted/20 cursor-pointer transition-colors group"
+                className="border-b border-border/50 hover:bg-muted/30 cursor-pointer transition-colors group rounded-none"
                 onClick={() => onViewDetail(p.id)}
               >
                 <td className="py-4 px-6 text-sm font-semibold text-primary">
@@ -175,7 +176,7 @@ export function ProcessosOperacionaisTable({
         </table>
       </div>
 
-      <div className="flex justify-center items-center gap-4 py-6 border-t border-border">
+      <div className="flex justify-center items-center gap-4 py-6 border-t border-border rounded-none">
         <Button
           variant="outline"
           size="sm"
@@ -220,11 +221,11 @@ function StatusBadge({ status }: { status: string }) {
   else if (s.includes('analise')) key = 'analise_inicial'
 
   const colors: Record<string, string> = {
-    em_elaboracao: 'bg-yellow-100 text-yellow-700',
-    em_execucao: 'bg-blue-100 text-blue-700',
-    finalizado: 'bg-green-100 text-green-700',
-    cancelado: 'bg-red-100 text-red-700',
-    analise_inicial: 'bg-gray-100 text-gray-700',
+    em_elaboracao: 'bg-yellow-100 text-yellow-800',
+    em_execucao: 'bg-blue-100 text-blue-800',
+    finalizado: 'bg-emerald-100 text-emerald-800',
+    cancelado: 'bg-destructive/10 text-destructive',
+    analise_inicial: 'bg-muted text-muted-foreground',
   }
 
   const labels: Record<string, string> = {

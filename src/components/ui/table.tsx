@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
+    <div className="relative w-full overflow-auto rounded-none">
       <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
     </div>
   ),
@@ -17,7 +17,7 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn('[&_tr]:border-b bg-[#f5f8fa] border-y border-border', className)}
+    className={cn('[&_tr]:border-b bg-muted border-y border-border', className)}
     {...props}
   />
 ))
@@ -27,7 +27,7 @@ const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <tbody ref={ref} className={cn('[&_tr:last-child]:border-0 bg-white', className)} {...props} />
+  <tbody ref={ref} className={cn('[&_tr:last-child]:border-0 bg-card', className)} {...props} />
 ))
 TableBody.displayName = 'TableBody'
 
@@ -48,7 +48,7 @@ const TableRow = React.forwardRef<HTMLTableRowElement, React.HTMLAttributes<HTML
     <tr
       ref={ref}
       className={cn(
-        'border-b border-border transition-colors hover:bg-secondary/40 data-[state=selected]:bg-muted',
+        'border-b border-border transition-colors hover:bg-muted/30 data-[state=selected]:bg-muted rounded-none',
         className,
       )}
       {...props}

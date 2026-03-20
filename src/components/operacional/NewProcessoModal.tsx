@@ -55,7 +55,6 @@ export function NewProcessoModal({ isOpen, onClose, defaultProvider, onCreated }
     setPdfFile(file)
     setIsExtracting(true)
 
-    // Mock OCR Extraction
     setTimeout(() => {
       setFormData((p) => ({
         ...p,
@@ -126,7 +125,7 @@ export function NewProcessoModal({ isOpen, onClose, defaultProvider, onCreated }
           {!pdfFile ? (
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-primary hover:bg-accent/30 transition-colors mb-6 flex flex-col items-center justify-center group"
+              className="border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-primary hover:bg-muted/30 transition-colors mb-6 flex flex-col items-center justify-center group"
             >
               {isExtracting ? (
                 <Loader2 className="w-8 h-8 animate-spin text-primary mb-2" />
@@ -182,7 +181,7 @@ export function NewProcessoModal({ isOpen, onClose, defaultProvider, onCreated }
             <Button
               onClick={handleSave}
               disabled={isSaving || isExtracting}
-              className="bg-primary hover:bg-primary/90 text-white min-w-[120px]"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px]"
             >
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
               Salvar Processo

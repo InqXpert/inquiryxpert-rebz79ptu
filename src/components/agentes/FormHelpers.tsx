@@ -55,7 +55,7 @@ export function FInput({
             value={field.value ?? ''}
             className={cn(
               isImported &&
-                'border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in',
+                'border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in',
             )}
           />
         )
@@ -107,7 +107,7 @@ export function FSelect({
                   <TooltipTrigger asChild>
                     <div className="relative w-full">
                       <FormControl>
-                        <SelectTrigger className="border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in">
+                        <SelectTrigger className="border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in">
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
                       </FormControl>
@@ -164,10 +164,10 @@ export function FCombobox({
                   variant="outline"
                   role="combobox"
                   className={cn(
-                    'justify-between font-normal w-full',
+                    'justify-between font-normal w-full border-border',
                     !field.value && 'text-muted-foreground',
                     isImported &&
-                      'border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in',
+                      'border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in',
                   )}
                 >
                   {field.value
@@ -243,7 +243,7 @@ export function FTextarea({ name, label, placeholder }: FieldProps) {
             value={field.value ?? ''}
             className={cn(
               isImported &&
-                'border-l-[3px] border-l-green-500 bg-green-50/40 transition-opacity duration-300 animate-in fade-in',
+                'border-l-[3px] border-l-secondary bg-secondary/10 transition-opacity duration-300 animate-in fade-in',
             )}
           />
         )
