@@ -12,14 +12,14 @@ import { t as FileText } from "./file-text-DDtc1NqT.js";
 import { t as TriangleAlert } from "./triangle-alert-R6f4Drav.js";
 import { t as Upload } from "./upload-iJ3tsFQ6.js";
 import { t as X } from "./x-BL9hAKZc.js";
-import { d as Search, l as useAuth, u as createContextScope$1 } from "./index-FEdK-i_x.js";
+import { d as Search, l as useAuth, u as createContextScope$1 } from "./index-DBP2SZJl.js";
 import { t as Card } from "./card-DqCKMwAt.js";
 import { t as useRealtime } from "./use-realtime-DsW8Mvpe.js";
 import { n as utils, t as readSync } from "./xlsx-ENKdGg9c.js";
 import { a as deleteProcesso, c as fetchDocumentos, d as fetchProcessos, f as getNextNumeroControle, i as deleteDocumento, l as fetchHistorico, m as uploadDocumento, n as addPosicao, o as downloadTemplate, p as updateProcesso, r as createProcesso, s as exportToCSV, t as addObservacao, u as fetchProcessoById } from "./procesosOperacionais-q6C1WZga.js";
 import { n as useToast } from "./use-toast-C1zkQ-lx.js";
 import { t as getErrorMessage } from "./errors-BlN4TC0W.js";
-import { i as TabsTrigger, n as TabsContent, r as TabsList, t as Tabs } from "./tabs-B6rOl1lY.js";
+import { i as TabsTrigger, n as TabsContent, r as TabsList, t as Tabs } from "./tabs-jfIHlttB.js";
 import { t as Skeleton } from "./skeleton-DcV1Qh--.js";
 var ArrowDown = createLucideIcon("arrow-down", [["path", {
 	d: "M12 5v14",
@@ -3253,4 +3253,4 @@ function Processos() {
 //#endregion
 export { Processos as default };
 
-//# sourceMappingURL=Processos-DJdQwwxV.js.map
+//# sourceMappingURL=Processos-Crqf92HS.js.map

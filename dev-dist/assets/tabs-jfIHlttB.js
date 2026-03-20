@@ -1,6 +1,6 @@
 import { i as require_react, r as require_jsx_runtime, s as __toESM, t as cn } from "./utils-B9zKDa3a.js";
 import { C as createContextScope, _ as Primitive, d as useId, h as useDirection, r as Presence, w as composeEventHandlers, x as useControllableState } from "./Combination-CaVwfZpk.js";
-import { c as createRovingFocusGroupScope, o as Item, s as Root } from "./index-FEdK-i_x.js";
+import { c as createRovingFocusGroupScope, o as Item, s as Root } from "./index-DBP2SZJl.js";
 //#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/@radix-ui+react-tabs@1.1.13_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react@_2ad0945e3cb98dc5bbfaaf29c105e977/node_modules/@radix-ui/react-tabs/dist/index.mjs
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
@@ -166,4 +166,4 @@ TabsContent.displayName = Content.displayName;
 //#endregion
 export { TabsTrigger as i, TabsContent as n, TabsList as r, Tabs as t };
 
-//# sourceMappingURL=tabs-B6rOl1lY.js.map
+//# sourceMappingURL=tabs-jfIHlttB.js.map

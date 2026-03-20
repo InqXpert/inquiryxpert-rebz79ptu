@@ -8,7 +8,7 @@ import { t as CircleCheckBig } from "./circle-check-big-Bt6vSdMG.js";
 import { t as Download } from "./download-Db6DwsPn.js";
 import { n as SquarePen, r as Key, t as Badge } from "./badge-uG_n1g3Z.js";
 import { t as Upload } from "./upload-iJ3tsFQ6.js";
-import { a as DropdownMenuTrigger, i as DropdownMenuItem, l as useAuth, n as DropdownMenu, r as DropdownMenuContent, t as toast } from "./index-FEdK-i_x.js";
+import { a as DropdownMenuTrigger, i as DropdownMenuItem, l as useAuth, n as DropdownMenu, r as DropdownMenuContent, t as toast } from "./index-DBP2SZJl.js";
 import { i as CardTitle, n as CardContent, r as CardHeader, t as Card } from "./card-DqCKMwAt.js";
 import { t as useRealtime } from "./use-realtime-DsW8Mvpe.js";
 import { a as TableHeader, i as TableHead, n as TableBody, o as TableRow, r as TableCell, t as Table } from "./table-BcjhkrC5.js";
@@ -3873,4 +3873,4 @@ function MetricCard({ title, value, icon }) {
 //#endregion
 export { GestaoUsuarios as default };
 
-//# sourceMappingURL=GestaoUsuarios-FKid-vcp.js.map
+//# sourceMappingURL=GestaoUsuarios-CbW8CmKd.js.map

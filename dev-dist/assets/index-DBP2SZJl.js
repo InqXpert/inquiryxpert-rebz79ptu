@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/Dashboard-BmGzRtMD.js","assets/utils-B9zKDa3a.js","assets/client-riYRmEzR.js","assets/clock-Bw0sNngA.js","assets/circle-check-CfXQe345.js","assets/file-text-DDtc1NqT.js","assets/card-DqCKMwAt.js","assets/use-realtime-DsW8Mvpe.js","assets/procesosOperacionais-q6C1WZga.js","assets/xlsx-ENKdGg9c.js","assets/Processos-DJdQwwxV.js","assets/dist-dHjiV_RN.js","assets/Combination-CaVwfZpk.js","assets/select-DGlMpVlA.js","assets/x-BL9hAKZc.js","assets/tabs-B6rOl1lY.js","assets/chevron-right-DwKneTOU.js","assets/circle-check-big-Bt6vSdMG.js","assets/cloud-upload-DxDKUliC.js","assets/download-Db6DwsPn.js","assets/loader-circle-D8POstvG.js","assets/triangle-alert-R6f4Drav.js","assets/upload-iJ3tsFQ6.js","assets/skeleton-DcV1Qh--.js","assets/use-toast-C1zkQ-lx.js","assets/errors-BlN4TC0W.js","assets/List-DspWrv11.js","assets/use-municipios-DWHwa41L.js","assets/map-pin-B5UgX0yG.js","assets/ImportAgenteModal-BNy5vP_0.js","assets/table-BcjhkrC5.js","assets/agentes-BNdj0SB2.js","assets/Novo-wlaezS8B.js","assets/schemas-ru_PgzNZ.js","assets/label-D9B33VZM.js","assets/FormContent-D4PPPZhd.js","assets/textarea-BlePx3PY.js","assets/save-mly8Ec9C.js","assets/Profile-DKvWS1Oa.js","assets/badge-uG_n1g3Z.js","assets/mail-CtiHQI6m.js","assets/Sindicancia-DRFZOECR.js","assets/Configuracoes-Dt7_CL8V.js","assets/Ajuda-C3ohBN-Y.js","assets/GestaoUsuarios-FKid-vcp.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/Dashboard-BmGzRtMD.js","assets/utils-B9zKDa3a.js","assets/client-riYRmEzR.js","assets/clock-Bw0sNngA.js","assets/circle-check-CfXQe345.js","assets/file-text-DDtc1NqT.js","assets/card-DqCKMwAt.js","assets/use-realtime-DsW8Mvpe.js","assets/procesosOperacionais-q6C1WZga.js","assets/xlsx-ENKdGg9c.js","assets/Processos-Crqf92HS.js","assets/dist-dHjiV_RN.js","assets/Combination-CaVwfZpk.js","assets/select-DGlMpVlA.js","assets/x-BL9hAKZc.js","assets/tabs-jfIHlttB.js","assets/chevron-right-DwKneTOU.js","assets/circle-check-big-Bt6vSdMG.js","assets/cloud-upload-DxDKUliC.js","assets/download-Db6DwsPn.js","assets/loader-circle-D8POstvG.js","assets/triangle-alert-R6f4Drav.js","assets/upload-iJ3tsFQ6.js","assets/skeleton-DcV1Qh--.js","assets/use-toast-C1zkQ-lx.js","assets/errors-BlN4TC0W.js","assets/List-DSYPkRwn.js","assets/use-municipios-fxsBRp6w.js","assets/map-pin-B5UgX0yG.js","assets/ImportAgenteModal-BNy5vP_0.js","assets/table-BcjhkrC5.js","assets/agentes-BNdj0SB2.js","assets/Novo-hwxJmdm4.js","assets/schemas-ru_PgzNZ.js","assets/label-D9B33VZM.js","assets/FormContent-CLmo7x6f.js","assets/textarea-BlePx3PY.js","assets/save-mly8Ec9C.js","assets/Profile-CYJCQjBi.js","assets/badge-uG_n1g3Z.js","assets/mail-CtiHQI6m.js","assets/Sindicancia-kON_682q.js","assets/Configuracoes-Dt7_CL8V.js","assets/Ajuda-C3ohBN-Y.js","assets/GestaoUsuarios-CbW8CmKd.js"])))=>i.map(i=>d[i]);
 import { a as __commonJSMin, i as require_react, r as require_jsx_runtime, s as __toESM, t as cn$1 } from "./utils-B9zKDa3a.js";
 import { _ as __vitePreload, c as BrowserRouter, d as Outlet, f as Route, h as useNavigate, l as Link, m as useLocation, n as Button, o as composeRefs, p as Routes, s as useComposedRefs, t as Primitive, u as Navigate, v as require_react_dom } from "./dist-dHjiV_RN.js";
 import { r as createLucideIcon, t as pb } from "./client-riYRmEzR.js";
@@ -17402,14 +17402,14 @@ var Toaster = ({ ...props }) => {
 //#endregion
 //#region src/App.tsx
 var Dashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./Dashboard-BmGzRtMD.js"), __vite__mapDeps([0,1,2,3,4,5,6,7,8,9])));
-var Processos = (0, import_react.lazy)(() => __vitePreload(() => import("./Processos-DJdQwwxV.js"), __vite__mapDeps([10,1,11,12,2,13,14,15,16,17,18,19,20,5,21,22,9,6,23,7,24,25,8])));
-var AgentesList = (0, import_react.lazy)(() => __vitePreload(() => import("./List-DspWrv11.js"), __vite__mapDeps([26,1,11,12,2,13,14,27,15,4,28,21,29,18,19,20,9,24,6,23,30,7,31])));
-var NovoAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Novo-wlaezS8B.js"), __vite__mapDeps([32,1,11,12,2,33,13,14,34,27,35,6,36,24,37,22,29,4,18,19,20,21,9,25,31])));
-var ProfileAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Profile-DKvWS1Oa.js"), __vite__mapDeps([38,1,11,12,2,33,13,14,34,27,35,6,36,24,4,39,40,28,21,23,7,31,8,9])));
-var SindicanciaAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Sindicancia-DRFZOECR.js"), __vite__mapDeps([41,1,11,34,2,17,18,5,40,37,14,6,23,36,24,31,8,9])));
+var Processos = (0, import_react.lazy)(() => __vitePreload(() => import("./Processos-Crqf92HS.js"), __vite__mapDeps([10,1,11,12,2,13,14,15,16,17,18,19,20,5,21,22,9,6,23,7,24,25,8])));
+var AgentesList = (0, import_react.lazy)(() => __vitePreload(() => import("./List-DSYPkRwn.js"), __vite__mapDeps([26,1,11,12,2,13,14,27,15,4,28,21,29,18,19,20,9,24,6,23,30,7,31])));
+var NovoAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Novo-hwxJmdm4.js"), __vite__mapDeps([32,1,11,12,2,33,13,14,34,27,35,6,36,24,37,22,29,4,18,19,20,21,9,25,31])));
+var ProfileAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Profile-CYJCQjBi.js"), __vite__mapDeps([38,1,11,12,2,33,13,14,34,27,35,6,36,24,4,39,40,28,21,23,7,31,8,9])));
+var SindicanciaAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Sindicancia-kON_682q.js"), __vite__mapDeps([41,1,11,34,2,17,18,5,40,37,14,6,23,36,24,31,8,9])));
 var Configuracoes = (0, import_react.lazy)(() => __vitePreload(() => import("./Configuracoes-Dt7_CL8V.js"), __vite__mapDeps([42,1,6])));
 var Ajuda = (0, import_react.lazy)(() => __vitePreload(() => import("./Ajuda-C3ohBN-Y.js"), __vite__mapDeps([43,1,6])));
-var GestaoUsuarios = (0, import_react.lazy)(() => __vitePreload(() => import("./GestaoUsuarios-FKid-vcp.js"), __vite__mapDeps([44,1,11,12,2,33,13,14,34,3,17,19,39,22,6,30,7])));
+var GestaoUsuarios = (0, import_react.lazy)(() => __vitePreload(() => import("./GestaoUsuarios-CbW8CmKd.js"), __vite__mapDeps([44,1,11,12,2,33,13,14,34,3,17,19,39,22,6,30,7])));
 function App() {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(ErrorBoundary, {
 		"data-uid": "src/App.tsx:21:5",
@@ -17563,4 +17563,4 @@ function App() {
 //#endregion
 export { DropdownMenuTrigger as a, createRovingFocusGroupScope as c, Search as d, DropdownMenuItem as i, useAuth as l, DropdownMenu as n, Item as o, DropdownMenuContent as r, Root as s, toast as t, createContextScope as u };
 
-//# sourceMappingURL=index-FEdK-i_x.js.map
+//# sourceMappingURL=index-DBP2SZJl.js.map

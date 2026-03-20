@@ -7,7 +7,7 @@ import { t as FileText } from "./file-text-DDtc1NqT.js";
 import { t as Mail } from "./mail-CtiHQI6m.js";
 import { t as Save } from "./save-mly8Ec9C.js";
 import { t as X } from "./x-BL9hAKZc.js";
-import { l as useAuth } from "./index-FEdK-i_x.js";
+import { l as useAuth } from "./index-DBP2SZJl.js";
 import { n as CardContent, t as Card } from "./card-DqCKMwAt.js";
 import { f as getNextNumeroControle, m as uploadDocumento, r as createProcesso } from "./procesosOperacionais-q6C1WZga.js";
 import { t as Label } from "./label-D9B33VZM.js";
@@ -460,4 +460,4 @@ function Sindicancia() {
 //#endregion
 export { Sindicancia as default };
 
-//# sourceMappingURL=Sindicancia-DRFZOECR.js.map
+//# sourceMappingURL=Sindicancia-kON_682q.js.map
