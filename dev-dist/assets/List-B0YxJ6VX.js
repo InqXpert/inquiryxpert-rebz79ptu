@@ -7,65 +7,13 @@ import { t as CircleCheck } from "./circle-check-oimSmPTz.js";
 import { t as Upload } from "./upload-sjXe6YBD.js";
 import { n as MapPin, t as Badge } from "./badge-Cju-YFbc.js";
 import { A as useControllableState, C as FocusScope, D as dispatchDiscreteCustomEvent, E as Primitive, F as Input, N as createContextScope, O as createSlot, P as composeEventHandlers, S as Portal$1, T as useCallbackRef, a as Content, b as useFocusGuards, i as Arrow, j as useId, o as Root2$1, r as Anchor, s as createPopperScope, v as hideOthers, w as DismissableLayer, x as Presence, y as ReactRemoveScroll } from "./dist-DorypG4D.js";
-import { c as Search, o as Skeleton } from "./index-C3ozkf-a.js";
+import { c as Search, o as Skeleton } from "./index-BfOWarOV.js";
 import { t as Card } from "./card-D6zMsiVA.js";
 import { t as useRealtime } from "./use-realtime-DIflD0Z-.js";
 import { n as useToast } from "./use-toast-BFg79Zi0.js";
 import { i as getAgentes } from "./agentes-ayEXYkb3.js";
 import { t as ImportAgenteModal } from "./ImportAgenteModal-D8U-gS2x.js";
 import { t as useMunicipios } from "./use-municipios-BLIF8fyY.js";
-var Calculator = createLucideIcon("calculator", [
-	["rect", {
-		width: "16",
-		height: "20",
-		x: "4",
-		y: "2",
-		rx: "2",
-		key: "1nb95v"
-	}],
-	["line", {
-		x1: "8",
-		x2: "16",
-		y1: "6",
-		y2: "6",
-		key: "x4nwl0"
-	}],
-	["line", {
-		x1: "16",
-		x2: "16",
-		y1: "14",
-		y2: "18",
-		key: "wjye3r"
-	}],
-	["path", {
-		d: "M16 10h.01",
-		key: "1m94wz"
-	}],
-	["path", {
-		d: "M12 10h.01",
-		key: "1nrarc"
-	}],
-	["path", {
-		d: "M8 10h.01",
-		key: "19clt8"
-	}],
-	["path", {
-		d: "M12 14h.01",
-		key: "1etili"
-	}],
-	["path", {
-		d: "M8 14h.01",
-		key: "6423bh"
-	}],
-	["path", {
-		d: "M12 18h.01",
-		key: "mhygvu"
-	}],
-	["path", {
-		d: "M8 18h.01",
-		key: "lrp35t"
-	}]
-]);
 var Circle = createLucideIcon("circle", [["circle", {
 	cx: "12",
 	cy: "12",
@@ -1471,7 +1419,7 @@ function InvestigationMap({ agentes, loading: agentsLoading }) {
 		getCoords,
 		muniLoading
 	]);
-	const handleCalculate = () => {
+	const handleCalculate = (0, import_react.useCallback)(() => {
 		const coords = getCoords(invState, invCity);
 		if (!coords) {
 			setInvCoords(null);
@@ -1492,7 +1440,26 @@ function InvestigationMap({ agentes, loading: agentsLoading }) {
 			setNearestId(null);
 			setDistances({});
 		}
-	};
+	}, [
+		invState,
+		invCity,
+		getCoords,
+		findNearestAgent,
+		mappedAgents,
+		calculateDistance
+	]);
+	(0, import_react.useEffect)(() => {
+		if (invState && invCity) handleCalculate();
+		else {
+			setInvCoords(null);
+			setNearestId(null);
+			setDistances({});
+		}
+	}, [
+		invState,
+		invCity,
+		handleCalculate
+	]);
 	const selectedAgentInfo = (0, import_react.useMemo)(() => {
 		if (!nearestId || !distances[nearestId]) return null;
 		const a = mappedAgents.find((x) => x.id === nearestId);
@@ -1508,156 +1475,141 @@ function InvestigationMap({ agentes, loading: agentsLoading }) {
 		mappedAgents
 	]);
 	if (agentsLoading || muniLoading) return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, {
-		"data-uid": "src/components/agentes/InvestigationMap.tsx:94:12",
+		"data-uid": "src/components/agentes/InvestigationMap.tsx:105:12",
 		"data-prohibitions": "[editContent]",
 		className: "w-full h-[500px] rounded-2xl"
 	});
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-		"data-uid": "src/components/agentes/InvestigationMap.tsx:98:5",
+		"data-uid": "src/components/agentes/InvestigationMap.tsx:109:5",
 		"data-prohibitions": "[editContent]",
 		className: "rounded-2xl shadow-sm border-none overflow-hidden flex flex-col mt-6 animate-in fade-in zoom-in duration-300",
 		children: [
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/agentes/InvestigationMap.tsx:99:7",
+				"data-uid": "src/components/agentes/InvestigationMap.tsx:110:7",
 				"data-prohibitions": "[editContent]",
 				className: "p-4 sm:p-6 bg-muted/10 border-b border-border/50",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h3", {
-					"data-uid": "src/components/agentes/InvestigationMap.tsx:100:9",
+					"data-uid": "src/components/agentes/InvestigationMap.tsx:111:9",
 					"data-prohibitions": "[]",
 					className: "text-lg font-bold text-primary mb-4 flex items-center gap-2",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MapPin, {
-						"data-uid": "src/components/agentes/InvestigationMap.tsx:101:11",
+						"data-uid": "src/components/agentes/InvestigationMap.tsx:112:11",
 						"data-prohibitions": "[editContent]",
 						className: "w-5 h-5 text-secondary"
 					}), " Inteligência Logística"]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/agentes/InvestigationMap.tsx:103:9",
+					"data-uid": "src/components/agentes/InvestigationMap.tsx:114:9",
 					"data-prohibitions": "[editContent]",
-					className: "flex flex-wrap gap-4 items-end",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/agentes/InvestigationMap.tsx:104:11",
-							"data-prohibitions": "[editContent]",
-							className: "flex-1 min-w-[200px]",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-								"data-uid": "src/components/agentes/InvestigationMap.tsx:105:13",
-								"data-prohibitions": "[]",
-								className: "text-sm font-medium text-muted-foreground mb-1.5 block",
-								children: "Estado da Investigação"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-								"data-uid": "src/components/agentes/InvestigationMap.tsx:108:13",
-								"data-prohibitions": "[editContent]",
-								value: invState,
-								onValueChange: (v) => {
-									setInvState(v);
-									setInvCity("");
-								},
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-									"data-uid": "src/components/agentes/InvestigationMap.tsx:115:15",
-									"data-prohibitions": "[]",
-									className: "h-12 rounded-xl",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-										"data-uid": "src/components/agentes/InvestigationMap.tsx:116:17",
-										"data-prohibitions": "[editContent]",
-										placeholder: "Selecione o estado..."
-									})
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
-									"data-uid": "src/components/agentes/InvestigationMap.tsx:118:15",
-									"data-prohibitions": "[editContent]",
-									children: states.map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-										"data-uid": "src/components/agentes/InvestigationMap.tsx:120:19",
-										"data-prohibitions": "[editContent]",
-										value: s,
-										children: s
-									}, s))
-								})]
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-							"data-uid": "src/components/agentes/InvestigationMap.tsx:127:11",
-							"data-prohibitions": "[editContent]",
-							className: "flex-1 min-w-[200px]",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
-								"data-uid": "src/components/agentes/InvestigationMap.tsx:128:13",
-								"data-prohibitions": "[]",
-								className: "text-sm font-medium text-muted-foreground mb-1.5 block",
-								children: "Cidade da Investigação"
-							}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
-								"data-uid": "src/components/agentes/InvestigationMap.tsx:131:13",
-								"data-prohibitions": "[editContent]",
-								value: invCity,
-								onValueChange: setInvCity,
-								disabled: !invState,
-								children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
-									"data-uid": "src/components/agentes/InvestigationMap.tsx:132:15",
-									"data-prohibitions": "[]",
-									className: "h-12 rounded-xl",
-									children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
-										"data-uid": "src/components/agentes/InvestigationMap.tsx:133:17",
-										"data-prohibitions": "[editContent]",
-										placeholder: "Selecione a cidade..."
-									})
-								}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
-									"data-uid": "src/components/agentes/InvestigationMap.tsx:135:15",
-									"data-prohibitions": "[editContent]",
-									children: cities.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
-										"data-uid": "src/components/agentes/InvestigationMap.tsx:137:19",
-										"data-prohibitions": "[editContent]",
-										value: c.nome,
-										children: c.nome
-									}, c.nome))
-								})]
-							})]
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Button, {
-							"data-uid": "src/components/agentes/InvestigationMap.tsx:144:11",
+					className: "flex flex-col sm:flex-row gap-4 items-end",
+					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/agentes/InvestigationMap.tsx:115:11",
+						"data-prohibitions": "[editContent]",
+						className: "flex-1 w-full",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+							"data-uid": "src/components/agentes/InvestigationMap.tsx:116:13",
 							"data-prohibitions": "[]",
-							onClick: handleCalculate,
-							disabled: !invCity,
-							className: "h-12 px-6 rounded-xl bg-secondary text-white hover:bg-secondary/90 font-semibold gap-2 w-full sm:w-auto",
-							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(Calculator, {
-								"data-uid": "src/components/agentes/InvestigationMap.tsx:149:13",
+							className: "text-sm font-medium text-muted-foreground mb-1.5 block",
+							children: "Estado da Investigação"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
+							"data-uid": "src/components/agentes/InvestigationMap.tsx:119:13",
+							"data-prohibitions": "[editContent]",
+							value: invState,
+							onValueChange: (v) => {
+								setInvState(v);
+								setInvCity("");
+							},
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
+								"data-uid": "src/components/agentes/InvestigationMap.tsx:126:15",
+								"data-prohibitions": "[]",
+								className: "h-12 rounded-xl",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
+									"data-uid": "src/components/agentes/InvestigationMap.tsx:127:17",
+									"data-prohibitions": "[editContent]",
+									placeholder: "Selecione o estado..."
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
+								"data-uid": "src/components/agentes/InvestigationMap.tsx:129:15",
 								"data-prohibitions": "[editContent]",
-								className: "w-4 h-4"
-							}), " Calcular Mais Próximo"]
-						})
-					]
+								children: states.map((s) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
+									"data-uid": "src/components/agentes/InvestigationMap.tsx:131:19",
+									"data-prohibitions": "[editContent]",
+									value: s,
+									children: s
+								}, s))
+							})]
+						})]
+					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						"data-uid": "src/components/agentes/InvestigationMap.tsx:138:11",
+						"data-prohibitions": "[editContent]",
+						className: "flex-1 w-full",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("label", {
+							"data-uid": "src/components/agentes/InvestigationMap.tsx:139:13",
+							"data-prohibitions": "[]",
+							className: "text-sm font-medium text-muted-foreground mb-1.5 block",
+							children: "Cidade da Investigação"
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Select, {
+							"data-uid": "src/components/agentes/InvestigationMap.tsx:142:13",
+							"data-prohibitions": "[editContent]",
+							value: invCity,
+							onValueChange: setInvCity,
+							disabled: !invState,
+							children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectTrigger, {
+								"data-uid": "src/components/agentes/InvestigationMap.tsx:143:15",
+								"data-prohibitions": "[]",
+								className: "h-12 rounded-xl",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectValue, {
+									"data-uid": "src/components/agentes/InvestigationMap.tsx:144:17",
+									"data-prohibitions": "[editContent]",
+									placeholder: "Selecione a cidade..."
+								})
+							}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectContent, {
+								"data-uid": "src/components/agentes/InvestigationMap.tsx:146:15",
+								"data-prohibitions": "[editContent]",
+								children: cities.map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItem, {
+									"data-uid": "src/components/agentes/InvestigationMap.tsx:148:19",
+									"data-prohibitions": "[editContent]",
+									value: c.nome,
+									children: c.nome
+								}, c.nome))
+							})]
+						})]
+					})]
 				})]
 			}),
 			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/agentes/InvestigationMap.tsx:154:7",
+				"data-uid": "src/components/agentes/InvestigationMap.tsx:158:7",
 				"data-prohibitions": "[editContent]",
 				className: "relative w-full h-[400px] md:h-[500px] bg-muted/30",
-				children: [!invCoords ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/agentes/InvestigationMap.tsx:156:11",
+				children: [!invCity ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+					"data-uid": "src/components/agentes/InvestigationMap.tsx:160:11",
 					"data-prohibitions": "[]",
 					className: "absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(MapPin, {
-						"data-uid": "src/components/agentes/InvestigationMap.tsx:157:13",
+						"data-uid": "src/components/agentes/InvestigationMap.tsx:161:13",
 						"data-prohibitions": "[editContent]",
 						className: "w-10 h-10 mb-3 opacity-50"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/agentes/InvestigationMap.tsx:158:13",
+						"data-uid": "src/components/agentes/InvestigationMap.tsx:162:13",
 						"data-prohibitions": "[]",
 						className: "font-medium",
-						children: "Selecione estado/cidade da investigação"
+						children: "Selecione estado e cidade para buscar agentes"
 					})]
 				}) : mappedAgents.length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/agentes/InvestigationMap.tsx:161:11",
+					"data-uid": "src/components/agentes/InvestigationMap.tsx:165:11",
 					"data-prohibitions": "[]",
 					className: "absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TriangleAlert, {
-						"data-uid": "src/components/agentes/InvestigationMap.tsx:162:13",
+						"data-uid": "src/components/agentes/InvestigationMap.tsx:166:13",
 						"data-prohibitions": "[editContent]",
 						className: "w-10 h-10 mb-3 opacity-50 text-yellow-600"
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						"data-uid": "src/components/agentes/InvestigationMap.tsx:163:13",
+						"data-uid": "src/components/agentes/InvestigationMap.tsx:167:13",
 						"data-prohibitions": "[]",
 						className: "font-medium",
-						children: "Nenhum agente ativo com base cadastrada."
+						children: "Nenhum agente cadastrado ou próximo o suficiente."
 					})]
 				}) : null, /* @__PURE__ */ (0, import_jsx_runtime.jsx)(InteractiveMapBrazil, {
-					"data-uid": "src/components/agentes/InvestigationMap.tsx:166:9",
+					"data-uid": "src/components/agentes/InvestigationMap.tsx:170:9",
 					"data-prohibitions": "[editContent]",
 					agents: mappedAgents,
 					investigationCoords: invCoords,
@@ -1667,19 +1619,19 @@ function InvestigationMap({ agentes, loading: agentsLoading }) {
 				})]
 			}),
 			selectedAgentInfo && /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-				"data-uid": "src/components/agentes/InvestigationMap.tsx:176:9",
+				"data-uid": "src/components/agentes/InvestigationMap.tsx:180:9",
 				"data-prohibitions": "[editContent]",
 				className: "p-4 sm:p-6 bg-green-50 border-t border-green-100 flex flex-col sm:flex-row items-center justify-between gap-4 animate-in slide-in-from-bottom-4",
 				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					"data-uid": "src/components/agentes/InvestigationMap.tsx:177:11",
+					"data-uid": "src/components/agentes/InvestigationMap.tsx:181:11",
 					"data-prohibitions": "[editContent]",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("h4", {
-						"data-uid": "src/components/agentes/InvestigationMap.tsx:178:13",
+						"data-uid": "src/components/agentes/InvestigationMap.tsx:182:13",
 						"data-prohibitions": "[editContent]",
 						className: "font-bold text-green-900 text-lg flex items-center gap-2",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CircleCheck, {
-								"data-uid": "src/components/agentes/InvestigationMap.tsx:179:15",
+								"data-uid": "src/components/agentes/InvestigationMap.tsx:183:15",
 								"data-prohibitions": "[editContent]",
 								className: "w-5 h-5 text-green-600"
 							}),
@@ -1687,11 +1639,11 @@ function InvestigationMap({ agentes, loading: agentsLoading }) {
 							selectedAgentInfo.name
 						]
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-						"data-uid": "src/components/agentes/InvestigationMap.tsx:182:13",
+						"data-uid": "src/components/agentes/InvestigationMap.tsx:186:13",
 						"data-prohibitions": "[editContent]",
 						className: "flex gap-4 mt-2 text-sm text-green-800 font-medium",
 						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-							"data-uid": "src/components/agentes/InvestigationMap.tsx:183:15",
+							"data-uid": "src/components/agentes/InvestigationMap.tsx:187:15",
 							"data-prohibitions": "[editContent]",
 							children: [
 								"Distância: ",
@@ -1699,17 +1651,17 @@ function InvestigationMap({ agentes, loading: agentsLoading }) {
 								" km"
 							]
 						}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("span", {
-							"data-uid": "src/components/agentes/InvestigationMap.tsx:184:15",
+							"data-uid": "src/components/agentes/InvestigationMap.tsx:188:15",
 							"data-prohibitions": "[editContent]",
 							children: ["Custo Estimado: R$ ", selectedAgentInfo.estimatedCost.toFixed(2)]
 						})]
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-					"data-uid": "src/components/agentes/InvestigationMap.tsx:187:11",
+					"data-uid": "src/components/agentes/InvestigationMap.tsx:191:11",
 					"data-prohibitions": "[]",
 					className: "rounded-xl h-11 px-8 bg-green-600 hover:bg-green-700 text-white font-bold w-full sm:w-auto shadow-sm",
 					onClick: () => navigate(`/agentes/${selectedAgentInfo.id}`),
-					children: "Selecionar Agente"
+					children: "Acessar Perfil"
 				})]
 			})
 		]
@@ -2226,4 +2178,4 @@ function AgentesList() {
 //#endregion
 export { AgentesList as default };
 
-//# sourceMappingURL=List-DzqQYGCF.js.map
+//# sourceMappingURL=List-B0YxJ6VX.js.map

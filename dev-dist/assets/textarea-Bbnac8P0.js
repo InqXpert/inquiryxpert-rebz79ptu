@@ -1,6 +1,6 @@
 import { i as require_react, r as require_jsx_runtime, s as __toESM, t as cn } from "./utils-B9zKDa3a.js";
 import { r as cva } from "./button-B8G2v1WD.js";
-import { s as Primitive } from "./index-C3ozkf-a.js";
+import { s as Primitive } from "./index-BfOWarOV.js";
 //#region ../../cache/modules/gerenciador-de-prestadores-d53d6/node_modules/.pnpm/@radix-ui+react-label@2.1.8_@types+react-dom@19.2.3_@types+react@19.2.14__@types+react@_55fa612a976b7bdfbf4dcdd93d861aab/node_modules/@radix-ui/react-label/dist/index.mjs
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
 var import_jsx_runtime = require_jsx_runtime();
@@ -44,4 +44,4 @@ Textarea.displayName = "Textarea";
 //#endregion
 export { Label as n, Textarea as t };
 
-//# sourceMappingURL=textarea-Cv2w36Qx.js.map
+//# sourceMappingURL=textarea-Bbnac8P0.js.map

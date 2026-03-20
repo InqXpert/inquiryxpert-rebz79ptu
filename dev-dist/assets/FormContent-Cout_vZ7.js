@@ -3,11 +3,11 @@ import { i as Slot, t as Button } from "./button-B8G2v1WD.js";
 import { r as createLucideIcon } from "./client-riYRmEzR.js";
 import { c as SelectContent, d as SelectValue, l as SelectItem, s as Select, u as SelectTrigger } from "./dialog-CyB8De43.js";
 import { F as Input } from "./dist-DorypG4D.js";
-import { a as TooltipTrigger, i as TooltipContent, r as Tooltip } from "./index-C3ozkf-a.js";
+import { a as TooltipTrigger, i as TooltipContent, r as Tooltip } from "./index-BfOWarOV.js";
 import { i as CardTitle, n as CardContent, r as CardHeader, t as Card } from "./card-D6zMsiVA.js";
 import { n as useToast } from "./use-toast-BFg79Zi0.js";
 import { t as useMunicipios } from "./use-municipios-BLIF8fyY.js";
-import { n as Label, t as Textarea } from "./textarea-Cv2w36Qx.js";
+import { n as Label, t as Textarea } from "./textarea-Bbnac8P0.js";
 var ChevronLeft = createLucideIcon("chevron-left", [["path", {
 	d: "m15 18-6-6 6-6",
 	key: "1wnfg3"
@@ -6440,134 +6440,138 @@ function FormContent() {
 							"data-uid": "src/pages/agentes/FormContent.tsx:150:13",
 							"data-prohibitions": "[]",
 							className: "text-lg font-semibold text-primary",
-							children: "Status do Agente"
+							children: "Status e Performance do Agente"
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/agentes/FormContent.tsx:152:11",
+						"data-uid": "src/pages/agentes/FormContent.tsx:154:11",
 						"data-prohibitions": "[editContent]",
 						className: "grid grid-cols-1 sm:grid-cols-2 gap-6",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSimNao, {
-								"data-uid": "src/pages/agentes/FormContent.tsx:153:13",
+								"data-uid": "src/pages/agentes/FormContent.tsx:155:13",
 								"data-prohibitions": "[editContent]",
 								name: "ativo",
 								label: "Agente ativo?"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
-								"data-uid": "src/pages/agentes/FormContent.tsx:154:13",
+								"data-uid": "src/pages/agentes/FormContent.tsx:156:13",
 								"data-prohibitions": "[editContent]",
 								name: "dataAtivacao",
 								label: "Data de ativação",
 								type: "date"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
-								"data-uid": "src/pages/agentes/FormContent.tsx:155:13",
+								"data-uid": "src/pages/agentes/FormContent.tsx:157:13",
 								"data-prohibitions": "[editContent]",
 								name: "dataInativacao",
 								label: "Data de inativação",
 								type: "date"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSimNao, {
-								"data-uid": "src/pages/agentes/FormContent.tsx:156:13",
+								"data-uid": "src/pages/agentes/FormContent.tsx:158:13",
 								"data-prohibitions": "[editContent]",
 								name: "naBlackList",
 								label: "Está na Black List?"
 							}),
 							naBlackList === "Sim" && /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-								"data-uid": "src/pages/agentes/FormContent.tsx:158:15",
+								"data-uid": "src/pages/agentes/FormContent.tsx:160:15",
 								"data-prohibitions": "[]",
 								className: "col-span-full",
 								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
-									"data-uid": "src/pages/agentes/FormContent.tsx:159:17",
+									"data-uid": "src/pages/agentes/FormContent.tsx:161:17",
 									"data-prohibitions": "[editContent]",
 									name: "motivoBlackList",
 									label: "Motivo da inclusão"
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/agentes/FormContent.tsx:164:13",
+								"data-prohibitions": "[editContent]",
+								className: "col-span-full border-t border-muted/50 my-2"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/agentes/FormContent.tsx:165:13",
+								"data-prohibitions": "[]",
+								className: "col-span-full font-semibold text-primary text-sm -mb-2",
+								children: "Métricas de Avaliação (KPIs)"
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/agentes/FormContent.tsx:168:13",
+								"data-prohibitions": "[]",
+								className: "col-span-full",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
+									"data-uid": "src/pages/agentes/FormContent.tsx:169:15",
+									"data-prohibitions": "[editContent]",
+									name: "qualidade_nivel",
+									label: "Nível de Qualidade",
+									options: QUALIDADE_OPTIONS
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/agentes/FormContent.tsx:175:13",
+								"data-prohibitions": "[]",
+								className: "col-span-full",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
+									"data-uid": "src/pages/agentes/FormContent.tsx:176:15",
+									"data-prohibitions": "[editContent]",
+									name: "experiencia_nivel",
+									label: "Nível de Experiência",
+									options: EXPERIENCIA_OPTIONS
+								})
+							}),
+							/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+								"data-uid": "src/pages/agentes/FormContent.tsx:182:13",
+								"data-prohibitions": "[]",
+								className: "col-span-full",
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
+									"data-uid": "src/pages/agentes/FormContent.tsx:183:15",
+									"data-prohibitions": "[editContent]",
+									name: "compliance_nivel",
+									label: "Nível de Compliance",
+									options: COMPLIANCE_OPTIONS
 								})
 							})
 						]
 					})]
 				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-					"data-uid": "src/pages/agentes/FormContent.tsx:165:9",
+					"data-uid": "src/pages/agentes/FormContent.tsx:192:9",
 					"data-prohibitions": "[]",
 					className: "rounded-2xl shadow-sm border-none",
 					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-						"data-uid": "src/pages/agentes/FormContent.tsx:166:11",
+						"data-uid": "src/pages/agentes/FormContent.tsx:193:11",
 						"data-prohibitions": "[]",
 						className: "border-b border-muted/50 pb-4 mb-4",
 						children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-							"data-uid": "src/pages/agentes/FormContent.tsx:167:13",
+							"data-uid": "src/pages/agentes/FormContent.tsx:194:13",
 							"data-prohibitions": "[]",
 							className: "text-lg font-semibold text-primary",
 							children: "Outras Informações"
 						})
 					}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-						"data-uid": "src/pages/agentes/FormContent.tsx:169:11",
+						"data-uid": "src/pages/agentes/FormContent.tsx:196:11",
 						"data-prohibitions": "[]",
 						className: "grid grid-cols-1 gap-6",
 						children: [
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FInput, {
-								"data-uid": "src/pages/agentes/FormContent.tsx:170:13",
+								"data-uid": "src/pages/agentes/FormContent.tsx:197:13",
 								"data-prohibitions": "[editContent]",
 								name: "origemIndicacao",
 								label: "De onde veio a indicação"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FTextarea, {
-								"data-uid": "src/pages/agentes/FormContent.tsx:171:13",
+								"data-uid": "src/pages/agentes/FormContent.tsx:198:13",
 								"data-prohibitions": "[editContent]",
 								name: "outrasEmpresas",
 								label: "Outras empresas onde presta serviço"
 							}),
 							/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FTextarea, {
-								"data-uid": "src/pages/agentes/FormContent.tsx:172:13",
+								"data-uid": "src/pages/agentes/FormContent.tsx:199:13",
 								"data-prohibitions": "[editContent]",
 								name: "observacoes",
 								label: "Observações"
 							})
 						]
 					})]
-				})]
-			}),
-			/* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Card, {
-				"data-uid": "src/pages/agentes/FormContent.tsx:177:7",
-				"data-prohibitions": "[]",
-				className: "rounded-2xl shadow-sm border-none md:col-span-2",
-				children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardHeader, {
-					"data-uid": "src/pages/agentes/FormContent.tsx:178:9",
-					"data-prohibitions": "[]",
-					className: "border-b border-muted/50 pb-4 mb-4",
-					children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(CardTitle, {
-						"data-uid": "src/pages/agentes/FormContent.tsx:179:11",
-						"data-prohibitions": "[]",
-						className: "text-lg font-semibold text-primary",
-						children: "Performance e Compliance (KPIs)"
-					})
-				}), /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-					"data-uid": "src/pages/agentes/FormContent.tsx:183:9",
-					"data-prohibitions": "[]",
-					className: "grid grid-cols-1 md:grid-cols-3 gap-6",
-					children: [
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
-							"data-uid": "src/pages/agentes/FormContent.tsx:184:11",
-							"data-prohibitions": "[editContent]",
-							name: "qualidade_nivel",
-							label: "Nível de Qualidade",
-							options: QUALIDADE_OPTIONS
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
-							"data-uid": "src/pages/agentes/FormContent.tsx:185:11",
-							"data-prohibitions": "[editContent]",
-							name: "experiencia_nivel",
-							label: "Nível de Experiência",
-							options: EXPERIENCIA_OPTIONS
-						}),
-						/* @__PURE__ */ (0, import_jsx_runtime.jsx)(FSelect, {
-							"data-uid": "src/pages/agentes/FormContent.tsx:190:11",
-							"data-prohibitions": "[editContent]",
-							name: "compliance_nivel",
-							label: "Nível de Compliance",
-							options: COMPLIANCE_OPTIONS
-						})
-					]
 				})]
 			})
 		]
@@ -6576,4 +6580,4 @@ function FormContent() {
 //#endregion
 export { a, ChevronLeft as c, agenteSchema as i, ImportedFieldsContext as n, useForm as o, Form as r, Copy as s, FormContent as t };
 
-//# sourceMappingURL=FormContent-CvXmBDtf.js.map
+//# sourceMappingURL=FormContent-Cout_vZ7.js.map

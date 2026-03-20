@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import { Card } from '@/components/ui/card'
 import {
   Select,
@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { MapPin, Calculator, CheckCircle2, AlertTriangle } from 'lucide-react'
+import { MapPin, CheckCircle2, AlertTriangle } from 'lucide-react'
 import { Agente } from '@/types'
 import { useGeoDistance, Coords, AgentGeoInfo } from '@/hooks/use-geo-distance'
 import { InteractiveMapBrazil } from '@/components/InteractiveMapBrazil'
@@ -55,7 +55,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
       .filter(Boolean) as AgentGeoInfo[]
   }, [agentes, getCoords, muniLoading])
 
-  const handleCalculate = () => {
+  const handleCalculate = useCallback(() => {
     const coords = getCoords(invState, invCity)
     if (!coords) {
       setInvCoords(null)
@@ -77,7 +77,18 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
       setNearestId(null)
       setDistances({})
     }
-  }
+  }, [invState, invCity, getCoords, findNearestAgent, mappedAgents, calculateDistance])
+
+  // Automatically calculate when city changes
+  useEffect(() => {
+    if (invState && invCity) {
+      handleCalculate()
+    } else {
+      setInvCoords(null)
+      setNearestId(null)
+      setDistances({})
+    }
+  }, [invState, invCity, handleCalculate])
 
   const selectedAgentInfo = useMemo(() => {
     if (!nearestId || !distances[nearestId]) return null
@@ -100,8 +111,8 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
         <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
           <MapPin className="w-5 h-5 text-secondary" /> Inteligência Logística
         </h3>
-        <div className="flex flex-wrap gap-4 items-end">
-          <div className="flex-1 min-w-[200px]">
+        <div className="flex flex-col sm:flex-row gap-4 items-end">
+          <div className="flex-1 w-full">
             <label className="text-sm font-medium text-muted-foreground mb-1.5 block">
               Estado da Investigação
             </label>
@@ -124,7 +135,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
               </SelectContent>
             </Select>
           </div>
-          <div className="flex-1 min-w-[200px]">
+          <div className="flex-1 w-full">
             <label className="text-sm font-medium text-muted-foreground mb-1.5 block">
               Cidade da Investigação
             </label>
@@ -141,26 +152,19 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
               </SelectContent>
             </Select>
           </div>
-          <Button
-            onClick={handleCalculate}
-            disabled={!invCity}
-            className="h-12 px-6 rounded-xl bg-secondary text-white hover:bg-secondary/90 font-semibold gap-2 w-full sm:w-auto"
-          >
-            <Calculator className="w-4 h-4" /> Calcular Mais Próximo
-          </Button>
         </div>
       </div>
 
       <div className="relative w-full h-[400px] md:h-[500px] bg-muted/30">
-        {!invCoords ? (
+        {!invCity ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px]">
             <MapPin className="w-10 h-10 mb-3 opacity-50" />
-            <p className="font-medium">Selecione estado/cidade da investigação</p>
+            <p className="font-medium">Selecione estado e cidade para buscar agentes</p>
           </div>
         ) : mappedAgents.length === 0 ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground z-10 bg-muted/10 backdrop-blur-[1px]">
             <AlertTriangle className="w-10 h-10 mb-3 opacity-50 text-yellow-600" />
-            <p className="font-medium">Nenhum agente ativo com base cadastrada.</p>
+            <p className="font-medium">Nenhum agente cadastrado ou próximo o suficiente.</p>
           </div>
         ) : null}
         <InteractiveMapBrazil
@@ -188,7 +192,7 @@ export function InvestigationMap({ agentes, loading: agentsLoading }: Props) {
             className="rounded-xl h-11 px-8 bg-green-600 hover:bg-green-700 text-white font-bold w-full sm:w-auto shadow-sm"
             onClick={() => navigate(`/agentes/${selectedAgentInfo.id}`)}
           >
-            Selecionar Agente
+            Acessar Perfil
           </Button>
         </div>
       )}

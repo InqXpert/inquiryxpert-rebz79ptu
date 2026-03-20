@@ -6,12 +6,12 @@ import { t as CloudUpload } from "./cloud-upload-DZf4zhuO.js";
 import { t as FileText } from "./file-text-DU1VjS2y.js";
 import { t as Mail } from "./mail-RAv0Yjo5.js";
 import { t as Save } from "./save-Djd3JGEZ.js";
-import { o as Skeleton, t as useAuth } from "./index-C3ozkf-a.js";
+import { o as Skeleton, t as useAuth } from "./index-BfOWarOV.js";
 import { n as CardContent, t as Card } from "./card-D6zMsiVA.js";
 import { f as getNextNumeroControle, m as uploadDocumento, r as createProcesso } from "./procesosOperacionais-BfEV9Zn1.js";
 import { n as useToast } from "./use-toast-BFg79Zi0.js";
 import { r as getAgente } from "./agentes-ayEXYkb3.js";
-import { n as Label, t as Textarea } from "./textarea-Cv2w36Qx.js";
+import { n as Label, t as Textarea } from "./textarea-Bbnac8P0.js";
 var ArrowLeft = createLucideIcon("arrow-left", [["path", {
 	d: "m12 19-7-7 7-7",
 	key: "1l729n"
@@ -457,4 +457,4 @@ function Sindicancia() {
 //#endregion
 export { Sindicancia as default };
 
-//# sourceMappingURL=Sindicancia-DTsJtVCZ.js.map
+//# sourceMappingURL=Sindicancia-C2T6_ebZ.js.map

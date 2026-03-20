@@ -1,4 +1,4 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/Dashboard-D_cW_Nwp.js","assets/utils-B9zKDa3a.js","assets/client-riYRmEzR.js","assets/circle-check-oimSmPTz.js","assets/file-text-DU1VjS2y.js","assets/card-D6zMsiVA.js","assets/use-realtime-DIflD0Z-.js","assets/procesosOperacionais-BfEV9Zn1.js","assets/xlsx-qyzHOFaM.js","assets/Processos--uDbdzMc.js","assets/button-B8G2v1WD.js","assets/dist-DorypG4D.js","assets/dialog-CyB8De43.js","assets/tabs-DS7Jabzb.js","assets/circle-check-big-DT4gR5MW.js","assets/cloud-upload-DZf4zhuO.js","assets/upload-sjXe6YBD.js","assets/use-toast-BFg79Zi0.js","assets/errors-DEijByru.js","assets/List-DzqQYGCF.js","assets/badge-Cju-YFbc.js","assets/ImportAgenteModal-D8U-gS2x.js","assets/use-municipios-BLIF8fyY.js","assets/agentes-ayEXYkb3.js","assets/Novo-BSxtm6fH.js","assets/FormContent-CvXmBDtf.js","assets/textarea-Cv2w36Qx.js","assets/save-Djd3JGEZ.js","assets/Profile-d-egjbpO.js","assets/mail-RAv0Yjo5.js","assets/Sindicancia-DTsJtVCZ.js","assets/Configuracoes-CbZZPRzJ.js","assets/Ajuda-BAPsivdw.js"])))=>i.map(i=>d[i]);
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/Dashboard-D_cW_Nwp.js","assets/utils-B9zKDa3a.js","assets/client-riYRmEzR.js","assets/circle-check-oimSmPTz.js","assets/file-text-DU1VjS2y.js","assets/card-D6zMsiVA.js","assets/use-realtime-DIflD0Z-.js","assets/procesosOperacionais-BfEV9Zn1.js","assets/xlsx-qyzHOFaM.js","assets/Processos-Bi3w0DiL.js","assets/button-B8G2v1WD.js","assets/dist-DorypG4D.js","assets/dialog-CyB8De43.js","assets/tabs-DS7Jabzb.js","assets/circle-check-big-DT4gR5MW.js","assets/cloud-upload-DZf4zhuO.js","assets/upload-sjXe6YBD.js","assets/use-toast-BFg79Zi0.js","assets/errors-DEijByru.js","assets/List-B0YxJ6VX.js","assets/badge-Cju-YFbc.js","assets/ImportAgenteModal-D8U-gS2x.js","assets/use-municipios-BLIF8fyY.js","assets/agentes-ayEXYkb3.js","assets/Novo-ZFHHVH9Q.js","assets/FormContent-Cout_vZ7.js","assets/textarea-Bbnac8P0.js","assets/save-Djd3JGEZ.js","assets/Profile-CmeRcX6g.js","assets/mail-RAv0Yjo5.js","assets/Sindicancia-C2T6_ebZ.js","assets/Configuracoes-CbZZPRzJ.js","assets/Ajuda-BAPsivdw.js"])))=>i.map(i=>d[i]);
 import { a as __commonJSMin, i as require_react, r as require_jsx_runtime, s as __toESM, t as cn } from "./utils-B9zKDa3a.js";
 import { a as createSlot, c as X, d as Navigate, f as Outlet, h as useLocation, i as Slot, l as BrowserRouter, m as Routes, p as Route, r as cva, s as useComposedRefs, t as Button, u as Link, v as __vitePreload, y as require_react_dom } from "./button-B8G2v1WD.js";
 import { r as createLucideIcon, t as pb } from "./client-riYRmEzR.js";
@@ -16356,11 +16356,11 @@ function Layout() {
 //#endregion
 //#region src/App.tsx
 var Dashboard = (0, import_react.lazy)(() => __vitePreload(() => import("./Dashboard-D_cW_Nwp.js"), __vite__mapDeps([0,1,2,3,4,5,6,7,8])));
-var Processos = (0, import_react.lazy)(() => __vitePreload(() => import("./Processos--uDbdzMc.js"), __vite__mapDeps([9,1,10,2,11,12,13,14,15,16,4,8,5,6,17,18,7])));
-var AgentesList = (0, import_react.lazy)(() => __vitePreload(() => import("./List-DzqQYGCF.js"), __vite__mapDeps([19,1,10,2,11,12,13,3,16,20,21,15,8,17,5,22,6,23])));
-var NovoAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Novo-BSxtm6fH.js"), __vite__mapDeps([24,1,10,2,11,25,12,26,5,22,17,16,27,21,3,15,8,18,23])));
-var ProfileAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Profile-d-egjbpO.js"), __vite__mapDeps([28,1,10,2,11,25,12,26,5,22,17,3,29,20,6,23,7,8])));
-var SindicanciaAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Sindicancia-DTsJtVCZ.js"), __vite__mapDeps([30,1,10,2,26,14,15,4,29,27,5,17,23,7,8])));
+var Processos = (0, import_react.lazy)(() => __vitePreload(() => import("./Processos-Bi3w0DiL.js"), __vite__mapDeps([9,1,10,2,11,12,13,14,15,16,4,8,5,6,17,18,7])));
+var AgentesList = (0, import_react.lazy)(() => __vitePreload(() => import("./List-B0YxJ6VX.js"), __vite__mapDeps([19,1,10,2,11,12,13,3,16,20,21,15,8,17,5,22,6,23])));
+var NovoAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Novo-ZFHHVH9Q.js"), __vite__mapDeps([24,1,10,2,11,25,12,26,5,22,17,16,27,21,3,15,8,18,23])));
+var ProfileAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Profile-CmeRcX6g.js"), __vite__mapDeps([28,1,10,2,11,25,12,26,5,22,17,3,29,20,6,23,7,8])));
+var SindicanciaAgente = (0, import_react.lazy)(() => __vitePreload(() => import("./Sindicancia-C2T6_ebZ.js"), __vite__mapDeps([30,1,10,2,26,14,15,4,29,27,5,17,23,7,8])));
 var Configuracoes = (0, import_react.lazy)(() => __vitePreload(() => import("./Configuracoes-CbZZPRzJ.js"), __vite__mapDeps([31,1,5])));
 var Ajuda = (0, import_react.lazy)(() => __vitePreload(() => import("./Ajuda-BAPsivdw.js"), __vite__mapDeps([32,1,5])));
 function App() {
@@ -16504,4 +16504,4 @@ function App() {
 //#endregion
 export { TooltipTrigger as a, Search as c, TooltipContent as i, createContextScope as n, Skeleton as o, Tooltip as r, Primitive as s, useAuth as t };
 
-//# sourceMappingURL=index-C3ozkf-a.js.map
+//# sourceMappingURL=index-BfOWarOV.js.map

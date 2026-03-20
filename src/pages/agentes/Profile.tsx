@@ -14,6 +14,9 @@ import {
   Edit,
   Copy,
   Briefcase,
+  Star,
+  Award,
+  ShieldCheck,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -26,7 +29,6 @@ import { useRealtime } from '@/hooks/use-realtime'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EditAgenteModal } from '@/components/agentes/EditAgenteModal'
-import { AgentePerformanceKPIs } from '@/components/agentes/AgentePerformanceKPIs'
 
 export default function ProfileAgente() {
   const { id } = useParams()
@@ -53,7 +55,7 @@ export default function ProfileAgente() {
       }
     } catch (err) {
       toast({
-        title: 'Erro ao carregar KPIs.',
+        title: 'Erro ao carregar dados.',
         description: 'Agente não encontrado ou erro de rede.',
         variant: 'destructive',
       })
@@ -143,6 +145,19 @@ export default function ProfileAgente() {
     return cn(base, 'bg-muted text-muted-foreground')
   }
 
+  const getKPITextColor = (val?: string) => {
+    if (!val) return 'text-muted-foreground'
+    if (val.includes('NIVEL 1') || val.includes('ZERO') || val.includes('TREINAMENTO'))
+      return 'text-red-600'
+    if (val.includes('NIVEL 2') || val.includes('PARCIAL') || val.includes('JUNIOR'))
+      return 'text-orange-600'
+    if (val.includes('NIVEL 3') || val.includes('ALTO') || val.includes('PLENO'))
+      return 'text-blue-600'
+    if (val.includes('NIVEL 4') || val.includes('TOTAL') || val.includes('SENIOR'))
+      return 'text-green-600'
+    return 'text-muted-foreground'
+  }
+
   const recentes = processos.slice(0, 3)
 
   return (
@@ -186,8 +201,8 @@ export default function ProfileAgente() {
       </div>
 
       <Card className="border-none shadow-sm rounded-2xl overflow-hidden animate-in fade-in duration-300 ease-out">
-        <CardContent className="p-8 grid grid-cols-1 md:grid-cols-[240px_auto_260px] gap-8 md:items-start">
-          <div className="flex flex-col items-center md:items-start text-center md:text-left">
+        <CardContent className="p-8 grid grid-cols-1 lg:grid-cols-[220px_1fr_1fr_1fr] gap-8 md:items-start">
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
             <img
               src={`https://img.usecurling.com/ppl/large?gender=male&seed=${p.id}`}
               className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-sm"
@@ -219,7 +234,7 @@ export default function ProfileAgente() {
             >
               {p.regiaoAbrangencia || 'Sem Especialidade'}
             </Badge>
-            <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-4">
+            <div className="flex flex-wrap justify-center lg:justify-start gap-2 mt-4">
               {p.naBlackList === 'Sim' && (
                 <div className="bg-destructive/10 text-destructive text-xs font-bold px-3 py-1 rounded-full flex gap-1.5 items-center">
                   <AlertTriangle className="w-3.5 h-3.5" /> Blacklist
@@ -233,7 +248,7 @@ export default function ProfileAgente() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-center space-y-4 pt-2">
+          <div className="flex flex-col justify-center space-y-4 lg:pt-2">
             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Informações de Contato
             </h3>
@@ -274,7 +289,7 @@ export default function ProfileAgente() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-center space-y-4 pt-2">
+          <div className="flex flex-col justify-center space-y-4 lg:pt-2">
             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
               Financeiro & Comercial
             </h3>
@@ -312,6 +327,62 @@ export default function ProfileAgente() {
                     title={p.chavePix}
                   >
                     {p.chavePix || '-'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-center space-y-4 lg:pt-2">
+            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              Performance & Qualidade
+            </h3>
+            <div className="grid grid-cols-1 gap-3">
+              <div className="flex gap-3 items-center">
+                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                  <Star className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-xs text-muted-foreground font-medium">Qualidade</span>
+                  <span
+                    className={cn(
+                      'text-sm font-semibold truncate',
+                      getKPITextColor(p.qualidade_nivel),
+                    )}
+                  >
+                    {p.qualidade_nivel || 'Não Avaliado'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-3 items-center">
+                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                  <Award className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-xs text-muted-foreground font-medium">Experiência</span>
+                  <span
+                    className={cn(
+                      'text-sm font-semibold truncate',
+                      getKPITextColor(p.experiencia_nivel),
+                    )}
+                  >
+                    {p.experiencia_nivel || 'Não Avaliado'}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-3 items-center">
+                <div className="w-8 h-8 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4 text-muted-foreground" />
+                </div>
+                <div className="flex flex-col overflow-hidden">
+                  <span className="text-xs text-muted-foreground font-medium">Compliance</span>
+                  <span
+                    className={cn(
+                      'text-sm font-semibold truncate',
+                      getKPITextColor(p.compliance_nivel),
+                    )}
+                  >
+                    {p.compliance_nivel || 'Não Avaliado'}
                   </span>
                 </div>
               </div>
@@ -368,8 +439,6 @@ export default function ProfileAgente() {
               </Card>
             ))}
       </div>
-
-      <AgentePerformanceKPIs agente={p} onRefresh={loadData} />
 
       <div className="grid grid-cols-1 md:grid-cols-[65%_35%] gap-6">
         <Card className="border-none shadow-sm rounded-2xl p-6">

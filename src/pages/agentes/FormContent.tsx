@@ -147,7 +147,9 @@ export function FormContent() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="rounded-2xl shadow-sm border-none">
           <CardHeader className="border-b border-muted/50 pb-4 mb-4">
-            <CardTitle className="text-lg font-semibold text-primary">Status do Agente</CardTitle>
+            <CardTitle className="text-lg font-semibold text-primary">
+              Status e Performance do Agente
+            </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <FSimNao name="ativo" label="Agente ativo?" />
@@ -159,6 +161,31 @@ export function FormContent() {
                 <FInput name="motivoBlackList" label="Motivo da inclusão" />
               </div>
             )}
+            <div className="col-span-full border-t border-muted/50 my-2" />
+            <div className="col-span-full font-semibold text-primary text-sm -mb-2">
+              Métricas de Avaliação (KPIs)
+            </div>
+            <div className="col-span-full">
+              <FSelect
+                name="qualidade_nivel"
+                label="Nível de Qualidade"
+                options={QUALIDADE_OPTIONS}
+              />
+            </div>
+            <div className="col-span-full">
+              <FSelect
+                name="experiencia_nivel"
+                label="Nível de Experiência"
+                options={EXPERIENCIA_OPTIONS}
+              />
+            </div>
+            <div className="col-span-full">
+              <FSelect
+                name="compliance_nivel"
+                label="Nível de Compliance"
+                options={COMPLIANCE_OPTIONS}
+              />
+            </div>
           </CardContent>
         </Card>
 
@@ -173,27 +200,6 @@ export function FormContent() {
           </CardContent>
         </Card>
       </div>
-
-      <Card className="rounded-2xl shadow-sm border-none md:col-span-2">
-        <CardHeader className="border-b border-muted/50 pb-4 mb-4">
-          <CardTitle className="text-lg font-semibold text-primary">
-            Performance e Compliance (KPIs)
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <FSelect name="qualidade_nivel" label="Nível de Qualidade" options={QUALIDADE_OPTIONS} />
-          <FSelect
-            name="experiencia_nivel"
-            label="Nível de Experiência"
-            options={EXPERIENCIA_OPTIONS}
-          />
-          <FSelect
-            name="compliance_nivel"
-            label="Nível de Compliance"
-            options={COMPLIANCE_OPTIONS}
-          />
-        </CardContent>
-      </Card>
     </div>
   )
 }
