@@ -15,6 +15,7 @@ const SindicanciaAgente = lazy(() => import('./pages/agentes/Sindicancia'))
 const Configuracoes = lazy(() => import('./pages/Configuracoes'))
 const Ajuda = lazy(() => import('./pages/Ajuda'))
 const GestaoUsuarios = lazy(() => import('./pages/GestaoUsuarios'))
+const Perfil = lazy(() => import('./pages/Perfil'))
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
                 <Route path="/agentes/:id" element={<ProfileAgente />} />
                 <Route path="/agentes/:id/sindicancia" element={<SindicanciaAgente />} />
                 <Route path="/gestao-usuarios" element={<GestaoUsuarios />} />
+                <Route path="/perfil" element={<Perfil />} />
                 <Route path="/configuracoes" element={<Configuracoes />} />
                 <Route path="/ajuda" element={<Ajuda />} />
                 <Route path="*" element={<Navigate to="/dashboard" replace />} />

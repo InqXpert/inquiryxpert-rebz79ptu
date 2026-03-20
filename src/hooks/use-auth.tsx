@@ -22,10 +22,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const initAuth = async () => {
+      if (pb.authStore.isValid) {
+        try {
+          // Dynamic Permission Synchronization
+          await pb.collection('users').authRefresh()
+          setUser(pb.authStore.record as User | null)
+        } catch (error) {
+          console.error('Auth refresh failed:', error)
+          pb.authStore.clear()
+          setUser(null)
+        }
+      }
+      setLoading(false)
+    }
+
+    initAuth()
+
     const unsubscribe = pb.authStore.onChange((_token, record) => {
       setUser(record as User | null)
     })
-    setLoading(false)
+
     return () => unsubscribe()
   }, [])
 

@@ -1,5 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Users, CreditCard, BarChart, Settings, ShieldCheck } from 'lucide-react'
+import {
+  LayoutDashboard,
+  Users,
+  CreditCard,
+  BarChart,
+  Settings,
+  ShieldCheck,
+  FolderOpen,
+} from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -19,14 +27,15 @@ export function AppSidebar() {
   const { user } = useAuth()
 
   const items = [
-    { title: 'Dashboard', url: '/', icon: LayoutDashboard },
+    { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
+    { title: 'Processos', url: '/processos', icon: FolderOpen },
     { title: 'Agentes', url: '/agentes', icon: Users },
     ...(user?.role === 'c-level'
       ? [{ title: 'Gestão de Usuários', url: '/gestao-usuarios', icon: ShieldCheck }]
       : []),
     { title: 'Financeiro', url: '#', icon: CreditCard },
     { title: 'Analytics', url: '#', icon: BarChart },
-    { title: 'Configurações', url: '#', icon: Settings },
+    { title: 'Configurações', url: '/configuracoes', icon: Settings },
   ]
 
   const isActive = (url: string) => {
@@ -36,25 +45,30 @@ export function AppSidebar() {
 
   return (
     <Sidebar>
-      <SidebarHeader className="p-6">
-        <h1 className="text-2xl font-bold tracking-wider text-sidebar-primary-foreground">
-          NL CORP.
-        </h1>
+      <SidebarHeader className="p-4 border-b border-sidebar-border">
+        <Link to="/" className="flex items-center gap-3 px-2 group">
+          <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center font-bold text-sm text-sidebar-primary-foreground shadow-sm group-hover:bg-sidebar-accent-foreground transition-colors">
+            IX
+          </div>
+          <span className="font-bold text-lg tracking-tight text-sidebar-foreground group-hover:text-sidebar-accent-foreground transition-colors">
+            InquiryXperty
+          </span>
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1.5 mt-2 px-2">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
                     isActive={isActive(item.url)}
-                    className="py-6 transition-all hover:translate-x-1"
+                    className="py-5 px-3 transition-all hover:translate-x-1"
                   >
                     <Link to={item.url}>
                       <item.icon className="!size-5" />
-                      <span className="text-base font-medium">{item.title}</span>
+                      <span className="text-sm font-medium">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -63,23 +77,28 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="p-4">
-        <div className="flex items-center gap-3 rounded-2xl bg-sidebar-accent p-3 shadow-elevation">
-          <Avatar>
+      <SidebarFooter className="p-4 border-t border-sidebar-border">
+        <Link
+          to="/perfil"
+          className="flex items-center gap-3 rounded-xl bg-sidebar-accent/50 p-3 hover:bg-sidebar-accent transition-colors group cursor-pointer"
+        >
+          <Avatar className="w-10 h-10 border border-sidebar-border group-hover:border-sidebar-primary transition-colors">
             <AvatarImage
               src={`https://img.usecurling.com/ppl/thumbnail?gender=female&seed=${user?.id || 1}`}
             />
-            <AvatarFallback>{user?.name?.substring(0, 2).toUpperCase() || 'US'}</AvatarFallback>
+            <AvatarFallback className="bg-sidebar-background text-sidebar-foreground">
+              {user?.name?.substring(0, 2).toUpperCase() || 'US'}
+            </AvatarFallback>
           </Avatar>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-sidebar-primary-foreground line-clamp-1">
+          <div className="flex flex-col flex-1 min-w-0">
+            <span className="text-sm font-semibold text-sidebar-foreground truncate">
               {user?.name || 'Usuário'}
             </span>
-            <span className="text-xs text-sidebar-primary-foreground/70 capitalize">
-              {user?.role || 'Guest'}
+            <span className="text-xs text-sidebar-foreground/70 capitalize truncate">
+              {user?.role || 'Visitante'}
             </span>
           </div>
-        </div>
+        </Link>
       </SidebarFooter>
     </Sidebar>
   )
