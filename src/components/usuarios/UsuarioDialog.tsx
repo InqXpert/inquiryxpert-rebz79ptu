@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -22,6 +22,7 @@ import * as z from 'zod'
 import pb from '@/lib/pocketbase/client'
 import { toast } from 'sonner'
 import type { User } from '@/types'
+import { Eye, EyeOff } from 'lucide-react'
 
 const schema = z.object({
   name: z.string().min(3, 'O nome deve ter no mínimo 3 caracteres'),
@@ -40,6 +41,7 @@ export default function UsuarioDialog({
   onOpenChange: (v: boolean) => void
   user: User | null
 }) {
+  const [showPassword, setShowPassword] = useState(false)
   const {
     register,
     handleSubmit,
@@ -53,6 +55,7 @@ export default function UsuarioDialog({
 
   useEffect(() => {
     if (open) {
+      setShowPassword(false)
       if (user) {
         reset({
           name: user.name,
@@ -89,18 +92,21 @@ export default function UsuarioDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[480px] rounded-none border-t-4 border-t-primary">
+      <DialogContent className="sm:max-w-[480px] rounded-lg border-t-4 border-t-[#00A8B5]">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">
+          <DialogTitle className="text-xl font-bold text-[#2A3B4C]">
             {user ? 'Edição de Perfil' : 'Registro de Usuário'}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 py-4">
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+            <Label className="text-xs uppercase tracking-wide text-muted-foreground font-bold">
               Nome Completo
             </Label>
-            <Input {...register('name')} className="rounded-none bg-muted/50" />
+            <Input
+              {...register('name')}
+              className="rounded-md bg-muted/30 focus-visible:ring-[#00A8B5]"
+            />
             {errors.name && (
               <span className="text-[11px] font-medium text-destructive">
                 {errors.name.message as string}
@@ -108,10 +114,14 @@ export default function UsuarioDialog({
             )}
           </div>
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+            <Label className="text-xs uppercase tracking-wide text-muted-foreground font-bold">
               Endereço de E-mail
             </Label>
-            <Input {...register('email')} type="email" className="rounded-none bg-muted/50" />
+            <Input
+              {...register('email')}
+              type="email"
+              className="rounded-md bg-muted/30 focus-visible:ring-[#00A8B5]"
+            />
             {errors.email && (
               <span className="text-[11px] font-medium text-destructive">
                 {errors.email.message as string}
@@ -119,80 +129,89 @@ export default function UsuarioDialog({
             )}
           </div>
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+            <Label className="text-xs uppercase tracking-wide text-muted-foreground font-bold">
               Senha{' '}
-              {user && <span className="lowercase normal-case">(Opcional para não alterar)</span>}
+              {user && (
+                <span className="lowercase normal-case font-medium text-muted-foreground/70">
+                  (Opcional para não alterar)
+                </span>
+              )}
             </Label>
-            <Input
-              {...register('password')}
-              type="password"
-              className="rounded-none bg-muted/50"
-              placeholder={user ? '••••••••' : 'Digite uma senha segura'}
-            />
+            <div className="relative">
+              <Input
+                {...register('password')}
+                type={showPassword ? 'text' : 'password'}
+                className="rounded-md bg-muted/30 pr-10 focus-visible:ring-[#00A8B5]"
+                placeholder={user ? '••••••••' : 'Digite uma senha segura'}
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-[#00A8B5] transition-colors focus:outline-none"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            {errors.password && (
+              <span className="text-[11px] font-medium text-destructive">
+                {errors.password.message as string}
+              </span>
+            )}
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+              <Label className="text-xs uppercase tracking-wide text-muted-foreground font-bold">
                 Papel (RBAC)
               </Label>
               <Select
                 onValueChange={(v) => setValue('role', v)}
                 defaultValue={user?.role || 'analista'}
               >
-                <SelectTrigger className="rounded-none bg-muted/50">
+                <SelectTrigger className="rounded-md bg-muted/30 focus:ring-[#00A8B5]">
                   <SelectValue placeholder="Selecione..." />
                 </SelectTrigger>
-                <SelectContent className="rounded-none">
-                  <SelectItem className="rounded-none" value="c-level">
-                    C-Level
-                  </SelectItem>
-                  <SelectItem className="rounded-none" value="admin">
-                    Administrador
-                  </SelectItem>
-                  <SelectItem className="rounded-none" value="supervisor">
-                    Supervisor
-                  </SelectItem>
-                  <SelectItem className="rounded-none" value="analista">
-                    Analista Padrão
-                  </SelectItem>
+                <SelectContent className="rounded-md">
+                  <SelectItem value="c-level">C-Level</SelectItem>
+                  <SelectItem value="admin">Administrador</SelectItem>
+                  <SelectItem value="supervisor">Supervisor</SelectItem>
+                  <SelectItem value="analista">Analista Padrão</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+              <Label className="text-xs uppercase tracking-wide text-muted-foreground font-bold">
                 Status da Conta
               </Label>
               <Select
                 onValueChange={(v) => setValue('status_conta', v)}
                 defaultValue={user?.status_conta || 'ativo'}
               >
-                <SelectTrigger className="rounded-none bg-muted/50">
+                <SelectTrigger className="rounded-md bg-muted/30 focus:ring-[#00A8B5]">
                   <SelectValue placeholder="Selecione..." />
                 </SelectTrigger>
-                <SelectContent className="rounded-none">
-                  <SelectItem className="rounded-none" value="ativo">
-                    Ativa
-                  </SelectItem>
-                  <SelectItem className="rounded-none" value="suspenso">
-                    Suspensa
-                  </SelectItem>
-                  <SelectItem className="rounded-none" value="bloqueado">
-                    Bloqueada
-                  </SelectItem>
+                <SelectContent className="rounded-md">
+                  <SelectItem value="ativo">Ativa</SelectItem>
+                  <SelectItem value="suspenso">Suspensa</SelectItem>
+                  <SelectItem value="bloqueado">Bloqueada</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
-          <DialogFooter className="pt-4 border-t">
+          <DialogFooter className="pt-4 mt-2">
             <Button
               type="button"
-              variant="ghost"
+              variant="outline"
               onClick={() => onOpenChange(false)}
-              className="rounded-none"
+              className="rounded-md"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting} className="rounded-none shadow-sm">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="rounded-md shadow-sm bg-[#FF7A59] hover:bg-[#FF7A59]/90 text-white"
+            >
               {user ? 'Salvar Alterações' : 'Confirmar Cadastro'}
             </Button>
           </DialogFooter>
