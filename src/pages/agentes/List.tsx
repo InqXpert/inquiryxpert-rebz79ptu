@@ -29,6 +29,8 @@ import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAgentes } from '@/hooks/use-agentes'
 import { ImportAgenteModal } from '@/components/agentes/ImportAgenteModal'
+import { InvestigationMap } from '@/components/agentes/InvestigationMap'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function AgentesList() {
   const { agentes, loading } = useAgentes()
@@ -51,6 +53,8 @@ export default function AgentesList() {
     }
     if (searchMode === 'Região') {
       return (
+        (p.base_atendimento_cidade || '').toLowerCase().includes(search.toLowerCase()) ||
+        (p.base_atendimento_estado || '').toLowerCase().includes(search.toLowerCase()) ||
         (p.baseAtendimento || '').toLowerCase().includes(search.toLowerCase()) ||
         (p.regiaoAbrangencia || '').toLowerCase().includes(search.toLowerCase())
       )
@@ -95,175 +99,206 @@ export default function AgentesList() {
         </DropdownMenu>
       </div>
 
-      <Card className="p-4 flex flex-wrap gap-4 shadow-sm rounded-2xl border-none items-center">
-        <div className="w-full sm:w-auto">
-          <Select value={searchMode} onValueChange={setSearchMode}>
-            <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl min-w-[200px]">
-              <SelectValue placeholder="Tipo de Busca" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Nome">Buscar: Nome</SelectItem>
-              <SelectItem value="Status/Blacklist">Filtro: Status/Blacklist</SelectItem>
-              <SelectItem value="Região">Buscar: Região</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+      <Tabs defaultValue="list" className="w-full">
+        <TabsList className="grid w-full max-w-[400px] grid-cols-2 h-12 rounded-xl bg-muted/50 p-1 mb-2">
+          <TabsTrigger
+            value="list"
+            className="rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            Lista de Agentes
+          </TabsTrigger>
+          <TabsTrigger
+            value="map"
+            className="rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:shadow-sm"
+          >
+            Mapa Logístico
+          </TabsTrigger>
+        </TabsList>
 
-        {searchMode === 'Nome' || searchMode === 'Região' ? (
-          <div className="flex-1 min-w-[200px] relative animate-in fade-in zoom-in duration-200">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder={
-                searchMode === 'Nome'
-                  ? 'Buscar por nome ou documento...'
-                  : 'Buscar por cidade ou estado...'
-              }
-              className="pl-11 h-12 bg-muted/30 border-none rounded-xl text-sm focus-visible:ring-2 focus-visible:ring-secondary/50"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        ) : (
-          <div className="flex flex-1 flex-wrap gap-4 animate-in fade-in zoom-in duration-200">
-            <div className="w-full sm:w-48">
-              <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl">
-                  <SelectValue placeholder="Status" />
+        <TabsContent value="list" className="mt-0 flex flex-col gap-6 h-full outline-none">
+          <Card className="p-4 flex flex-wrap gap-4 shadow-sm rounded-2xl border-none items-center">
+            <div className="w-full sm:w-auto">
+              <Select value={searchMode} onValueChange={setSearchMode}>
+                <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl min-w-[200px]">
+                  <SelectValue placeholder="Tipo de Busca" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Todos">Status: Todos</SelectItem>
-                  <SelectItem value="Sim">Ativos</SelectItem>
-                  <SelectItem value="Não">Inativos</SelectItem>
+                  <SelectItem value="Nome">Buscar: Nome</SelectItem>
+                  <SelectItem value="Status/Blacklist">Filtro: Status/Blacklist</SelectItem>
+                  <SelectItem value="Região">Buscar: Região</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="w-full sm:w-48">
-              <Select value={blacklist} onValueChange={setBlacklist}>
-                <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl">
-                  <SelectValue placeholder="Black List" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Todos">Black List: Todos</SelectItem>
-                  <SelectItem value="Sim">Apenas Black List</SelectItem>
-                  <SelectItem value="Não">Sem Black List</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        )}
-      </Card>
 
-      <Card className="rounded-2xl shadow-sm border-none overflow-hidden flex-1 flex flex-col">
-        {loading ? (
-          <div className="flex flex-col gap-4 p-6">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="h-14 w-full rounded-xl bg-muted/50" />
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground animate-in fade-in">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-              <Search className="w-8 h-8 text-muted-foreground" />
-            </div>
-            <h3 className="text-xl font-bold text-primary mb-1">Nenhum agente encontrado</h3>
-            <p className="text-sm">Tente ajustar os filtros de busca ou adicione um novo agente.</p>
-          </div>
-        ) : (
-          <div className="overflow-auto flex-1 animate-in fade-in">
-            <Table>
-              <TableHeader className="bg-muted/30">
-                <TableRow className="border-b-border">
-                  <TableHead className="pl-6 py-4 font-semibold text-muted-foreground">
-                    Nome Completo
-                  </TableHead>
-                  <TableHead className="py-4 font-semibold text-muted-foreground">
-                    CPF/CNPJ
-                  </TableHead>
-                  <TableHead className="py-4 font-semibold text-muted-foreground">Região</TableHead>
-                  <TableHead className="py-4 font-semibold text-muted-foreground">
-                    Honorário
-                  </TableHead>
-                  <TableHead className="py-4 font-semibold text-muted-foreground">Status</TableHead>
-                  <TableHead className="py-4 font-semibold text-muted-foreground text-right pr-6">
-                    Ações
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((p) => (
-                  <TableRow
-                    key={p.id}
-                    className="cursor-pointer hover:bg-muted/20 border-b-border/50 transition-colors"
-                    onClick={() => navigate(`/agentes/${p.id}`)}
-                  >
-                    <TableCell className="pl-6 font-semibold text-primary py-4 flex items-center gap-4">
-                      <img
-                        src={`https://img.usecurling.com/ppl/thumbnail?seed=${p.id}&gender=male`}
-                        className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                        alt="Avatar"
-                      />
-                      <div className="flex flex-col">
-                        <span>{p.nomeCompleto}</span>
-                        {p.numero_controle && (
-                          <span className="text-xs font-medium text-muted-foreground">
-                            {p.numero_controle}
-                          </span>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground font-medium">
-                      {p.cpf || p.cnpj || '-'}
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {p.baseAtendimento || p.regiaoAbrangencia || '-'}
-                    </TableCell>
-                    <TableCell className="font-bold text-primary">
-                      R$ {Number(p.valorHonorario || 0).toFixed(2)}
-                    </TableCell>
-                    <TableCell>
-                      {p.naBlackList === 'Sim' ? (
-                        <Badge
-                          variant="destructive"
-                          className="bg-destructive/10 text-destructive border-0 hover:bg-destructive/20 font-bold px-3 py-1"
-                        >
-                          <AlertTriangle className="w-3 h-3 mr-1.5" /> Black List
-                        </Badge>
-                      ) : p.ativo === 'Sim' ? (
-                        <Badge
-                          variant="secondary"
-                          className="bg-secondary/10 text-secondary border-0 hover:bg-secondary/20 font-bold px-3 py-1"
-                        >
-                          Ativo
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="text-muted-foreground border-muted-foreground/30 font-bold px-3 py-1"
-                        >
-                          Inativo
-                        </Badge>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right pr-6">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-muted"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          navigate(`/agentes/${p.id}/editar`)
-                        }}
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+            {searchMode === 'Nome' || searchMode === 'Região' ? (
+              <div className="flex-1 min-w-[200px] relative animate-in fade-in zoom-in duration-200">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder={
+                    searchMode === 'Nome'
+                      ? 'Buscar por nome ou documento...'
+                      : 'Buscar por cidade ou estado...'
+                  }
+                  className="pl-11 h-12 bg-muted/30 border-none rounded-xl text-sm focus-visible:ring-2 focus-visible:ring-secondary/50"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            ) : (
+              <div className="flex flex-1 flex-wrap gap-4 animate-in fade-in zoom-in duration-200">
+                <div className="w-full sm:w-48">
+                  <Select value={status} onValueChange={setStatus}>
+                    <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Todos">Status: Todos</SelectItem>
+                      <SelectItem value="Sim">Ativos</SelectItem>
+                      <SelectItem value="Não">Inativos</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="w-full sm:w-48">
+                  <Select value={blacklist} onValueChange={setBlacklist}>
+                    <SelectTrigger className="h-12 bg-muted/30 border-none rounded-xl">
+                      <SelectValue placeholder="Black List" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Todos">Black List: Todos</SelectItem>
+                      <SelectItem value="Sim">Apenas Black List</SelectItem>
+                      <SelectItem value="Não">Sem Black List</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
+          </Card>
+
+          <Card className="rounded-2xl shadow-sm border-none overflow-hidden flex-1 flex flex-col">
+            {loading ? (
+              <div className="flex flex-col gap-4 p-6">
+                {[...Array(5)].map((_, i) => (
+                  <Skeleton key={i} className="h-14 w-full rounded-xl bg-muted/50" />
                 ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
-      </Card>
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="flex-1 flex flex-col items-center justify-center py-20 text-muted-foreground animate-in fade-in">
+                <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+                  <Search className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-xl font-bold text-primary mb-1">Nenhum agente encontrado</h3>
+                <p className="text-sm">
+                  Tente ajustar os filtros de busca ou adicione um novo agente.
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-auto flex-1 animate-in fade-in">
+                <Table>
+                  <TableHeader className="bg-muted/30">
+                    <TableRow className="border-b-border">
+                      <TableHead className="pl-6 py-4 font-semibold text-muted-foreground">
+                        Nome Completo
+                      </TableHead>
+                      <TableHead className="py-4 font-semibold text-muted-foreground">
+                        CPF/CNPJ
+                      </TableHead>
+                      <TableHead className="py-4 font-semibold text-muted-foreground">
+                        Região
+                      </TableHead>
+                      <TableHead className="py-4 font-semibold text-muted-foreground">
+                        Valor Hora
+                      </TableHead>
+                      <TableHead className="py-4 font-semibold text-muted-foreground">
+                        Status
+                      </TableHead>
+                      <TableHead className="py-4 font-semibold text-muted-foreground text-right pr-6">
+                        Ações
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filtered.map((p) => (
+                      <TableRow
+                        key={p.id}
+                        className="cursor-pointer hover:bg-muted/20 border-b-border/50 transition-colors"
+                        onClick={() => navigate(`/agentes/${p.id}`)}
+                      >
+                        <TableCell className="pl-6 font-semibold text-primary py-4 flex items-center gap-4">
+                          <img
+                            src={`https://img.usecurling.com/ppl/thumbnail?seed=${p.id}&gender=male`}
+                            className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
+                            alt="Avatar"
+                          />
+                          <div className="flex flex-col">
+                            <span>{p.nomeCompleto}</span>
+                            {p.numero_controle && (
+                              <span className="text-xs font-medium text-muted-foreground">
+                                {p.numero_controle}
+                              </span>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground font-medium">
+                          {p.cpf || p.cnpj || '-'}
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {p.base_atendimento_cidade && p.base_atendimento_estado
+                            ? `${p.base_atendimento_cidade} - ${p.base_atendimento_estado}`
+                            : p.baseAtendimento || p.regiaoAbrangencia || '-'}
+                        </TableCell>
+                        <TableCell className="font-bold text-primary">
+                          R$ {Number(p.valor_hora || p.valorHonorario || 0).toFixed(2)}
+                        </TableCell>
+                        <TableCell>
+                          {p.naBlackList === 'Sim' ? (
+                            <Badge
+                              variant="destructive"
+                              className="bg-destructive/10 text-destructive border-0 hover:bg-destructive/20 font-bold px-3 py-1"
+                            >
+                              <AlertTriangle className="w-3 h-3 mr-1.5" /> Black List
+                            </Badge>
+                          ) : p.ativo === 'Sim' ? (
+                            <Badge
+                              variant="secondary"
+                              className="bg-secondary/10 text-secondary border-0 hover:bg-secondary/20 font-bold px-3 py-1"
+                            >
+                              Ativo
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="outline"
+                              className="text-muted-foreground border-muted-foreground/30 font-bold px-3 py-1"
+                            >
+                              Inativo
+                            </Badge>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right pr-6">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-muted"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              navigate(`/agentes/${p.id}/editar`)
+                            }}
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="map" className="mt-0 outline-none">
+          <InvestigationMap agentes={agentes} loading={loading} />
+        </TabsContent>
+      </Tabs>
 
       <ImportAgenteModal open={isImportModalOpen} onOpenChange={setIsImportModalOpen} />
     </div>

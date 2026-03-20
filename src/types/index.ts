@@ -16,6 +16,8 @@ export interface Agente {
   notaTerceiros: SimNao
   vinculoTerceiroNf?: string
   baseAtendimento: string
+  base_atendimento_estado?: string
+  base_atendimento_cidade?: string
   regiaoAbrangencia: string
   cepBase: string
   telefone: string
@@ -31,6 +33,7 @@ export interface Agente {
   // 3. Condições Comerciais
   valorHonorario: number
   valorKm: number
+  valor_hora?: number
   // 4. Status
   ativo: SimNao
   dataAtivacao: string

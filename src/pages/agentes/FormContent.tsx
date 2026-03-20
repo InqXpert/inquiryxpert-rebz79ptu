@@ -1,9 +1,10 @@
 import { useFormContext } from 'react-hook-form'
-import { FInput, FSimNao, FTextarea } from '@/components/agentes/FormHelpers'
+import { FInput, FSimNao, FTextarea, FSelect } from '@/components/agentes/FormHelpers'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Copy } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { BR_STATES, getCitiesByState } from '@/services/brazilCities'
 
 export function FormContent() {
   const { watch } = useFormContext()
@@ -13,6 +14,7 @@ export function FormContent() {
   const notaTerceiros = watch('notaTerceiros')
   const dadosBancariosTerceiros = watch('dadosBancariosTerceiros')
   const naBlackList = watch('naBlackList')
+  const estadoSelecionado = watch('base_atendimento_estado')
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -25,6 +27,10 @@ export function FormContent() {
       })
     }
   }
+
+  const cidadesOptions = estadoSelecionado
+    ? getCitiesByState(estadoSelecionado).map((c) => ({ label: c.name, value: c.name }))
+    : []
 
   return (
     <div className="grid gap-6">
@@ -61,7 +67,16 @@ export function FormContent() {
             <FInput name="vinculoTerceiroNf" label="Qual o vínculo do terceiro (NF)?" />
           )}
           <div className="col-span-full border-t border-muted/50 my-2" />
-          <FInput name="baseAtendimento" label="Base de atendimento" />
+
+          {/* New Geo Fields */}
+          <FSelect
+            name="base_atendimento_estado"
+            label="Estado (Base)"
+            options={BR_STATES.map((s) => ({ label: s, value: s }))}
+          />
+          <FSelect name="base_atendimento_cidade" label="Cidade (Base)" options={cidadesOptions} />
+
+          <FInput name="baseAtendimento" label="Endereço da Base / Bairro" />
           <FInput name="regiaoAbrangencia" label="Região de abrangência" />
           <FInput name="cepBase" label="CEP de saída da base" />
           <FInput name="telefone" label="Telefone" />
@@ -96,8 +111,9 @@ export function FormContent() {
             </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <FInput name="valorHonorario" label="Valor do honorário (R$)" type="number" />
+            <FInput name="valorHonorario" label="Valor do honorário Fixo (R$)" type="number" />
             <FInput name="valorKm" label="Valor do km (R$)" type="number" />
+            <FInput name="valor_hora" label="Valor por Hora (R$)" type="number" />
           </CardContent>
         </Card>
       </div>

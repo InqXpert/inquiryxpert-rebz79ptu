@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-20T05:17:50.986Z",
+  "generatedAt": "2026-03-20T05:23:57.053Z",
   "collections": [
     {
       "name": "users",
@@ -266,10 +266,29 @@
           "type": "text",
           "required": false,
           "system": false
+        },
+        {
+          "name": "base_atendimento_estado",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "base_atendimento_cidade",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "valor_hora",
+          "type": "number",
+          "required": false,
+          "system": false
         }
       ],
       "indexes": [
-        "CREATE UNIQUE INDEX `idx_agentes_numero_controle` ON `agentes` (numero_controle)"
+        "CREATE UNIQUE INDEX `idx_agentes_numero_controle` ON `agentes` (numero_controle)",
+        "CREATE INDEX `idx_agentes_estado_cidade` ON `agentes` (base_atendimento_estado, base_atendimento_cidade)"
       ]
     },
     {

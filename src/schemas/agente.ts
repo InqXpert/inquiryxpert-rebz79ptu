@@ -14,6 +14,8 @@ export const agenteSchema = z.object({
   notaTerceiros: simNaoSchema,
   vinculoTerceiroNf: z.string().optional(),
   baseAtendimento: z.string().min(2, 'Obrigatório'),
+  base_atendimento_estado: z.string().optional(),
+  base_atendimento_cidade: z.string().optional(),
   regiaoAbrangencia: z.string().min(2, 'Obrigatório'),
   cepBase: z.string().min(8, 'CEP inválido'),
   telefone: z.string().min(10, 'Telefone inválido'),
@@ -29,6 +31,7 @@ export const agenteSchema = z.object({
 
   valorHonorario: z.coerce.number().min(0),
   valorKm: z.coerce.number().min(0),
+  valor_hora: z.coerce.number().min(0).optional(),
 
   ativo: simNaoSchema,
   dataAtivacao: z.string().min(1, 'Data obrigatória'),
