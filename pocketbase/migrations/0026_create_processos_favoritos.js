@@ -1,5 +1,8 @@
 migrate(
   (app) => {
+    const processosCol = app.findCollectionByNameOrId('processos_operacionais')
+    const usersCol = app.findCollectionByNameOrId('_pb_users_auth_')
+
     const collection = new Collection({
       name: 'processos_favoritos',
       type: 'base',
@@ -13,7 +16,7 @@ migrate(
           name: 'user_id',
           type: 'relation',
           required: true,
-          collectionId: '_pb_users_auth_',
+          collectionId: usersCol.id,
           cascadeDelete: true,
           maxSelect: 1,
         },
@@ -21,7 +24,7 @@ migrate(
           name: 'processo_id',
           type: 'relation',
           required: true,
-          collectionId: 'processos_operacionais',
+          collectionId: processosCol.id,
           cascadeDelete: true,
           maxSelect: 1,
         },
