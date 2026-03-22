@@ -149,7 +149,10 @@ export default function Layout() {
                   <span className="font-medium text-[13px]">Meu Perfil</span>
                 </Link>
               </DropdownMenuItem>
-              {user?.role === 'agente' && (
+              {(user?.role === 'c-level' ||
+                user?.role === 'admin' ||
+                user?.role === 'supervisor' ||
+                user?.role === 'agente') && (
                 <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3 hover:bg-[#f5f8fa]">
                   <Link to="/gestao-agentes" className="w-full flex items-center text-[#2A3B4C]">
                     <LayoutDashboard className="mr-2.5 h-4 w-4 text-[#00A8B5]" />

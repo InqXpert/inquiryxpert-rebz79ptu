@@ -17,8 +17,9 @@ export default function GestaoAgentesLayout() {
   const location = useLocation()
   const { user } = useAuth()
 
-  // RBAC: Accessible only to authenticated users with role: "agente"
-  if (user?.role !== 'agente') {
+  // RBAC: Accessible to authenticated users with roles: "agente", "c-level", "admin", "supervisor"
+  const allowedRoles = ['c-level', 'admin', 'supervisor', 'agente']
+  if (!user || !allowedRoles.includes(user.role as string)) {
     return <Navigate to="/login" replace />
   }
 

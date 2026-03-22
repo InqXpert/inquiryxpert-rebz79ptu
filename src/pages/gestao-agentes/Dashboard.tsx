@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAgenteStats } from '@/hooks/useAgenteStats'
+import { useAuth } from '@/hooks/use-auth'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
@@ -41,6 +42,7 @@ import { format } from 'date-fns'
 
 export default function GestaoAgentesDashboard() {
   const { stats, loading } = useAgenteStats()
+  const { user } = useAuth()
   const navigate = useNavigate()
 
   const greeting = useMemo(() => {
@@ -49,6 +51,8 @@ export default function GestaoAgentesDashboard() {
     if (hour >= 12 && hour < 18) return 'Boa tarde'
     return 'Boa noite'
   }, [])
+
+  const userName = stats?.agenteName?.split(' ')[0] || user?.name?.split(' ')[0] || 'Usuário'
 
   if (loading) {
     return (
@@ -74,7 +78,7 @@ export default function GestaoAgentesDashboard() {
       <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight text-[#282c59]">
-            {greeting}, {stats?.agenteName || 'Agente'}
+            {greeting}, {userName}
           </h1>
           <p className="text-muted-foreground mt-1">Bem-vindo ao seu painel de controle.</p>
         </div>
@@ -115,7 +119,7 @@ export default function GestaoAgentesDashboard() {
     <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight text-[#282c59]">
-          {greeting}, {stats.agenteName.split(' ')[0]}
+          {greeting}, {userName}
         </h1>
         <p className="text-muted-foreground mt-1">
           Acompanhe seu desempenho e gerencie seus processos.
