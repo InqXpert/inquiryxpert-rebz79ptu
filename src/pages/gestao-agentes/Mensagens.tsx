@@ -1,18 +1,26 @@
 import { Card, CardContent } from '@/components/ui/card'
+import { MessageSquare } from 'lucide-react'
 
 export default function GestaoAgentesMensagens() {
   return (
     <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-primary">Mensagens</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-[#282c59]">Mensagens</h1>
         <p className="text-muted-foreground mt-1">
           Comunicação direta com a equipe de analistas e supervisores.
         </p>
       </div>
 
-      <Card className="border-border shadow-sm rounded-2xl bg-card">
-        <CardContent className="p-12 text-center text-muted-foreground">
-          <p className="font-medium text-[15px]">Caixa de entrada em desenvolvimento.</p>
+      <Card className="border-border shadow-sm rounded-2xl bg-card min-h-[400px] flex items-center justify-center">
+        <CardContent className="p-12 text-center text-muted-foreground flex flex-col items-center">
+          <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-6">
+            <MessageSquare className="w-10 h-10 text-muted-foreground/50" />
+          </div>
+          <p className="font-bold text-lg text-[#282c59] mb-2">Caixa de Entrada</p>
+          <p className="font-medium text-[15px] max-w-md">
+            Módulo de comunicação integrado em desenvolvimento. Em breve você poderá centralizar as
+            conversas por processo.
+          </p>
         </CardContent>
       </Card>
     </div>

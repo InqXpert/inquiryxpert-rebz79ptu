@@ -4,14 +4,16 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
   {
     variants: {
       variant: {
-        default: 'border-transparent bg-brand-navy text-white hover:bg-brand-navy/80',
-        secondary: 'border-transparent bg-brand-teal text-brand-navy hover:bg-brand-teal/80',
-        destructive: 'border-transparent bg-brand-coral text-white hover:bg-brand-coral/80',
-        outline: 'text-brand-navy dark:text-white border-brand-teal dark:border-brand-cyan/50',
+        default: 'border-transparent bg-[#282c59] text-white hover:bg-[#282c59]/80',
+        secondary: 'border-transparent bg-[#b1dad5] text-[#282c59] hover:bg-[#b1dad5]/80',
+        destructive: 'border-transparent bg-[#f43b53] text-white hover:bg-[#f43b53]/80',
+        outline: 'text-foreground',
+        warning: 'border-transparent bg-amber-500 text-white hover:bg-amber-500/80',
+        success: 'border-transparent bg-[#2bc8cf] text-[#282c59] hover:bg-[#2bc8cf]/80',
       },
     },
     defaultVariants: {

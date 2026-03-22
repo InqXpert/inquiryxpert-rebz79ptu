@@ -1,29 +1,23 @@
 migrate(
   (app) => {
-    // 1. Update Users Collection
     const users = app.findCollectionByNameOrId('users')
     const roleField = users.fields.getByName('role')
-    if (roleField) {
-      roleField.values = ['c-level', 'admin', 'supervisor', 'analista', 'agente']
+    if (roleField && !roleField.values.includes('agente')) {
+      roleField.values.push('agente')
+      app.saveNoValidate(users)
     }
-    app.saveNoValidate(users)
 
-    // 2. Update Agentes Collection
     const agentes = app.findCollectionByNameOrId('agentes')
-    if (!agentes.fields.getByName('user_id')) {
+    if (!agentes.fields.getByName('user_id'))
       agentes.fields.add(
         new RelationField({ name: 'user_id', collectionId: users.id, maxSelect: 1 }),
       )
-    }
-    if (!agentes.fields.getByName('nome')) {
-      agentes.fields.add(new TextField({ name: 'nome' }))
-    }
-    if (!agentes.fields.getByName('status_conta')) {
+    if (!agentes.fields.getByName('nome')) agentes.fields.add(new TextField({ name: 'nome' }))
+    if (!agentes.fields.getByName('status_conta'))
       agentes.fields.add(
         new SelectField({ name: 'status_conta', values: ['ativo', 'suspenso', 'bloqueado'] }),
       )
-    }
-    if (!agentes.fields.getByName('foto_perfil')) {
+    if (!agentes.fields.getByName('foto_perfil'))
       agentes.fields.add(
         new FileField({
           name: 'foto_perfil',
@@ -32,23 +26,10 @@ migrate(
           mimeTypes: ['image/jpeg', 'image/png'],
         }),
       )
-    }
-    if (!agentes.fields.getByName('criado_por')) {
+    if (!agentes.fields.getByName('criado_por'))
       agentes.fields.add(
         new RelationField({ name: 'criado_por', collectionId: users.id, maxSelect: 1 }),
       )
-    }
-
-    const qnField = agentes.fields.getByName('qualidade_nivel')
-    if (qnField)
-      qnField.values = ['nivel1', 'nivel2', 'nivel3', 'nivel4', ...(qnField.values || [])]
-
-    const enField = agentes.fields.getByName('experiencia_nivel')
-    if (enField)
-      enField.values = ['em_treinamento', 'junior', 'pleno', 'senior', ...(enField.values || [])]
-
-    const cnField = agentes.fields.getByName('compliance_nivel')
-    if (cnField) cnField.values = ['zero', 'parcial', 'total', ...(cnField.values || [])]
 
     agentes.listRule =
       "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id"
@@ -56,15 +37,6 @@ migrate(
       "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id"
     app.saveNoValidate(agentes)
 
-    try {
-      agentes.addIndex('idx_agentes_status_conta_new', false, 'status_conta', '')
-    } catch (e) {}
-    try {
-      agentes.addIndex('idx_agentes_created_new', false, 'created', '')
-    } catch (e) {}
-    app.save(agentes)
-
-    // 3. Update Processos Operacionais
     const processos = app.findCollectionByNameOrId('processos_operacionais')
     if (!processos.fields.getByName('numero_processo'))
       processos.fields.add(new TextField({ name: 'numero_processo' }))
@@ -86,6 +58,8 @@ migrate(
       )
     if (!processos.fields.getByName('descricao'))
       processos.fields.add(new TextField({ name: 'descricao' }))
+    if (!processos.fields.getByName('orientacoes'))
+      processos.fields.add(new TextField({ name: 'orientacoes' }))
     if (!processos.fields.getByName('relatorio_status'))
       processos.fields.add(
         new SelectField({
@@ -116,214 +90,179 @@ migrate(
         'analise_inicial',
       ]
     }
-
     processos.listRule =
       "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id"
     processos.viewRule =
       "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id"
     processos.updateRule =
-      "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'"
+      "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id"
     app.saveNoValidate(processos)
 
     try {
-      processos.addIndex('idx_proc_agente', false, 'agente_id', '')
-    } catch (e) {}
-    try {
-      processos.addIndex('idx_proc_superv', false, 'supervisor_id', '')
-    } catch (e) {}
-    try {
-      processos.addIndex('idx_proc_status', false, 'status', '')
-    } catch (e) {}
-    try {
-      processos.addIndex('idx_proc_prazo', false, 'data_prazo', '')
-    } catch (e) {}
-    try {
-      processos.addIndex('idx_proc_audio_req', false, 'audio_obrigatorio_presente', '')
-    } catch (e) {}
-    try {
-      processos.addIndex('idx_proc_audio_val', false, 'audio_validado', '')
-    } catch (e) {}
-    app.save(processos)
+      app.findCollectionByNameOrId('documentos_processo')
+    } catch {
+      const doc = new Collection({
+        name: 'documentos_processo',
+        type: 'base',
+        listRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
+        viewRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
+        createRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
+        updateRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
+        deleteRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        fields: [
+          {
+            name: 'processo_id',
+            type: 'relation',
+            collectionId: processos.id,
+            maxSelect: 1,
+            required: true,
+          },
+          {
+            name: 'agente_id',
+            type: 'relation',
+            collectionId: agentes.id,
+            maxSelect: 1,
+            required: true,
+          },
+          { name: 'arquivo', type: 'file', maxSelect: 1, maxSize: 104857600, required: true },
+          {
+            name: 'tipo',
+            type: 'select',
+            values: ['cliente', 'agente', 'supervisor', 'audio_entrevista'],
+            maxSelect: 1,
+            required: true,
+          },
+          { name: 'duracao_segundos', type: 'number' },
+          { name: 'versao', type: 'number' },
+          { name: 'validado', type: 'bool' },
+          { name: 'created', type: 'autodate', onCreate: true, onUpdate: false },
+          { name: 'updated', type: 'autodate', onCreate: true, onUpdate: true },
+        ],
+      })
+      app.save(doc)
+    }
 
-    // 4. Create documentos_processo
-    const documentos = new Collection({
-      name: 'documentos_processo',
-      type: 'base',
-      listRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
-      viewRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
-      createRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
-      updateRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
-      deleteRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
-      fields: [
-        {
-          name: 'processo_id',
-          type: 'relation',
-          required: true,
-          collectionId: processos.id,
-          maxSelect: 1,
-        },
-        {
-          name: 'agente_id',
-          type: 'relation',
-          required: true,
-          collectionId: agentes.id,
-          maxSelect: 1,
-        },
-        { name: 'arquivo_url', type: 'file', required: true, maxSelect: 1, maxSize: 52428800 },
-        {
-          name: 'tipo',
-          type: 'select',
-          required: true,
-          values: ['cliente', 'agente', 'supervisor', 'audio_entrevista'],
-          maxSelect: 1,
-        },
-        { name: 'duracao_segundos', type: 'number' },
-        { name: 'versao', type: 'number' },
-        { name: 'validado', type: 'bool' },
-        { name: 'created', type: 'autodate', onCreate: true, onUpdate: false },
-        { name: 'updated', type: 'autodate', onCreate: true, onUpdate: true },
-      ],
-      indexes: [
-        'CREATE INDEX idx_doc_proc ON documentos_processo (processo_id)',
-        'CREATE INDEX idx_doc_agt ON documentos_processo (agente_id)',
-        'CREATE INDEX idx_doc_tipo ON documentos_processo (tipo)',
-      ],
-    })
-    app.save(documentos)
+    try {
+      app.findCollectionByNameOrId('relatorios_processo')
+    } catch {
+      const rel = new Collection({
+        name: 'relatorios_processo',
+        type: 'base',
+        listRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
+        viewRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
+        createRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
+        updateRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
+        deleteRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        fields: [
+          {
+            name: 'processo_id',
+            type: 'relation',
+            collectionId: processos.id,
+            maxSelect: 1,
+            required: true,
+          },
+          {
+            name: 'agente_id',
+            type: 'relation',
+            collectionId: agentes.id,
+            maxSelect: 1,
+            required: true,
+          },
+          { name: 'conteudo', type: 'text' },
+          {
+            name: 'status',
+            type: 'select',
+            values: ['rascunho', 'enviado', 'revisado', 'aprovado'],
+            maxSelect: 1,
+          },
+          { name: 'data_envio', type: 'date' },
+          { name: 'data_aprovacao', type: 'date' },
+          { name: 'feedback_supervisor', type: 'text' },
+          { name: 'pode_faturar', type: 'bool' },
+          { name: 'created', type: 'autodate', onCreate: true, onUpdate: false },
+          { name: 'updated', type: 'autodate', onCreate: true, onUpdate: true },
+        ],
+      })
+      app.save(rel)
+    }
 
-    // 5. Create relatorios_processo
-    const relatorios = new Collection({
-      name: 'relatorios_processo',
-      type: 'base',
-      listRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
-      viewRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
-      createRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
-      updateRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
-      deleteRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
-      fields: [
-        {
-          name: 'processo_id',
-          type: 'relation',
-          required: true,
-          collectionId: processos.id,
-          maxSelect: 1,
-        },
-        {
-          name: 'agente_id',
-          type: 'relation',
-          required: true,
-          collectionId: agentes.id,
-          maxSelect: 1,
-        },
-        { name: 'conteudo', type: 'text' },
-        {
-          name: 'status',
-          type: 'select',
-          values: ['rascunho', 'enviado', 'revisado', 'aprovado'],
-          maxSelect: 1,
-        },
-        { name: 'data_envio', type: 'date' },
-        { name: 'data_aprovacao', type: 'date' },
-        { name: 'feedback_supervisor', type: 'text' },
-        { name: 'pode_faturar', type: 'bool' },
-        { name: 'created', type: 'autodate', onCreate: true, onUpdate: false },
-        { name: 'updated', type: 'autodate', onCreate: true, onUpdate: true },
-      ],
-      indexes: [
-        'CREATE INDEX idx_rel_proc ON relatorios_processo (processo_id)',
-        'CREATE INDEX idx_rel_agt ON relatorios_processo (agente_id)',
-        'CREATE INDEX idx_rel_status ON relatorios_processo (status)',
-        'CREATE INDEX idx_rel_fat ON relatorios_processo (pode_faturar)',
-      ],
-    })
-    app.save(relatorios)
+    try {
+      app.findCollectionByNameOrId('notificacoes_agente')
+    } catch {
+      const notif = new Collection({
+        name: 'notificacoes_agente',
+        type: 'base',
+        listRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || agente_id.user_id = @request.auth.id",
+        viewRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || agente_id.user_id = @request.auth.id",
+        createRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        updateRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
+        deleteRule:
+          "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        fields: [
+          {
+            name: 'agente_id',
+            type: 'relation',
+            collectionId: agentes.id,
+            maxSelect: 1,
+            required: true,
+          },
+          {
+            name: 'tipo',
+            type: 'select',
+            values: [
+              'novo_processo',
+              'prazo_proximo',
+              'mensagem',
+              'treinamento',
+              'audio_obrigatorio_faltando',
+            ],
+            maxSelect: 1,
+          },
+          { name: 'titulo', type: 'text', required: true },
+          { name: 'descricao', type: 'text' },
+          { name: 'lida', type: 'bool' },
+          { name: 'created', type: 'autodate', onCreate: true, onUpdate: false },
+          { name: 'updated', type: 'autodate', onCreate: true, onUpdate: true },
+        ],
+      })
+      app.save(notif)
+    }
 
-    // 6. Create notificacoes_agente
-    const notificacoes = new Collection({
-      name: 'notificacoes_agente',
-      type: 'base',
-      listRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || agente_id.user_id = @request.auth.id",
-      viewRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || agente_id.user_id = @request.auth.id",
-      createRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
-      updateRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || agente_id.user_id = @request.auth.id",
-      deleteRule:
-        "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
-      fields: [
-        {
-          name: 'agente_id',
-          type: 'relation',
-          required: true,
-          collectionId: agentes.id,
-          maxSelect: 1,
-        },
-        {
-          name: 'tipo',
-          type: 'select',
-          values: [
-            'novo_processo',
-            'prazo_proximo',
-            'mensagem',
-            'treinamento',
-            'audio_obrigatorio_faltando',
-          ],
-          maxSelect: 1,
-        },
-        { name: 'titulo', type: 'text', required: true },
-        { name: 'descricao', type: 'text' },
-        { name: 'lida', type: 'bool' },
-        { name: 'created', type: 'autodate', onCreate: true, onUpdate: false },
-        { name: 'updated', type: 'autodate', onCreate: true, onUpdate: true },
-      ],
-      indexes: [
-        'CREATE INDEX idx_notif_agt ON notificacoes_agente (agente_id)',
-        'CREATE INDEX idx_notif_lida ON notificacoes_agente (lida)',
-        'CREATE INDEX idx_notif_tipo ON notificacoes_agente (tipo)',
-      ],
-    })
-    app.save(notificacoes)
-
-    // 7. Update usuarios_historico
     const hist = app.findCollectionByNameOrId('usuarios_historico')
-    const acaoField = hist.fields.getByName('acao')
-    if (acaoField) {
-      acaoField.values = [
-        ...acaoField.values,
+    const acaoField2 = hist.fields.getByName('acao')
+    if (acaoField2) {
+      const newActions = [
         'criar_agente',
         'editar_agente',
         'deletar_agente',
         'criar_processo',
         'editar_processo',
         'deletar_processo',
-        'alterar_status_agente',
         'upload_audio',
         'validar_audio',
         'bloquear_processo_sem_audio',
+        'liberar_para_pagamento',
+        'alterar_status_agente',
       ]
+      newActions.forEach((a) => {
+        if (!acaoField2.values.includes(a)) acaoField2.values.push(a)
+      })
     }
-    hist.listRule =
-      "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id || usuario_afetado_id = @request.auth.id"
     app.saveNoValidate(hist)
-
-    try {
-      hist.addIndex('idx_ushist_acao_new', false, 'acao', '')
-    } catch (e) {}
-    app.save(hist)
   },
-  (app) => {
-    // Revert omitted for data safety
-  },
+  (app) => {},
 )

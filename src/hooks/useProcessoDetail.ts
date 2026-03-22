@@ -2,7 +2,9 @@ import { useState, useCallback } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useToast } from '@/hooks/use-toast'
 import * as service from '@/services/procesosOperacionais'
+import pb from '@/lib/pocketbase/client'
 import { ProcessoOperacional, ProcessoHistorico, ProcessoDocumento } from '@/types'
+import { trackAcao } from '@/utils/trackAcao'
 
 export function useProcessoDetail() {
   const { user } = useAuth()
@@ -48,12 +50,34 @@ export function useProcessoDetail() {
     }
   }
 
+  const validarAudioProcesso = async () => {
+    if (!processo) return
+    try {
+      const updated = await pb
+        .collection('processos_operacionais')
+        .update<ProcessoOperacional>(processo.id, {
+          audio_validado: true,
+          data_validacao_audio: new Date().toISOString(),
+          status: 'concluido',
+        })
+      setProcesso(updated)
+      await trackAcao(
+        'validar_audio',
+        `Áudio validado e processo concluído`,
+        undefined,
+        `Processo ID: ${processo.id}`,
+      )
+      toast({ title: 'Sucesso', description: 'Áudio validado e processo concluído com sucesso!' })
+    } catch (err) {
+      toast({ title: 'Erro', description: 'Falha ao validar áudio.', variant: 'destructive' })
+    }
+  }
+
   const addObservacao = async (observacao: string) => {
     if (!processo) return
     try {
       const updated = await service.addObservacao(processo.id, observacao, userName)
       setProcesso(updated)
-      // Refresh history mock logic
       setHistorico((prev) => [
         {
           id: Math.random().toString(),
@@ -116,11 +140,12 @@ export function useProcessoDetail() {
   }
 
   const canEditProcesso = () =>
-    userRole === 'admin' || userRole === 'supervisor' || processo?.user_id === userId
+    userRole === 'admin' || userRole === 'supervisor' || userRole === 'analista'
   const canDeleteProcesso = () => userRole === 'admin'
   const canAddObservacao = () => true
   const canAddPosicao = () => true
   const canUploadDocumento = () => true
+  const canValidateAudio = () => userRole === 'admin' || userRole === 'supervisor'
 
   return {
     processo,
@@ -130,6 +155,7 @@ export function useProcessoDetail() {
     error,
     fetchProcessoDetail,
     updateProcesso,
+    validarAudioProcesso,
     addObservacao,
     addPosicao,
     uploadDocumento,
@@ -140,5 +166,6 @@ export function useProcessoDetail() {
     canAddObservacao,
     canAddPosicao,
     canUploadDocumento,
+    canValidateAudio,
   }
 }

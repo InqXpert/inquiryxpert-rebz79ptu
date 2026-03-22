@@ -21,6 +21,8 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useProcessoDetail } from '@/hooks/useProcessoDetail'
 import { useEffect } from 'react'
+import { Badge } from '@/components/ui/badge'
+import { CheckCircle2, AlertCircle } from 'lucide-react'
 
 import { TabInformacoesGerais } from './tabs/TabInformacoesGerais'
 import { TabPosicoes } from './tabs/TabPosicoes'
@@ -43,6 +45,7 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
     loading,
     fetchProcessoDetail,
     updateProcesso,
+    validarAudioProcesso,
     addObservacao,
     addPosicao,
     uploadDocumento,
@@ -53,6 +56,7 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
     canAddObservacao,
     canAddPosicao,
     canUploadDocumento,
+    canValidateAudio,
   } = useProcessoDetail()
 
   useEffect(() => {
@@ -67,6 +71,11 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
       onUpdated()
       onClose()
     }
+  }
+
+  const handleValidarAudio = async () => {
+    await validarAudioProcesso()
+    onUpdated()
   }
 
   return (
@@ -84,19 +93,52 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
           </div>
         ) : (
           <>
-            <div className="p-6 sm:p-8 bg-white border-b border-border z-10 shrink-0">
+            <div className="p-6 sm:p-8 bg-white border-b border-border z-10 shrink-0 flex justify-between items-start gap-4 flex-wrap">
               <DialogHeader className="mb-0 space-y-0 text-left">
-                <DialogTitle className="text-2xl sm:text-3xl font-bold text-primary mb-2">
+                <DialogTitle className="text-2xl sm:text-3xl font-bold text-[#282c59] mb-2 flex items-center gap-3 flex-wrap">
                   Detalhes do Processo
+                  {processo.status === 'bloqueado_sem_audio' && (
+                    <Badge variant="destructive" className="text-xs">
+                      Bloqueado S/ Áudio
+                    </Badge>
+                  )}
+                  {processo.status === 'concluido' && (
+                    <Badge
+                      variant="success"
+                      className="text-xs bg-[#2bc8cf] text-[#282c59] border-none"
+                    >
+                      Concluído
+                    </Badge>
+                  )}
                 </DialogTitle>
                 <DialogDescription className="text-[15px] font-medium text-muted-foreground flex items-center gap-3 flex-wrap">
                   <span className="bg-primary/5 text-primary px-3 py-1 rounded-md border border-primary/10">
-                    {processo.numero_controle}
+                    {processo.numero_processo || processo.numero_controle}
                   </span>
                   <span>•</span>
                   <span>{processo.nome_segurado}</span>
                 </DialogDescription>
               </DialogHeader>
+
+              {processo.status === 'pendente' &&
+                processo.audio_obrigatorio_presente &&
+                !processo.audio_validado &&
+                canValidateAudio() && (
+                  <Button
+                    onClick={handleValidarAudio}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm"
+                  >
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Validar Áudio e Concluir
+                  </Button>
+                )}
+              {processo.status === 'bloqueado_sem_audio' &&
+                !processo.audio_obrigatorio_presente && (
+                  <div className="text-sm font-medium text-[#f43b53] bg-[#f43b53]/10 px-4 py-2 rounded-xl flex items-center border border-[#f43b53]/20">
+                    <AlertCircle className="w-4 h-4 mr-2" />
+                    Aguardando envio de áudio pelo Agente
+                  </div>
+                )}
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 sm:p-8">
@@ -112,7 +154,7 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
                     <TabsTrigger
                       key={tab.value}
                       value={tab.value}
-                      className="px-1 py-3 text-[14px] sm:text-[15px] font-semibold text-muted-foreground data-[state=active]:text-primary data-[state=active]:border-primary data-[state=active]:border-b-[3px] border-b-[3px] border-transparent rounded-none bg-transparent hover:bg-transparent shadow-none transition-all whitespace-nowrap"
+                      className="px-1 py-3 text-[14px] sm:text-[15px] font-semibold text-muted-foreground data-[state=active]:text-[#282c59] data-[state=active]:border-[#282c59] data-[state=active]:border-b-[3px] border-b-[3px] border-transparent rounded-none bg-transparent hover:bg-transparent shadow-none transition-all whitespace-nowrap"
                     >
                       {tab.label}
                     </TabsTrigger>

@@ -86,6 +86,9 @@ export interface Agente {
   experiencia_nivel?: string
   compliance_nivel?: string
   criado_por?: string
+  expand?: {
+    user_id?: User
+  }
 }
 
 export type ProcessoStatus =
@@ -139,6 +142,10 @@ export interface ProcessoOperacional {
   prioridade?: 'baixa' | 'media' | 'alta'
   created: string
   updated: string
+  expand?: {
+    agente_id?: Agente
+    supervisor_id?: User
+  }
 }
 
 export interface ProcessoHistorico {
@@ -152,21 +159,11 @@ export interface ProcessoHistorico {
   created: string
 }
 
-export interface ProcessoDocumento {
-  id: string
-  processo_id: string
-  arquivo: string
-  name: string
-  size: number
-  created: string
-  url?: string
-}
-
 export interface DocumentoProcesso {
   id: string
   processo_id: string
   agente_id: string
-  arquivo_url: string
+  arquivo: string
   tipo: 'cliente' | 'agente' | 'supervisor' | 'audio_entrevista'
   duracao_segundos?: number
   versao?: number
@@ -187,6 +184,10 @@ export interface RelatorioProcesso {
   pode_faturar: boolean
   created: string
   updated: string
+  expand?: {
+    processo_id?: ProcessoOperacional
+    agente_id?: Agente
+  }
 }
 
 export interface NotificacaoAgente {
@@ -203,4 +204,14 @@ export interface NotificacaoAgente {
   lida: boolean
   created: string
   updated: string
+}
+
+export interface ProcessoDocumento {
+  id: string
+  processo_id: string
+  arquivo: string
+  name: string
+  size: number
+  created: string
+  url?: string
 }
