@@ -8,9 +8,55 @@ export const fetchProcessosAgente = async (agenteId: string): Promise<Processo[]
   })
 }
 
+export const fetchFavoritos = async (userId: string): Promise<Set<string>> => {
+  try {
+    const favs = await pb.collection('processos_favoritos').getFullList({
+      filter: `user_id="${userId}"`,
+    })
+    return new Set(favs.map((f) => f.processo_id))
+  } catch {
+    return new Set()
+  }
+}
+
+export const toggleProcessoFavorite = async (
+  processoId: string,
+  userId: string,
+): Promise<boolean> => {
+  const existing = await pb.collection('processos_favoritos').getList(1, 1, {
+    filter: `processo_id='${processoId}' && user_id='${userId}'`,
+  })
+  if (existing.items.length > 0) {
+    await pb.collection('processos_favoritos').delete(existing.items[0].id)
+    return false
+  } else {
+    await pb.collection('processos_favoritos').create({ processo_id: processoId, user_id: userId })
+    return true
+  }
+}
+
+export const markProcessosAsRead = async (processoIds: string[]) => {
+  for (const id of processoIds) {
+    await pb.collection('processos_operacionais').update(id, { lido: true })
+  }
+}
+
+export const transcribeAudio = async (processoId: string): Promise<string> => {
+  const res = await pb.send('/backend/v1/transcribe', {
+    method: 'POST',
+    body: JSON.stringify({ processo_id: processoId }),
+  })
+  return res.text || ''
+}
+
 export const filterByStatus = (processos: Processo[], status: string) => {
   if (!status || status === 'todos') return processos
   return processos.filter((p) => p.status === status)
+}
+
+export const filterByFavorites = (processos: Processo[], showFavorites: boolean) => {
+  if (!showFavorites) return processos
+  return processos.filter((p) => p.is_favorite)
 }
 
 export const filterByDate = (

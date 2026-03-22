@@ -1,30 +1,43 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Textarea } from '@/components/ui/textarea'
+import { ArrowLeft, AlertCircle, CheckCircle2, Mic, Camera, Loader2 } from 'lucide-react'
 import { useGestaoAgentes } from '@/hooks/useGestaoAgentes'
 import pb from '@/lib/pocketbase/client'
 import { ProcessoOperacional } from '@/types'
 import { Skeleton } from '@/components/ui/skeleton'
 import { AudioUploadModal } from './components/AudioUploadModal'
 import { useRealtime } from '@/hooks/use-realtime'
+import { useToast } from '@/hooks/use-toast'
+import { transcribeAudio } from '@/services/processosService'
 
 export default function GestaoAgentesProcessoDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
   const { agenteId, loading: authLoading } = useGestaoAgentes()
   const [processo, setProcesso] = useState<ProcessoOperacional | null>(null)
   const [loading, setLoading] = useState(true)
   const [showAudioModal, setShowAudioModal] = useState(false)
+  const { toast } = useToast()
+
+  // Relatorio specific
+  const [relatorioText, setRelatorioText] = useState('')
+  const [isTranscribing, setIsTranscribing] = useState(false)
+
+  const queryParams = new URLSearchParams(location.search)
+  const defaultTab = queryParams.get('tab') || 'info'
 
   const loadData = async () => {
     if (!id) return
     try {
       const data = await pb.collection('processos_operacionais').getOne<ProcessoOperacional>(id)
       setProcesso(data)
+      setRelatorioText(data.descricao || '') // Mocking report text using descricao for now
     } catch (err) {
       console.error(err)
     } finally {
@@ -39,6 +52,23 @@ export default function GestaoAgentesProcessoDetail() {
   useRealtime('processos_operacionais', (e) => {
     if (e.record.id === id) setProcesso(e.record as ProcessoOperacional)
   })
+
+  const handleTranscribe = async () => {
+    if (!processo) return
+    setIsTranscribing(true)
+    try {
+      const transcribedText = await transcribeAudio(processo.id)
+      setRelatorioText((prev) => (prev ? prev + '\n\n' + transcribedText : transcribedText))
+      toast({
+        title: 'Transcrição Concluída',
+        description: 'O áudio foi convertido em texto e adicionado ao relatório.',
+      })
+    } catch (err) {
+      toast({ title: 'Erro', description: 'Falha ao transcrever o áudio.', variant: 'destructive' })
+    } finally {
+      setIsTranscribing(false)
+    }
+  }
 
   if (loading || authLoading) {
     return (
@@ -59,13 +89,13 @@ export default function GestaoAgentesProcessoDetail() {
       processo.status === 'concluido')
 
   return (
-    <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+    <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300 pb-28 md:pb-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <Button
             variant="ghost"
             className="mb-2 -ml-3 text-muted-foreground hover:text-foreground"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/gestao-agentes/processos')}
           >
             <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
           </Button>
@@ -114,7 +144,7 @@ export default function GestaoAgentesProcessoDetail() {
       )}
 
       <Card className="border-border shadow-sm rounded-2xl bg-card overflow-hidden">
-        <Tabs defaultValue="info" className="w-full">
+        <Tabs defaultValue={defaultTab} className="w-full">
           <div className="border-b border-border/60 bg-muted/10 px-6 pt-4">
             <TabsList className="bg-transparent justify-start w-full border-b-0 h-auto p-0 gap-6 overflow-x-auto">
               <TabsTrigger
@@ -195,8 +225,29 @@ export default function GestaoAgentesProcessoDetail() {
               </div>
             </TabsContent>
             <TabsContent value="relatorio" className="mt-0">
-              <div className="p-12 text-center text-muted-foreground border border-dashed rounded-xl bg-muted/30">
-                <p className="font-medium">Editor de Relatório (Em Desenvolvimento)</p>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <h3 className="font-bold text-lg text-primary">Redação do Relatório</h3>
+                  <Button
+                    variant="outline"
+                    className="rounded-xl border-primary text-primary hover:bg-primary/5 shadow-sm"
+                    onClick={handleTranscribe}
+                    disabled={isTranscribing}
+                  >
+                    {isTranscribing ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Mic className="w-4 h-4 mr-2" />
+                    )}
+                    {isTranscribing ? 'Transcrevendo...' : 'Transcrever Áudio Anexado'}
+                  </Button>
+                </div>
+                <Textarea
+                  value={relatorioText}
+                  onChange={(e) => setRelatorioText(e.target.value)}
+                  className="min-h-[400px] resize-y rounded-xl text-[15px] p-4 leading-relaxed"
+                  placeholder="Escreva o relatório final da sindicância aqui..."
+                />
               </div>
             </TabsContent>
             <TabsContent value="docs" className="mt-0">
@@ -212,6 +263,26 @@ export default function GestaoAgentesProcessoDetail() {
           </CardContent>
         </Tabs>
       </Card>
+
+      {/* Mobile-First Field Optimization: Bottom Action Bar */}
+      {processo.status !== 'concluido' && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border flex gap-3 z-40 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+          <Button
+            className="flex-1 h-14 rounded-2xl shadow-md text-[15px] bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
+            onClick={() => setShowAudioModal(true)}
+          >
+            <Mic className="w-5 h-5 mr-2" /> Gravar Áudio
+          </Button>
+          <Button
+            className="flex-1 h-14 rounded-2xl shadow-md text-[15px]"
+            onClick={() =>
+              toast({ title: 'Câmera', description: 'Abrindo captura de fotos do dispositivo...' })
+            }
+          >
+            <Camera className="w-5 h-5 mr-2" /> Tirar Foto
+          </Button>
+        </div>
+      )}
 
       {agenteId && (
         <AudioUploadModal

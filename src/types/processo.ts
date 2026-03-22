@@ -9,5 +9,8 @@ export interface Processo {
   created: string
   agente_id: string
   nome_segurado?: string
+  descricao?: string
+  lido?: boolean
+  is_favorite?: boolean // Derived property
   [key: string]: any
 }

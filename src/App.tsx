@@ -21,6 +21,7 @@ const Configuracoes = lazy(() => import('./pages/Configuracoes'))
 const Ajuda = lazy(() => import('./pages/Ajuda'))
 const GestaoUsuarios = lazy(() => import('./pages/GestaoUsuarios'))
 const Perfil = lazy(() => import('./pages/Perfil'))
+const PerformanceSupervisores = lazy(() => import('./pages/gestao/PerformanceSupervisores'))
 
 // Gestão de Agentes Module Lazy Loads
 const GestaoAgentesLayout = lazy(() => import('./pages/gestao-agentes/Layout'))
@@ -66,6 +67,10 @@ export default function App() {
                   <Route path="/perfil" element={<Perfil />} />
                   <Route path="/configuracoes" element={<Configuracoes />} />
                   <Route path="/ajuda" element={<Ajuda />} />
+                  <Route
+                    path="/gestao/performance-supervisores"
+                    element={<PerformanceSupervisores />}
+                  />
 
                   {/* Gestão de Agentes Module */}
                   <Route path="/gestao-agentes" element={<GestaoAgentesLayout />}>

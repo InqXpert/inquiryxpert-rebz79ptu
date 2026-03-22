@@ -1,12 +1,22 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format, isValid, parseISO } from 'date-fns'
-import { Calendar as CalendarIcon, Inbox, Search, Eye, FileEdit } from 'lucide-react'
+import {
+  Calendar as CalendarIcon,
+  Inbox,
+  Search,
+  Eye,
+  FileEdit,
+  Star,
+  CheckSquare,
+  Download,
+} from 'lucide-react'
 import type { DateRange } from 'react-day-picker'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Select,
   SelectContent,
@@ -28,6 +38,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardContent } from '@/components/ui/card'
 import { useDebounce } from '@/hooks/use-debounce'
 import { useProcessosAgente } from '@/hooks/useProcessosAgente'
+import { ProcessoQuickViewSheet } from '@/components/operacional/ProcessoQuickViewSheet'
+import { Processo } from '@/types/processo'
 
 export default function GestaoAgentesProcessos() {
   const navigate = useNavigate()
@@ -37,15 +49,32 @@ export default function GestaoAgentesProcessos() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>()
   const [priorityFilter, setPriorityFilter] = useState('todas')
   const [searchTerm, setSearchTerm] = useState('')
+  const [showFavorites, setShowFavorites] = useState(false)
+  const [quickViewProc, setQuickViewProc] = useState<Processo | null>(null)
 
   const debouncedSearch = useDebounce(searchTerm, 300)
 
-  const { processos, totalCount, filteredCount, loading, hasMore, setPage } = useProcessosAgente(
+  const {
+    processos,
+    totalCount,
+    filteredCount,
+    loading,
+    hasMore,
+    setPage,
+    toggleFavorite,
+    selectedIds,
+    toggleSelection,
+    toggleAll,
+    markAsRead,
+    exportSelected,
+    clearSelection,
+  } = useProcessosAgente(
     statusFilter,
     dateFilter,
     dateRange,
     priorityFilter,
     debouncedSearch,
+    showFavorites,
   )
 
   const clearFilters = () => {
@@ -54,6 +83,7 @@ export default function GestaoAgentesProcessos() {
     setDateRange(undefined)
     setPriorityFilter('todas')
     setSearchTerm('')
+    setShowFavorites(false)
   }
 
   const getStatusBadge = (status: string) => {
@@ -103,12 +133,19 @@ export default function GestaoAgentesProcessos() {
     return isValid(d) ? format(d, 'dd/MM/yyyy') : '-'
   }
 
+  const handleRowClick = (proc: Processo) => {
+    setQuickViewProc(proc)
+  }
+
+  const displayedIds = processos.map((p) => p.id)
+  const isAllSelected = displayedIds.length > 0 && displayedIds.every((id) => selectedIds.has(id))
+
   return (
-    <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+    <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300 pb-24">
       <div>
         <h1 className="text-[28px] font-bold tracking-tight text-foreground">Meus Processos</h1>
         <p className="text-muted-foreground mt-1 text-sm md:text-base">
-          Acompanhe o status de suas investigações
+          Acompanhe o status de suas investigações e trabalho de campo
         </p>
       </div>
 
@@ -173,17 +210,14 @@ export default function GestaoAgentesProcessos() {
             </Popover>
           )}
 
-          <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Prioridade" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todas">Todas</SelectItem>
-              <SelectItem value="alta">Alta</SelectItem>
-              <SelectItem value="media">Média</SelectItem>
-              <SelectItem value="baixa">Baixa</SelectItem>
-            </SelectContent>
-          </Select>
+          <Button
+            variant={showFavorites ? 'default' : 'outline'}
+            onClick={() => setShowFavorites(!showFavorites)}
+            className="flex gap-2 items-center"
+          >
+            <Star className={cn('w-4 h-4', showFavorites ? 'fill-current' : '')} />
+            Favoritos
+          </Button>
 
           <div className="relative w-full md:w-[300px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -211,6 +245,8 @@ export default function GestaoAgentesProcessos() {
             <Table className="w-full min-w-[800px]">
               <TableHeader>
                 <TableRow className="border-b">
+                  <TableHead className="w-12"></TableHead>
+                  <TableHead className="w-12"></TableHead>
                   <TableHead className="text-muted-foreground font-bold w-[200px]">
                     Número
                   </TableHead>
@@ -226,6 +262,12 @@ export default function GestaoAgentesProcessos() {
               <TableBody>
                 {Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={`skel-desktop-${i}`} className="h-[48px]">
+                    <TableCell>
+                      <Skeleton className="h-5 w-5 rounded" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-5 rounded-full" />
+                    </TableCell>
                     <TableCell>
                       <Skeleton className="h-5 w-24" />
                     </TableCell>
@@ -243,7 +285,6 @@ export default function GestaoAgentesProcessos() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
-                        <Skeleton className="h-8 w-8 rounded-md" />
                         <Skeleton className="h-8 w-8 rounded-md" />
                       </div>
                     </TableCell>
@@ -263,10 +304,6 @@ export default function GestaoAgentesProcessos() {
                   <div className="flex justify-between mt-2">
                     <Skeleton className="h-5 w-[120px]" />
                     <Skeleton className="h-6 w-[80px] rounded-full" />
-                  </div>
-                  <div className="flex justify-end gap-2 mt-2 pt-2 border-t">
-                    <Skeleton className="h-8 w-[80px] rounded-md" />
-                    <Skeleton className="h-8 w-[100px] rounded-md" />
                   </div>
                 </CardContent>
               </Card>
@@ -302,6 +339,13 @@ export default function GestaoAgentesProcessos() {
             <Table className="w-full min-w-[800px]">
               <TableHeader>
                 <TableRow className="hover:bg-transparent border-b">
+                  <TableHead className="w-12 text-center">
+                    <Checkbox
+                      checked={isAllSelected}
+                      onCheckedChange={() => toggleAll(displayedIds)}
+                    />
+                  </TableHead>
+                  <TableHead className="w-12 text-center">Fav</TableHead>
                   <TableHead className="text-muted-foreground font-bold sticky left-0 bg-muted/50 z-10 w-[200px]">
                     Número
                   </TableHead>
@@ -318,18 +362,54 @@ export default function GestaoAgentesProcessos() {
                 {processos.map((proc, idx) => (
                   <TableRow
                     key={proc.id}
-                    className="cursor-pointer group h-[48px] hover:bg-muted even:bg-muted/50 transition-colors animate-in fade-in-0 slide-in-from-bottom-2 duration-500 fill-mode-backwards"
+                    className={cn(
+                      'cursor-pointer group h-[48px] transition-colors animate-in fade-in-0 slide-in-from-bottom-2 duration-500 fill-mode-backwards',
+                      !proc.lido && 'bg-primary/5 hover:bg-primary/10',
+                      proc.lido && 'hover:bg-muted even:bg-muted/50',
+                    )}
                     style={{ animationDelay: `${idx * 30}ms` }}
-                    onClick={() => navigate(`/gestao-agentes/processos/${proc.id}`)}
+                    onClick={() => handleRowClick(proc)}
                   >
-                    <TableCell className="sticky left-0 bg-card group-even:bg-muted/50 group-hover:bg-muted z-10 font-medium text-foreground transition-colors border-r border-transparent">
-                      <span className="group-hover:underline">
+                    <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+                      <Checkbox
+                        checked={selectedIds.has(proc.id)}
+                        onCheckedChange={() => toggleSelection(proc.id)}
+                      />
+                    </TableCell>
+                    <TableCell className="text-center" onClick={(e) => e.stopPropagation()}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="w-8 h-8 hover:bg-transparent"
+                        onClick={() => toggleFavorite(proc.id)}
+                      >
+                        <Star
+                          className={cn(
+                            'w-4 h-4 transition-colors',
+                            proc.is_favorite
+                              ? 'fill-amber-400 text-amber-400'
+                              : 'text-muted-foreground',
+                          )}
+                        />
+                      </Button>
+                    </TableCell>
+                    <TableCell className="sticky left-0 z-10 font-medium text-foreground transition-colors border-r border-transparent">
+                      <span
+                        className={cn(
+                          'group-hover:underline',
+                          !proc.lido && 'font-bold text-primary',
+                        )}
+                      >
                         {proc.numero_processo || proc.numero_controle || '-'}
                       </span>
                     </TableCell>
                     <TableCell>{getStatusBadge(proc.status)}</TableCell>
-                    <TableCell>{safeFormat(proc.created)}</TableCell>
-                    <TableCell>{safeFormat(proc.data_prazo)}</TableCell>
+                    <TableCell className={cn(!proc.lido && 'font-semibold')}>
+                      {safeFormat(proc.created)}
+                    </TableCell>
+                    <TableCell className={cn(!proc.lido && 'font-semibold')}>
+                      {safeFormat(proc.data_prazo)}
+                    </TableCell>
                     <TableCell className="hidden lg:table-cell">
                       {getPriorityBadge(proc.prioridade)}
                     </TableCell>
@@ -346,19 +426,6 @@ export default function GestaoAgentesProcessos() {
                         >
                           <Eye className="w-4 h-4" />
                         </Button>
-                        {proc.status !== 'concluido' && (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="text-foreground hover:text-primary hover:bg-primary/10"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              navigate(`/gestao-agentes/processos/${proc.id}?tab=relatorio`)
-                            }}
-                          >
-                            <FileEdit className="w-4 h-4" />
-                          </Button>
-                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -372,48 +439,52 @@ export default function GestaoAgentesProcessos() {
             {processos.map((proc, idx) => (
               <Card
                 key={proc.id}
-                className="cursor-pointer hover:border-primary/50 transition-colors animate-in fade-in-0 slide-in-from-bottom-2 duration-500 fill-mode-backwards"
+                className={cn(
+                  'cursor-pointer transition-colors animate-in fade-in-0 slide-in-from-bottom-2 duration-500 fill-mode-backwards',
+                  !proc.lido ? 'border-primary/50 bg-primary/5' : 'hover:border-primary/50',
+                )}
                 style={{ animationDelay: `${idx * 30}ms` }}
-                onClick={() => navigate(`/gestao-agentes/processos/${proc.id}`)}
+                onClick={() => handleRowClick(proc)}
               >
                 <CardContent className="p-4 flex flex-col gap-3">
-                  <div className="flex justify-between items-start">
-                    <span className="font-bold text-foreground truncate mr-2">
-                      {proc.numero_processo || proc.numero_controle || '-'}
-                    </span>
-                    <div className="shrink-0">{getStatusBadge(proc.status)}</div>
-                  </div>
-                  <div className="flex justify-between text-sm text-muted-foreground items-center">
-                    <span>Prazo: {safeFormat(proc.data_prazo)}</span>
-                    {getPriorityBadge(proc.prioridade)}
-                  </div>
-                  <div className="flex justify-end gap-2 mt-2 pt-2 border-t border-border">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-foreground hover:text-primary"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        navigate(`/gestao-agentes/processos/${proc.id}`)
-                      }}
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Ver
-                    </Button>
-                    {proc.status !== 'concluido' && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-foreground hover:text-primary"
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <Checkbox
+                          checked={selectedIds.has(proc.id)}
+                          onCheckedChange={() => toggleSelection(proc.id)}
+                          className="mt-1"
+                        />
+                      </div>
+                      <span
+                        className={cn(
+                          'font-bold truncate',
+                          !proc.lido ? 'text-primary' : 'text-foreground',
+                        )}
+                      >
+                        {proc.numero_processo || proc.numero_controle || '-'}
+                      </span>
+                      <div
                         onClick={(e) => {
                           e.stopPropagation()
-                          navigate(`/gestao-agentes/processos/${proc.id}?tab=relatorio`)
+                          toggleFavorite(proc.id)
                         }}
                       >
-                        <FileEdit className="w-4 h-4 mr-2" />
-                        Relatório
-                      </Button>
-                    )}
+                        <Star
+                          className={cn(
+                            'w-4 h-4 shrink-0',
+                            proc.is_favorite
+                              ? 'fill-amber-400 text-amber-400'
+                              : 'text-muted-foreground',
+                          )}
+                        />
+                      </div>
+                    </div>
+                    <div className="shrink-0">{getStatusBadge(proc.status)}</div>
+                  </div>
+                  <div className="flex justify-between text-sm text-muted-foreground items-center ml-7">
+                    <span>Prazo: {safeFormat(proc.data_prazo)}</span>
+                    {getPriorityBadge(proc.prioridade)}
                   </div>
                 </CardContent>
               </Card>
@@ -429,6 +500,45 @@ export default function GestaoAgentesProcessos() {
           </Button>
         </div>
       )}
+
+      {selectedIds.size > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 bg-foreground text-background px-6 py-3 rounded-full shadow-2xl flex items-center gap-4 z-50 animate-in slide-in-from-bottom-5">
+          <span className="font-bold whitespace-nowrap text-sm">
+            {selectedIds.size} selecionado(s)
+          </span>
+          <div className="h-6 w-px bg-muted-foreground/30"></div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-background hover:bg-background/20 rounded-full text-xs h-8"
+            onClick={markAsRead}
+          >
+            <CheckSquare className="w-4 h-4 mr-1.5" /> Marcar como Lido
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-background hover:bg-background/20 rounded-full text-xs h-8"
+            onClick={exportSelected}
+          >
+            <Download className="w-4 h-4 mr-1.5" /> Exportar
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:bg-background/20 rounded-full text-xs h-8 px-2"
+            onClick={clearSelection}
+          >
+            Cancelar
+          </Button>
+        </div>
+      )}
+
+      <ProcessoQuickViewSheet
+        isOpen={!!quickViewProc}
+        onClose={() => setQuickViewProc(null)}
+        processo={quickViewProc}
+      />
     </div>
   )
 }

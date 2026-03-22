@@ -8,6 +8,7 @@ import {
   User as UserIcon,
   LogOut,
   LayoutDashboard,
+  BarChart3,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -37,6 +38,9 @@ export default function Layout() {
       ? [{ title: 'Portal do Agente', url: '/gestao-agentes' }]
       : []),
     ...(user?.role === 'c-level' ? [{ title: 'Gestão de Usuários', url: '/gestao-usuarios' }] : []),
+    ...(user?.role === 'c-level' || user?.role === 'admin'
+      ? [{ title: 'Performance', url: '/gestao/performance-supervisores' }]
+      : []),
   ]
 
   const isActive = (url: string) => {
@@ -149,6 +153,17 @@ export default function Layout() {
                   <span className="font-medium text-[13px]">Meu Perfil</span>
                 </Link>
               </DropdownMenuItem>
+              {(user?.role === 'c-level' || user?.role === 'admin') && (
+                <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3 hover:bg-[#f5f8fa]">
+                  <Link
+                    to="/gestao/performance-supervisores"
+                    className="w-full flex items-center text-[#2A3B4C]"
+                  >
+                    <BarChart3 className="mr-2.5 h-4 w-4 text-[#00A8B5]" />
+                    <span className="font-medium text-[13px]">Performance</span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
               {(user?.role === 'c-level' ||
                 user?.role === 'admin' ||
                 user?.role === 'supervisor' ||
