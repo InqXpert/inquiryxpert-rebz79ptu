@@ -26,16 +26,10 @@ onRecordAuthRequest((e) => {
   }
 
   loginAttemptsStore[ip].push(now)
-  e.next()
-}, 'users')
 
-// Reset counter on successful auth
-onRecordAuthRequest((e) => {
   e.next() // Wait for success
-  const ip =
-    e.requestInfo().headers['x_forwarded_for'] ||
-    e.requestInfo().headers['remote_addr'] ||
-    'unknown'
+
+  // Reset counter on successful auth
   if (loginAttemptsStore[ip]) {
     delete loginAttemptsStore[ip]
   }
@@ -45,9 +39,9 @@ onRecordAuthRequest((e) => {
 // Using a fixed mock key for demonstration. In prod, use $os.getenv("AES_SECRET")
 const AES_KEY = '12345678901234567890123456789012'
 
-onRecordBeforeSaveRequest((e) => {
+function encryptTwoFa(e) {
   const record = e.record
-  if (record.get('two_fa_secret') && !record.get('two_fa_secret').startsWith('ENC:')) {
+  if (record && record.get('two_fa_secret') && !record.get('two_fa_secret').startsWith('ENC:')) {
     try {
       const encrypted = $security.encrypt(record.get('two_fa_secret'), AES_KEY)
       record.set('two_fa_secret', 'ENC:' + encrypted)
@@ -56,7 +50,10 @@ onRecordBeforeSaveRequest((e) => {
     }
   }
   e.next()
-}, 'users')
+}
+
+onRecordCreate(encryptTwoFa, 'users')
+onRecordUpdate(encryptTwoFa, 'users')
 
 onRecordViewRequest((e) => {
   e.next()
