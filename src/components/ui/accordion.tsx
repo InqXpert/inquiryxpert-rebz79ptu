@@ -1,4 +1,3 @@
-/* Accordion Component primitives - A component that displays a list of items in an accordion - from shadcn/ui (exposes Accordion, AccordionItem, AccordionTrigger, AccordionContent) */
 import * as React from 'react'
 import * as AccordionPrimitive from '@radix-ui/react-accordion'
 import { ChevronDown } from 'lucide-react'
@@ -11,7 +10,11 @@ const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
 >(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item ref={ref} className={cn('border-b', className)} {...props} />
+  <AccordionPrimitive.Item
+    ref={ref}
+    className={cn('border-b border-brand-teal/30 dark:border-brand-cyan/20', className)}
+    {...props}
+  />
 ))
 AccordionItem.displayName = 'AccordionItem'
 
@@ -23,13 +26,13 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        'flex flex-1 items-center justify-between py-4 font-medium transition-all hover:underline [&[data-state=open]>svg]:rotate-180',
+        'flex flex-1 items-center justify-between py-4 font-bold transition-all hover:underline text-brand-navy dark:text-white [&[data-state=open]>svg]:rotate-180',
         className,
       )}
       {...props}
     >
       {children}
-      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+      <ChevronDown className="h-5 w-5 shrink-0 transition-transform duration-200 text-brand-cyan" />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))

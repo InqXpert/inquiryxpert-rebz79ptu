@@ -92,48 +92,39 @@ export default function UsuarioDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[480px] rounded-2xl border-t-4 border-t-[#00A8B5] p-6">
+      <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-[#2A3B4C] mb-2">
-            {user ? 'Edição de Perfil' : 'Registro de Usuário'}
-          </DialogTitle>
+          <DialogTitle>{user ? 'Edição de Perfil' : 'Registro de Usuário'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-2">
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-wider text-muted-foreground font-bold">
-              Nome Completo
+            <Label className="text-brand-navy dark:text-brand-light">
+              Nome Completo <span className="text-brand-coral">*</span>
             </Label>
-            <Input
-              {...register('name')}
-              className="rounded-xl h-11 bg-muted/30 focus-visible:ring-[#00A8B5] border-border"
-            />
+            <Input {...register('name')} />
             {errors.name && (
-              <span className="text-[11px] font-medium text-destructive">
+              <span className="text-[12px] font-medium text-brand-coral">
                 {errors.name.message as string}
               </span>
             )}
           </div>
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-wider text-muted-foreground font-bold">
-              Endereço de E-mail
+            <Label className="text-brand-navy dark:text-brand-light">
+              Endereço de E-mail <span className="text-brand-coral">*</span>
             </Label>
-            <Input
-              {...register('email')}
-              type="email"
-              className="rounded-xl h-11 bg-muted/30 focus-visible:ring-[#00A8B5] border-border"
-            />
+            <Input {...register('email')} type="email" />
             {errors.email && (
-              <span className="text-[11px] font-medium text-destructive">
+              <span className="text-[12px] font-medium text-brand-coral">
                 {errors.email.message as string}
               </span>
             )}
           </div>
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-wider text-muted-foreground font-bold">
+            <Label className="text-brand-navy dark:text-brand-light">
               Senha{' '}
               {user && (
-                <span className="lowercase normal-case font-medium text-muted-foreground/70">
-                  (Opcional para não alterar)
+                <span className="lowercase normal-case font-medium text-brand-gray dark:text-brand-light/70">
+                  (Opcional)
                 </span>
               )}
             </Label>
@@ -141,12 +132,12 @@ export default function UsuarioDialog({
               <Input
                 {...register('password')}
                 type={showPassword ? 'text' : 'password'}
-                className="rounded-xl h-11 bg-muted/30 pr-12 focus-visible:ring-[#00A8B5] border-border"
+                className="pr-12"
                 placeholder={user ? '••••••••' : 'Digite uma senha segura'}
               />
               <button
                 type="button"
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-[#00A8B5] transition-colors focus:outline-none"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-brand-cyan hover:text-brand-cyan/80 transition-colors focus:outline-none"
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
               >
@@ -154,24 +145,24 @@ export default function UsuarioDialog({
               </button>
             </div>
             {errors.password && (
-              <span className="text-[11px] font-medium text-destructive">
+              <span className="text-[12px] font-medium text-brand-coral">
                 {errors.password.message as string}
               </span>
             )}
           </div>
           <div className="grid grid-cols-2 gap-5">
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wider text-muted-foreground font-bold">
-                Papel (RBAC)
+              <Label className="text-brand-navy dark:text-brand-light">
+                Papel (RBAC) <span className="text-brand-coral">*</span>
               </Label>
               <Select
                 onValueChange={(v) => setValue('role', v)}
                 defaultValue={user?.role || 'analista'}
               >
-                <SelectTrigger className="rounded-xl h-11 bg-muted/30 focus:ring-[#00A8B5] border-border">
+                <SelectTrigger>
                   <SelectValue placeholder="Selecione..." />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl">
+                <SelectContent>
                   <SelectItem value="c-level">C-Level</SelectItem>
                   <SelectItem value="admin">Administrador</SelectItem>
                   <SelectItem value="supervisor">Supervisor</SelectItem>
@@ -180,17 +171,17 @@ export default function UsuarioDialog({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-wider text-muted-foreground font-bold">
-                Status da Conta
+              <Label className="text-brand-navy dark:text-brand-light">
+                Status da Conta <span className="text-brand-coral">*</span>
               </Label>
               <Select
                 onValueChange={(v) => setValue('status_conta', v)}
                 defaultValue={user?.status_conta || 'ativo'}
               >
-                <SelectTrigger className="rounded-xl h-11 bg-muted/30 focus:ring-[#00A8B5] border-border">
+                <SelectTrigger>
                   <SelectValue placeholder="Selecione..." />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl">
+                <SelectContent>
                   <SelectItem value="ativo">Ativa</SelectItem>
                   <SelectItem value="suspenso">Suspensa</SelectItem>
                   <SelectItem value="bloqueado">Bloqueada</SelectItem>
@@ -198,19 +189,14 @@ export default function UsuarioDialog({
               </Select>
             </div>
           </div>
-          <DialogFooter className="pt-6 mt-4 border-t border-border">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="rounded-xl h-11 px-6 font-semibold"
-            >
+          <DialogFooter className="pt-6 mt-4 border-t border-brand-teal/50 dark:border-brand-cyan/30">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancelar
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="rounded-xl h-11 px-6 font-semibold shadow-sm bg-[#F2485C] hover:bg-[#F2485C]/90 text-white"
+              className="bg-brand-cyan text-white hover:bg-brand-cyan/90"
             >
               {user ? 'Salvar Alterações' : 'Confirmar Cadastro'}
             </Button>

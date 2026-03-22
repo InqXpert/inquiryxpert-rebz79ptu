@@ -5,23 +5,24 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-[14px] font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-[14px] font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan/50 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm',
-        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm',
+        default:
+          'bg-brand-navy text-white hover:bg-brand-navy/90 shadow-sm dark:bg-brand-cyan dark:text-brand-navy dark:hover:bg-brand-cyan/90',
+        destructive: 'bg-brand-coral text-white hover:bg-brand-coral/90 shadow-sm',
         outline:
-          'border border-border bg-transparent text-foreground hover:bg-muted hover:text-foreground',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-sm',
-        ghost: 'text-foreground hover:bg-muted hover:text-foreground',
-        link: 'text-primary underline-offset-4 hover:underline font-semibold',
+          'border border-brand-teal bg-transparent text-brand-navy hover:bg-brand-light dark:border-brand-cyan/50 dark:text-white dark:hover:bg-brand-navy/50',
+        secondary: 'bg-brand-teal text-brand-navy hover:bg-brand-teal/80 shadow-sm',
+        ghost: 'text-brand-navy hover:bg-brand-light dark:text-white dark:hover:bg-white/10',
+        link: 'text-brand-cyan underline-offset-4 hover:underline font-semibold',
       },
       size: {
-        default: 'h-10 px-4 py-2',
+        default: 'h-11 px-4 py-2 min-h-[44px]',
         sm: 'h-9 px-3 text-[13px]',
-        lg: 'h-11 px-8 text-[15px]',
-        icon: 'h-10 w-10',
+        lg: 'h-12 px-8 text-[15px] min-h-[48px]',
+        icon: 'h-11 w-11 min-h-[44px] min-w-[44px]',
       },
     },
     defaultVariants: {

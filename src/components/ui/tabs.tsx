@@ -1,6 +1,5 @@
 import * as React from 'react'
 import * as TabsPrimitive from '@radix-ui/react-tabs'
-
 import { cn } from '@/lib/utils'
 
 const Tabs = TabsPrimitive.Root
@@ -12,7 +11,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'inline-flex h-12 items-center justify-start border-b border-border bg-transparent p-0 text-muted-foreground w-full',
+      'inline-flex items-center justify-start border-b border-brand-teal/50 bg-transparent p-0 w-full gap-2 overflow-x-auto no-scrollbar',
       className,
     )}
     {...props}
@@ -27,7 +26,7 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center whitespace-nowrap px-6 py-3.5 text-[14px] font-semibold transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary bg-transparent border-b-2 border-transparent hover:text-primary hover:bg-muted/30 -mb-[1px]',
+      'inline-flex items-center justify-center whitespace-nowrap px-6 py-3 min-h-[44px] text-[14px] font-semibold transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-brand-navy data-[state=active]:text-white data-[state=inactive]:text-brand-navy data-[state=inactive]:bg-transparent hover:data-[state=inactive]:bg-brand-light dark:data-[state=inactive]:text-white dark:hover:data-[state=inactive]:bg-white/10 rounded-t-lg',
       className,
     )}
     {...props}
@@ -42,7 +41,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      'mt-0 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      'mt-6 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-cyan focus-visible:ring-offset-2',
       className,
     )}
     {...props}

@@ -34,18 +34,18 @@ export default function GestaoUsuarios() {
   }
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-6">
+    <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 pb-20 space-y-6">
       <div>
-        <h1 className="text-3xl md:text-4xl font-bold text-[#2A3B4C] tracking-tight mb-2">
+        <h1 className="text-[28px] font-bold text-brand-navy dark:text-white tracking-tight mb-2">
           Gestão de Usuários
         </h1>
-        <p className="text-base text-muted-foreground font-medium">
+        <p className="text-[14px] text-brand-gray dark:text-brand-light font-medium">
           Controle completo de acessos, permissões e auditoria da plataforma.
         </p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="mb-8 flex overflow-x-auto no-scrollbar justify-start border-b border-border bg-transparent p-0 h-auto w-full gap-2">
+        <TabsList>
           <TabsTrigger value="lista">Lista de Usuários</TabsTrigger>
           <TabsTrigger value="novo">Novo Usuário</TabsTrigger>
           {userToEdit && <TabsTrigger value="editar">Editar Usuário</TabsTrigger>}
@@ -53,8 +53,8 @@ export default function GestaoUsuarios() {
           <TabsTrigger value="metricas">Métricas e Relatórios</TabsTrigger>
         </TabsList>
 
-        <div className="animate-in fade-in duration-500">
-          <TabsContent value="lista" className="mt-0">
+        <div className="animate-in fade-in duration-300">
+          <TabsContent value="lista">
             <UsuariosTable
               users={users}
               loading={loading}
@@ -63,12 +63,12 @@ export default function GestaoUsuarios() {
             />
           </TabsContent>
 
-          <TabsContent value="novo" className="mt-0">
+          <TabsContent value="novo">
             <UsuarioForm onSuccess={handleSuccessForm} onCancel={handleCancelForm} />
           </TabsContent>
 
           {userToEdit && (
-            <TabsContent value="editar" className="mt-0">
+            <TabsContent value="editar">
               <UsuarioForm
                 userToEdit={userToEdit}
                 onSuccess={handleSuccessForm}
@@ -77,11 +77,11 @@ export default function GestaoUsuarios() {
             </TabsContent>
           )}
 
-          <TabsContent value="historico" className="mt-0">
+          <TabsContent value="historico">
             <HistoricoGeralTable />
           </TabsContent>
 
-          <TabsContent value="metricas" className="mt-0">
+          <TabsContent value="metricas">
             <MetricasDashboard users={users} />
           </TabsContent>
         </div>

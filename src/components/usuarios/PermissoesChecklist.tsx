@@ -6,14 +6,8 @@ import {
 } from '@/components/ui/accordion'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
-import { Badge } from '@/components/ui/badge'
 
-const ROLE_LEVEL = {
-  'c-level': 4,
-  admin: 3,
-  supervisor: 2,
-  analista: 1,
-} as const
+const ROLE_LEVEL = { 'c-level': 4, admin: 3, supervisor: 2, analista: 1 } as const
 
 const PERMISSIONS_GROUPS = [
   {
@@ -95,95 +89,82 @@ const PERMISSIONS_GROUPS = [
   },
 ]
 
-interface PermissoesChecklistProps {
-  selectedRole: string
-  selectedPermissoes: string[]
-  onChange: (permissoes: string[]) => void
-}
-
 export function PermissoesChecklist({
   selectedRole,
   selectedPermissoes,
   onChange,
-}: PermissoesChecklistProps) {
+}: {
+  selectedRole: string
+  selectedPermissoes: string[]
+  onChange: (p: string[]) => void
+}) {
   const roleLevel = ROLE_LEVEL[selectedRole as keyof typeof ROLE_LEVEL] || 1
-
-  const handleToggle = (id: string, checked: boolean) => {
-    if (checked) {
-      onChange([...selectedPermissoes, id])
-    } else {
-      onChange(selectedPermissoes.filter((p) => p !== id))
-    }
-  }
+  const handleToggle = (id: string, checked: boolean) =>
+    onChange(checked ? [...selectedPermissoes, id] : selectedPermissoes.filter((p) => p !== id))
 
   return (
-    <Accordion type="multiple" className="w-full space-y-3">
-      {PERMISSIONS_GROUPS.map((group) => (
-        <AccordionItem
-          key={group.id}
-          value={group.id}
-          className="border border-border/60 rounded-xl px-5 bg-card shadow-sm"
-        >
-          <AccordionTrigger className="hover:no-underline py-4">
-            <span className="font-semibold text-[15px] text-foreground">{group.label}</span>
-          </AccordionTrigger>
-          <AccordionContent className="pt-1 pb-5">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-              {group.permissions.map((perm) => {
-                const reqLevel = ROLE_LEVEL[perm.minRole as keyof typeof ROLE_LEVEL] || 1
-                const isDisabled = roleLevel < reqLevel
-
-                return (
-                  <TooltipProvider key={perm.id}>
-                    <Tooltip delayDuration={200}>
-                      <TooltipTrigger asChild>
-                        <div
-                          className={`flex items-start space-x-3 p-2.5 rounded-lg border border-transparent transition-colors ${isDisabled ? 'opacity-50 bg-muted/40 cursor-not-allowed' : 'hover:bg-muted/60 hover:border-border/50 cursor-pointer'}`}
-                          onClick={(e) => {
-                            if (isDisabled) e.preventDefault()
-                          }}
-                        >
-                          <Checkbox
-                            id={perm.id}
-                            checked={selectedPermissoes.includes(perm.id) && !isDisabled}
-                            disabled={isDisabled}
-                            onCheckedChange={(checked) => handleToggle(perm.id, !!checked)}
-                            className="mt-0.5 shadow-none"
-                          />
-                          <div className="flex flex-col gap-1.5 leading-none">
-                            <label
-                              htmlFor={perm.id}
-                              className={`text-[13px] font-semibold tracking-tight ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer text-foreground/90'}`}
-                            >
-                              {perm.label}
-                            </label>
-                            {isDisabled && (
-                              <Badge
-                                variant="secondary"
-                                className="w-fit text-[10px] px-1.5 py-0 font-bold bg-muted-foreground/10 text-muted-foreground"
+    <div className="border border-brand-teal dark:border-brand-cyan/50 rounded-lg bg-white dark:bg-brand-navy/50 p-2 shadow-sm">
+      <Accordion type="multiple" className="w-full">
+        {PERMISSIONS_GROUPS.map((group) => (
+          <AccordionItem
+            key={group.id}
+            value={group.id}
+            className="border-b border-brand-teal/30 last:border-0 px-3 py-1"
+          >
+            <AccordionTrigger className="text-brand-navy dark:text-white font-bold text-[14px] [&>svg]:text-brand-cyan hover:no-underline py-3">
+              {group.label}
+            </AccordionTrigger>
+            <AccordionContent className="pb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                {group.permissions.map((perm) => {
+                  const isDisabled =
+                    roleLevel < (ROLE_LEVEL[perm.minRole as keyof typeof ROLE_LEVEL] || 1)
+                  return (
+                    <TooltipProvider key={perm.id}>
+                      <Tooltip delayDuration={200}>
+                        <TooltipTrigger asChild>
+                          <div
+                            className={`flex items-start space-x-3 p-2 rounded-md transition-colors ${isDisabled ? 'opacity-50 bg-brand-light dark:bg-black/20 cursor-not-allowed' : 'hover:bg-brand-teal/10 cursor-pointer'}`}
+                            onClick={(e) => {
+                              if (isDisabled) e.preventDefault()
+                            }}
+                          >
+                            <Checkbox
+                              id={perm.id}
+                              checked={selectedPermissoes.includes(perm.id) && !isDisabled}
+                              disabled={isDisabled}
+                              onCheckedChange={(c) => handleToggle(perm.id, !!c)}
+                              className="mt-0.5"
+                            />
+                            <div className="flex flex-col gap-1 leading-none">
+                              <label
+                                htmlFor={perm.id}
+                                className={`text-[13px] font-bold ${isDisabled ? 'text-brand-gray cursor-not-allowed' : 'text-brand-navy dark:text-brand-light cursor-pointer'}`}
                               >
-                                Requer {perm.minRole}
-                              </Badge>
-                            )}
+                                {perm.label}
+                              </label>
+                              {isDisabled && (
+                                <span className="text-[12px] font-medium text-brand-gray mt-0.5">
+                                  Requer role {perm.minRole}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      </TooltipTrigger>
-                      {isDisabled && (
-                        <TooltipContent className="bg-popover text-popover-foreground border-border shadow-md">
-                          <p className="text-xs font-medium">
-                            O papel atual ({selectedRole}) não tem permissão para esta ação. Requer{' '}
-                            <strong className="text-primary">{perm.minRole}</strong>.
-                          </p>
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                  </TooltipProvider>
-                )
-              })}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      ))}
-    </Accordion>
+                        </TooltipTrigger>
+                        {isDisabled && (
+                          <TooltipContent className="bg-brand-navy text-white text-[12px] font-medium border-brand-cyan">
+                            Restrito: Requer {perm.minRole}
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                    </TooltipProvider>
+                  )
+                })}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </div>
   )
 }
