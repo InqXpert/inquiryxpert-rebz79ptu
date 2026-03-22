@@ -7,6 +7,7 @@ import { AuthProvider } from '@/hooks/use-auth'
 import { Toaster } from '@/components/ui/sonner'
 import { AuthGuard } from '@/components/AuthGuard'
 import { GuestGuard } from '@/components/GuestGuard'
+import { TrackActivity } from '@/components/TrackActivity'
 import Login from '@/pages/Login'
 
 const Dashboard = lazy(() => import('./pages/Dashboard'))
@@ -34,7 +35,13 @@ export default function App() {
 
               {/* Protected Routes */}
               <Route element={<AuthGuard />}>
-                <Route element={<Layout />}>
+                <Route
+                  element={
+                    <TrackActivity>
+                      <Layout />
+                    </TrackActivity>
+                  }
+                >
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/processos" element={<Processos />} />

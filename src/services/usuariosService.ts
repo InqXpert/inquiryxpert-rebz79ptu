@@ -1,20 +1,6 @@
 import pb from '@/lib/pocketbase/client'
 import type { User, UsuarioHistorico, UsuarioSessao } from '@/types'
-
-const logAction = async (acao: string, descricao: string, usuario_afetado_id?: string) => {
-  try {
-    await pb.collection('usuarios_historico').create({
-      user_id: pb.authStore.record?.id,
-      acao,
-      descricao,
-      usuario_afetado_id,
-      ip_address: '0.0.0.0',
-      user_agent: navigator.userAgent,
-    })
-  } catch (e) {
-    console.error('Failed to log action', e)
-  }
-}
+import { trackAcao } from '@/utils/trackAcao'
 
 export const usuariosService = {
   fetchUsuarios: async () => {
@@ -32,13 +18,13 @@ export const usuariosService = {
 
   createUsuario: async (data: any) => {
     const user = await pb.collection('users').create(data)
-    await logAction('criar_usuario', `Criou o usuário ${data.email}`, user.id)
+    await trackAcao('criar_usuario', `Criou o usuário ${data.email}`, user.id)
     return user
   },
 
   updateUsuario: async (id: string, data: any) => {
     const user = await pb.collection('users').update(id, data)
-    await logAction('editar_usuario', `Atualizou o usuário ${user.email}`, user.id)
+    await trackAcao('editar_usuario', `Atualizou o usuário ${user.email}`, user.id)
     return user
   },
 
@@ -48,13 +34,13 @@ export const usuariosService = {
       password: tempPassword,
       passwordConfirm: tempPassword,
     })
-    await logAction('resetar_senha', `Resetou a senha do usuário ${user.email}`, user.id)
+    await trackAcao('resetar_senha', `Resetou a senha do usuário ${user.email}`, user.id)
     return tempPassword
   },
 
   alterarRole: async (userId: string, novoRole: string) => {
     const user = await pb.collection('users').update(userId, { role: novoRole })
-    await logAction(
+    await trackAcao(
       'alterar_role',
       `Alterou role do usuário ${user.email} para ${novoRole}`,
       user.id,
@@ -64,13 +50,13 @@ export const usuariosService = {
 
   permitirUsuario: async (id: string) => {
     const user = await pb.collection('users').update(id, { status_conta: 'ativo' })
-    await logAction('alterar_status_usuario', `Ativou o usuário ${user.email}`, user.id)
+    await trackAcao('alterar_status_usuario', `Ativou o usuário ${user.email}`, user.id)
     return user
   },
 
   bloquearUsuario: async (id: string) => {
     const user = await pb.collection('users').update(id, { status_conta: 'bloqueado' })
-    await logAction('alterar_status_usuario', `Bloqueou o usuário ${user.email}`, user.id)
+    await trackAcao('alterar_status_usuario', `Bloqueou o usuário ${user.email}`, user.id)
     return user
   },
 
@@ -99,7 +85,7 @@ export const usuariosService = {
 
   forceLogout: async (sessionId: string) => {
     const session = await pb.collection('usuarios_sessoes').update(sessionId, { expirada: true })
-    await logAction('logout', `Forçou logout da sessão ${sessionId}`, session.user_id)
+    await trackAcao('logout', `Forçou logout remoto da sessão ${sessionId}`, session.user_id)
     return session
   },
 }

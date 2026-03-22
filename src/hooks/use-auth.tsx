@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import pb from '@/lib/pocketbase/client'
+import { trackAcao } from '@/utils/trackAcao'
 import type { User } from '@/types'
 
 interface AuthContextType {
@@ -25,7 +26,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initAuth = async () => {
       if (pb.authStore.isValid) {
         try {
-          // Dynamic Permission Synchronization
           await pb.collection('users').authRefresh()
           setUser(pb.authStore.record as User | null)
         } catch (error) {
@@ -54,13 +54,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         await pb.collection('users').update(authData.record.id, {
           ultimo_login: new Date().toISOString(),
         })
-        await pb.collection('usuarios_historico').create({
+
+        const sessao = await pb.collection('usuarios_sessoes').create({
           user_id: authData.record.id,
-          acao: 'login',
-          descricao: 'Login efetuado com sucesso',
+          token: pb.authStore.token,
           ip_address: '0.0.0.0',
-          user_agent: navigator.userAgent,
+          duracao_minutos: 0,
+          expirada: false,
         })
+        localStorage.setItem('current_session_id', sessao.id)
+
+        await trackAcao('login', 'Login efetuado com sucesso')
       } catch (e) {
         console.error('Falha ao registrar histórico de login', e)
       }
@@ -74,15 +78,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signOut = async () => {
     if (pb.authStore.record) {
       try {
-        await pb.collection('usuarios_historico').create({
-          user_id: pb.authStore.record.id,
-          acao: 'logout',
-          descricao: 'Logout efetuado do sistema',
-          ip_address: '0.0.0.0',
-          user_agent: navigator.userAgent,
-        })
+        const sessionId = localStorage.getItem('current_session_id')
+        if (sessionId) {
+          const sessao = await pb.collection('usuarios_sessoes').getOne(sessionId)
+          const start = new Date(sessao.created)
+          const diffMins = Math.floor((new Date().getTime() - start.getTime()) / 60000)
+
+          await pb.collection('usuarios_sessoes').update(sessionId, {
+            expirada: true,
+            duracao_minutos: diffMins,
+          })
+
+          const u = await pb.collection('users').getOne(pb.authStore.record.id)
+          await pb.collection('users').update(u.id, {
+            tempo_uso_total: (u.tempo_uso_total || 0) + diffMins,
+          })
+
+          localStorage.removeItem('current_session_id')
+        }
+        await trackAcao('logout', 'Logout efetuado do sistema')
       } catch (e) {
-        console.error('Falha ao registrar histórico de logout', e)
+        console.error('Falha ao encerrar sessão e histórico', e)
       }
     }
     pb.authStore.clear()

@@ -11,7 +11,7 @@ import type { User } from '@/types'
 
 export default function GestaoUsuarios() {
   const { user } = useAuth()
-  const { users, loading, loadUsers } = useGestaoUsuarios()
+  const { users, activeSessions, loading, loadUsers } = useGestaoUsuarios()
   const [activeTab, setActiveTab] = useState('lista')
   const [userToEdit, setUserToEdit] = useState<User | null>(null)
 
@@ -57,6 +57,7 @@ export default function GestaoUsuarios() {
           <TabsContent value="lista">
             <UsuariosTable
               users={users}
+              activeSessions={activeSessions}
               loading={loading}
               onEdit={handleEdit}
               onRefresh={loadUsers}

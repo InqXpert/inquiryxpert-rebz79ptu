@@ -7,12 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Edit, History, ShieldOff, CheckCircle, Ban, Activity } from 'lucide-react'
+import { Edit, History, Ban, CheckCircle, Activity } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { format } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { usuariosService } from '@/services/usuariosService'
@@ -25,11 +25,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 export function UsuariosTable({
   users,
+  activeSessions,
   loading,
   onEdit,
   onRefresh,
 }: {
   users: User[]
+  activeSessions: Record<string, number>
   loading: boolean
   onEdit: (u: User) => void
   onRefresh: () => void
@@ -97,7 +99,8 @@ export function UsuariosTable({
             <TableHead>Papel</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Último Login</TableHead>
-            <TableHead>Tempo Uso</TableHead>
+            <TableHead>Tempo Uso Total</TableHead>
+            <TableHead>Sessões Ativas</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
         </TableHeader>
@@ -105,140 +108,158 @@ export function UsuariosTable({
           {loading
             ? Array.from({ length: 5 }).map((_, i) => (
                 <TableRow key={i}>
-                  <TableCell colSpan={7}>
+                  <TableCell colSpan={8}>
                     <Skeleton className="h-6 w-full" />
                   </TableCell>
                 </TableRow>
               ))
-            : users.map((u, i) => (
-                <TableRow
-                  key={u.id}
-                  className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
-                  style={{ animationDelay: `${i * 50}ms` }}
-                >
-                  <TableCell className="w-12 px-4">
-                    <Checkbox
-                      checked={selected.includes(u.id)}
-                      onCheckedChange={() => toggleSelect(u.id)}
-                    />
-                  </TableCell>
-                  <TableCell className="sticky left-0 bg-white dark:bg-[#282c59]/90 group-hover:bg-brand-light dark:group-hover:bg-white/10 group-even:bg-brand-light/50 dark:group-even:bg-white/5 transition-colors z-10 border-r border-brand-teal/20">
-                    <div className="flex flex-col">
-                      <span className="font-bold text-[14px] text-brand-navy dark:text-white">
-                        {u.name}
-                      </span>
-                      <span className="text-[13px] text-brand-gray">{u.email}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      className={`uppercase text-[10px] font-bold tracking-wider border-none ${roleColors[u.role || 'analista']}`}
-                    >
-                      {u.role}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      className={`capitalize text-[11px] font-bold tracking-wide border-none ${statusColors[u.status_conta || 'ativo']}`}
-                    >
-                      {u.status_conta}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-[13px] text-brand-gray dark:text-brand-light">
-                    {u.ultimo_login
-                      ? format(new Date(u.ultimo_login), 'dd/MM/yyyy HH:mm', { locale: ptBR })
-                      : 'Nunca acessou'}
-                  </TableCell>
-                  <TableCell className="text-[13px] font-bold text-brand-navy dark:text-white">
-                    {Math.round((u.tempo_uso_total || 0) / 60)} hrs
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <TooltipProvider>
-                      <div className="flex items-center justify-end gap-1">
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              aria-label="Editar usuario"
-                              onClick={() => onEdit(u)}
-                              className="text-brand-navy dark:text-brand-cyan hover:bg-brand-teal/20"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Editar usuário</TooltipContent>
-                        </Tooltip>
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              aria-label="Ver sessoes"
-                              onClick={() => setSessoesUser(u.id)}
-                              className="text-brand-cyan hover:bg-brand-teal/20"
-                            >
-                              <Activity className="w-4 h-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Ver sessões</TooltipContent>
-                        </Tooltip>
-                        <Tooltip delayDuration={300}>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              aria-label="Ver historico"
-                              onClick={() => setHistoricoUser(u.id)}
-                              className="text-brand-gray dark:text-brand-light hover:bg-brand-teal/20"
-                            >
-                              <History className="w-4 h-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Ver histórico</TooltipContent>
-                        </Tooltip>
-                        {u.status_conta === 'ativo' ? (
-                          <Tooltip delayDuration={300}>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                aria-label="Bloquear usuario"
-                                onClick={async () => {
-                                  await usuariosService.bloquearUsuario(u.id)
-                                  onRefresh()
-                                }}
-                                className="text-brand-coral hover:bg-brand-coral/20"
-                              >
-                                <Ban className="w-4 h-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Bloquear usuário</TooltipContent>
-                          </Tooltip>
-                        ) : (
-                          <Tooltip delayDuration={300}>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                aria-label="Permitir usuario"
-                                onClick={async () => {
-                                  await usuariosService.permitirUsuario(u.id)
-                                  onRefresh()
-                                }}
-                                className="text-brand-cyan hover:bg-brand-cyan/20"
-                              >
-                                <CheckCircle className="w-4 h-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Permitir usuário</TooltipContent>
-                          </Tooltip>
-                        )}
+            : users.map((u, i) => {
+                const sessoesCount = activeSessions[u.id] || 0
+                return (
+                  <TableRow
+                    key={u.id}
+                    className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+                    style={{ animationDelay: `${i * 50}ms` }}
+                  >
+                    <TableCell className="w-12 px-4">
+                      <Checkbox
+                        checked={selected.includes(u.id)}
+                        onCheckedChange={() => toggleSelect(u.id)}
+                      />
+                    </TableCell>
+                    <TableCell className="sticky left-0 bg-white dark:bg-[#282c59]/90 group-hover:bg-brand-light dark:group-hover:bg-white/10 group-even:bg-brand-light/50 dark:group-even:bg-white/5 transition-colors z-10 border-r border-brand-teal/20">
+                      <div className="flex flex-col">
+                        <span className="font-bold text-[14px] text-brand-navy dark:text-white">
+                          {u.name}
+                        </span>
+                        <span className="text-[13px] text-brand-gray">{u.email}</span>
                       </div>
-                    </TooltipProvider>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        className={`uppercase text-[10px] font-bold tracking-wider border-none ${roleColors[u.role || 'analista']}`}
+                      >
+                        {u.role}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        className={`capitalize text-[11px] font-bold tracking-wide border-none ${statusColors[u.status_conta || 'ativo']}`}
+                      >
+                        {u.status_conta}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-[13px] text-brand-gray dark:text-brand-light">
+                      {u.ultimo_login
+                        ? formatDistanceToNow(new Date(u.ultimo_login), {
+                            addSuffix: true,
+                            locale: ptBR,
+                          })
+                        : 'Nunca acessou'}
+                    </TableCell>
+                    <TableCell className="text-[13px] font-bold text-brand-navy dark:text-white">
+                      {Math.floor((u.tempo_uso_total || 0) / 60)}h {(u.tempo_uso_total || 0) % 60}m
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        onClick={() => setSessoesUser(u.id)}
+                        className={`cursor-pointer border-none px-3 py-1 ${
+                          sessoesCount > 3
+                            ? 'bg-brand-coral text-white hover:bg-brand-coral/80'
+                            : 'bg-brand-teal text-brand-navy hover:bg-brand-teal/80'
+                        }`}
+                      >
+                        {sessoesCount} {sessoesCount === 1 ? 'ativa' : 'ativas'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <TooltipProvider>
+                        <div className="flex items-center justify-end gap-1">
+                          <Tooltip delayDuration={300}>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-label="Editar usuario"
+                                onClick={() => onEdit(u)}
+                                className="text-brand-navy dark:text-brand-cyan hover:bg-brand-teal/20"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Editar usuário</TooltipContent>
+                          </Tooltip>
+                          <Tooltip delayDuration={300}>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-label="Ver sessoes"
+                                onClick={() => setSessoesUser(u.id)}
+                                className="text-brand-cyan hover:bg-brand-teal/20"
+                              >
+                                <Activity className="w-4 h-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Gerenciar sessões</TooltipContent>
+                          </Tooltip>
+                          <Tooltip delayDuration={300}>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                aria-label="Ver historico"
+                                onClick={() => setHistoricoUser(u.id)}
+                                className="text-brand-gray dark:text-brand-light hover:bg-brand-teal/20"
+                              >
+                                <History className="w-4 h-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Ver histórico</TooltipContent>
+                          </Tooltip>
+                          {u.status_conta === 'ativo' ? (
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  aria-label="Bloquear usuario"
+                                  onClick={async () => {
+                                    await usuariosService.bloquearUsuario(u.id)
+                                    onRefresh()
+                                  }}
+                                  className="text-brand-coral hover:bg-brand-coral/20"
+                                >
+                                  <Ban className="w-4 h-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Bloquear usuário</TooltipContent>
+                            </Tooltip>
+                          ) : (
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  aria-label="Permitir usuario"
+                                  onClick={async () => {
+                                    await usuariosService.permitirUsuario(u.id)
+                                    onRefresh()
+                                  }}
+                                  className="text-brand-cyan hover:bg-brand-cyan/20"
+                                >
+                                  <CheckCircle className="w-4 h-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>Permitir usuário</TooltipContent>
+                            </Tooltip>
+                          )}
+                        </div>
+                      </TooltipProvider>
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
         </TableBody>
       </Table>
 

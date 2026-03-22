@@ -11,9 +11,12 @@ export function MetricasDashboard({ users }: { users: User[] }) {
   const loginsHoje = users.filter(
     (u) => u.ultimo_login && new Date(u.ultimo_login).toDateString() === hoje,
   ).length
-  const avgTimeHrs = total
-    ? Math.round(users.reduce((acc, u) => acc + (u.tempo_uso_total || 0), 0) / 60 / total)
+
+  const avgTimeMins = total
+    ? Math.round(users.reduce((acc, u) => acc + (u.tempo_uso_total || 0), 0) / total)
     : 0
+  const avgHrs = Math.floor(avgTimeMins / 60)
+  const avgMins = avgTimeMins % 60
 
   return (
     <div className="space-y-6">
@@ -72,9 +75,11 @@ export function MetricasDashboard({ users }: { users: User[] }) {
           <div className="mt-10 mb-2 p-4 bg-brand-light dark:bg-black/20 rounded-full text-brand-cyan">
             <Activity className="w-8 h-8" />
           </div>
-          <h2 className="text-4xl font-bold text-brand-navy dark:text-white">{avgTimeHrs}h</h2>
-          <p className="text-[14px] text-brand-gray dark:text-brand-light mt-2">
-            Por usuário na plataforma
+          <h2 className="text-4xl font-bold text-brand-navy dark:text-white">
+            {avgHrs}h <span className="text-2xl text-brand-cyan">{avgMins}m</span>
+          </h2>
+          <p className="text-[14px] text-brand-gray dark:text-brand-light mt-2 font-medium">
+            Por usuário na plataforma em tempo real
           </p>
         </div>
       </div>
