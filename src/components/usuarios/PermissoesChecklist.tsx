@@ -1,0 +1,189 @@
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '@/components/ui/accordion'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip'
+import { Badge } from '@/components/ui/badge'
+
+const ROLE_LEVEL = {
+  'c-level': 4,
+  admin: 3,
+  supervisor: 2,
+  analista: 1,
+} as const
+
+const PERMISSIONS_GROUPS = [
+  {
+    id: 'crud',
+    label: 'CRUD',
+    permissions: [{ id: 'crud_completo', label: 'CRUD Completo', minRole: 'admin' }],
+  },
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    permissions: [
+      { id: 'dashboard', label: 'Acesso ao Dashboard', minRole: 'analista' },
+      { id: 'relatorios_financeiros', label: 'Relatórios Financeiros', minRole: 'c-level' },
+      {
+        id: 'visualizar_logs_seguranca',
+        label: 'Visualizar Logs de Segurança',
+        minRole: 'c-level',
+      },
+    ],
+  },
+  {
+    id: 'gestao',
+    label: 'Gestão',
+    permissions: [
+      { id: 'gestao_usuarios', label: 'Gestão de Usuários', minRole: 'c-level' },
+      { id: 'gestao_agentes', label: 'Gestão de Agentes', minRole: 'admin' },
+      { id: 'gestao_analistas', label: 'Gestão de Analistas', minRole: 'admin' },
+      { id: 'gerenciar_roles', label: 'Gerenciar Roles', minRole: 'c-level' },
+    ],
+  },
+  {
+    id: 'seguranca',
+    label: 'Segurança',
+    permissions: [
+      { id: 'resetar_senha', label: 'Resetar Senhas', minRole: 'admin' },
+      { id: 'habilitar_2fa', label: 'Gerenciar 2FA', minRole: 'supervisor' },
+      { id: 'auditoria_completa', label: 'Auditoria Completa', minRole: 'admin' },
+    ],
+  },
+  {
+    id: 'operacional',
+    label: 'Operacional',
+    permissions: [
+      { id: 'criar_agentes', label: 'Criar Agentes', minRole: 'analista' },
+      { id: 'criar_processos', label: 'Criar Processos', minRole: 'analista' },
+      { id: 'delegar_investigacao', label: 'Delegar Investigação', minRole: 'supervisor' },
+      { id: 'delegar_processos', label: 'Delegar Processos', minRole: 'supervisor' },
+      { id: 'editar_status', label: 'Editar Status', minRole: 'analista' },
+      { id: 'deletar_processos', label: 'Deletar Processos', minRole: 'admin' },
+      { id: 'editar_proprios', label: 'Editar Próprios Registros', minRole: 'analista' },
+      { id: 'editar_alheios', label: 'Editar Registros Alheios', minRole: 'supervisor' },
+    ],
+  },
+  {
+    id: 'dados',
+    label: 'Dados',
+    permissions: [
+      { id: 'exportar_dados', label: 'Exportar Dados', minRole: 'admin' },
+      { id: 'importar_dados', label: 'Importar Dados', minRole: 'admin' },
+      { id: 'ler_todos', label: 'Ler Todos os Dados', minRole: 'supervisor' },
+    ],
+  },
+  {
+    id: 'colaboracao',
+    label: 'Colaboração',
+    permissions: [
+      { id: 'adicionar_observacoes', label: 'Adicionar Observações', minRole: 'analista' },
+      { id: 'adicionar_posicoes', label: 'Adicionar Posições', minRole: 'analista' },
+      { id: 'upload_documentos', label: 'Upload de Documentos', minRole: 'analista' },
+    ],
+  },
+  {
+    id: 'integracao',
+    label: 'Integração',
+    permissions: [
+      { id: 'configuracao_integracoes', label: 'Configuração de Integrações', minRole: 'admin' },
+      { id: 'gerenciar_notificacoes', label: 'Gerenciar Notificações', minRole: 'supervisor' },
+    ],
+  },
+]
+
+interface PermissoesChecklistProps {
+  selectedRole: string
+  selectedPermissoes: string[]
+  onChange: (permissoes: string[]) => void
+}
+
+export function PermissoesChecklist({
+  selectedRole,
+  selectedPermissoes,
+  onChange,
+}: PermissoesChecklistProps) {
+  const roleLevel = ROLE_LEVEL[selectedRole as keyof typeof ROLE_LEVEL] || 1
+
+  const handleToggle = (id: string, checked: boolean) => {
+    if (checked) {
+      onChange([...selectedPermissoes, id])
+    } else {
+      onChange(selectedPermissoes.filter((p) => p !== id))
+    }
+  }
+
+  return (
+    <Accordion type="multiple" className="w-full space-y-3">
+      {PERMISSIONS_GROUPS.map((group) => (
+        <AccordionItem
+          key={group.id}
+          value={group.id}
+          className="border border-border/60 rounded-xl px-5 bg-card shadow-sm"
+        >
+          <AccordionTrigger className="hover:no-underline py-4">
+            <span className="font-semibold text-[15px] text-foreground">{group.label}</span>
+          </AccordionTrigger>
+          <AccordionContent className="pt-1 pb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+              {group.permissions.map((perm) => {
+                const reqLevel = ROLE_LEVEL[perm.minRole as keyof typeof ROLE_LEVEL] || 1
+                const isDisabled = roleLevel < reqLevel
+
+                return (
+                  <TooltipProvider key={perm.id}>
+                    <Tooltip delayDuration={200}>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={`flex items-start space-x-3 p-2.5 rounded-lg border border-transparent transition-colors ${isDisabled ? 'opacity-50 bg-muted/40 cursor-not-allowed' : 'hover:bg-muted/60 hover:border-border/50 cursor-pointer'}`}
+                          onClick={(e) => {
+                            if (isDisabled) e.preventDefault()
+                          }}
+                        >
+                          <Checkbox
+                            id={perm.id}
+                            checked={selectedPermissoes.includes(perm.id) && !isDisabled}
+                            disabled={isDisabled}
+                            onCheckedChange={(checked) => handleToggle(perm.id, !!checked)}
+                            className="mt-0.5 shadow-none"
+                          />
+                          <div className="flex flex-col gap-1.5 leading-none">
+                            <label
+                              htmlFor={perm.id}
+                              className={`text-[13px] font-semibold tracking-tight ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer text-foreground/90'}`}
+                            >
+                              {perm.label}
+                            </label>
+                            {isDisabled && (
+                              <Badge
+                                variant="secondary"
+                                className="w-fit text-[10px] px-1.5 py-0 font-bold bg-muted-foreground/10 text-muted-foreground"
+                              >
+                                Requer {perm.minRole}
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      </TooltipTrigger>
+                      {isDisabled && (
+                        <TooltipContent className="bg-popover text-popover-foreground border-border shadow-md">
+                          <p className="text-xs font-medium">
+                            O papel atual ({selectedRole}) não tem permissão para esta ação. Requer{' '}
+                            <strong className="text-primary">{perm.minRole}</strong>.
+                          </p>
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                )
+              })}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  )
+}
