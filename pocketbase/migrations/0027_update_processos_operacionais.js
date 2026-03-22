@@ -3,7 +3,8 @@ migrate(
     const collection = app.findCollectionByNameOrId('processos_operacionais')
 
     // Clean up existing data to avoid UNIQUE constraint violation on numero_processo
-    const records = app.findRecordsByFilter('processos_operacionais', '1=1', '', 0, 0)
+    // Using limit 100000 instead of 0 to ensure records are actually fetched (0 means default or none)
+    const records = app.findRecordsByFilter('processos_operacionais', '1=1', '', 100000, 0)
     const seen = new Set()
 
     records.forEach((record) => {
@@ -11,13 +12,17 @@ migrate(
 
       // If empty or already seen, we generate a new unique value
       if (!num || seen.has(num)) {
-        num = 'PROC-' + record.id.substring(0, 8).toUpperCase()
+        const baseNum = num || 'PROC-' + record.id.substring(0, 8).toUpperCase()
+        let newNum = baseNum
+        let counter = 1
 
         // ensure the new one is not in seen
-        while (seen.has(num)) {
-          num = num + '-' + Math.floor(Math.random() * 1000)
+        while (seen.has(newNum)) {
+          newNum = baseNum + '-' + counter
+          counter++
         }
 
+        num = newNum
         record.set('numero_processo', num)
         app.saveNoValidate(record)
       }
