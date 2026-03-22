@@ -23,6 +23,16 @@ export const usuariosService = {
     return await pb.collection('users').getFullList<User>({ sort: '-created' })
   },
 
+  checkEmailExists: async (email: string, excludeId?: string) => {
+    try {
+      const filter = excludeId ? `email='${email}' && id != '${excludeId}'` : `email='${email}'`
+      const res = await pb.collection('users').getList(1, 1, { filter })
+      return res.totalItems > 0
+    } catch {
+      return false
+    }
+  },
+
   fetchRolePermissoes: async (role: string) => {
     try {
       const record = await pb.collection('roles_permissoes').getFirstListItem(`role='${role}'`)
@@ -32,17 +42,17 @@ export const usuariosService = {
     }
   },
 
-  createUsuario: async (data: any) => {
+  createUsuario: async (data: any, motivo?: string) => {
     const payload = buildFormData(data)
     const user = await pb.collection('users').create(payload)
-    await trackAcao('criar_usuario', `Criou o usuário ${data.email}`, user.id)
+    await trackAcao('criar_usuario', `Criou o usuário ${data.email}`, user.id, motivo)
     return user
   },
 
-  updateUsuario: async (id: string, data: any) => {
+  updateUsuario: async (id: string, data: any, motivo?: string) => {
     const payload = buildFormData(data)
     const user = await pb.collection('users').update(id, payload)
-    await trackAcao('editar_usuario', `Atualizou o usuário ${user.email}`, user.id)
+    await trackAcao('editar_usuario', `Atualizou perfil do usuário ${user.email}`, user.id, motivo)
     return user
   },
 
@@ -65,6 +75,7 @@ export const usuariosService = {
       'habilitar_2fa',
       `${enabled ? 'Habilitou' : 'Desabilitou'} 2FA para o usuário`,
       user.id,
+      'Solicitado pelo administrador ou próprio usuário',
     )
     return user
   },
@@ -76,52 +87,37 @@ export const usuariosService = {
     return res.totalItems > 0
   },
 
-  resetSenha: async (id: string) => {
+  resetSenha: async (id: string, motivo?: string) => {
     const tempPassword = Math.random().toString(36).slice(-8) + 'A1@'
     const user = await pb.collection('users').update(id, {
       password: tempPassword,
       passwordConfirm: tempPassword,
     })
-    await trackAcao('resetar_senha', `Resetou a senha do usuário ${user.email}`, user.id)
+    await trackAcao('resetar_senha', `Resetou a senha do usuário ${user.email}`, user.id, motivo)
     return tempPassword
   },
 
-  alterarRole: async (userId: string, novoRole: string) => {
+  alterarRole: async (userId: string, novoRole: string, motivo?: string) => {
     const user = await pb.collection('users').update(userId, { role: novoRole })
     await trackAcao(
       'alterar_role',
       `Alterou role do usuário ${user.email} para ${novoRole}`,
       user.id,
+      motivo,
     )
     return user
   },
 
-  permitirUsuario: async (id: string) => {
+  permitirUsuario: async (id: string, motivo?: string) => {
     const user = await pb.collection('users').update(id, { status_conta: 'ativo' })
-    await trackAcao('alterar_status_usuario', `Ativou o usuário ${user.email}`, user.id)
+    await trackAcao('alterar_status_usuario', `Ativou o usuário ${user.email}`, user.id, motivo)
     return user
   },
 
-  bloquearUsuario: async (id: string) => {
+  bloquearUsuario: async (id: string, motivo?: string) => {
     const user = await pb.collection('users').update(id, { status_conta: 'bloqueado' })
-    await trackAcao('alterar_status_usuario', `Bloqueou o usuário ${user.email}`, user.id)
+    await trackAcao('alterar_status_usuario', `Bloqueou o usuário ${user.email}`, user.id, motivo)
     return user
-  },
-
-  fetchHistorico: async (userId?: string, limit = 50) => {
-    const filter = userId ? `usuario_afetado_id='${userId}' || user_id='${userId}'` : ''
-    return await pb.collection('usuarios_historico').getList<UsuarioHistorico>(1, limit, {
-      filter,
-      sort: '-created',
-      expand: 'user_id,usuario_afetado_id',
-    })
-  },
-
-  fetchAllHistorico: async () => {
-    return await pb.collection('usuarios_historico').getFullList<any>({
-      sort: '-created',
-      expand: 'user_id,usuario_afetado_id',
-    })
   },
 
   fetchSessoes: async (userId: string) => {
@@ -133,7 +129,12 @@ export const usuariosService = {
 
   forceLogout: async (sessionId: string) => {
     const session = await pb.collection('usuarios_sessoes').update(sessionId, { expirada: true })
-    await trackAcao('logout', `Forçou logout remoto da sessão ${sessionId}`, session.user_id)
+    await trackAcao(
+      'logout',
+      `Forçou logout remoto da sessão ${sessionId}`,
+      session.user_id,
+      'Ação administrativa',
+    )
     return session
   },
 }

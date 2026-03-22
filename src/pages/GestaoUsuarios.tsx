@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '@/hooks/use-auth'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -22,7 +22,8 @@ export default function GestaoUsuarios() {
   const [importOpen, setImportOpen] = useState(false)
   const [exportOpen, setExportOpen] = useState(false)
 
-  if (user?.role !== 'c-level') return <Navigate to="/dashboard" replace />
+  // Verify that an Analista cannot access the Gestao de Usuarios tab
+  if (user?.role === 'analista') return <Navigate to="/dashboard" replace />
 
   const handleEdit = (u: User) => {
     setUserToEdit(u)
@@ -40,6 +41,8 @@ export default function GestaoUsuarios() {
     setUserToEdit(null)
   }
 
+  const roleLevel = { 'c-level': 4, admin: 3, supervisor: 2 }[user?.role as string] || 0
+
   return (
     <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 pb-20 space-y-6">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -51,27 +54,29 @@ export default function GestaoUsuarios() {
             Controle completo de acessos, permissões e auditoria da plataforma.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            onClick={() => setImportOpen(true)}
-            className="border-brand-teal text-brand-navy dark:text-white"
-          >
-            <Upload className="w-4 h-4 mr-2" /> Importar
-          </Button>
-          <Button
-            onClick={() => setExportOpen(true)}
-            className="bg-brand-cyan text-white hover:bg-brand-cyan/90"
-          >
-            <Download className="w-4 h-4 mr-2" /> Exportar
-          </Button>
-        </div>
+        {roleLevel >= 3 && ( // Admin and C-Level only
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setImportOpen(true)}
+              className="border-brand-teal text-brand-navy dark:text-white"
+            >
+              <Upload className="w-4 h-4 mr-2" /> Importar
+            </Button>
+            <Button
+              onClick={() => setExportOpen(true)}
+              className="bg-brand-cyan text-white hover:bg-brand-cyan/90"
+            >
+              <Download className="w-4 h-4 mr-2" /> Exportar
+            </Button>
+          </div>
+        )}
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList>
           <TabsTrigger value="lista">Lista de Usuários</TabsTrigger>
-          <TabsTrigger value="novo">Novo Usuário</TabsTrigger>
+          {roleLevel >= 3 && <TabsTrigger value="novo">Novo Usuário</TabsTrigger>}
           {userToEdit && <TabsTrigger value="editar">Editar Usuário</TabsTrigger>}
           <TabsTrigger value="historico">Histórico de Auditoria</TabsTrigger>
           <TabsTrigger value="metricas">Métricas e Relatórios</TabsTrigger>
@@ -88,9 +93,11 @@ export default function GestaoUsuarios() {
             />
           </TabsContent>
 
-          <TabsContent value="novo">
-            <UsuarioForm onSuccess={handleSuccessForm} onCancel={handleCancelForm} />
-          </TabsContent>
+          {roleLevel >= 3 && (
+            <TabsContent value="novo">
+              <UsuarioForm onSuccess={handleSuccessForm} onCancel={handleCancelForm} />
+            </TabsContent>
+          )}
 
           {userToEdit && (
             <TabsContent value="editar">

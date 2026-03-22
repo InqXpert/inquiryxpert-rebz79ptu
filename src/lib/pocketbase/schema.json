@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-22T04:02:59.252Z",
+  "generatedAt": "2026-03-22T04:06:51.541Z",
   "collections": [
     {
       "name": "users",
@@ -728,8 +728,8 @@
       "name": "usuarios_historico",
       "type": "base",
       "apiRules": {
-        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
-        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id || usuario_afetado_id = @request.auth.id",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id || usuario_afetado_id = @request.auth.id",
         "create": "@request.auth.id != ''",
         "update": null,
         "delete": null
@@ -825,8 +825,8 @@
       "name": "usuarios_sessoes",
       "type": "base",
       "apiRules": {
-        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id",
-        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id",
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
         "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id",
         "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id",
         "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id"
