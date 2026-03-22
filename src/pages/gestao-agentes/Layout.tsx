@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Outlet, Link, useLocation } from 'react-router-dom'
+import { Outlet, Link, useLocation, Navigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { GestaoAgentesErrorBoundary } from './GestaoAgentesErrorBoundary'
 import {
@@ -10,13 +10,17 @@ import {
   MessageSquare,
   UserCircle,
   FileSignature,
-  Receipt,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 
 export default function GestaoAgentesLayout() {
   const location = useLocation()
   const { user } = useAuth()
+
+  // RBAC: Accessible only to authenticated users with role: "agente"
+  if (user?.role !== 'agente') {
+    return <Navigate to="/login" replace />
+  }
 
   const navItems = [
     { title: 'Painel Geral', icon: LayoutDashboard, url: '/gestao-agentes' },
@@ -28,11 +32,6 @@ export default function GestaoAgentesLayout() {
     { title: 'Termos e Assinaturas', icon: FileSignature, url: '/gestao-agentes/termos' },
   ]
 
-  // Add Faturamento only for specific roles
-  if (user?.role === 'c-level' || user?.role === 'admin' || user?.role === 'supervisor') {
-    navItems.push({ title: 'Faturamento', icon: Receipt, url: '/gestao-agentes/faturamento' })
-  }
-
   const isActive = (url: string) => {
     if (url === '/gestao-agentes' && location.pathname === '/gestao-agentes') return true
     if (url !== '/gestao-agentes' && location.pathname.startsWith(url)) return true
@@ -41,7 +40,6 @@ export default function GestaoAgentesLayout() {
 
   return (
     <div className="flex w-full min-h-screen bg-[#f5f8fa]">
-      {/* Sidebar specific for Agent Management Module */}
       <aside className="w-64 bg-white border-r border-border shrink-0 hidden md:flex flex-col">
         <div className="h-16 flex items-center px-6 border-b border-border">
           <h2 className="text-[16px] font-bold text-primary tracking-tight">Portal do Agente</h2>
@@ -70,7 +68,6 @@ export default function GestaoAgentesLayout() {
         </nav>
       </aside>
 
-      {/* Main Content Area */}
       <main className="flex-1 flex flex-col w-full h-full min-h-screen overflow-y-auto relative">
         <div className="p-4 sm:p-6 md:p-8 flex-1 w-full max-w-[1200px] mx-auto">
           <GestaoAgentesErrorBoundary>

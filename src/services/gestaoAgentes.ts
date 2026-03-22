@@ -12,11 +12,9 @@ export const getAgenteIdByUserId = async (userId: string): Promise<string | null
 
 export const getDashboardStats = async (agenteId: string) => {
   const [ativos, concluidos, pendentes] = await Promise.all([
-    pb
-      .collection('processos_operacionais')
-      .getList(1, 1, {
-        filter: `agente_id="${agenteId}" && status != 'concluido' && status != 'cancelado'`,
-      }),
+    pb.collection('processos_operacionais').getList(1, 1, {
+      filter: `agente_id="${agenteId}" && status != 'concluido' && status != 'cancelado'`,
+    }),
     pb
       .collection('processos_operacionais')
       .getList(1, 1, { filter: `agente_id="${agenteId}" && status = 'concluido'` }),
