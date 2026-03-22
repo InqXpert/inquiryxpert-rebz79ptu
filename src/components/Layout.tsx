@@ -1,6 +1,14 @@
 import { Suspense } from 'react'
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
-import { Search, Bell, Settings, HelpCircle, User as UserIcon, LogOut } from 'lucide-react'
+import {
+  Search,
+  Bell,
+  Settings,
+  HelpCircle,
+  User as UserIcon,
+  LogOut,
+  LayoutDashboard,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/hooks/use-auth'
@@ -22,6 +30,12 @@ export default function Layout() {
     { title: 'Dashboard', url: '/dashboard' },
     { title: 'Processos', url: '/processos' },
     { title: 'Agentes', url: '/agentes' },
+    ...(user?.role === 'c-level' ||
+    user?.role === 'admin' ||
+    user?.role === 'supervisor' ||
+    user?.role === 'agente'
+      ? [{ title: 'Portal do Agente', url: '/gestao-agentes' }]
+      : []),
     ...(user?.role === 'c-level' ? [{ title: 'Gestão de Usuários', url: '/gestao-usuarios' }] : []),
   ]
 
@@ -39,7 +53,7 @@ export default function Layout() {
             <div className="w-8 h-8 rounded bg-[#F2485C] flex items-center justify-center font-bold text-sm text-white shadow-sm">
               IX
             </div>
-            <span className="font-bold text-lg tracking-tight hidden md:block">InquiryXperty</span>
+            <span className="font-bold text-lg tracking-tight hidden md:block">InquiryXpert</span>
           </Link>
 
           <nav className="flex items-center h-full overflow-x-auto no-scrollbar">
@@ -135,6 +149,14 @@ export default function Layout() {
                   <span className="font-medium text-[13px]">Meu Perfil</span>
                 </Link>
               </DropdownMenuItem>
+              {user?.role === 'agente' && (
+                <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3 hover:bg-[#f5f8fa]">
+                  <Link to="/gestao-agentes" className="w-full flex items-center text-[#2A3B4C]">
+                    <LayoutDashboard className="mr-2.5 h-4 w-4 text-[#00A8B5]" />
+                    <span className="font-medium text-[13px]">Portal do Agente</span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3 hover:bg-[#f5f8fa]">
                 <Link to="/configuracoes" className="w-full flex items-center text-[#2A3B4C]">
                   <Settings className="mr-2.5 h-4 w-4 text-[#00A8B5]" />
