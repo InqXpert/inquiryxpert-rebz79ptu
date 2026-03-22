@@ -5,7 +5,7 @@ import { fetchDashboardStats, DashboardStats } from '@/services/agentesService'
 import { useRealtime } from '@/hooks/use-realtime'
 import { useToast } from '@/hooks/use-toast'
 
-export function useAgenteStats() {
+export function useAgenteStats(selectedAgenteId?: string | null) {
   const { user } = useAuth()
   const [agenteId, setAgenteId] = useState<string | null>(null)
   const [stats, setStats] = useState<DashboardStats | null>(null)
@@ -13,8 +13,9 @@ export function useAgenteStats() {
   const { toast } = useToast()
 
   const loadData = useCallback(
-    async (aId: string) => {
+    async (aId?: string | null) => {
       try {
+        setLoading(true)
         const data = await fetchDashboardStats(aId)
         setStats(data)
       } catch (error) {
@@ -29,18 +30,25 @@ export function useAgenteStats() {
 
   useEffect(() => {
     if (user?.id) {
-      getAgenteIdByUserId(user.id).then((id) => {
-        if (id) {
-          setAgenteId(id)
-          loadData(id)
-        } else {
-          setLoading(false)
-        }
-      })
+      const isManager = ['c-level', 'admin', 'supervisor'].includes(user.role || '')
+      if (isManager) {
+        const targetId = selectedAgenteId || 'all'
+        setAgenteId(targetId)
+        loadData(targetId)
+      } else {
+        getAgenteIdByUserId(user.id).then((id) => {
+          if (id) {
+            setAgenteId(id)
+            loadData(id)
+          } else {
+            setLoading(false)
+          }
+        })
+      }
     } else {
       setLoading(false)
     }
-  }, [user, loadData])
+  }, [user, loadData, selectedAgenteId])
 
   useRealtime(
     'processos_operacionais',

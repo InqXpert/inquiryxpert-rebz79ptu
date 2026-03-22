@@ -17,17 +17,32 @@ export interface DashboardStats {
   agenteName: string
 }
 
-export const fetchDashboardStats = async (agenteId: string): Promise<DashboardStats> => {
-  const [processosRes, notificacoesRes, agenteRes] = await Promise.all([
+export const fetchDashboardStats = async (agenteId?: string | null): Promise<DashboardStats> => {
+  const isGlobal = !agenteId || agenteId === 'all'
+  const filter = isGlobal ? '' : `agente_id = "${agenteId}"`
+  const notifFilter = isGlobal
+    ? `lida = false && tipo = 'mensagem'`
+    : `agente_id = "${agenteId}" && lida = false && tipo = 'mensagem'`
+
+  const [processosRes, notificacoesRes] = await Promise.all([
     pb.collection('processos_operacionais').getFullList<ProcessoOperacional>({
-      filter: `agente_id = "${agenteId}"`,
+      filter,
       sort: '-created',
     }),
     pb.collection('notificacoes_agente').getList<NotificacaoAgente>(1, 1, {
-      filter: `agente_id = "${agenteId}" && lida = false && tipo = 'mensagem'`,
+      filter: notifFilter,
     }),
-    pb.collection('agentes').getOne(agenteId),
   ])
+
+  let agenteName = 'Visão Global'
+  if (!isGlobal && agenteId) {
+    try {
+      const agenteRes = await pb.collection('agentes').getOne(agenteId)
+      agenteName = agenteRes.nomeCompleto || agenteRes.nome || 'Agente'
+    } catch (e) {
+      console.error('Agente nao encontrado', e)
+    }
+  }
 
   const processos = processosRes
 
@@ -109,6 +124,6 @@ export const fetchDashboardStats = async (agenteId: string): Promise<DashboardSt
     trendChart,
     recentes: processos.slice(0, 5),
     unreadMessages: notificacoesRes.totalItems,
-    agenteName: agenteRes.nomeCompleto || agenteRes.nome || 'Agente',
+    agenteName,
   }
 }
