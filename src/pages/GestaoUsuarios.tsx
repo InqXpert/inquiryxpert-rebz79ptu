@@ -7,6 +7,10 @@ import { UsuariosTable } from '@/components/usuarios/UsuariosTable'
 import { UsuarioForm } from '@/components/usuarios/UsuarioForm'
 import { HistoricoGeralTable } from '@/components/usuarios/HistoricoGeralTable'
 import { MetricasDashboard } from '@/components/usuarios/MetricasDashboard'
+import { ImportUsuariosModal } from '@/components/usuarios/ImportUsuariosModal'
+import { ExportUsuariosModal } from '@/components/usuarios/ExportUsuariosModal'
+import { Button } from '@/components/ui/button'
+import { Upload, Download } from 'lucide-react'
 import type { User } from '@/types'
 
 export default function GestaoUsuarios() {
@@ -14,6 +18,9 @@ export default function GestaoUsuarios() {
   const { users, activeSessions, loading, loadUsers } = useGestaoUsuarios()
   const [activeTab, setActiveTab] = useState('lista')
   const [userToEdit, setUserToEdit] = useState<User | null>(null)
+
+  const [importOpen, setImportOpen] = useState(false)
+  const [exportOpen, setExportOpen] = useState(false)
 
   if (user?.role !== 'c-level') return <Navigate to="/dashboard" replace />
 
@@ -35,13 +42,30 @@ export default function GestaoUsuarios() {
 
   return (
     <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 pb-20 space-y-6">
-      <div>
-        <h1 className="text-[28px] font-bold text-brand-navy dark:text-white tracking-tight mb-2">
-          Gestão de Usuários
-        </h1>
-        <p className="text-[14px] text-brand-gray dark:text-brand-light font-medium">
-          Controle completo de acessos, permissões e auditoria da plataforma.
-        </p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-[28px] font-bold text-brand-navy dark:text-white tracking-tight mb-2">
+            Gestão de Usuários
+          </h1>
+          <p className="text-[14px] text-brand-gray dark:text-brand-light font-medium">
+            Controle completo de acessos, permissões e auditoria da plataforma.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            onClick={() => setImportOpen(true)}
+            className="border-brand-teal text-brand-navy dark:text-white"
+          >
+            <Upload className="w-4 h-4 mr-2" /> Importar
+          </Button>
+          <Button
+            onClick={() => setExportOpen(true)}
+            className="bg-brand-cyan text-white hover:bg-brand-cyan/90"
+          >
+            <Download className="w-4 h-4 mr-2" /> Exportar
+          </Button>
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -87,6 +111,16 @@ export default function GestaoUsuarios() {
           </TabsContent>
         </div>
       </Tabs>
+
+      <ImportUsuariosModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onSuccess={() => {
+          setImportOpen(false)
+          loadUsers()
+        }}
+      />
+      <ExportUsuariosModal open={exportOpen} onClose={() => setExportOpen(false)} />
     </div>
   )
 }

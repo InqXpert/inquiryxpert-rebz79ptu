@@ -14,6 +14,9 @@ export interface User {
   status_conta?: string
   ultimo_login?: string
   tempo_uso_total?: number
+  foto_perfil?: string
+  two_fa_enabled?: boolean
+  two_fa_secret?: string
   [key: string]: any
 }
 

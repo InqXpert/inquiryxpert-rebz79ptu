@@ -13,8 +13,10 @@ export interface User {
   tempo_uso_total: number
   foto_perfil?: string
   two_fa_enabled: boolean
+  two_fa_secret?: string
   created: string
   updated: string
+  collectionId?: string
 }
 
 export interface UsuarioHistorico {
