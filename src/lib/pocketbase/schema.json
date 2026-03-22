@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-20T19:17:02.326Z",
+  "generatedAt": "2026-03-22T03:34:30.049Z",
   "collections": [
     {
       "name": "users",
@@ -7,9 +7,9 @@
       "apiRules": {
         "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || id = @request.auth.id",
         "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || id = @request.auth.id",
-        "create": "",
-        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || id = @request.auth.id",
-        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "update": "@request.auth.role = 'c-level' || (@request.auth.role = 'admin' && role != 'c-level') || id = @request.auth.id",
+        "delete": "@request.auth.role = 'c-level' || (@request.auth.role = 'admin' && role != 'c-level')"
       },
       "fields": [
         {
@@ -81,6 +81,19 @@
           "type": "text",
           "required": false,
           "system": false
+        },
+        {
+          "name": "permissoes_customizadas",
+          "type": "json",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "criado_por",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "users"
         }
       ],
       "indexes": [
@@ -88,7 +101,8 @@
         "CREATE UNIQUE INDEX `idx_email__pb_users_auth_` ON `users` (`email`) WHERE `email` != ''",
         "CREATE INDEX `idx_users_role` ON `users` (role)",
         "CREATE INDEX `idx_users_status_conta` ON `users` (status_conta)",
-        "CREATE INDEX `idx_users_ultimo_login` ON `users` (ultimo_login)"
+        "CREATE INDEX `idx_users_ultimo_login` ON `users` (ultimo_login)",
+        "CREATE INDEX `idx_users_criado_por` ON `users` (criado_por)"
       ]
     },
     {
@@ -741,7 +755,23 @@
             "sindicancia_enviada",
             "alteracao_perfil",
             "senha_reset",
-            "configuracao_app"
+            "configuracao_app",
+            "criar_usuario",
+            "editar_usuario",
+            "deletar_usuario",
+            "alterar_role",
+            "resetar_senha",
+            "habilitar_2fa",
+            "criar_agente",
+            "editar_agente",
+            "deletar_agente",
+            "criar_processo",
+            "editar_processo",
+            "deletar_processo",
+            "exportar_dados",
+            "importar_dados",
+            "alterar_status_usuario",
+            "alterar_status_agente"
           ]
         },
         {
@@ -775,19 +805,31 @@
           "required": false,
           "system": false,
           "autodateTriggers": ["onCreate", "onUpdate"]
+        },
+        {
+          "name": "usuario_afetado_id",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "users"
         }
       ],
-      "indexes": ["CREATE INDEX idx_ushist_user_acao ON usuarios_historico (user_id, acao)"]
+      "indexes": [
+        "CREATE INDEX idx_ushist_user_acao ON usuarios_historico (user_id, acao)",
+        "CREATE INDEX `idx_ushist_user_id` ON `usuarios_historico` (user_id)",
+        "CREATE INDEX `idx_ushist_created` ON `usuarios_historico` (created)",
+        "CREATE INDEX `idx_ushist_acao` ON `usuarios_historico` (acao)"
+      ]
     },
     {
       "name": "usuarios_sessoes",
       "type": "base",
       "apiRules": {
-        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
-        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
-        "create": "@request.auth.id != ''",
-        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || user_id = @request.auth.id",
-        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id",
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && @request.method = 'GET') || user_id = @request.auth.id"
       },
       "fields": [
         {
@@ -836,7 +878,52 @@
           "autodateTriggers": ["onCreate", "onUpdate"]
         }
       ],
-      "indexes": ["CREATE UNIQUE INDEX idx_usess_token ON usuarios_sessoes (token)"]
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_usess_token ON usuarios_sessoes (token)",
+        "CREATE INDEX `idx_usess_user_id` ON `usuarios_sessoes` (user_id)",
+        "CREATE INDEX `idx_usess_expirada` ON `usuarios_sessoes` (expirada)"
+      ]
+    },
+    {
+      "name": "roles_permissoes",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || role = @request.auth.role",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || role = @request.auth.role",
+        "create": null,
+        "update": null,
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "role",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": ["c-level", "admin", "supervisor", "analista"]
+        },
+        {
+          "name": "permissoes",
+          "type": "json",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE INDEX idx_roles_permissoes_role ON roles_permissoes (role)"]
     }
   ]
 }
