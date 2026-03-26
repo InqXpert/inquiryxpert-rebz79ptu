@@ -9,7 +9,6 @@ import { ImportOperacionalDataModal } from '@/components/operacional/ImportOpera
 import { NewProcessoModal } from '@/components/operacional/NewProcessoModal'
 import { exportToCSV } from '@/services/procesosOperacionais'
 import { useToast } from '@/hooks/use-toast'
-import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
 export default function Processos() {
@@ -54,28 +53,28 @@ export default function Processos() {
   }
 
   return (
-    <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
+    <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 pb-20 space-y-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-primary mb-3">
+          <h1 className="text-[28px] font-bold tracking-tight text-brand-navy dark:text-white mb-2">
             Processos
           </h1>
-          <p className="text-base text-muted-foreground">
+          <p className="text-[14px] text-brand-gray dark:text-brand-light font-medium">
             Gerenciamento operacional de solicitações e andamentos.
           </p>
         </div>
         <Button
-          className="rounded-xl shadow-sm px-6 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold h-12"
+          className="bg-brand-cyan hover:bg-brand-cyan/90 text-white font-bold h-11 px-6 rounded-lg shadow-sm"
           onClick={() => {
             setDefaultProvider('')
             setIsNewModalOpen(true)
           }}
         >
-          <Plus className="w-5 h-5 mr-2" /> NOVO PROCESSO
+          <Plus className="w-4 h-4 mr-2" /> Novo Processo
         </Button>
       </div>
 
-      <Card className="p-5 shadow-sm border border-border/50 rounded-2xl bg-card">
+      <div className="p-4 md:p-6 bg-white dark:bg-brand-navy/80 rounded-xl border border-brand-teal dark:border-brand-cyan/50 shadow-sm">
         <DashboardFilters
           filters={filters}
           setFilters={setFilters}
@@ -85,9 +84,9 @@ export default function Processos() {
           canExport={canExport()}
           canImport={canImport()}
         />
-      </Card>
+      </div>
 
-      <Card className="shadow-sm border border-border/50 rounded-2xl overflow-hidden bg-card mt-6">
+      <div className="rounded-xl overflow-hidden border border-brand-teal dark:border-brand-cyan/50 bg-white dark:bg-brand-navy/80 shadow-sm mt-6">
         <ProcessosOperacionaisTable
           processos={processos}
           loading={loading}
@@ -95,7 +94,7 @@ export default function Processos() {
           pagination={pagination}
           setPagination={setPagination}
         />
-      </Card>
+      </div>
 
       <ProcessoDetailModal
         processoId={selectedProcessoId}

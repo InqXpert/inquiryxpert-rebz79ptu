@@ -1,6 +1,16 @@
 import { ProcessoOperacional } from '@/types'
 import { Button } from '@/components/ui/button'
-import { FolderOpen, ArrowDown, ArrowUp, ChevronRight } from 'lucide-react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { FolderOpen, ArrowDown, ArrowUp, Eye } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useState } from 'react'
 
 interface Props {
@@ -65,22 +75,41 @@ export function ProcessosOperacionaisTable({
 
   if (loading) {
     return (
-      <div className="space-y-4 p-6">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-16 bg-muted animate-pulse rounded-xl" />
-        ))}
+      <div className="flex flex-col w-full bg-white dark:bg-brand-navy/80">
+        <Table className="border-0 border-t border-transparent rounded-none">
+          <TableHeader>
+            <TableRow>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <TableHead key={i}>
+                  <Skeleton className="h-4 w-20 bg-brand-light dark:bg-white/10" />
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <TableRow key={i}>
+                <TableCell colSpan={8}>
+                  <Skeleton className="h-6 w-full bg-brand-light dark:bg-white/10" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     )
   }
 
   if (processos.length === 0) {
     return (
-      <div className="py-24 text-center flex flex-col items-center justify-center p-6">
-        <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-          <FolderOpen className="w-8 h-8 text-muted-foreground" />
+      <div className="py-24 text-center flex flex-col items-center justify-center p-6 bg-white dark:bg-brand-navy/80">
+        <div className="w-16 h-16 bg-brand-light dark:bg-white/10 rounded-full flex items-center justify-center mb-4">
+          <FolderOpen className="w-8 h-8 text-brand-gray dark:text-brand-light/70" />
         </div>
-        <h3 className="text-xl font-bold text-primary mb-2">Nenhum processo encontrado</h3>
-        <p className="text-base text-muted-foreground">
+        <h3 className="text-[20px] font-bold text-brand-navy dark:text-white mb-2">
+          Nenhum processo encontrado
+        </h3>
+        <p className="text-[14px] text-brand-gray dark:text-brand-light">
           Ajuste os filtros para encontrar registros.
         </p>
       </div>
@@ -88,123 +117,134 @@ export function ProcessosOperacionaisTable({
   }
 
   return (
-    <div className="flex flex-col w-full bg-card">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left whitespace-nowrap">
-          <thead className="bg-muted/50 border-b border-border text-muted-foreground">
-            <tr>
-              <th
-                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
-                onClick={() => handleSort('numero_controle')}
-              >
-                Controle <SortIcon colKey="numero_controle" />
-              </th>
-              <th
-                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
-                onClick={() => handleSort('status')}
-              >
-                Status <SortIcon colKey="status" />
-              </th>
-              <th
-                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
-                onClick={() => handleSort('cia')}
-              >
-                Seguradora <SortIcon colKey="cia" />
-              </th>
-              <th
-                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
-                onClick={() => handleSort('nome_segurado')}
-              >
-                Segurado <SortIcon colKey="nome_segurado" />
-              </th>
-              <th
-                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
-                onClick={() => handleSort('agente_prestador')}
-              >
-                Prestador <SortIcon colKey="agente_prestador" />
-              </th>
-              <th
-                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
-                onClick={() => handleSort('data_entrada')}
-              >
-                Data Entrada <SortIcon colKey="data_entrada" />
-              </th>
-              <th
-                className="py-5 px-6 text-sm font-semibold cursor-pointer hover:text-primary transition-colors"
-                onClick={() => handleSort('analista_solicitante')}
-              >
-                Analista <SortIcon colKey="analista_solicitante" />
-              </th>
-              <th className="py-5 px-6 text-sm font-semibold text-right">Ação</th>
-            </tr>
-          </thead>
-          <tbody>
-            {pageData.map((p) => (
-              <tr
-                key={p.id}
-                className="border-b border-border/50 hover:bg-muted/30 even:bg-muted/20 dark:even:bg-white/5 cursor-pointer transition-colors group"
-                onClick={() => onViewDetail(p.id)}
-              >
-                <td className="py-5 px-6 text-[15px] font-semibold text-primary">
-                  {p.numero_controle || '-'}
-                </td>
-                <td className="py-5 px-6 text-[15px]">
-                  <StatusBadge status={p.status} />
-                </td>
-                <td className="py-5 px-6 text-[15px] text-muted-foreground">{p.cia || '-'}</td>
-                <td className="py-5 px-6 text-[15px] font-medium text-foreground">
-                  {p.nome_segurado || '-'}
-                </td>
-                <td className="py-5 px-6 text-[15px] text-muted-foreground">
-                  {p.agente_prestador || '-'}
-                </td>
-                <td className="py-5 px-6 text-[15px] text-muted-foreground">
-                  {p.data_entrada || '-'}
-                </td>
-                <td className="py-5 px-6 text-[15px] text-muted-foreground">
-                  {p.analista_solicitante || '-'}
-                </td>
-                <td className="py-5 px-6 text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-muted-foreground group-hover:text-brand-cyan group-hover:bg-brand-cyan/10 rounded-full h-9 w-9"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div className="flex flex-col w-full bg-white dark:bg-brand-navy/80">
+      <Table className="border-0 border-t border-transparent rounded-none">
+        <TableHeader>
+          <TableRow className="hover:bg-transparent">
+            <TableHead
+              className="cursor-pointer hover:text-brand-cyan transition-colors"
+              onClick={() => handleSort('numero_controle')}
+            >
+              Controle <SortIcon colKey="numero_controle" />
+            </TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-brand-cyan transition-colors"
+              onClick={() => handleSort('status')}
+            >
+              Status <SortIcon colKey="status" />
+            </TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-brand-cyan transition-colors"
+              onClick={() => handleSort('cia')}
+            >
+              Seguradora <SortIcon colKey="cia" />
+            </TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-brand-cyan transition-colors"
+              onClick={() => handleSort('nome_segurado')}
+            >
+              Segurado <SortIcon colKey="nome_segurado" />
+            </TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-brand-cyan transition-colors"
+              onClick={() => handleSort('agente_prestador')}
+            >
+              Prestador <SortIcon colKey="agente_prestador" />
+            </TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-brand-cyan transition-colors"
+              onClick={() => handleSort('data_entrada')}
+            >
+              Data Entrada <SortIcon colKey="data_entrada" />
+            </TableHead>
+            <TableHead
+              className="cursor-pointer hover:text-brand-cyan transition-colors"
+              onClick={() => handleSort('analista_solicitante')}
+            >
+              Analista <SortIcon colKey="analista_solicitante" />
+            </TableHead>
+            <TableHead className="text-right">Ação</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {pageData.map((p) => (
+            <TableRow
+              key={p.id}
+              onClick={() => onViewDetail(p.id)}
+              className="cursor-pointer group"
+            >
+              <TableCell className="font-bold text-[14px] text-brand-navy dark:text-white">
+                {p.numero_controle || '-'}
+              </TableCell>
+              <TableCell>
+                <StatusBadge status={p.status} />
+              </TableCell>
+              <TableCell className="text-brand-gray dark:text-brand-light">
+                {p.cia || '-'}
+              </TableCell>
+              <TableCell className="font-medium">{p.nome_segurado || '-'}</TableCell>
+              <TableCell className="text-brand-gray dark:text-brand-light">
+                {p.agente_prestador || '-'}
+              </TableCell>
+              <TableCell className="text-brand-gray dark:text-brand-light">
+                {p.data_entrada || '-'}
+              </TableCell>
+              <TableCell className="text-brand-gray dark:text-brand-light">
+                {p.analista_solicitante || '-'}
+              </TableCell>
+              <TableCell className="text-right">
+                <TooltipProvider>
+                  <Tooltip delayDuration={300}>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onViewDetail(p.id)
+                        }}
+                        className="text-brand-cyan hover:bg-brand-teal/20"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Visualizar Processo</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
-      <div className="flex justify-center items-center gap-4 py-6 border-t border-border bg-card">
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-xl px-5 font-semibold"
-          disabled={pagination.currentPage === 1}
-          onClick={() =>
-            setPagination((prev: any) => ({ ...prev, currentPage: prev.currentPage - 1 }))
-          }
-        >
-          Anterior
-        </Button>
-        <span className="text-sm font-medium text-muted-foreground">
+      <div className="flex items-center justify-between p-4 border-t border-brand-teal/50 dark:border-brand-cyan/30 bg-brand-light/30 dark:bg-black/10">
+        <span className="text-sm text-brand-gray dark:text-brand-light">
           Página {pagination.currentPage} de {totalPages || 1}
         </span>
-        <Button
-          variant="outline"
-          size="sm"
-          className="rounded-xl px-5 font-semibold"
-          disabled={pagination.currentPage >= totalPages}
-          onClick={() =>
-            setPagination((prev: any) => ({ ...prev, currentPage: prev.currentPage + 1 }))
-          }
-        >
-          Próxima
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-brand-teal text-brand-navy dark:text-white"
+            disabled={pagination.currentPage === 1}
+            onClick={() =>
+              setPagination((prev: any) => ({ ...prev, currentPage: prev.currentPage - 1 }))
+            }
+          >
+            Anterior
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-brand-teal text-brand-navy dark:text-white"
+            disabled={pagination.currentPage >= totalPages || totalPages === 0}
+            onClick={() =>
+              setPagination((prev: any) => ({ ...prev, currentPage: prev.currentPage + 1 }))
+            }
+          >
+            Próxima
+          </Button>
+        </div>
       </div>
     </div>
   )
@@ -222,11 +262,11 @@ function StatusBadge({ status }: { status: string }) {
   else if (s.includes('ANALISE')) key = 'ANALISE_INICIAL'
 
   const colors: Record<string, string> = {
-    EM_ELABORACAO: 'bg-brand-orange/20 text-brand-orange',
-    EM_EXECUCAO: 'bg-brand-cyan/20 text-brand-cyan',
-    FINALIZADO: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400',
-    CANCELADO: 'bg-destructive/10 text-destructive',
-    ANALISE_INICIAL: 'bg-muted text-muted-foreground',
+    EM_ELABORACAO: 'bg-brand-orange text-white',
+    EM_EXECUCAO: 'bg-brand-cyan text-brand-navy',
+    FINALIZADO: 'bg-brand-teal text-white',
+    CANCELADO: 'bg-brand-coral text-white',
+    ANALISE_INICIAL: 'bg-brand-gray text-white',
   }
 
   const labels: Record<string, string> = {
@@ -239,7 +279,7 @@ function StatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`inline-flex px-3 py-1.5 rounded-full text-[12px] font-bold ${colors[key] || 'bg-muted text-muted-foreground'}`}
+      className={`inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide border-none ${colors[key] || 'bg-brand-gray text-white'}`}
     >
       {labels[key] || status || 'N/A'}
     </span>
