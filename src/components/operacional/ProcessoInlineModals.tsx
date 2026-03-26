@@ -9,7 +9,16 @@ import { Processo } from '@/types/processo'
 import { useEffect, useState } from 'react'
 import pb from '@/lib/pocketbase/client'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from '@/components/ui/table'
+import { toast } from 'sonner'
 
 export function HistoricoModal({
   processo,
@@ -33,26 +42,59 @@ export function HistoricoModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Histórico de Auditoria</DialogTitle>
+      <DialogContent className="sm:max-w-[600px] w-full p-0 gap-0 max-h-[80vh] flex flex-col overflow-hidden bg-card border-border rounded-lg">
+        <DialogHeader className="px-[20px] py-[20px] border-b border-border shrink-0">
+          <DialogTitle className="text-[18px] font-bold text-foreground">
+            Histórico de Auditoria
+          </DialogTitle>
           <DialogDescription className="sr-only">Log de auditoria do processo</DialogDescription>
         </DialogHeader>
-        <div className="max-h-[60vh] overflow-auto space-y-3 p-1">
-          {historico.map((h) => (
-            <div key={h.id} className="p-3 bg-muted/30 rounded-lg border border-border">
-              <p className="font-bold text-sm text-primary capitalize">
-                {h.tipo_evento?.replace(/_/g, ' ')}
-              </p>
-              <p className="text-sm mt-1">{h.descricao}</p>
-              <p className="text-xs text-muted-foreground mt-2">
-                {new Date(h.created).toLocaleString()} por {h.user_name || 'Sistema'}
-              </p>
-            </div>
-          ))}
-          {historico.length === 0 && (
-            <p className="text-sm text-muted-foreground italic">Nenhum registro encontrado.</p>
-          )}
+        <div className="p-[20px] overflow-y-auto flex-1">
+          <div className="rounded-md border border-border overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="font-bold text-muted-foreground text-[14px]">
+                    Data
+                  </TableHead>
+                  <TableHead className="font-bold text-muted-foreground text-[14px]">
+                    Usuário
+                  </TableHead>
+                  <TableHead className="font-bold text-muted-foreground text-[14px]">
+                    Evento
+                  </TableHead>
+                  <TableHead className="font-bold text-muted-foreground text-[14px]">
+                    Descrição
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {historico.map((h, i) => (
+                  <TableRow
+                    key={h.id}
+                    className="h-[48px] hover:bg-muted animate-in fade-in fill-mode-both duration-200"
+                    style={{ animationDelay: `${i * 50}ms` }}
+                  >
+                    <TableCell className="text-[14px] whitespace-nowrap">
+                      {new Date(h.created).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-[14px] whitespace-nowrap">
+                      {h.user_name || 'Sistema'}
+                    </TableCell>
+                    <TableCell className="text-[14px] capitalize whitespace-nowrap">
+                      {h.tipo_evento?.replace(/_/g, ' ')}
+                    </TableCell>
+                    <TableCell className="text-[14px] min-w-[200px]">{h.descricao}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {historico.length === 0 && (
+              <div className="p-[20px] text-center">
+                <p className="text-[14px] text-muted-foreground">Nenhum registro encontrado.</p>
+              </div>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -79,15 +121,21 @@ export function ObservacoesModal({
       const newObs = {
         text: obs,
         date: new Date().toISOString(),
-        user: pb.authStore.record?.name || pb.authStore.record?.email,
+        user: pb.authStore.record?.name || pb.authStore.record?.email || 'Usuário',
       }
       await pb.collection('processos_operacionais').update(processo.id, {
         observacoes_json: [...current, newObs],
       })
       setObs('')
+      toast.success('Observação adicionada', {
+        description: 'A observação foi salva com sucesso.',
+      })
       onClose()
     } catch (e) {
       console.error(e)
+      toast.error('Erro ao salvar', {
+        description: 'Não foi possível salvar a observação.',
+      })
     } finally {
       setSaving(false)
     }
@@ -97,36 +145,52 @@ export function ObservacoesModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Observações</DialogTitle>
+      <DialogContent className="sm:max-w-[600px] w-full p-0 gap-0 max-h-[80vh] flex flex-col overflow-hidden bg-card border-border rounded-lg">
+        <DialogHeader className="px-[20px] py-[20px] border-b border-border shrink-0">
+          <DialogTitle className="text-[18px] font-bold text-foreground">Observações</DialogTitle>
           <DialogDescription className="sr-only">
             Adicionar e visualizar observações
           </DialogDescription>
         </DialogHeader>
-        <div className="max-h-[40vh] overflow-auto space-y-3 p-1 mb-4">
-          {existingObs.map((o: any, i: number) => (
-            <div key={i} className="p-3 bg-muted/30 rounded-lg border border-border">
-              <p className="text-sm">{o.text}</p>
-              <p className="text-xs text-muted-foreground mt-2">
-                {new Date(o.date).toLocaleString()} • {o.user}
-              </p>
-            </div>
-          ))}
-          {existingObs.length === 0 && (
-            <p className="text-sm text-muted-foreground italic">Nenhuma observação.</p>
-          )}
-        </div>
-        <div className="flex flex-col gap-2">
-          <textarea
-            value={obs}
-            onChange={(e) => setObs(e.target.value)}
-            className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-cyan min-h-[100px]"
-            placeholder="Nova observação..."
-          />
-          <Button onClick={handleSave} disabled={saving || !obs.trim()} className="w-full">
-            Adicionar Observação
-          </Button>
+        <div className="p-[20px] overflow-y-auto flex-1 flex flex-col gap-[24px]">
+          <div className="flex flex-col gap-3 shrink-0">
+            <Textarea
+              value={obs}
+              onChange={(e) => setObs(e.target.value)}
+              className="h-[100px] resize-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary"
+              placeholder="Nova observação..."
+            />
+            <Button
+              onClick={handleSave}
+              disabled={saving || !obs.trim()}
+              className="h-[40px] w-full disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              Adicionar
+            </Button>
+          </div>
+
+          <div className="flex flex-col">
+            {existingObs.map((o: any, i: number) => (
+              <div
+                key={i}
+                className="mb-[12px] p-[12px] border border-border rounded-[6px] animate-in fade-in fill-mode-both duration-200"
+                style={{ animationDelay: `${i * 50}ms` }}
+              >
+                <div className="flex justify-between items-center mb-1 gap-4">
+                  <span className="text-[12px] font-bold text-foreground truncate">{o.user}</span>
+                  <span className="text-[12px] text-muted-foreground whitespace-nowrap">
+                    {new Date(o.date).toLocaleString()}
+                  </span>
+                </div>
+                <p className="text-[14px] text-foreground break-words">{o.text}</p>
+              </div>
+            ))}
+            {existingObs.length === 0 && (
+              <div className="p-[20px] text-center">
+                <p className="text-[14px] text-muted-foreground">Nenhuma observação registrada.</p>
+              </div>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -153,15 +217,21 @@ export function PosicoesModal({
       const newPos = {
         text: pos,
         date: new Date().toISOString(),
-        user: pb.authStore.record?.name || pb.authStore.record?.email,
+        user: pb.authStore.record?.name || pb.authStore.record?.email || 'Usuário',
       }
       await pb.collection('processos_operacionais').update(processo.id, {
         posicoes_json: [...current, newPos],
       })
       setPos('')
+      toast.success('Posição adicionada', {
+        description: 'A posição foi salva com sucesso.',
+      })
       onClose()
     } catch (e) {
       console.error(e)
+      toast.error('Erro ao salvar', {
+        description: 'Não foi possível salvar a posição.',
+      })
     } finally {
       setSaving(false)
     }
@@ -171,33 +241,50 @@ export function PosicoesModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>Posições</DialogTitle>
+      <DialogContent className="sm:max-w-[600px] w-full p-0 gap-0 max-h-[80vh] flex flex-col overflow-hidden bg-card border-border rounded-lg">
+        <DialogHeader className="px-[20px] py-[20px] border-b border-border shrink-0">
+          <DialogTitle className="text-[18px] font-bold text-foreground">Posições</DialogTitle>
           <DialogDescription className="sr-only">Adicionar e visualizar posições</DialogDescription>
         </DialogHeader>
-        <div className="max-h-[40vh] overflow-auto space-y-3 p-1 mb-4">
-          {existingPos.map((p: any, i: number) => (
-            <div key={i} className="p-3 bg-brand-cyan/10 rounded-lg border border-brand-cyan/20">
-              <p className="text-sm font-medium text-foreground">{p.text}</p>
-              <p className="text-xs text-muted-foreground mt-2">
-                {new Date(p.date).toLocaleString()} • {p.user}
-              </p>
-            </div>
-          ))}
-          {existingPos.length === 0 && (
-            <p className="text-sm text-muted-foreground italic">Nenhuma posição registrada.</p>
-          )}
-        </div>
-        <div className="flex flex-col gap-2">
-          <Input
-            value={pos}
-            onChange={(e) => setPos(e.target.value)}
-            placeholder="Descreva a nova posição..."
-          />
-          <Button onClick={handleSave} disabled={saving || !pos.trim()} className="w-full">
-            Adicionar Posição
-          </Button>
+        <div className="p-[20px] overflow-y-auto flex-1 flex flex-col gap-[24px]">
+          <div className="flex flex-col gap-3 shrink-0">
+            <Textarea
+              value={pos}
+              onChange={(e) => setPos(e.target.value)}
+              className="h-[100px] resize-none placeholder:text-muted-foreground focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary"
+              placeholder="Descreva a nova posição..."
+            />
+            <Button
+              onClick={handleSave}
+              disabled={saving || !pos.trim()}
+              className="h-[40px] w-full disabled:opacity-50 disabled:cursor-not-allowed bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              Adicionar
+            </Button>
+          </div>
+
+          <div className="flex flex-col">
+            {existingPos.map((p: any, i: number) => (
+              <div
+                key={i}
+                className="mb-[12px] p-[12px] border border-border rounded-[6px] animate-in fade-in fill-mode-both duration-200"
+                style={{ animationDelay: `${i * 50}ms` }}
+              >
+                <div className="flex justify-between items-center mb-1 gap-4">
+                  <span className="text-[12px] font-bold text-foreground truncate">{p.user}</span>
+                  <span className="text-[12px] text-muted-foreground whitespace-nowrap">
+                    {new Date(p.date).toLocaleString()}
+                  </span>
+                </div>
+                <p className="text-[14px] text-foreground break-words">{p.text}</p>
+              </div>
+            ))}
+            {existingPos.length === 0 && (
+              <div className="p-[20px] text-center">
+                <p className="text-[14px] text-muted-foreground">Nenhuma posição registrada.</p>
+              </div>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
