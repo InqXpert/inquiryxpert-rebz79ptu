@@ -81,12 +81,13 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-[1000px] p-0 !rounded-2xl max-h-[90vh] overflow-hidden flex flex-col gap-0 border-none bg-muted/10 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+        <DialogTitle className="sr-only">Detalhes do Processo</DialogTitle>
+        <DialogDescription className="sr-only">
+          Visualização e edição dos detalhes do processo selecionado.
+        </DialogDescription>
+
         {loading || !processo ? (
           <div className="p-8 space-y-6 bg-white w-full h-full">
-            <DialogTitle className="sr-only">Carregando detalhes do processo</DialogTitle>
-            <DialogDescription className="sr-only">
-              Aguarde enquanto os detalhes são carregados.
-            </DialogDescription>
             <Skeleton className="h-10 w-1/3" />
             <Skeleton className="h-5 w-1/4 mb-10" />
             <Skeleton className="h-[500px] w-full rounded-2xl" />
@@ -95,7 +96,7 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
           <>
             <div className="p-6 sm:p-8 bg-white border-b border-border z-10 shrink-0 flex justify-between items-start gap-4 flex-wrap">
               <DialogHeader className="mb-0 space-y-0 text-left">
-                <DialogTitle className="text-2xl sm:text-3xl font-bold text-[#282c59] mb-2 flex items-center gap-3 flex-wrap">
+                <h2 className="text-2xl sm:text-3xl font-bold text-[#282c59] mb-2 flex items-center gap-3 flex-wrap">
                   Detalhes do Processo
                   {processo.status === 'bloqueado_sem_audio' && (
                     <Badge variant="destructive" className="text-xs">
@@ -110,14 +111,14 @@ export function ProcessoDetailModal({ processoId, isOpen, onClose, onUpdated }: 
                       Concluído
                     </Badge>
                   )}
-                </DialogTitle>
-                <DialogDescription className="text-[15px] font-medium text-muted-foreground flex items-center gap-3 flex-wrap">
+                </h2>
+                <div className="text-[15px] font-medium text-muted-foreground flex items-center gap-3 flex-wrap">
                   <span className="bg-primary/5 text-primary px-3 py-1 rounded-md border border-primary/10">
                     {processo.numero_processo || processo.numero_controle}
                   </span>
                   <span>•</span>
                   <span>{processo.nome_segurado}</span>
-                </DialogDescription>
+                </div>
               </DialogHeader>
 
               {processo.status === 'pendente' &&
