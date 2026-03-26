@@ -7,10 +7,15 @@ export interface Processo {
   data_entrada?: string
   data_prazo?: string
   created: string
-  agente_id: string
+  agente_id?: string
+  supervisor_id?: string
   nome_segurado?: string
   descricao?: string
   lido?: boolean
-  is_favorite?: boolean // Derived property
+  is_favorite?: boolean
+  observacoes?: string
+  observacoes_json?: any
+  posicoes_json?: any
+  expand?: any
   [key: string]: any
 }

@@ -1,0 +1,107 @@
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Button } from '@/components/ui/button'
+import { useDebounce } from '@/hooks/use-debounce'
+import { useEffect, useState } from 'react'
+import pb from '@/lib/pocketbase/client'
+import { Search, FilterX } from 'lucide-react'
+
+export function ProcessosListFilters({
+  statusFilter,
+  setStatusFilter,
+  dateFilter,
+  setDateFilter,
+  supervisorFilter,
+  setSupervisorFilter,
+  search,
+  setSearch,
+  clearFilters,
+}: any) {
+  const [localSearch, setLocalSearch] = useState(search)
+  const debouncedSearch = useDebounce(localSearch, 300)
+
+  const [supervisores, setSupervisores] = useState<any[]>([])
+
+  useEffect(() => {
+    setSearch(debouncedSearch)
+  }, [debouncedSearch, setSearch])
+
+  useEffect(() => {
+    setLocalSearch(search)
+  }, [search])
+
+  useEffect(() => {
+    pb.collection('users')
+      .getFullList({ filter: `role = 'supervisor'` })
+      .then((res) => setSupervisores(res))
+      .catch(() => {})
+  }, [])
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 bg-card p-4 rounded-xl border border-border shadow-sm">
+      <div className="relative lg:col-span-2">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          placeholder="Buscar por ID, data, solicitante, segurado, placa..."
+          className="pl-9 h-11"
+          value={localSearch}
+          onChange={(e) => setLocalSearch(e.target.value)}
+        />
+      </div>
+      <Select value={statusFilter} onValueChange={setStatusFilter}>
+        <SelectTrigger className="h-11">
+          <SelectValue placeholder="Status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Todos">Todos os Status</SelectItem>
+          <SelectItem value="ANALISE_INICIAL">Análise Inicial</SelectItem>
+          <SelectItem value="EM_EXECUCAO">Em Execução</SelectItem>
+          <SelectItem value="EM_ELABORACAO">Em Elaboração</SelectItem>
+          <SelectItem value="FINALIZADO">Finalizado</SelectItem>
+          <SelectItem value="CANCELADO">Cancelado</SelectItem>
+        </SelectContent>
+      </Select>
+      <Select value={dateFilter} onValueChange={setDateFilter}>
+        <SelectTrigger className="h-11">
+          <SelectValue placeholder="Data" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Todos">Todas as Datas</SelectItem>
+          <SelectItem value="7days">Últimos 7 dias</SelectItem>
+          <SelectItem value="30days">Últimos 30 dias</SelectItem>
+          <SelectItem value="custom">Customizado</SelectItem>
+        </SelectContent>
+      </Select>
+      <div className="flex gap-2">
+        <Select value={supervisorFilter} onValueChange={setSupervisorFilter}>
+          <SelectTrigger className="flex-1 h-11">
+            <SelectValue placeholder="Supervisor" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Todos">Todos Supervisores</SelectItem>
+            {supervisores.map((s) => (
+              <SelectItem key={s.id} value={s.id}>
+                {s.name || s.email}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Button
+          variant="outline"
+          size="icon"
+          className="h-11 w-11 shrink-0 text-muted-foreground hover:text-foreground"
+          onClick={clearFilters}
+          title="Limpar Filtros"
+        >
+          <FilterX className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  )
+}
