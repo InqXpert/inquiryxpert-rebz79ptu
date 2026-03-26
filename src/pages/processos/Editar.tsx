@@ -1,335 +1,305 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowLeft, Save, Trash, X } from 'lucide-react'
-import { useAuth } from '@/hooks/use-auth'
-import { useToast } from '@/hooks/use-toast'
-import pb from '@/lib/pocketbase/client'
+import { useProcessoDetail } from '@/hooks/useProcessoDetail'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Form } from '@/components/ui/form'
-import { ProcessoFormFields } from './components/ProcessoFormFields'
-import { formSchema, getDiasTotais, getStatusColor } from './utils'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
+import { ArrowLeft, Save, X, Trash2, Loader2 } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
 
 export default function ProcessoEdit() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { user } = useAuth()
-  const { toast } = useToast()
+  const {
+    processo,
+    loading,
+    error,
+    fetchProcessoDetail,
+    updateProcesso,
+    removeProcesso,
+    canEditProcesso,
+    canDeleteProcesso,
+  } = useProcessoDetail()
 
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [processo, setProcesso] = useState<any>(null)
-  const [users, setUsers] = useState<any[]>([])
-  const [agentes, setAgentes] = useState<any[]>([])
-
-  const form = useForm({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      cia: '',
-      controle_cia: '',
-      natureza_sinistro: '',
-      tipo_servico: '',
-      local_sinistro: '',
-      nome_segurado: '',
-      placas_veiculos: '',
-      solicitante_id: '',
-      agente_id: '',
-      status: '',
-      supervisor_id: '',
-      data_entrada: '',
-      data_retorno: '',
-      data_saida: '',
-    },
+  const [formData, setFormData] = useState({
+    nome_segurado: '',
+    status: '',
+    prioridade: '',
+    tipo_servico: '',
+    descricao: '',
   })
 
-  const watchDataEntrada = form.watch('data_entrada')
-  const watchDataRetorno = form.watch('data_retorno')
-  const watchDataSaida = form.watch('data_saida')
-  const watchStatus = form.watch('status')
+  const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
-    let active = true
-    const loadData = async () => {
-      if (!['c-level', 'admin', 'supervisor'].includes(user?.role || '')) {
-        setError('Acesso negado.')
-        setLoading(false)
-        return
-      }
+    if (id) fetchProcessoDetail(id)
+  }, [id, fetchProcessoDetail])
 
-      try {
-        setLoading(true)
-        const proc = await pb.collection('processos_operacionais').getOne(id!)
-
-        if (user?.role === 'supervisor' && proc.supervisor_id !== user?.id) {
-          throw new Error('Unauthorized')
-        }
-
-        const [usersData, agentesData] = await Promise.all([
-          pb.collection('users').getFullList({
-            filter: "role='admin' || role='supervisor' || role='c-level' || role='analista'",
-          }),
-          pb.collection('agentes').getFullList(),
-        ])
-
-        if (!active) return
-
-        setUsers(usersData)
-        setAgentes(agentesData)
-        setProcesso(proc)
-
-        form.reset({
-          cia: proc.cia || '',
-          controle_cia: proc.controle_cia || '',
-          natureza_sinistro: proc.observacoes_json?.natureza_sinistro || '',
-          tipo_servico: proc.tipo_servico || '',
-          local_sinistro: proc.local_sinistro || '',
-          nome_segurado: proc.nome_segurado || '',
-          placas_veiculos: proc.placas_veiculos || '',
-          solicitante_id: proc.solicitante_id || '',
-          agente_id: proc.agente_id || '',
-          status: proc.status || '',
-          supervisor_id: proc.supervisor_id || '',
-          data_entrada: proc.data_entrada || '',
-          data_retorno: proc.data_retorno || '',
-          data_saida: proc.data_saida || '',
-        })
-      } catch (e: any) {
-        if (!active) return
-        setError(
-          e.message === 'Unauthorized'
-            ? 'Você não tem permissão para editar este processo.'
-            : 'Erro ao carregar processo.',
-        )
-      } finally {
-        if (active) setLoading(false)
-      }
-    }
-    loadData()
-    return () => {
-      active = false
-    }
-  }, [id, user, form])
-
-  const onSubmit = async (data: any) => {
-    try {
-      const dt = getDiasTotais(data.data_entrada, data.data_saida)
-      const prev = { ...processo }
-      const obsJson =
-        typeof processo.observacoes_json === 'object' && processo.observacoes_json !== null
-          ? processo.observacoes_json
-          : {}
-
-      const payload = {
-        ...data,
-        dias_totais: dt,
-        observacoes_json: { ...obsJson, natureza_sinistro: data.natureza_sinistro },
-      }
-      delete payload.natureza_sinistro
-
-      const updated = await pb.collection('processos_operacionais').update(processo.id, payload)
-
-      await pb.collection('audit_log').create({
-        processo_id: processo.id,
-        usuario_id: user?.id,
-        acao: 'EDITADO',
-        dados_anteriores: prev,
-        dados_novos: updated,
+  useEffect(() => {
+    if (processo) {
+      setFormData({
+        nome_segurado: processo.nome_segurado || '',
+        status: processo.status || '',
+        prioridade: processo.prioridade || 'media',
+        tipo_servico: processo.tipo_servico || '',
+        descricao: processo.descricao || '',
       })
-
-      toast({ title: 'Sucesso', description: 'Processo atualizado com sucesso!' })
-      navigate('/processos')
-    } catch (e) {
-      toast({ title: 'Erro', description: 'Erro ao salvar alterações.', variant: 'destructive' })
     }
+  }, [processo])
+
+  const handleSave = async () => {
+    setSaving(true)
+    await updateProcesso(formData)
+    setSaving(false)
+    navigate(-1)
   }
 
   const handleDelete = async () => {
-    try {
-      const prev = { ...processo }
-      await pb.collection('audit_log').create({
-        processo_id: processo.id,
-        usuario_id: user?.id,
-        acao: 'DELETADO',
-        dados_anteriores: prev,
-        dados_novos: null,
-      })
-      await pb.collection('processos_operacionais').delete(processo.id)
-      toast({ title: 'Sucesso', description: 'Processo deletado com sucesso.' })
+    if (!window.confirm('Tem certeza que deseja excluir este processo?')) return
+    setDeleting(true)
+    const success = await removeProcesso()
+    if (success) {
       navigate('/processos')
-    } catch (e) {
-      toast({ title: 'Erro', description: 'Erro ao excluir.', variant: 'destructive' })
     }
-  }
-
-  if (error) {
-    return (
-      <div className="w-full h-[60vh] flex flex-col items-center justify-center gap-4 animate-in fade-in zoom-in-95">
-        <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center">
-          <X className="w-8 h-8 text-destructive" />
-        </div>
-        <h2 className="text-xl font-bold text-destructive">Erro de Acesso</h2>
-        <p className="text-muted-foreground">{error}</p>
-        <Button variant="outline" onClick={() => navigate('/processos')}>
-          Voltar para a lista
-        </Button>
-      </div>
-    )
+    setDeleting(false)
   }
 
   if (loading) {
     return (
-      <div className="w-full px-4 md:px-8 py-6 md:py-8 space-y-6">
-        <div className="flex items-center gap-4 mb-6">
-          <Skeleton className="w-10 h-10 rounded-lg" />
-          <Skeleton className="h-8 w-48" />
-        </div>
-        <Skeleton className="h-32 w-full rounded-xl" />
-        <Skeleton className="h-[500px] w-full rounded-xl" />
+      <div className="p-4 md:p-8 max-w-7xl mx-auto space-y-6 w-full">
+        <Skeleton className="h-10 w-1/3" />
+        <Skeleton className="h-[400px] w-full rounded-[8px]" />
       </div>
     )
   }
 
-  if (!processo) {
+  if (error || !processo) {
     return (
-      <div className="w-full h-[60vh] flex flex-col items-center justify-center gap-4 animate-in fade-in zoom-in-95">
-        <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-          <X className="w-8 h-8 text-muted-foreground" />
-        </div>
-        <h2 className="text-xl font-bold">Processo não encontrado</h2>
-        <p className="text-muted-foreground">O processo solicitado não existe ou foi excluído.</p>
-        <Button variant="outline" onClick={() => navigate('/processos')}>
-          Voltar para a lista
+      <div className="p-4 md:p-8 max-w-7xl mx-auto text-center w-full">
+        <h2 className="text-[20px] font-bold text-destructive">Processo não encontrado</h2>
+        <Button
+          onClick={() => navigate('/processos')}
+          className="mt-4 active:scale-[0.98] transition-transform duration-100 ease-in-out h-[40px]"
+        >
+          Voltar para Processos
         </Button>
       </div>
     )
   }
 
   return (
-    <div className="w-full px-4 md:px-8 py-6 md:py-8 space-y-6 animate-fade-in-up duration-500">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)} className="shrink-0">
-            <ArrowLeft className="w-5 h-5" />
+    <div className="p-4 md:p-8 max-w-7xl mx-auto w-full animate-in fade-in duration-300 ease-out fill-mode-both">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div className="flex flex-col items-start">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-2 -ml-3 text-muted-foreground hover:text-foreground active:scale-[0.98] transition-transform duration-100 ease-in-out h-[40px]"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
           </Button>
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-primary">
-                Processo {processo?.id}
-              </h1>
-              {watchStatus && (
-                <Badge className={getStatusColor(watchStatus)} variant="outline">
-                  {watchStatus.replace('_', ' ')}
-                </Badge>
-              )}
-            </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              Edite as informações e acompanhe o progresso da investigação.
-            </p>
+          <div className="flex items-center gap-3">
+            <h1 className="text-[28px] font-bold text-foreground">
+              {processo.numero_processo || processo.numero_controle || 'Sem Número'}
+            </h1>
+            <Badge variant="secondary" className="uppercase h-6 text-[12px] px-2">
+              {processo.status?.replace(/_/g, ' ') || 'Novo'}
+            </Badge>
           </div>
-        </div>
-
-        <div className="flex items-center gap-3 self-end sm:self-auto">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="sm" type="button">
-                <Trash className="w-4 h-4 mr-2" /> Deletar
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Esta ação não pode ser desfeita. Isso excluirá permanentemente o processo e os
-                  dados associados.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDelete}
-                  className="bg-brand-coral hover:bg-brand-coral/90 text-white"
-                >
-                  Sim, deletar processo
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <Button variant="outline" size="sm" type="button" onClick={() => navigate('/processos')}>
-            <X className="w-4 h-4 mr-2" /> Cancelar
-          </Button>
-          <Button size="sm" type="submit" form="processo-form">
-            <Save className="w-4 h-4 mr-2" /> Salvar
-          </Button>
         </div>
       </div>
 
-      <Card className="shadow-sm border-border overflow-hidden">
-        <CardHeader className="bg-muted/30 pb-4">
-          <CardTitle className="text-lg">Informações Básicas</CardTitle>
-        </CardHeader>
-        <CardContent className="p-6 grid grid-cols-2 md:grid-cols-5 gap-4 bg-card">
-          <div className="space-y-1">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              ID Processo
-            </p>
-            <p className="text-sm font-medium text-foreground">{processo?.id}</p>
+      <div className="space-y-[24px]">
+        {/* Informações Básicas (Read-only) */}
+        <div className="bg-card border border-border rounded-[8px] p-[20px] shadow-sm">
+          <h2 className="text-[18px] font-bold text-foreground mb-[24px]">Informações Básicas</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
+            {[
+              { label: 'Número de Controle', value: processo.numero_controle },
+              {
+                label: 'Data de Entrada',
+                value: processo.data_entrada
+                  ? new Date(processo.data_entrada).toLocaleDateString()
+                  : '-',
+              },
+              { label: 'Seguradora', value: processo.cia || '-' },
+              { label: 'Agente Prestador', value: processo.agente_prestador || '-' },
+            ].map((item, index) => (
+              <div
+                key={item.label}
+                className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+                style={{ animationDelay: `${index * 50}ms`, animationDuration: '300ms' }}
+              >
+                <Label className="text-[14px] font-bold block mb-[8px]">{item.label}</Label>
+                <div className="bg-muted text-foreground p-[12px] rounded-[6px] min-h-[44px] flex items-center text-[14px] font-medium border border-transparent">
+                  {item.value}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="space-y-1">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Data Entrada
-            </p>
-            <p className="text-sm font-medium text-foreground">{watchDataEntrada || '-'}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Data Retorno
-            </p>
-            <p className="text-sm font-medium text-foreground">{watchDataRetorno || '-'}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Data Saída
-            </p>
-            <p className="text-sm font-medium text-foreground">{watchDataSaida || '-'}</p>
-          </div>
-          <div className="space-y-1">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Dias Totais
-            </p>
-            <p className="text-sm font-medium text-foreground">
-              {getDiasTotais(watchDataEntrada, watchDataSaida)} dias
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <Form {...form}>
-        <form id="processo-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <Card className="shadow-sm border-border overflow-hidden">
-            <CardHeader className="bg-muted/30 pb-4">
-              <CardTitle className="text-lg">Dados do Processo</CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 bg-card">
-              <ProcessoFormFields form={form} users={users} agentes={agentes} />
-            </CardContent>
-          </Card>
-        </form>
-      </Form>
+        {/* Dados do Processo (Editable) */}
+        <div className="bg-card border border-border rounded-[8px] p-[20px] shadow-sm">
+          <h2 className="text-[18px] font-bold text-foreground mb-[24px]">Dados do Processo</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
+            <div
+              className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+              style={{ animationDelay: `${4 * 50}ms`, animationDuration: '300ms' }}
+            >
+              <Label className="text-[14px] font-bold block mb-[8px]">
+                Nome do Segurado <span className="text-primary">*</span>
+              </Label>
+              <Input
+                value={formData.nome_segurado}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, nome_segurado: e.target.value }))
+                }
+                placeholder="Ex: João da Silva"
+                disabled={!canEditProcesso()}
+                className="focus-visible:ring-primary focus-visible:border-primary transition-all text-[14px]"
+              />
+            </div>
+
+            <div
+              className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+              style={{ animationDelay: `${5 * 50}ms`, animationDuration: '300ms' }}
+            >
+              <Label className="text-[14px] font-bold block mb-[8px]">
+                Status <span className="text-primary">*</span>
+              </Label>
+              <Select
+                value={formData.status}
+                onValueChange={(val) => setFormData((prev) => ({ ...prev, status: val }))}
+                disabled={!canEditProcesso()}
+              >
+                <SelectTrigger className="focus:ring-primary focus:border-primary transition-all text-[14px]">
+                  <SelectValue placeholder="Selecione o status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="analise_inicial">Análise Inicial</SelectItem>
+                  <SelectItem value="em_execucao">Em Execução</SelectItem>
+                  <SelectItem value="em_elaboracao">Em Elaboração</SelectItem>
+                  <SelectItem value="bloqueado_sem_audio">Bloqueado S/ Áudio</SelectItem>
+                  <SelectItem value="concluido">Concluído</SelectItem>
+                  <SelectItem value="cancelado">Cancelado</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div
+              className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+              style={{ animationDelay: `${6 * 50}ms`, animationDuration: '300ms' }}
+            >
+              <Label className="text-[14px] font-bold block mb-[8px]">
+                Prioridade <span className="text-primary">*</span>
+              </Label>
+              <Select
+                value={formData.prioridade}
+                onValueChange={(val) => setFormData((prev) => ({ ...prev, prioridade: val }))}
+                disabled={!canEditProcesso()}
+              >
+                <SelectTrigger className="focus:ring-primary focus:border-primary transition-all text-[14px]">
+                  <SelectValue placeholder="Selecione a prioridade" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="baixa">Baixa</SelectItem>
+                  <SelectItem value="media">Média</SelectItem>
+                  <SelectItem value="alta">Alta</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div
+              className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+              style={{ animationDelay: `${7 * 50}ms`, animationDuration: '300ms' }}
+            >
+              <Label className="text-[14px] font-bold block mb-[8px]">
+                Tipo de Serviço <span className="text-primary">*</span>
+              </Label>
+              <Input
+                value={formData.tipo_servico}
+                onChange={(e) => setFormData((prev) => ({ ...prev, tipo_servico: e.target.value }))}
+                placeholder="Ex: Sindicância Auto"
+                disabled={!canEditProcesso()}
+                className="focus-visible:ring-primary focus-visible:border-primary transition-all text-[14px]"
+              />
+            </div>
+
+            <div
+              className="md:col-span-2 animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+              style={{ animationDelay: `${8 * 50}ms`, animationDuration: '300ms' }}
+            >
+              <Label className="text-[14px] font-bold block mb-[8px]">Descrição</Label>
+              <textarea
+                className={cn(
+                  'flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-[14px] ring-offset-background',
+                  'placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+                  'focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all resize-y',
+                )}
+                value={formData.descricao}
+                onChange={(e) => setFormData((prev) => ({ ...prev, descricao: e.target.value }))}
+                placeholder="Detalhes adicionais sobre o processo..."
+                disabled={!canEditProcesso()}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-[12px] mt-[24px] pb-[40px]">
+          {canEditProcesso() && (
+            <Button
+              variant="default"
+              className="w-full sm:w-auto h-[40px] px-8 active:scale-[0.98] transition-transform duration-100 ease-in-out"
+              onClick={handleSave}
+              disabled={saving}
+            >
+              {saving ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="w-4 h-4 mr-2" />
+              )}
+              Salvar
+            </Button>
+          )}
+          <Button
+            variant="secondary"
+            className="w-full sm:w-auto h-[40px] px-8 active:scale-[0.98] transition-transform duration-100 ease-in-out"
+            onClick={() => navigate(-1)}
+            disabled={saving || deleting}
+          >
+            <X className="w-4 h-4 mr-2" />
+            Cancelar
+          </Button>
+          <div className="hidden sm:block flex-1" />
+          {canDeleteProcesso() && (
+            <Button
+              variant="destructive"
+              className="w-full sm:w-auto h-[40px] px-8 active:scale-[0.98] transition-transform duration-100 ease-in-out sm:ml-auto"
+              onClick={handleDelete}
+              disabled={deleting || saving}
+            >
+              {deleting ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4 mr-2" />
+              )}
+              Deletar
+            </Button>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

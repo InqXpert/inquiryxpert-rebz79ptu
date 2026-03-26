@@ -101,3 +101,9 @@
     @apply bg-background text-foreground font-sans;
   }
 }
+
+@layer utilities {
+  .fill-mode-both {
+    animation-fill-mode: both;
+  }
+}
