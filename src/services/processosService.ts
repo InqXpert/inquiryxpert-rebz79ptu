@@ -78,9 +78,9 @@ export const getElapsedDays = (dataEntradaStr?: string) => {
 
 export const calculateDayColor = (dataEntradaStr?: string) => {
   const { calendar, business } = getElapsedDays(dataEntradaStr)
-  if (business >= 7) return 'hsl(0, 84%, 60%)'
-  if (calendar >= 5) return 'hsl(25, 95%, 53%)'
-  if (business >= 3) return 'hsl(45, 96%, 56%)'
+  if (business >= 7) return 'hsla(0, 84%, 60%, 0.2)'
+  if (calendar >= 5) return 'hsla(25, 95%, 53%, 0.2)'
+  if (business >= 3) return 'hsla(45, 96%, 56%, 0.2)'
   return 'transparent'
 }
 
@@ -89,8 +89,9 @@ export const calculateTags = (dataEntradaStr?: string) => {
   const tags = []
 
   if (business >= 3)
-    tags.push({ label: 'Posição Preliminar', color: 'bg-[hsl(45,96%,56%)] text-black' })
-  if (calendar >= 5) tags.push({ label: 'Atualização', color: 'bg-[hsl(25,95%,53%)] text-white' })
+    tags.push({ label: 'Posição Preliminar', color: 'bg-[hsl(45,96%,56%)] text-slate-900' })
+  if (calendar >= 5)
+    tags.push({ label: 'Atualização', color: 'bg-[hsl(25,95%,53%)] text-slate-900' })
   if (business >= 7) tags.push({ label: 'Encerramento', color: 'bg-[hsl(0,84%,60%)] text-white' })
 
   return tags
@@ -133,7 +134,6 @@ export const filterByDate = (
   })
 }
 
-// Preserve original exports to avoid breaking other imports
 export const fetchProcessosAgente = async (agenteId: string): Promise<Processo[]> => {
   return await pb.collection('processos_operacionais').getFullList<Processo>({
     filter: `agente_id="${agenteId}"`,

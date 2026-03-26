@@ -44,63 +44,65 @@ export function ProcessosListFilters({
   }, [])
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 bg-card p-4 rounded-xl border border-border shadow-sm">
-      <div className="relative lg:col-span-2">
+    <div className="flex flex-col lg:flex-row gap-4 w-full items-center">
+      <div className="relative w-full lg:w-[300px] shrink-0">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
-          placeholder="Buscar por ID, data, solicitante, segurado, placa..."
-          className="pl-9 h-11"
+          placeholder="Buscar..."
+          className="pl-9 h-11 w-full"
           value={localSearch}
           onChange={(e) => setLocalSearch(e.target.value)}
         />
       </div>
-      <Select value={statusFilter} onValueChange={setStatusFilter}>
-        <SelectTrigger className="h-11">
-          <SelectValue placeholder="Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Todos">Todos os Status</SelectItem>
-          <SelectItem value="ANALISE_INICIAL">Análise Inicial</SelectItem>
-          <SelectItem value="EM_EXECUCAO">Em Execução</SelectItem>
-          <SelectItem value="EM_ELABORACAO">Em Elaboração</SelectItem>
-          <SelectItem value="FINALIZADO">Finalizado</SelectItem>
-          <SelectItem value="CANCELADO">Cancelado</SelectItem>
-        </SelectContent>
-      </Select>
-      <Select value={dateFilter} onValueChange={setDateFilter}>
-        <SelectTrigger className="h-11">
-          <SelectValue placeholder="Data" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Todos">Todas as Datas</SelectItem>
-          <SelectItem value="7days">Últimos 7 dias</SelectItem>
-          <SelectItem value="30days">Últimos 30 dias</SelectItem>
-          <SelectItem value="custom">Customizado</SelectItem>
-        </SelectContent>
-      </Select>
-      <div className="flex gap-2">
-        <Select value={supervisorFilter} onValueChange={setSupervisorFilter}>
-          <SelectTrigger className="flex-1 h-11">
-            <SelectValue placeholder="Supervisor" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full lg:flex-1">
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="h-11">
+            <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Todos">Todos Supervisores</SelectItem>
-            {supervisores.map((s) => (
-              <SelectItem key={s.id} value={s.id}>
-                {s.name || s.email}
-              </SelectItem>
-            ))}
+            <SelectItem value="Todos">Todos os Status</SelectItem>
+            <SelectItem value="ANALISE_INICIAL">Análise Inicial</SelectItem>
+            <SelectItem value="EM_EXECUCAO">Em Execução</SelectItem>
+            <SelectItem value="EM_ELABORACAO">Em Elaboração</SelectItem>
+            <SelectItem value="FINALIZADO">Finalizado</SelectItem>
+            <SelectItem value="CANCELADO">Cancelado</SelectItem>
           </SelectContent>
         </Select>
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-11 w-11 shrink-0 text-muted-foreground hover:text-foreground"
-          onClick={clearFilters}
-          title="Limpar Filtros"
-        >
-          <FilterX className="h-4 w-4" />
-        </Button>
+        <Select value={dateFilter} onValueChange={setDateFilter}>
+          <SelectTrigger className="h-11">
+            <SelectValue placeholder="Data" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Todos">Todas as Datas</SelectItem>
+            <SelectItem value="7days">Últimos 7 dias</SelectItem>
+            <SelectItem value="30days">Últimos 30 dias</SelectItem>
+            <SelectItem value="custom">Customizado</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="flex gap-2">
+          <Select value={supervisorFilter} onValueChange={setSupervisorFilter}>
+            <SelectTrigger className="flex-1 h-11">
+              <SelectValue placeholder="Supervisor" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Todos">Todos Supervisores</SelectItem>
+              {supervisores.map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  {s.name || s.email}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-11 w-11 shrink-0 text-foreground hover:opacity-80 transition-opacity hover:bg-transparent"
+            onClick={clearFilters}
+            title="Limpar Filtros"
+          >
+            <FilterX className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   )

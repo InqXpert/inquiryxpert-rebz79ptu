@@ -26,44 +26,77 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
 
   if (loading) {
     return (
-      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-        <Table className="table-fixed w-full">
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[10%]">ID</TableHead>
-              <TableHead className="w-[15%]">STATUS</TableHead>
-              <TableHead className="w-[15%]">SUPERVISOR</TableHead>
-              <TableHead className="w-[15%]">SEGURADORA</TableHead>
-              <TableHead className="w-[10%]">TIPO</TableHead>
-              <TableHead className="w-[15%]">AGENTE</TableHead>
-              <TableHead className="w-[10%]">DATA ENTRADA</TableHead>
-              <TableHead className="w-[10%] text-right">AÇÕES</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 10 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell colSpan={8}>
-                  <Skeleton className="h-10 w-full" />
-                </TableCell>
+      <>
+        <div className="hidden md:block bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+          <Table className="table-fixed w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[12%]">ID</TableHead>
+                <TableHead className="w-[18%]">STATUS</TableHead>
+                <TableHead className="w-[15%]">SUPERVISOR</TableHead>
+                <TableHead className="w-[15%]">SEGURADORA</TableHead>
+                <TableHead className="w-[12%]">TIPO</TableHead>
+                <TableHead className="w-[15%] hidden lg:table-cell">AGENTE</TableHead>
+                <TableHead className="w-[12%]">DATA ENTRADA</TableHead>
+                <TableHead className="w-[12%] text-right">AÇÕES</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {Array.from({ length: 10 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell>
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="md:hidden space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-[200px] w-full rounded-xl" />
+          ))}
+        </div>
+      </>
     )
   }
 
   if (processos.length === 0) {
     const isFiltering = rawCount > 0
     return (
-      <div className="py-24 flex flex-col items-center justify-center text-center p-6 bg-card border border-border rounded-xl shadow-sm">
-        <Inbox className="w-16 h-16 text-muted-foreground mb-4 opacity-50" />
-        <h3 className="text-xl font-bold text-foreground">
+      <div className="flex flex-col items-center justify-center text-center py-[60px] px-[24px] bg-card border border-border rounded-xl shadow-sm animate-in fade-in duration-300">
+        <Inbox className="w-16 h-16 text-secondary mb-4" />
+        <h3 className="text-[18px] font-bold text-foreground">
           {!isFiltering
             ? 'Nenhum processo atribuído'
             : 'Nenhum processo encontrado com esses filtros'}
         </h3>
+        <p className="text-[14px] text-muted-foreground mt-2 max-w-md">
+          {!isFiltering
+            ? 'Você não possui processos no momento.'
+            : 'Tente ajustar os parâmetros de busca para encontrar o que procura.'}
+        </p>
         {!isFiltering && (
           <Button className="mt-6" onClick={() => navigate('/processos/novo')}>
             Novo Processo
@@ -75,22 +108,22 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
 
   return (
     <>
-      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+      <div className="hidden md:block bg-card border border-border rounded-xl overflow-hidden shadow-sm">
         <Table className="table-fixed w-full">
           <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="w-[10%]">ID</TableHead>
-              <TableHead className="w-[15%]">STATUS</TableHead>
+            <TableRow>
+              <TableHead className="w-[12%]">ID</TableHead>
+              <TableHead className="w-[18%]">STATUS</TableHead>
               <TableHead className="w-[15%]">SUPERVISOR</TableHead>
               <TableHead className="w-[15%]">SEGURADORA</TableHead>
-              <TableHead className="w-[10%]">TIPO</TableHead>
-              <TableHead className="w-[15%]">AGENTE</TableHead>
-              <TableHead className="w-[10%]">DATA ENTRADA</TableHead>
-              <TableHead className="text-right w-[10%]">AÇÕES</TableHead>
+              <TableHead className="w-[12%]">TIPO</TableHead>
+              <TableHead className="w-[15%] hidden lg:table-cell">AGENTE</TableHead>
+              <TableHead className="w-[12%]">DATA ENTRADA</TableHead>
+              <TableHead className="w-[12%] text-right">AÇÕES</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {processos.map((p: Processo) => {
+            {processos.map((p: Processo, i: number) => {
               const bgColor = calculateDayColor(p.data_entrada)
               const tags = calculateTags(p.data_entrada)
 
@@ -98,12 +131,13 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
                 <TableRow
                   key={p.id}
                   className={cn(
-                    'cursor-pointer transition-colors hover:opacity-90',
-                    bgColor !== 'transparent' &&
-                      bgColor !== '#ffffff' &&
-                      '[&>td]:text-slate-900 [&>td]:dark:text-slate-900',
+                    'cursor-pointer animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-300',
+                    bgColor !== 'transparent' && 'hover:brightness-95',
                   )}
-                  style={{ backgroundColor: bgColor !== 'transparent' ? bgColor : undefined }}
+                  style={{
+                    backgroundColor: bgColor !== 'transparent' ? bgColor : undefined,
+                    animationDelay: `${i * 30}ms`,
+                  }}
                   onClick={(e) => {
                     if (!(e.target as HTMLElement).closest('.action-btn')) {
                       navigate(`/processos/${p.id}/editar`)
@@ -122,12 +156,12 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
                         {p.status?.replace(/_/g, ' ')}
                       </span>
                       {tags.length > 0 && (
-                        <div className="flex flex-col gap-1 w-full">
-                          {tags.map((t, i) => (
+                        <div className="flex flex-wrap gap-1 w-full">
+                          {tags.map((t, idx) => (
                             <span
-                              key={i}
+                              key={idx}
                               className={cn(
-                                'text-[10px] px-1.5 py-0.5 rounded shadow-sm font-bold truncate max-w-full inline-block',
+                                'text-[11px] px-2 py-1 rounded-[4px] shadow-sm font-bold truncate max-w-full inline-block',
                                 t.color,
                               )}
                               title={t.label}
@@ -152,7 +186,7 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
                     {p.tipo_servico || 'N/A'}
                   </TableCell>
                   <TableCell
-                    className="truncate"
+                    className="truncate hidden lg:table-cell"
                     title={p.expand?.agente_id?.nomeCompleto || p.agente_prestador || 'N/A'}
                   >
                     {p.expand?.agente_id?.nomeCompleto || p.agente_prestador || 'N/A'}
@@ -162,58 +196,66 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
                   </TableCell>
                   <TableCell className="text-right">
                     <TooltipProvider delayDuration={200}>
-                      <div className="flex justify-end gap-1">
+                      <div className="flex justify-end gap-2">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="action-btn h-8 w-8 hover:bg-black/10 dark:hover:bg-white/20"
+                              className="action-btn h-8 w-8 rounded-full text-foreground hover:text-primary/80 hover:bg-transparent"
                               onClick={() => navigate(`/processos/${p.id}/editar`)}
                             >
                               <Edit2 className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Editar</TooltipContent>
+                          <TooltipContent className="text-[12px] text-muted-foreground bg-card border-border shadow-sm">
+                            Editar
+                          </TooltipContent>
                         </Tooltip>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="action-btn h-8 w-8 hover:bg-black/10 dark:hover:bg-white/20"
+                              className="action-btn h-8 w-8 rounded-full text-foreground hover:text-primary/80 hover:bg-transparent"
                               onClick={() => setModalState({ type: 'history', proc: p })}
                             >
                               <History className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Histórico</TooltipContent>
+                          <TooltipContent className="text-[12px] text-muted-foreground bg-card border-border shadow-sm">
+                            Histórico
+                          </TooltipContent>
                         </Tooltip>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="action-btn h-8 w-8 hover:bg-black/10 dark:hover:bg-white/20"
+                              className="action-btn h-8 w-8 rounded-full text-foreground hover:text-primary/80 hover:bg-transparent"
                               onClick={() => setModalState({ type: 'obs', proc: p })}
                             >
                               <MessageSquare className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Observações</TooltipContent>
+                          <TooltipContent className="text-[12px] text-muted-foreground bg-card border-border shadow-sm">
+                            Observações
+                          </TooltipContent>
                         </Tooltip>
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="action-btn h-8 w-8 hover:bg-black/10 dark:hover:bg-white/20"
+                              className="action-btn h-8 w-8 rounded-full text-foreground hover:text-primary/80 hover:bg-transparent"
                               onClick={() => setModalState({ type: 'pos', proc: p })}
                             >
                               <Flag className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent>Posições</TooltipContent>
+                          <TooltipContent className="text-[12px] text-muted-foreground bg-card border-border shadow-sm">
+                            Posições
+                          </TooltipContent>
                         </Tooltip>
                       </div>
                     </TooltipProvider>
@@ -223,15 +265,154 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
             })}
           </TableBody>
         </Table>
-
-        {hasMore && (
-          <div className="p-4 flex justify-center border-t border-border bg-muted/20">
-            <Button variant="outline" className="font-bold shadow-sm px-8" onClick={onLoadMore}>
-              Carregar mais
-            </Button>
-          </div>
-        )}
       </div>
+
+      <div className="md:hidden space-y-4">
+        {processos.map((p: Processo, i: number) => {
+          const bgColor = calculateDayColor(p.data_entrada)
+          const tags = calculateTags(p.data_entrada)
+
+          return (
+            <div
+              key={p.id}
+              className="bg-card border border-border rounded-xl p-4 shadow-sm animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-300"
+              style={{
+                backgroundColor: bgColor !== 'transparent' ? bgColor : undefined,
+                animationDelay: `${i * 30}ms`,
+              }}
+              onClick={(e) => {
+                if (!(e.target as HTMLElement).closest('.action-btn')) {
+                  navigate(`/processos/${p.id}/editar`)
+                }
+              }}
+            >
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <p className="font-semibold text-foreground text-sm mb-1">
+                    {p.numero_controle || p.id.slice(0, 8)}
+                  </p>
+                  <p className="font-bold text-xs uppercase text-muted-foreground">
+                    {p.status?.replace(/_/g, ' ')}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-muted-foreground font-medium">
+                    {p.data_entrada || 'N/A'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-1 mb-3 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Seguradora:</span>
+                  <span className="font-medium truncate max-w-[180px]">{p.cia || 'N/A'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Tipo:</span>
+                  <span className="font-medium truncate max-w-[180px]">
+                    {p.tipo_servico || 'N/A'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Supervisor:</span>
+                  <span className="font-medium truncate max-w-[180px]">
+                    {p.expand?.supervisor_id?.name || 'N/A'}
+                  </span>
+                </div>
+              </div>
+
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {tags.map((t, idx) => (
+                    <span
+                      key={idx}
+                      className={cn(
+                        'text-[11px] font-bold px-2 py-1 rounded-[4px] shadow-sm',
+                        t.color,
+                      )}
+                    >
+                      {t.label}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-border/50">
+                <TooltipProvider delayDuration={200}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="action-btn h-8 w-8 rounded-full text-foreground hover:text-primary/80 hover:bg-transparent"
+                        onClick={() => navigate(`/processos/${p.id}/editar`)}
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="text-[12px] text-muted-foreground bg-card border-border shadow-sm">
+                      Editar
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="action-btn h-8 w-8 rounded-full text-foreground hover:text-primary/80 hover:bg-transparent"
+                        onClick={() => setModalState({ type: 'history', proc: p })}
+                      >
+                        <History className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="text-[12px] text-muted-foreground bg-card border-border shadow-sm">
+                      Histórico
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="action-btn h-8 w-8 rounded-full text-foreground hover:text-primary/80 hover:bg-transparent"
+                        onClick={() => setModalState({ type: 'obs', proc: p })}
+                      >
+                        <MessageSquare className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="text-[12px] text-muted-foreground bg-card border-border shadow-sm">
+                      Observações
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="action-btn h-8 w-8 rounded-full text-foreground hover:text-primary/80 hover:bg-transparent"
+                        onClick={() => setModalState({ type: 'pos', proc: p })}
+                      >
+                        <Flag className="h-4 w-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="text-[12px] text-muted-foreground bg-card border-border shadow-sm">
+                      Posições
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {hasMore && (
+        <div className="mt-6 flex justify-center">
+          <Button className="font-bold shadow-sm px-8" onClick={onLoadMore}>
+            Carregar mais
+          </Button>
+        </div>
+      )}
 
       <HistoricoModal
         processo={modalState.type === 'history' ? modalState.proc : null}
