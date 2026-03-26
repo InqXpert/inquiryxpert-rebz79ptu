@@ -57,9 +57,9 @@ export function ProcessosOperacionaisTable({
   const SortIcon = ({ colKey }: { colKey: string }) => {
     if (sortKey !== colKey) return null
     return sortDir === 'asc' ? (
-      <ArrowUp className="inline w-3 h-3 ml-1 text-secondary" />
+      <ArrowUp className="inline w-3 h-3 ml-1 text-brand-cyan" />
     ) : (
-      <ArrowDown className="inline w-3 h-3 ml-1 text-secondary" />
+      <ArrowDown className="inline w-3 h-3 ml-1 text-brand-cyan" />
     )
   }
 
@@ -142,7 +142,7 @@ export function ProcessosOperacionaisTable({
             {pageData.map((p) => (
               <tr
                 key={p.id}
-                className="border-b border-border/50 hover:bg-muted/30 cursor-pointer transition-colors group"
+                className="border-b border-border/50 hover:bg-muted/30 even:bg-muted/20 dark:even:bg-white/5 cursor-pointer transition-colors group"
                 onClick={() => onViewDetail(p.id)}
               >
                 <td className="py-5 px-6 text-[15px] font-semibold text-primary">
@@ -168,7 +168,7 @@ export function ProcessosOperacionaisTable({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-muted-foreground group-hover:text-secondary group-hover:bg-secondary/10 rounded-full h-9 w-9"
+                    className="text-muted-foreground group-hover:text-brand-cyan group-hover:bg-brand-cyan/10 rounded-full h-9 w-9"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </Button>
@@ -212,31 +212,29 @@ export function ProcessosOperacionaisTable({
 
 function StatusBadge({ status }: { status: string }) {
   const s = String(status || '')
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
     .trim()
   let key = s
-  if (s.includes('execucao')) key = 'em_execucao'
-  else if (s.includes('elaboracao')) key = 'em_elaboracao'
-  else if (s.includes('finalizad') || s.includes('concluid')) key = 'finalizado'
-  else if (s.includes('cancelad')) key = 'cancelado'
-  else if (s.includes('analise')) key = 'analise_inicial'
+  if (s.includes('EXECUCAO') || s.includes('EXECUÇÃO')) key = 'EM_EXECUCAO'
+  else if (s.includes('ELABORACAO') || s.includes('ELABORAÇÃO')) key = 'EM_ELABORACAO'
+  else if (s.includes('FINALIZADO') || s.includes('CONCLUIDO')) key = 'FINALIZADO'
+  else if (s.includes('CANCELADO')) key = 'CANCELADO'
+  else if (s.includes('ANALISE')) key = 'ANALISE_INICIAL'
 
   const colors: Record<string, string> = {
-    em_elaboracao: 'bg-yellow-100 text-yellow-800',
-    em_execucao: 'bg-blue-100 text-blue-800',
-    finalizado: 'bg-emerald-100 text-emerald-800',
-    cancelado: 'bg-destructive/10 text-destructive',
-    analise_inicial: 'bg-muted text-muted-foreground',
+    EM_ELABORACAO: 'bg-brand-orange/20 text-brand-orange',
+    EM_EXECUCAO: 'bg-brand-cyan/20 text-brand-cyan',
+    FINALIZADO: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-400',
+    CANCELADO: 'bg-destructive/10 text-destructive',
+    ANALISE_INICIAL: 'bg-muted text-muted-foreground',
   }
 
   const labels: Record<string, string> = {
-    em_elaboracao: 'Em Elaboração',
-    em_execucao: 'Em Execução',
-    finalizado: 'Concluído',
-    cancelado: 'Cancelado',
-    analise_inicial: 'Análise',
+    EM_ELABORACAO: 'Em Elaboração',
+    EM_EXECUCAO: 'Em Execução',
+    FINALIZADO: 'Concluído',
+    CANCELADO: 'Cancelado',
+    ANALISE_INICIAL: 'Análise',
   }
 
   return (

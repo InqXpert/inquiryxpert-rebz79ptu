@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 
-type Theme = 'light'
+type Theme = 'light' | 'dark'
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -26,17 +26,28 @@ export function ThemeProvider({
   storageKey = 'theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>('light')
+  const [theme, setTheme] = useState<Theme>(
+    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
+  )
 
   useEffect(() => {
     const root = window.document.documentElement
-    root.classList.remove('dark')
-    root.classList.add('light')
+
+    root.classList.remove('light', 'dark')
+
+    if (theme === 'dark') {
+      root.classList.add('dark')
+    } else {
+      root.classList.add('light')
+    }
   }, [theme])
 
   const value = {
     theme,
-    setTheme: () => null, // Forced light theme
+    setTheme: (theme: Theme) => {
+      localStorage.setItem(storageKey, theme)
+      setTheme(theme)
+    },
   }
 
   return (
