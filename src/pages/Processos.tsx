@@ -36,26 +36,4 @@ export default function Processos() {
             </Button>
           )}
           <Button
-            onClick={() => navigate('/processos/novo')}
-            className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold shadow-sm"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Processo
-          </Button>
-        </div>
-      </div>
-
-      <div className="sticky top-0 z-20 bg-background/95 dark:bg-brand-navy/95 backdrop-blur-md py-4 px-4 md:px-6 -mx-4 md:-mx-6 mb-6">
-        <ProcessosListFilters {...state} />
-      </div>
-
-      <ProcessosListTable
-        processos={state.data}
-        loading={state.loading}
-        hasMore={state.hasMore}
-        onLoadMore={state.loadMore}
-        rawCount={state.rawCount}
-      />
-    </div>
-  )
-}
+            onClick={() => navigate('/processos/novo
