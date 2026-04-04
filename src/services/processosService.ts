@@ -202,3 +202,65 @@ export const filterByPriority = (processos: Processo[], priority: string) => {
   if (!priority || priority === 'todas') return processos
   return processos.filter((p) => p.prioridade === priority)
 }
+
+export const fetchProcessoById = async (id: string): Promise<Processo> => {
+  return await pb.collection('processos_operacionais').getOne<Processo>(id, {
+    expand: 'agente_id,supervisor_id,solicitante_id',
+  })
+}
+
+export const updateProcesso = async (id: string, data: Partial<Processo>): Promise<Processo> => {
+  return await pb.collection('processos_operacionais').update<Processo>(id, data)
+}
+
+export const deleteProcesso = async (id: string): Promise<boolean> => {
+  await pb.collection('processos_operacionais').delete(id)
+  return true
+}
+
+export const createAuditLog = async (
+  processoId: string,
+  acao: string,
+  userId: string | undefined,
+  dadosAnteriores: any,
+  dadosNovos: any,
+) => {
+  if (!userId) return
+  try {
+    await pb.collection('audit_log').create({
+      processo_id: processoId,
+      usuario_id: userId,
+      acao,
+      dados_anteriores: dadosAnteriores,
+      dados_novos: dadosNovos,
+    })
+  } catch (e) {
+    console.error('Audit log failed', e)
+  }
+}
+
+export const calculateDiasTotais = (dataEntradaStr?: string, dataSaidaStr?: string): number => {
+  if (!dataEntradaStr || !dataSaidaStr) return 0
+
+  const parseDate = (str: string) => {
+    if (str.includes('/')) {
+      const [d, m, y] = str.split('/')
+      return new Date(Number(y), Number(m) - 1, Number(d))
+    }
+    return new Date(str)
+  }
+
+  const start = parseDate(dataEntradaStr)
+  const end = parseDate(dataSaidaStr)
+
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return 0
+
+  start.setDate(start.getDate() + 1)
+  start.setHours(0, 0, 0, 0)
+  end.setHours(0, 0, 0, 0)
+
+  const diff = end.getTime() - start.getTime()
+  if (diff < 0) return 0
+
+  return Math.ceil(diff / (1000 * 60 * 60 * 24))
+}

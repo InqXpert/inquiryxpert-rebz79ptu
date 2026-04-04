@@ -19,3 +19,12 @@ export interface Processo {
   expand?: any
   [key: string]: any
 }
+
+export interface ProcessoDetalhes extends Processo {
+  seguradora_nome?: string
+  natureza_sinistro_nome?: string
+  tipo_investigacao_nome?: string
+  agente_nome?: string
+  supervisor_nome?: string
+  solicitante_nome?: string
+}
