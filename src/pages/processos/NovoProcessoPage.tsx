@@ -33,6 +33,8 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
+import { usePlacaValidation, useInsuredValidation } from '@/hooks/usePlacaValidation'
+import { PlateValidationUI, InsuredValidationUI } from '@/components/processos/ValidationIndicators'
 
 const SEGURADORAS = [
   'ZURICH',
@@ -117,6 +119,11 @@ export default function NovoProcessoPage() {
   } = form
   const watchSeguradora = watch('seguradora')
   const watchTipoInvestigacao = watch('tipo_investigacao')
+  const watchPlacas = watch('placas_veiculos')
+  const watchNomeSegurado = watch('nome_segurado')
+
+  const plateValidation = usePlacaValidation(watchPlacas || '')
+  const insuredValidation = useInsuredValidation(watchNomeSegurado || '')
 
   useEffect(() => {
     if (user && !['c-level', 'admin', 'supervisor'].includes(user.role)) {
@@ -373,6 +380,7 @@ export default function NovoProcessoPage() {
                       className={errors.nome_segurado ? 'border-red-500 uppercase' : 'uppercase'}
                     />
                   </FormControl>
+                  <InsuredValidationUI validation={insuredValidation} />
                   <FormMessage className="text-red-500" />
                 </FormItem>
               )}
@@ -389,7 +397,7 @@ export default function NovoProcessoPage() {
                   <FormControl>
                     <Input
                       {...field}
-                      placeholder="ABC-1234, DEF-5678"
+                      placeholder="ABC-1234, ABC1D34"
                       onBlur={() => {
                         field.onBlur()
                         onBlurUppercase('placas_veiculos')
@@ -397,6 +405,7 @@ export default function NovoProcessoPage() {
                       className={errors.placas_veiculos ? 'border-red-500 uppercase' : 'uppercase'}
                     />
                   </FormControl>
+                  <PlateValidationUI validation={plateValidation} />
                   <FormMessage className="text-red-500" />
                 </FormItem>
               )}

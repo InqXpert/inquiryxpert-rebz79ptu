@@ -16,6 +16,8 @@ import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
 import { ArrowLeft, Trash2, Save, X, Loader2 } from 'lucide-react'
+import { usePlacaValidation, useInsuredValidation } from '@/hooks/usePlacaValidation'
+import { PlateValidationUI, InsuredValidationUI } from '@/components/processos/ValidationIndicators'
 import { format } from 'date-fns'
 import { calculateDiasTotais } from '@/services/processosService'
 import { determineSupervisor } from '@/services/allocationService'
@@ -83,6 +85,9 @@ export default function ProcessoDetalhesPage() {
   const [isSuggesting, setIsSuggesting] = useState(false)
   const [suggestedSupervisorId, setSuggestedSupervisorId] = useState<string | null>(null)
   const [warningSupervisor, setWarningSupervisor] = useState('')
+
+  const plateValidation = usePlacaValidation(formData.placas_veiculos || '', id)
+  const insuredValidation = useInsuredValidation(formData.nome_segurado || '', id)
 
   useEffect(() => {
     pb.collection('agentes')
@@ -330,13 +335,21 @@ export default function ProcessoDetalhesPage() {
                 )}
 
                 {field.type === 'input' && (
-                  <Input
-                    disabled={!canEdit}
-                    placeholder={field.ph}
-                    value={formData[field.key] || ''}
-                    onChange={(e) => handleChange(field.key, e.target.value)}
-                    className="focus-visible:ring-brand-cyan focus-visible:border-brand-cyan border-brand-teal/20 dark:border-brand-cyan/20"
-                  />
+                  <>
+                    <Input
+                      disabled={!canEdit}
+                      placeholder={field.ph}
+                      value={formData[field.key] || ''}
+                      onChange={(e) => handleChange(field.key, e.target.value)}
+                      className="focus-visible:ring-brand-cyan focus-visible:border-brand-cyan border-brand-teal/20 dark:border-brand-cyan/20"
+                    />
+                    {field.key === 'nome_segurado' && (
+                      <InsuredValidationUI validation={insuredValidation} />
+                    )}
+                    {field.key === 'placas_veiculos' && (
+                      <PlateValidationUI validation={plateValidation} />
+                    )}
+                  </>
                 )}
 
                 {field.type === 'relation' && (
