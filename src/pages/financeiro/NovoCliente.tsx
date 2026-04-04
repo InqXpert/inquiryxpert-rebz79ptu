@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
+import { ClienteForm } from './components/ClienteForm'
 
 export default function NovoCliente() {
   const navigate = useNavigate()
@@ -11,15 +12,14 @@ export default function NovoCliente() {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold text-brand-navy">Novo Cliente</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-[28px] font-bold text-[#0a2540] dark:text-white">Novo Cliente</h1>
+          <p className="text-muted-foreground text-[14px] mt-1">
             Cadastrar um novo contrato e dados de faturamento.
           </p>
         </div>
       </div>
-      <div className="rounded-md border bg-card p-8 text-center text-muted-foreground shadow-sm">
-        O formulário de cadastro de cliente será implementado em breve.
-      </div>
+
+      <ClienteForm />
     </div>
   )
 }
