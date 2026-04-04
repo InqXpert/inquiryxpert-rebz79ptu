@@ -36,6 +36,7 @@ export default function Layout() {
   const navItems = [
     { title: 'Dashboard', url: '/dashboard' },
     { title: 'Processos', url: '/processos' },
+    { title: 'Financeiro', url: '/financeiro' },
     { title: 'Agentes', url: '/agentes' },
     ...(user?.role === 'c-level' ||
     user?.role === 'admin' ||
@@ -60,7 +61,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col bg-muted/30 font-sans">
-      <header className="flex h-14 items-center justify-between px-4 bg-brand-navy text-white shadow-md z-30 shrink-0">
+      <header className="flex h-14 items-center justify-between px-4 bg-slate-900 text-white shadow-md z-30 shrink-0">
         <div className="flex items-center h-full overflow-hidden">
           <Sheet>
             <SheetTrigger asChild>
@@ -74,7 +75,7 @@ export default function Layout() {
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="bg-brand-navy text-white border-r-brand-teal/30 p-0 w-64"
+              className="bg-slate-900 text-white border-r-brand-teal/30 p-0 w-64"
             >
               <div className="p-4 border-b border-white/10 flex items-center gap-3">
                 <div className="w-8 h-8 rounded bg-brand-coral flex items-center justify-center font-bold text-sm text-white shadow-sm">
@@ -251,7 +252,7 @@ export default function Layout() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col relative w-full h-full items-center justify-start overflow-auto">
-        <div className="w-full max-w-7xl mx-auto flex-1 flex flex-col">
+        <div className="w-full max-w-[1400px] mx-auto flex-1 flex flex-col">
           <Suspense
             fallback={
               <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground gap-4">

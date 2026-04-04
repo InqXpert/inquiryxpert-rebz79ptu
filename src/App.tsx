@@ -28,6 +28,14 @@ const GestaoUsuarios = lazy(() => import('./pages/GestaoUsuarios'))
 const Perfil = lazy(() => import('./pages/Perfil'))
 const PerformanceSupervisores = lazy(() => import('./pages/gestao/PerformanceSupervisores'))
 
+// Financeiro Module Lazy Loads
+const DashboardFinanceiro = lazy(() => import('./pages/financeiro/DashboardFinanceiro'))
+const ClientesList = lazy(() => import('./pages/financeiro/ClientesList'))
+const NovoCliente = lazy(() => import('./pages/financeiro/NovoCliente'))
+const EditarCliente = lazy(() => import('./pages/financeiro/EditarCliente'))
+const PeriodosFaturamento = lazy(() => import('./pages/financeiro/PeriodosFaturamento'))
+const NotasFiscais = lazy(() => import('./pages/financeiro/NotasFiscais'))
+
 // Gestão de Agentes Module Lazy Loads
 const GestaoAgentesLayout = lazy(() => import('./pages/gestao-agentes/Layout'))
 const GestaoAgentesDashboard = lazy(() => import('./pages/gestao-agentes/Dashboard'))
@@ -81,6 +89,14 @@ export default function App() {
                     path="/gestao/performance-supervisores"
                     element={<PerformanceSupervisores />}
                   />
+
+                  {/* Financeiro Module */}
+                  <Route path="/financeiro" element={<DashboardFinanceiro />} />
+                  <Route path="/financeiro/clientes" element={<ClientesList />} />
+                  <Route path="/financeiro/clientes/novo" element={<NovoCliente />} />
+                  <Route path="/financeiro/clientes/:id" element={<EditarCliente />} />
+                  <Route path="/financeiro/periodos" element={<PeriodosFaturamento />} />
+                  <Route path="/financeiro/notas-fiscais" element={<NotasFiscais />} />
 
                   {/* Gestão de Agentes Module */}
                   <Route path="/gestao-agentes" element={<GestaoAgentesLayout />}>

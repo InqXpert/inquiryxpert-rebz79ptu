@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-04T16:38:02.206Z",
+  "generatedAt": "2026-04-04T18:11:24.219Z",
   "collections": [
     {
       "name": "users",
@@ -1598,6 +1598,274 @@
         }
       ],
       "indexes": []
+    },
+    {
+      "name": "clientes_contratos",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "razao_social",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "cnpj",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "email_contato",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "tipo_emissao",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["unitaria_processo", "unitaria_lote"]
+        },
+        {
+          "name": "periodo_faturamento",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["mensal", "trimestral", "por_demanda"]
+        },
+        {
+          "name": "dia_corte",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "agrupamento",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["por_supervisor", "por_tipo", "por_regiao", "sem_agrupamento"]
+        },
+        {
+          "name": "condicao_pagamento",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "tipo_imposto",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["ISS", "ICMS", "INSS", "IR", "nenhum"]
+        },
+        {
+          "name": "aliquota_imposto",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "retencao_na_fonte",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "aliquota_retencao",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["ativo", "inativo"]
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE UNIQUE INDEX idx_clientes_contratos_cnpj ON clientes_contratos (cnpj)"]
+    },
+    {
+      "name": "periodos_faturamento",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "cliente_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "clientes_contratos"
+        },
+        {
+          "name": "data_inicio",
+          "type": "date",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "data_fim",
+          "type": "date",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["aberto", "fechado", "faturado", "pago"]
+        },
+        {
+          "name": "total_processos",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "faturamento_total",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "notas_fiscais",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "numero_nf",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "cliente_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "clientes_contratos"
+        },
+        {
+          "name": "periodo_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "periodos_faturamento"
+        },
+        {
+          "name": "data_emissao",
+          "type": "date",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "valor_total",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "impostos",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "valor_liquido",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["emitida", "enviada", "paga", "cancelada"]
+        },
+        {
+          "name": "data_vencimento",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "data_pagamento",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE UNIQUE INDEX idx_notas_fiscais_numero_nf ON notas_fiscais (numero_nf)"]
     }
   ]
 }

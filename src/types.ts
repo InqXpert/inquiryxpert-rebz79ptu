@@ -41,3 +41,50 @@ export interface UsuarioSessao {
   expirada: boolean
   created: string
 }
+
+export interface ClienteContrato {
+  id: string
+  razao_social: string
+  cnpj: string
+  email_contato?: string
+  tipo_emissao?: 'unitaria_processo' | 'unitaria_lote'
+  periodo_faturamento?: 'mensal' | 'trimestral' | 'por_demanda'
+  dia_corte?: number
+  agrupamento?: 'por_supervisor' | 'por_tipo' | 'por_regiao' | 'sem_agrupamento'
+  condicao_pagamento?: string
+  tipo_imposto?: 'ISS' | 'ICMS' | 'INSS' | 'IR' | 'nenhum'
+  aliquota_imposto?: number
+  retencao_na_fonte?: boolean
+  aliquota_retencao?: number
+  status?: 'ativo' | 'inativo'
+  created: string
+  updated: string
+}
+
+export interface PeriodoFaturamento {
+  id: string
+  cliente_id: string
+  data_inicio: string
+  data_fim: string
+  status?: 'aberto' | 'fechado' | 'faturado' | 'pago'
+  total_processos?: number
+  faturamento_total?: number
+  created: string
+  updated: string
+}
+
+export interface NotaFiscal {
+  id: string
+  numero_nf: string
+  cliente_id: string
+  periodo_id: string
+  data_emissao: string
+  valor_total?: number
+  impostos?: number
+  valor_liquido?: number
+  status?: 'emitida' | 'enviada' | 'paga' | 'cancelada'
+  data_vencimento?: string
+  data_pagamento?: string
+  created: string
+  updated: string
+}
