@@ -79,6 +79,7 @@ export default function NovoProcessoPage() {
   const {
     agentes,
     users,
+    supervisores,
     loadingInitial,
     isSubmitting,
     duplicateFound,
@@ -130,16 +131,19 @@ export default function NovoProcessoPage() {
 
   useEffect(() => {
     if (watchSeguradora || watchTipoInvestigacao) {
-      const suggested = suggestSupervisor(watchTipoInvestigacao, watchSeguradora, users)
+      const suggested = determineSupervisor(watchTipoInvestigacao, watchSeguradora, supervisores)
+      setSuggestedSupervisorId(suggested)
       if (suggested) {
         setValue('supervisor_id', suggested, { shouldValidate: true })
         setWarningSupervisor('')
       } else if (watchTipoInvestigacao) {
-        setWarningSupervisor('Nenhum supervisor disponivel para essa combinacao')
+        setWarningSupervisor(
+          'Nenhum supervisor mapeado para esta combinação. Selecione manualmente.',
+        )
         setValue('supervisor_id', '', { shouldValidate: true })
       }
     }
-  }, [watchSeguradora, watchTipoInvestigacao, users, setValue])
+  }, [watchSeguradora, watchTipoInvestigacao, supervisores, setValue])
 
   const onBlurUppercase = (field: keyof NovoProcessoFormData) => {
     const val = form.getValues(field)
@@ -456,7 +460,7 @@ export default function NovoProcessoPage() {
               control={form.control}
               name="supervisor_id"
               render={({ field }) => {
-                const suggestedUser = users.find((u) => u.id === suggestedSupervisorId)
+                const suggestedUser = supervisores.find((u) => u.id === suggestedSupervisorId)
 
                 return (
                   <FormItem>
@@ -470,24 +474,17 @@ export default function NovoProcessoPage() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {users
-                          .filter((u) => ['supervisor', 'admin', 'c-level'].includes(u.role))
-                          .map((u) => (
-                            <SelectItem key={u.id} value={u.id}>
-                              {u.name || u.email}
-                            </SelectItem>
-                          ))}
+                        {supervisores.map((u) => (
+                          <SelectItem key={u.id} value={u.id}>
+                            {u.name || u.email}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage className="text-red-500" />
 
                     <div className="mt-2 min-h-[24px]">
-                      {isSuggesting ? (
-                        <div className="flex items-center text-xs text-brand-gray">
-                          <Loader2 className="w-3 h-3 mr-2 animate-spin" />
-                          Calculando alocação...
-                        </div>
-                      ) : suggestedSupervisorId ? (
+                      {suggestedSupervisorId ? (
                         <div className="flex flex-col gap-2">
                           <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                             Supervisor sugerido: {suggestedUser?.name || 'Desconhecido'}

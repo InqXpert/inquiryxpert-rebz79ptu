@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useProcessoDetail } from '@/hooks/useProcessoDetail'
+import pb from '@/lib/pocketbase/client'
+import { determineSupervisor } from '@/services/allocationService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -36,10 +38,21 @@ export default function ProcessoEdit() {
     prioridade: '',
     tipo_servico: '',
     descricao: '',
+    supervisor_id: '',
   })
 
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [supervisores, setSupervisores] = useState<any[]>([])
+  const [suggestedSupervisorId, setSuggestedSupervisorId] = useState<string | null>(null)
+  const [warningSupervisor, setWarningSupervisor] = useState('')
+
+  useEffect(() => {
+    pb.collection('users')
+      .getFullList({ filter: "role='c-level' || role='admin' || role='supervisor'" })
+      .then(setSupervisores)
+      .catch(console.error)
+  }, [])
 
   useEffect(() => {
     if (id) fetchProcessoDetail(id)
@@ -53,9 +66,34 @@ export default function ProcessoEdit() {
         prioridade: processo.prioridade || 'media',
         tipo_servico: processo.tipo_servico || '',
         descricao: processo.descricao || '',
+        supervisor_id: processo.supervisor_id || '',
       })
     }
   }, [processo])
+
+  useEffect(() => {
+    if (processo && supervisores.length > 0 && formData.tipo_servico) {
+      const suggested = determineSupervisor(formData.tipo_servico, processo.cia || '', supervisores)
+      setSuggestedSupervisorId(suggested)
+      if (suggested) {
+        setWarningSupervisor('')
+      } else if (formData.tipo_servico) {
+        setWarningSupervisor(
+          'Nenhum supervisor mapeado para esta combinação. Selecione manualmente.',
+        )
+      }
+    }
+  }, [formData.tipo_servico, processo?.cia, supervisores])
+
+  const handleTipoServicoChange = (val: string) => {
+    setFormData((prev) => ({ ...prev, tipo_servico: val }))
+    if (processo && supervisores.length > 0) {
+      const suggested = determineSupervisor(val, processo.cia || '', supervisores)
+      if (suggested) {
+        setFormData((prev) => ({ ...prev, supervisor_id: suggested }))
+      }
+    }
+  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -229,7 +267,7 @@ export default function ProcessoEdit() {
               </Label>
               <Input
                 value={formData.tipo_servico}
-                onChange={(e) => setFormData((prev) => ({ ...prev, tipo_servico: e.target.value }))}
+                onChange={(e) => handleTipoServicoChange(e.target.value)}
                 placeholder="Ex: Sindicância Auto"
                 disabled={!canEditProcesso()}
                 className="focus-visible:ring-primary focus-visible:border-primary transition-all text-[14px]"
@@ -237,8 +275,61 @@ export default function ProcessoEdit() {
             </div>
 
             <div
-              className="md:col-span-2 animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+              className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
               style={{ animationDelay: `${8 * 50}ms`, animationDuration: '300ms' }}
+            >
+              <Label className="text-[14px] font-bold block mb-[8px]">
+                Supervisor <span className="text-primary">*</span>
+              </Label>
+              <Select
+                value={formData.supervisor_id}
+                onValueChange={(val) => setFormData((prev) => ({ ...prev, supervisor_id: val }))}
+                disabled={!canEditProcesso()}
+              >
+                <SelectTrigger className="focus:ring-primary focus:border-primary transition-all text-[14px]">
+                  <SelectValue placeholder="Selecione o supervisor" />
+                </SelectTrigger>
+                <SelectContent>
+                  {supervisores.map((u) => (
+                    <SelectItem key={u.id} value={u.id}>
+                      {u.name || u.email}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="mt-2 min-h-[24px]">
+                {suggestedSupervisorId ? (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-xs text-green-600 dark:text-green-400 font-medium">
+                      Supervisor sugerido:{' '}
+                      {supervisores.find((u) => u.id === suggestedSupervisorId)?.name ||
+                        'Desconhecido'}
+                    </p>
+                    {formData.supervisor_id !== suggestedSupervisorId && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-7 px-2 text-xs w-max border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/30"
+                        onClick={() =>
+                          setFormData((prev) => ({ ...prev, supervisor_id: suggestedSupervisorId }))
+                        }
+                      >
+                        Usar Sugestão
+                      </Button>
+                    )}
+                  </div>
+                ) : warningSupervisor ? (
+                  <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">
+                    {warningSupervisor}
+                  </p>
+                ) : null}
+              </div>
+            </div>
+
+            <div
+              className="md:col-span-2 animate-in fade-in slide-in-from-bottom-2 fill-mode-both"
+              style={{ animationDelay: `${9 * 50}ms`, animationDuration: '300ms' }}
             >
               <Label className="text-[14px] font-bold block mb-[8px]">Descrição</Label>
               <textarea

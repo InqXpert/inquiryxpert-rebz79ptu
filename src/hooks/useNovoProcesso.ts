@@ -13,6 +13,7 @@ export const useNovoProcesso = () => {
   const { user } = useAuth()
   const [agentes, setAgentes] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
+  const [supervisores, setSupervisores] = useState<any[]>([])
   const [loadingInitial, setLoadingInitial] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [duplicateFound, setDuplicateFound] = useState<any | null>(null)
@@ -20,12 +21,17 @@ export const useNovoProcesso = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [agentesRes, usersRes] = await Promise.all([
+        const [agentesRes, usersRes, supervisoresRes] = await Promise.all([
           pb.collection('agentes').getFullList({ sort: 'nomeCompleto' }),
           pb.collection('users').getFullList({ sort: 'name' }),
+          pb.collection('users').getFullList({
+            sort: 'name',
+            filter: "role='c-level' || role='admin' || role='supervisor'",
+          }),
         ])
         setAgentes(agentesRes)
         setUsers(usersRes)
+        setSupervisores(supervisoresRes)
       } catch (err) {
         console.error('Failed to load form data dependencies', err)
       } finally {
@@ -77,6 +83,7 @@ export const useNovoProcesso = () => {
   return {
     agentes,
     users,
+    supervisores,
     loadingInitial,
     isSubmitting,
     duplicateFound,
