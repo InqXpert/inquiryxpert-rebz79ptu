@@ -40,29 +40,33 @@ export function TabPosicoes({ processo, canAdd, onAdd }: Props) {
         {posicoes.map((p, index) => (
           <div key={p.n} className="flex flex-row gap-[12px] pb-[16px] relative">
             {/* Timeline dot */}
-            <div className="w-[8px] h-[8px] rounded-full bg-[hsl(210_60%_25%)] mt-[6px] z-10 shrink-0" />
+            <div className="w-[8px] h-[8px] rounded-full bg-brand-cyan mt-[6px] z-10 shrink-0 shadow-sm" />
 
             {/* Vertical connector */}
             {index < posicoes.length - 1 && (
-              <div className="absolute left-[3px] top-[14px] w-[2px] h-full bg-border" />
+              <div className="absolute left-[3px] top-[14px] w-[2px] h-full bg-brand-teal/20 dark:bg-brand-cyan/20" />
             )}
 
             <div className="flex flex-col w-full">
-              <span className="text-[13px] font-medium text-foreground">{p.label}</span>
-              <span className="text-[12px] text-muted-foreground mt-[2px]">Status Atualizado</span>
+              <span className="text-[13px] font-bold text-brand-navy dark:text-white">
+                {p.label}
+              </span>
+              <span className="text-[12px] text-brand-gray dark:text-brand-light mt-[2px]">
+                Status Atualizado
+              </span>
 
               {editingPos === p.n ? (
-                <div className="flex flex-col gap-2 mt-2 w-full max-w-md">
+                <div className="flex flex-col gap-2 mt-2 w-full max-w-md animate-in fade-in duration-200">
                   <Input
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                     placeholder="Descreva a posição..."
-                    className="h-[40px] text-[13px] rounded-[6px]"
+                    className="h-[40px] text-[13px] rounded-[6px] border-brand-teal/20 dark:border-brand-cyan/20 focus-visible:ring-brand-cyan bg-white dark:bg-brand-navy/80"
                   />
                   <div className="flex gap-2">
                     <Button
                       size="sm"
-                      className="bg-[hsl(210_60%_25%)] text-white hover:bg-[hsl(210_60%_35%)] h-[32px] px-[16px]"
+                      className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold h-[32px] px-[16px] shadow-sm"
                       onClick={() => handleSave(p.n)}
                     >
                       Salvar
@@ -70,7 +74,7 @@ export function TabPosicoes({ processo, canAdd, onAdd }: Props) {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-[32px] px-[16px]"
+                      className="h-[32px] px-[16px] border-brand-teal text-brand-navy dark:text-white"
                       onClick={() => setEditingPos(null)}
                     >
                       Cancelar
@@ -80,8 +84,8 @@ export function TabPosicoes({ processo, canAdd, onAdd }: Props) {
               ) : (
                 <div className="mt-1 flex flex-col items-start gap-2">
                   {p.val && (
-                    <div className="flex flex-row gap-2 items-center w-full max-w-md">
-                      <p className="text-[13px] text-foreground p-3 bg-muted/50 rounded-[6px] border border-border flex-1 min-h-[40px]">
+                    <div className="flex flex-row gap-2 items-center w-full max-w-md animate-in fade-in duration-200">
+                      <p className="text-[13px] text-brand-navy dark:text-white p-3 bg-brand-light/30 dark:bg-black/10 rounded-[6px] border border-brand-teal/20 dark:border-brand-cyan/20 flex-1 min-h-[40px]">
                         {p.val}
                       </p>
                       {canAdd && (
@@ -89,15 +93,15 @@ export function TabPosicoes({ processo, canAdd, onAdd }: Props) {
                           <Button
                             variant="outline"
                             size="icon"
-                            className="w-[32px] h-[32px]"
+                            className="w-[32px] h-[32px] border-brand-teal/20 hover:bg-brand-teal/10 dark:hover:bg-brand-cyan/10 text-brand-gray dark:text-brand-light"
                             onClick={() => handleEdit(p.n, p.val)}
                           >
-                            <Pencil className="w-4 h-4 text-muted-foreground" />
+                            <Pencil className="w-4 h-4" />
                           </Button>
                           <Button
                             variant="outline"
                             size="icon"
-                            className="w-[32px] h-[32px] hover:text-destructive hover:border-destructive"
+                            className="w-[32px] h-[32px] border-brand-teal/20 hover:bg-brand-coral/10 hover:text-brand-coral hover:border-brand-coral/50 text-brand-gray dark:text-brand-light"
                             onClick={() => handleDelete(p.n)}
                           >
                             <Trash2 className="w-4 h-4" />
@@ -110,14 +114,14 @@ export function TabPosicoes({ processo, canAdd, onAdd }: Props) {
                   {!p.val && canAdd && (
                     <Button
                       size="sm"
-                      className="bg-[hsl(210_60%_25%)] text-white mt-[12px] hover:bg-[hsl(210_60%_35%)] h-[32px] px-[16px]"
+                      className="bg-brand-cyan text-brand-navy mt-[12px] hover:bg-brand-cyan/90 font-bold h-[32px] px-[16px] shadow-sm animate-in fade-in duration-200"
                       onClick={() => handleEdit(p.n, '')}
                     >
                       <Plus className="w-4 h-4 mr-1" /> Adicionar Posição
                     </Button>
                   )}
                   {!p.val && !canAdd && (
-                    <span className="text-[13px] text-muted-foreground italic mt-2">
+                    <span className="text-[13px] text-brand-gray dark:text-brand-light italic mt-2">
                       Aguardando preenchimento...
                     </span>
                   )}

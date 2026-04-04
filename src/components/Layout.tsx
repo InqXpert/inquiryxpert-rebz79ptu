@@ -254,13 +254,13 @@ export default function Layout() {
         <div className="w-full max-w-7xl mx-auto flex-1 flex flex-col">
           <Suspense
             fallback={
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-muted-foreground bg-background/50 backdrop-blur-sm gap-4 z-50">
+              <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground gap-4">
                 <div className="w-8 h-8 rounded-full border-[3px] border-brand-cyan border-t-transparent animate-spin" />
                 <span className="text-sm font-medium tracking-wide">Carregando...</span>
               </div>
             }
           >
-            <div className="animate-in fade-in zoom-in-95 duration-300 w-full h-full flex flex-col">
+            <div className="w-full h-full flex flex-col animate-in fade-in duration-300">
               <Outlet />
             </div>
           </Suspense>

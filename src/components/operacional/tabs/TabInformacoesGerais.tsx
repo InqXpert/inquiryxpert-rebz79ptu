@@ -66,7 +66,7 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
         <Button
           variant="outline"
           size="sm"
-          className="absolute right-0 -top-[52px] z-10 text-[13px] h-[32px]"
+          className="absolute right-0 -top-[52px] z-10 text-[13px] h-[32px] border-brand-teal text-brand-navy dark:text-white"
           onClick={() => setIsEditing(true)}
         >
           <Pencil className="w-3 h-3 mr-2" /> Editar
@@ -76,17 +76,19 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
         {fields.map((f) => (
           <div key={f.key} className="flex flex-col gap-[4px]">
-            <span className="text-[12px] font-medium text-muted-foreground">{f.label}</span>
+            <span className="text-[12px] font-bold text-brand-gray dark:text-brand-light tracking-wider uppercase">
+              {f.label}
+            </span>
             {isEditing ? (
               f.type === 'select' ? (
                 <Select
                   value={(formData as any)[f.key] || ''}
                   onValueChange={(v) => handleChange(f.key as any, v)}
                 >
-                  <SelectTrigger className="h-[40px] text-[13px] rounded-[6px]">
+                  <SelectTrigger className="h-[40px] text-[13px] rounded-[6px] border-brand-teal/20 dark:border-brand-cyan/20 focus:ring-brand-cyan">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="border-brand-teal/20 dark:border-brand-cyan/20">
                     {f.options?.map((opt) => (
                       <SelectItem key={opt} value={opt} className="capitalize text-[13px]">
                         {opt.replace('_', ' ')}
@@ -97,13 +99,13 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
               ) : (
                 <Input
                   type={f.type || 'text'}
-                  className="h-[40px] text-[13px] rounded-[6px]"
+                  className="h-[40px] text-[13px] rounded-[6px] border-brand-teal/20 dark:border-brand-cyan/20 focus-visible:ring-brand-cyan bg-white dark:bg-brand-navy/80"
                   value={(formData as any)[f.key] || ''}
                   onChange={(e) => handleChange(f.key as any, e.target.value)}
                 />
               )
             ) : (
-              <span className="text-[13px] text-foreground capitalize">
+              <span className="text-[13px] font-medium text-brand-navy dark:text-white capitalize">
                 {(processo as any)[f.key]
                   ? String((processo as any)[f.key]).replace('_', ' ')
                   : '-'}
@@ -114,10 +116,10 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
       </div>
 
       {isEditing && (
-        <div className="flex flex-row gap-[12px] justify-end mt-[24px]">
+        <div className="flex flex-row gap-[12px] justify-end mt-[24px] animate-in fade-in duration-200">
           <Button
             variant="outline"
-            className="h-[40px] px-[20px]"
+            className="h-[40px] px-[20px] border-brand-teal text-brand-navy dark:text-white"
             onClick={() => {
               setIsEditing(false)
               setFormData(processo)
@@ -126,7 +128,7 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
             Cancelar
           </Button>
           <Button
-            className="bg-[hsl(210_60%_25%)] text-white h-[40px] px-[20px] hover:bg-[hsl(210_60%_35%)]"
+            className="bg-brand-cyan text-brand-navy font-bold h-[40px] px-[20px] hover:bg-brand-cyan/90 shadow-sm"
             onClick={handleSave}
           >
             Salvar Alterações

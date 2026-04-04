@@ -212,23 +212,28 @@ export default function ProcessoDetalhesPage() {
           variant="ghost"
           size="icon"
           onClick={() => navigate(-1)}
-          className="active:scale-[0.98] transition-transform duration-100"
+          className="text-brand-gray hover:text-brand-navy dark:text-brand-light dark:hover:text-white active:scale-[0.98] transition-transform duration-100"
         >
           <ArrowLeft className="w-5 h-5" />
         </Button>
         <div>
-          <h1 className="text-[28px] font-bold tracking-tight text-foreground">
+          <h1 className="text-[28px] font-bold tracking-tight text-brand-navy dark:text-white">
             Processo {processo.numero_controle || processo.id}
           </h1>
-          <Badge variant="outline" className="mt-1">
-            {formData.status || 'Sem Status'}
+          <Badge
+            variant="outline"
+            className="mt-1 border-brand-teal/30 text-brand-navy dark:text-brand-light"
+          >
+            {String(formData.status || 'Sem Status').replace(/_/g, ' ')}
           </Badge>
         </div>
       </div>
 
       <div className="space-y-6">
-        <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
-          <h2 className="text-[18px] font-bold text-foreground mb-4">Informações Básicas</h2>
+        <div className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 shadow-sm">
+          <h2 className="text-[18px] font-bold text-brand-navy dark:text-white mb-4">
+            Informações Básicas
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {[
               { l: 'ID', v: processo.id },
@@ -239,27 +244,33 @@ export default function ProcessoDetalhesPage() {
             ].map((i, idx) => (
               <div
                 key={i.l}
-                className="bg-muted/50 p-3 rounded-[6px] flex flex-col space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
+                className="bg-brand-light/30 dark:bg-black/10 p-3 rounded-[6px] flex flex-col space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both border border-brand-teal/10 dark:border-brand-cyan/10"
                 style={{ animationDelay: `${(idx + 1) * 50}ms` }}
               >
-                <span className="text-sm font-bold text-foreground">{i.l}</span>
-                <span className="text-base text-foreground break-all">{i.v}</span>
+                <span className="text-xs font-bold text-brand-gray dark:text-brand-light uppercase tracking-wider">
+                  {i.l}
+                </span>
+                <span className="text-sm font-medium text-brand-navy dark:text-white break-all">
+                  {i.v}
+                </span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
-          <h2 className="text-[18px] font-bold text-foreground mb-4">Dados do Processo</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 shadow-sm">
+          <h2 className="text-[18px] font-bold text-brand-navy dark:text-white mb-4">
+            Dados do Processo
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {formFields.map((field, idx) => (
               <div
                 key={field.key}
                 className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
                 style={{ animationDelay: `${(idx + 6) * 50}ms` }}
               >
-                <Label className="text-sm font-bold text-foreground">
-                  {field.label} {field.req && <span className="text-primary">*</span>}
+                <Label className="text-sm font-bold text-brand-navy dark:text-white">
+                  {field.label} {field.req && <span className="text-brand-coral">*</span>}
                 </Label>
 
                 {field.type === 'select' && (
@@ -268,13 +279,13 @@ export default function ProcessoDetalhesPage() {
                     value={formData[field.key] || ''}
                     onValueChange={(v) => handleChange(field.key, v)}
                   >
-                    <SelectTrigger className="focus:ring-primary focus:border-primary">
+                    <SelectTrigger className="focus:ring-brand-cyan focus:border-brand-cyan border-brand-teal/20 dark:border-brand-cyan/20">
                       <SelectValue placeholder="Selecione..." />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="border-brand-teal/20 dark:border-brand-cyan/20">
                       {field.opts?.map((o: any) => (
                         <SelectItem key={o} value={o}>
-                          {o}
+                          {String(o).replace(/_/g, ' ')}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -287,7 +298,7 @@ export default function ProcessoDetalhesPage() {
                     placeholder={field.ph}
                     value={formData[field.key] || ''}
                     onChange={(e) => handleChange(field.key, e.target.value)}
-                    className="focus-visible:ring-primary focus-visible:border-primary"
+                    className="focus-visible:ring-brand-cyan focus-visible:border-brand-cyan border-brand-teal/20 dark:border-brand-cyan/20"
                   />
                 )}
 
@@ -297,10 +308,10 @@ export default function ProcessoDetalhesPage() {
                     value={formData[field.key] || ''}
                     onValueChange={(v) => handleChange(field.key, v)}
                   >
-                    <SelectTrigger className="focus:ring-primary focus:border-primary">
+                    <SelectTrigger className="focus:ring-brand-cyan focus:border-brand-cyan border-brand-teal/20 dark:border-brand-cyan/20">
                       <SelectValue placeholder="Selecione..." />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="border-brand-teal/20 dark:border-brand-cyan/20">
                       {field.opts?.map((o: any) => (
                         <SelectItem key={o.id} value={o.id}>
                           {field.d ? field.d(o) : o.id}
@@ -321,21 +332,27 @@ export default function ProcessoDetalhesPage() {
             <AlertDialogTrigger asChild>
               <Button
                 variant="destructive"
-                className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100"
+                className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 bg-brand-coral hover:bg-brand-coral/90 text-white"
               >
                 <Trash2 className="w-4 h-4 mr-2" /> Deletar
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="bg-white dark:bg-brand-navy">
               <AlertDialogHeader>
-                <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
-                <AlertDialogDescription>Esta ação é irreversível.</AlertDialogDescription>
+                <AlertDialogTitle className="text-brand-navy dark:text-white">
+                  Tem certeza?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-brand-gray dark:text-brand-light">
+                  Esta ação é irreversível.
+                </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogCancel className="border-brand-teal text-brand-navy dark:text-white">
+                  Cancelar
+                </AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleDelete}
-                  className="bg-destructive text-destructive-foreground"
+                  className="bg-brand-coral text-white hover:bg-brand-coral/90"
                 >
                   Deletar
                 </AlertDialogAction>
@@ -344,15 +361,14 @@ export default function ProcessoDetalhesPage() {
           </AlertDialog>
 
           <Button
-            variant="secondary"
-            className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100"
+            variant="outline"
+            className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 border-brand-teal text-brand-navy dark:text-white"
             onClick={() => navigate(-1)}
           >
             <X className="w-4 h-4 mr-2" /> Cancelar
           </Button>
           <Button
-            variant="default"
-            className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100"
+            className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold"
             onClick={handleSave}
           >
             <Save className="w-4 h-4 mr-2" /> Salvar

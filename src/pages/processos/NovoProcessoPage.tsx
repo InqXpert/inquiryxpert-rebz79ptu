@@ -110,8 +110,8 @@ export default function NovoProcessoPage() {
   if (loadingInitial) {
     return (
       <div className="p-6 max-w-4xl mx-auto space-y-6">
-        <Skeleton className="h-10 w-48" />
-        <Skeleton className="h-[600px] w-full rounded-xl" />
+        <Skeleton className="h-10 w-48 bg-white dark:bg-brand-navy" />
+        <Skeleton className="h-[600px] w-full rounded-xl bg-white dark:bg-brand-navy border border-brand-teal/20 dark:border-brand-cyan/20" />
       </div>
     )
   }
@@ -119,15 +119,22 @@ export default function NovoProcessoPage() {
   return (
     <div className="p-6 max-w-4xl mx-auto animate-in fade-in duration-300">
       <div className="flex items-center gap-4 mb-6">
-        <Button variant="ghost" size="icon" onClick={() => navigate('/processos')}>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/processos')}
+          className="text-brand-gray hover:text-brand-navy dark:text-brand-light dark:hover:text-white"
+        >
           <ArrowLeft className="w-5 h-5" />
         </Button>
-        <h1 className="text-2xl font-bold tracking-tight">Novo Processo</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-brand-navy dark:text-white">
+          Novo Processo
+        </h1>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="bg-card border rounded-xl p-6 sm:p-8 shadow-sm space-y-6"
+        className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 sm:p-8 shadow-sm space-y-6"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
@@ -322,32 +329,32 @@ export default function NovoProcessoPage() {
           </div>
         </div>
 
-        <div className="flex justify-end pt-6 border-t">
+        <div className="flex justify-end pt-6 border-t border-brand-teal/20 dark:border-brand-cyan/20">
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full md:w-auto h-11 px-8 font-semibold"
+            className="w-full md:w-auto h-11 px-8 font-bold bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 shadow-sm"
           >
-            {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin text-brand-navy" />}
             Salvar Processo
           </Button>
         </div>
       </form>
 
       <Dialog open={!!duplicateFound} onOpenChange={(o) => !o && setDuplicateFound(null)}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white dark:bg-brand-navy border-brand-teal/20">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-destructive">
+            <DialogTitle className="flex items-center gap-2 text-brand-coral">
               <AlertTriangle className="w-5 h-5" />
               Possível Duplicidade Encontrada
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-brand-gray dark:text-brand-light">
               Já existe um processo registrado com este Segurado e Placa.
             </DialogDescription>
           </DialogHeader>
 
           {duplicateFound && (
-            <div className="bg-muted/50 p-4 rounded-lg space-y-2 text-sm border border-border/50">
+            <div className="bg-brand-light/30 dark:bg-black/10 p-4 rounded-lg space-y-2 text-sm border border-brand-teal/20 dark:border-brand-cyan/20 text-brand-navy dark:text-white">
               <p>
                 <strong>ID do Processo:</strong>{' '}
                 {duplicateFound.numero_controle || duplicateFound.id}
@@ -367,19 +374,25 @@ export default function NovoProcessoPage() {
             </div>
           )}
 
-          <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6">
-            <Button variant="outline" onClick={() => navigate(`/processos/${duplicateFound?.id}`)}>
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6 gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              className="border-brand-teal text-brand-navy dark:text-white"
+              onClick={() => navigate(`/processos/${duplicateFound?.id}`)}
+            >
               Ir para Processo Existente
             </Button>
             <Button
-              variant="default"
               onClick={() => {
                 setDuplicateFound(null)
                 handleFinalSubmit()
               }}
               disabled={isSubmitting}
+              className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold"
             >
-              {isSubmitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {isSubmitting ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin text-brand-navy" />
+              ) : null}
               Criar Novo Mesmo Assim
             </Button>
           </div>

@@ -1,20 +1,35 @@
+import { useNavigate } from 'react-router-dom'
+import { Plus } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { useProcessosList } from '@/hooks/useProcessosList'
 import { ProcessosListTable } from '@/components/operacional/ProcessosListTable'
 import { ProcessosListFilters } from '@/components/operacional/ProcessosListFilters'
 
 export default function Processos() {
   const state = useProcessosList()
+  const navigate = useNavigate()
 
   return (
     <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 animate-in fade-in duration-500">
-      <div className="mb-6">
-        <h1 className="text-[28px] font-bold tracking-tight text-foreground mb-1">Processos</h1>
-        <p className="text-[14px] text-muted-foreground font-medium">
-          Acompanhamento de investigações
-        </p>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-[28px] font-bold tracking-tight text-brand-navy dark:text-white mb-1">
+            Processos
+          </h1>
+          <p className="text-[14px] text-brand-gray dark:text-brand-light font-medium">
+            Acompanhamento de investigações
+          </p>
+        </div>
+        <Button
+          onClick={() => navigate('/processos/novo')}
+          className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold shadow-sm"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Novo Processo
+        </Button>
       </div>
 
-      <div className="sticky top-0 z-20 bg-card border-b border-border py-4 px-4 md:px-6 -mx-4 md:-mx-6 mb-6 animate-in slide-in-from-top-4 duration-200 shadow-sm">
+      <div className="sticky top-0 z-20 bg-white dark:bg-brand-navy/95 backdrop-blur-md border-b border-brand-teal/20 dark:border-brand-cyan/20 py-4 px-4 md:px-6 -mx-4 md:-mx-6 mb-6 shadow-sm">
         <ProcessosListFilters {...state} />
       </div>
 
