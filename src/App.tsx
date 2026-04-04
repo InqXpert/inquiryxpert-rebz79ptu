@@ -12,6 +12,7 @@ import Login from '@/pages/Login'
 
 // Main App Lazy Loads
 const Dashboard = lazy(() => import('./pages/Dashboard'))
+const NovoProcessoPage = lazy(() => import('./pages/processos/NovoProcessoPage'))
 const Processos = lazy(() => import('./pages/Processos'))
 const ProcessoEdit = lazy(() => import('./pages/processos/Editar'))
 const ProcessoDetalhesPage = lazy(() => import('./pages/processos/ProcessoDetalhesPage'))
@@ -63,6 +64,7 @@ export default function App() {
                   <Route path="/" element={<Navigate to="/dashboard" replace />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/processos" element={<Processos />} />
+                  <Route path="/processos/novo" element={<NovoProcessoPage />} />
                   <Route path="/processos/:id" element={<ProcessoDetalhesPage />} />
                   <Route path="/processos/:id/editar" element={<ProcessoEdit />} />
                   <Route path="/alertas" element={<Alertas />} />

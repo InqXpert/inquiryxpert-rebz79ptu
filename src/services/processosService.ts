@@ -218,6 +218,80 @@ export const deleteProcesso = async (id: string): Promise<boolean> => {
   return true
 }
 
+export const generateNumeroControle = async (cia: string, natureza: string): Promise<string> => {
+  const now = new Date()
+  const mm = String(now.getMonth() + 1).padStart(2, '0')
+  const yy = String(now.getFullYear()).slice(-2)
+
+  const ciaMap: Record<string, string> = {
+    ZURICH: '01',
+    MAPFRE: '02',
+    SUHAI: '03',
+    BRADESCO: '04',
+    NEO: '05',
+    'SPLIT RISK': '06',
+    COOPERLINK: '07',
+    KVOR: '08',
+    'MAIS BRASIL': '09',
+    AUTOINSP: '10',
+    SEVEN: '11',
+  }
+
+  const natMap: Record<string, string> = {
+    'COLISAO COM TERCEIRO': '10',
+    'COLISAO SEM TERCEIRO': '16',
+    INCENDIO: '20',
+    ROUBO: '30',
+    FURTO: '31',
+    ENCHENTE: '50',
+    PROPERTY: '03',
+    'I.E': '00',
+  }
+
+  const cc = ciaMap[cia] || '00'
+  const nn = natMap[natureza] || '00'
+
+  const prefix = `${mm}.${yy}.${cc}.${nn}`
+
+  try {
+    const result = await pb.collection('processos_operacionais').getList(1, 1, {
+      filter: `numero_controle ~ '${prefix}.'`,
+      sort: '-numero_controle',
+    })
+
+    let nextSeq = 1
+    if (result.items.length > 0) {
+      const lastNum = result.items[0].numero_controle
+      const parts = lastNum?.split('.')
+      if (parts && parts.length === 5) {
+        nextSeq = parseInt(parts[4], 10) + 1
+      }
+    }
+
+    const sssss = String(nextSeq).padStart(5, '0')
+    return `${prefix}.${sssss}`
+  } catch {
+    return `${prefix}.00001`
+  }
+}
+
+export const validateDuplicidade = async (nomeSegurado: string, placas: string) => {
+  if (!nomeSegurado || !placas) return null
+  try {
+    const result = await pb.collection('processos_operacionais').getList(1, 1, {
+      filter: `nome_segurado = '${nomeSegurado.toUpperCase().replace(/'/g, "\\'")}' && placas_veiculos = '${placas.toUpperCase().replace(/'/g, "\\'")}'`,
+      sort: '-created',
+    })
+    return result.items.length > 0 ? result.items[0] : null
+  } catch {
+    return null
+  }
+}
+
+export const createProcesso = async (data: any): Promise<Processo> => {
+  return await pb.collection('processos_operacionais').create<Processo>(data)
+}
+
 export const createAuditLog = async (
   processoId: string,
   acao: string,

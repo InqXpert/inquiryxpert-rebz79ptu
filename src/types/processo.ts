@@ -28,3 +28,18 @@ export interface ProcessoDetalhes extends Processo {
   supervisor_nome?: string
   solicitante_nome?: string
 }
+
+export interface NovoProcesso {
+  seguradora: string
+  controle_cia: string
+  natureza_sinistro: string
+  tipo_investigacao: string
+  regiao_sinistro: string
+  nome_segurado: string
+  placas_veiculos: string
+  solicitante_id: string
+  agente_id: string
+  status: string
+  supervisor_id: string
+  [key: string]: any
+}
