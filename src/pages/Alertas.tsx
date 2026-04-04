@@ -184,6 +184,17 @@ export default function Alertas() {
     <div className="w-full px-4 md:px-8 py-6 md:py-8 space-y-6 max-w-7xl mx-auto animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
+          {user && ['c-level', 'admin', 'supervisor'].includes(user.role) && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/processos')}
+              className="mb-3 -ml-2 text-muted-foreground hover:text-foreground h-8"
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              Voltar para Processos
+            </Button>
+          )}
           <h1 className="text-3xl font-bold tracking-tight text-primary">Alertas de Processos</h1>
           <p className="text-muted-foreground mt-1">Acompanhamento de processos críticos</p>
         </div>
