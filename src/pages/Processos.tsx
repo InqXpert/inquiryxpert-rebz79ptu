@@ -1,13 +1,17 @@
 import { useNavigate } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { Plus, BellRing } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useProcessosList } from '@/hooks/useProcessosList'
 import { ProcessosListTable } from '@/components/operacional/ProcessosListTable'
 import { ProcessosListFilters } from '@/components/operacional/ProcessosListFilters'
+import { useAuth } from '@/hooks/use-auth'
 
 export default function Processos() {
   const state = useProcessosList()
   const navigate = useNavigate()
+  const { user } = useAuth()
+
+  const canViewAlerts = user?.role && ['c-level', 'admin', 'supervisor'].includes(user.role)
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-4 md:px-6 py-6 md:py-8 animate-in fade-in duration-500">
@@ -20,13 +24,25 @@ export default function Processos() {
             Acompanhamento de investigações
           </p>
         </div>
-        <Button
-          onClick={() => navigate('/processos/novo')}
-          className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold shadow-sm"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Novo Processo
-        </Button>
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {canViewAlerts && (
+            <Button
+              onClick={() => navigate('/processos/alertas')}
+              variant="outline"
+              className="font-bold shadow-sm bg-white dark:bg-transparent"
+            >
+              <BellRing className="w-4 h-4 mr-2" />
+              Central de Alertas
+            </Button>
+          )}
+          <Button
+            onClick={() => navigate('/processos/novo')}
+            className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold shadow-sm"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Novo Processo
+          </Button>
+        </div>
       </div>
 
       <div className="sticky top-0 z-20 bg-background/95 dark:bg-brand-navy/95 backdrop-blur-md py-4 px-4 md:px-6 -mx-4 md:-mx-6 mb-6">
