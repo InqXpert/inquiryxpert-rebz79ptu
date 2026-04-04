@@ -67,7 +67,7 @@ export default function App() {
                   <Route path="/processos/novo" element={<NovoProcessoPage />} />
                   <Route path="/processos/:id" element={<ProcessoDetalhesPage />} />
                   <Route path="/processos/:id/editar" element={<ProcessoEdit />} />
-                  <Route path="/alertas" element={<Alertas />} />
+                  <Route path="/processos/alertas" element={<Alertas />} />
                   <Route path="/relatorios" element={<Relatorios />} />
                   <Route path="/agentes" element={<AgentesList />} />
                   <Route path="/agentes/novo" element={<NovoAgente />} />

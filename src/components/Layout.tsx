@@ -164,7 +164,7 @@ export default function Layout() {
             variant="ghost"
             size="icon"
             className="text-white/80 hover:text-white hover:bg-white/10 h-8 w-8 relative"
-            onClick={() => navigate('/alertas')}
+            onClick={() => navigate('/processos/alertas')}
           >
             <Bell className="w-4 h-4" />
             <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-brand-coral rounded-full"></span>
