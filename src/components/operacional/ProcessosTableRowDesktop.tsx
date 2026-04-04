@@ -27,6 +27,12 @@ export function ProcessosTableRowDesktop({
   const bgColor = calculateDayColor(p.data_entrada)
   const tags = calculateTags(p.data_entrada)
 
+  const supervisorName = p.expand?.supervisor_id?.name || ''
+  const supervisorFirstName = supervisorName.split(' ')[0] || 'N/A'
+
+  const agenteName = p.expand?.agente_id?.nomeCompleto || p.agente_prestador || ''
+  const agenteFirstName = agenteName.split(' ')[0] || 'N/A'
+
   return (
     <React.Fragment>
       <TableRow
@@ -42,7 +48,7 @@ export function ProcessosTableRowDesktop({
         onClick={onToggle}
       >
         <TableCell
-          className="font-bold text-[14px] text-brand-navy dark:text-white"
+          className="font-bold text-xs text-brand-navy dark:text-white"
           title={p.numero_controle || p.id}
         >
           {p.numero_controle || p.id}
@@ -61,7 +67,7 @@ export function ProcessosTableRowDesktop({
                   <span
                     key={idx}
                     className={cn(
-                      'text-[11px] px-2 py-1 rounded-[4px] shadow-sm font-bold truncate max-w-full inline-block',
+                      'text-[10px] px-1.5 py-0.5 rounded-[4px] shadow-sm font-bold truncate max-w-full inline-block',
                       t.color,
                     )}
                     title={t.label}
@@ -74,31 +80,31 @@ export function ProcessosTableRowDesktop({
           </div>
         </TableCell>
         <TableCell
-          className="font-medium text-brand-gray dark:text-brand-light truncate"
-          title={p.expand?.supervisor_id?.name || 'N/A'}
+          className="font-medium text-xs text-brand-gray dark:text-brand-light truncate"
+          title={supervisorName || 'N/A'}
         >
-          {p.expand?.supervisor_id?.name || 'N/A'}
+          {supervisorFirstName}
         </TableCell>
         <TableCell
-          className="text-brand-gray dark:text-brand-light truncate"
+          className="text-xs text-brand-gray dark:text-brand-light truncate"
           title={p.cia || 'N/A'}
         >
           {p.cia || 'N/A'}
         </TableCell>
         <TableCell
-          className="text-brand-gray dark:text-brand-light truncate"
+          className="text-xs text-brand-gray dark:text-brand-light break-words"
           title={p.tipo_servico || 'N/A'}
         >
           {p.tipo_servico || 'N/A'}
         </TableCell>
         <TableCell
-          className="text-brand-gray dark:text-brand-light truncate hidden lg:table-cell"
-          title={p.expand?.agente_id?.nomeCompleto || p.agente_prestador || 'N/A'}
+          className="text-xs text-brand-gray dark:text-brand-light truncate hidden lg:table-cell"
+          title={agenteName || 'N/A'}
         >
-          {p.expand?.agente_id?.nomeCompleto || p.agente_prestador || 'N/A'}
+          {agenteFirstName}
         </TableCell>
         <TableCell
-          className="font-medium text-brand-gray dark:text-brand-light truncate"
+          className="font-medium text-xs text-brand-gray dark:text-brand-light whitespace-nowrap"
           title={p.data_entrada || 'N/A'}
         >
           {p.data_entrada || 'N/A'}
@@ -106,7 +112,7 @@ export function ProcessosTableRowDesktop({
         <TableCell className="text-right pr-4">
           <ChevronDown
             className={cn(
-              'h-5 w-5 text-brand-gray transition-transform duration-200 ml-auto',
+              'h-4 w-4 text-brand-gray transition-transform duration-200 ml-auto',
               expanded && 'rotate-180',
             )}
           />

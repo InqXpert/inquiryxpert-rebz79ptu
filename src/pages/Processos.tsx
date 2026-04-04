@@ -10,7 +10,7 @@ export default function Processos() {
   const navigate = useNavigate()
 
   return (
-    <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 animate-in fade-in duration-500">
+    <div className="w-full max-w-[1600px] mx-auto px-4 md:px-6 py-6 md:py-8 animate-in fade-in duration-500">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-[28px] font-bold tracking-tight text-brand-navy dark:text-white mb-1">
@@ -29,7 +29,7 @@ export default function Processos() {
         </Button>
       </div>
 
-      <div className="sticky top-0 z-20 bg-white dark:bg-brand-navy/95 backdrop-blur-md border-b border-brand-teal/20 dark:border-brand-cyan/20 py-4 px-4 md:px-6 -mx-4 md:-mx-6 mb-6 shadow-sm">
+      <div className="sticky top-0 z-20 bg-background/95 dark:bg-brand-navy/95 backdrop-blur-md py-4 px-4 md:px-6 -mx-4 md:-mx-6 mb-6">
         <ProcessosListFilters {...state} />
       </div>
 
