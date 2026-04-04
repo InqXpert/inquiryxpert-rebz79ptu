@@ -49,14 +49,15 @@ export function ProcessosListFilters({
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           placeholder="Buscar..."
-          className="pl-9 h-11 w-full"
+          className="pl-9 h-11 w-full min-h-[44px]"
           value={localSearch}
           onChange={(e) => setLocalSearch(e.target.value)}
+          aria-label="Buscar processos"
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full lg:flex-1">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="h-11">
+          <SelectTrigger className="h-11 min-h-[44px]" aria-label="Filtrar por Status">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -69,7 +70,7 @@ export function ProcessosListFilters({
           </SelectContent>
         </Select>
         <Select value={dateFilter} onValueChange={setDateFilter}>
-          <SelectTrigger className="h-11">
+          <SelectTrigger className="h-11 min-h-[44px]" aria-label="Filtrar por Data">
             <SelectValue placeholder="Data" />
           </SelectTrigger>
           <SelectContent>
@@ -81,7 +82,7 @@ export function ProcessosListFilters({
         </Select>
         <div className="flex gap-2">
           <Select value={supervisorFilter} onValueChange={setSupervisorFilter}>
-            <SelectTrigger className="flex-1 h-11">
+            <SelectTrigger className="flex-1 h-11 min-h-[44px]" aria-label="Filtrar por Supervisor">
               <SelectValue placeholder="Supervisor" />
             </SelectTrigger>
             <SelectContent>
@@ -96,9 +97,10 @@ export function ProcessosListFilters({
           <Button
             variant="ghost"
             size="icon"
-            className="h-11 w-11 shrink-0 text-foreground hover:opacity-80 transition-opacity hover:bg-transparent"
+            className="h-11 w-11 min-h-[44px] min-w-[44px] shrink-0 text-foreground hover:opacity-80 transition-opacity hover:bg-transparent"
             onClick={clearFilters}
             title="Limpar Filtros"
+            aria-label="Limpar Filtros"
           >
             <FilterX className="h-4 w-4" />
           </Button>

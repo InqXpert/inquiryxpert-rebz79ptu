@@ -32,6 +32,7 @@ export const searchProcessos = (processos: Processo[], search: string) => {
       (p.analista_solicitante || '').toLowerCase().includes(lower) ||
       (p.nome_segurado || '').toLowerCase().includes(lower) ||
       (p.placas_veiculos || '').toLowerCase().includes(lower) ||
+      (p.expand?.solicitante_id?.name || '').toLowerCase().includes(lower) ||
       JSON.stringify(p.observacoes_json || {})
         .toLowerCase()
         .includes(lower) ||
@@ -88,11 +89,16 @@ export const calculateTags = (dataEntradaStr?: string) => {
   const { calendar, business } = getElapsedDays(dataEntradaStr)
   const tags = []
 
-  if (business >= 3)
-    tags.push({ label: 'Posição Preliminar', color: 'bg-[hsl(45,96%,56%)] text-slate-900' })
-  if (calendar >= 5)
-    tags.push({ label: 'Atualização', color: 'bg-[hsl(25,95%,53%)] text-slate-900' })
-  if (business >= 7) tags.push({ label: 'Encerramento', color: 'bg-[hsl(0,84%,60%)] text-white' })
+  if (business >= 7) {
+    tags.push({ label: '7º dia (Encerramento)', color: 'bg-[hsl(0,84%,60%)] text-white' })
+  } else if (calendar >= 5) {
+    tags.push({ label: '5º dia (Atualização)', color: 'bg-[hsl(25,95%,53%)] text-slate-900' })
+  } else if (business >= 3) {
+    tags.push({
+      label: '3º dia (Posição Preliminar)',
+      color: 'bg-[hsl(45,96%,56%)] text-slate-900',
+    })
+  }
 
   return tags
 }

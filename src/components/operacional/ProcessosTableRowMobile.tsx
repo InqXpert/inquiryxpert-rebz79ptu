@@ -100,7 +100,7 @@ export function ProcessosTableRowMobile({
           <div className="flex flex-col gap-2 mb-4">
             <Button
               size="sm"
-              className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold w-full justify-start"
+              className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold w-full justify-start min-h-[44px]"
               onClick={(e) => {
                 e.stopPropagation()
                 navigate(`/processos/${p.id}/editar`)
@@ -112,7 +112,7 @@ export function ProcessosTableRowMobile({
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full bg-white dark:bg-brand-navy border-brand-teal/20 dark:border-brand-cyan/20"
+                className="w-full bg-white dark:bg-brand-navy border-brand-teal/20 dark:border-brand-cyan/20 min-h-[44px]"
                 onClick={(e) => {
                   e.stopPropagation()
                   onOpenModal('history', p)
@@ -123,7 +123,7 @@ export function ProcessosTableRowMobile({
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full bg-white dark:bg-brand-navy border-brand-teal/20 dark:border-brand-cyan/20"
+                className="w-full bg-white dark:bg-brand-navy border-brand-teal/20 dark:border-brand-cyan/20 min-h-[44px]"
                 onClick={(e) => {
                   e.stopPropagation()
                   onOpenModal('obs', p)
@@ -135,7 +135,7 @@ export function ProcessosTableRowMobile({
             <Button
               variant="outline"
               size="sm"
-              className="w-full bg-white dark:bg-brand-navy border-brand-teal/20 dark:border-brand-cyan/20"
+              className="w-full bg-white dark:bg-brand-navy border-brand-teal/20 dark:border-brand-cyan/20 min-h-[44px]"
               onClick={(e) => {
                 e.stopPropagation()
                 onOpenModal('pos', p)

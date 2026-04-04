@@ -143,15 +143,23 @@ export default function ProcessoDetalhesPage() {
 
   const handleChange = (field: string, value: any) => {
     setFormData((prev: any) => {
+      const uppercaseFields = [
+        'nome_segurado',
+        'controle_cia',
+        'regiao_sinistro',
+        'placas_veiculos',
+      ]
       const next = {
         ...prev,
         [field]:
-          field === 'nome_segurado' && typeof value === 'string' ? value.toUpperCase() : value,
+          uppercaseFields.includes(field) && typeof value === 'string'
+            ? value.toUpperCase()
+            : value,
       }
       if (field === 'status') {
         const dStr = format(new Date(), 'dd/MM/yyyy')
-        if (value === 'EM_ELABORACAO') next.data_retorno = dStr
-        if (value === 'FINALIZADO') next.data_saida = dStr
+        if (value === 'EM_ELABORACAO' && !prev.data_retorno) next.data_retorno = dStr
+        if (value === 'FINALIZADO' && !prev.data_saida) next.data_saida = dStr
       }
       return next
     })
@@ -239,8 +247,10 @@ export default function ProcessoDetalhesPage() {
           variant="ghost"
           size="icon"
           onClick={() => navigate(-1)}
-          className="text-brand-gray hover:text-brand-navy dark:text-brand-light dark:hover:text-white active:scale-[0.98] transition-transform duration-100"
+          aria-label="Voltar"
+          className="text-brand-gray min-w-[44px] min-h-[44px] hover:text-brand-navy dark:text-brand-light dark:hover:text-white active:scale-[0.98] transition-transform duration-100"
         >
+          {' '}
           <ArrowLeft className="w-5 h-5" />
         </Button>
         <div>
@@ -393,7 +403,7 @@ export default function ProcessoDetalhesPage() {
             <AlertDialogTrigger asChild>
               <Button
                 variant="destructive"
-                className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 bg-brand-coral hover:bg-brand-coral/90 text-white"
+                className="h-11 min-h-[44px] w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 bg-brand-coral hover:bg-brand-coral/90 text-white"
               >
                 <Trash2 className="w-4 h-4 mr-2" /> Deletar
               </Button>
@@ -423,13 +433,13 @@ export default function ProcessoDetalhesPage() {
 
           <Button
             variant="outline"
-            className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 border-brand-teal text-brand-navy dark:text-white"
+            className="h-11 min-h-[44px] w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 border-brand-teal text-brand-navy dark:text-white"
             onClick={() => navigate(-1)}
           >
             <X className="w-4 h-4 mr-2" /> Cancelar
           </Button>
           <Button
-            className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold"
+            className="h-11 min-h-[44px] w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold"
             onClick={handleSave}
           >
             <Save className="w-4 h-4 mr-2" /> Salvar

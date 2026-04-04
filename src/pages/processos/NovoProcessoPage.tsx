@@ -207,7 +207,8 @@ export default function NovoProcessoPage() {
           variant="ghost"
           size="icon"
           onClick={() => navigate('/processos')}
-          className="text-brand-gray hover:text-brand-navy dark:text-brand-light dark:hover:text-white"
+          aria-label="Voltar"
+          className="min-w-[44px] min-h-[44px] text-brand-gray hover:text-brand-navy dark:text-brand-light dark:hover:text-white"
         >
           <ArrowLeft className="w-5 h-5" />
         </Button>

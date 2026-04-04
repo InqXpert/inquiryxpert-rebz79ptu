@@ -129,7 +129,7 @@ export function ProcessosTableRowDesktop({
               <div className="flex flex-wrap gap-3 mb-6">
                 <Button
                   size="sm"
-                  className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold shadow-sm"
+                  className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold shadow-sm min-h-[44px]"
                   onClick={(e) => {
                     e.stopPropagation()
                     navigate(`/processos/${p.id}/editar`)
@@ -140,7 +140,7 @@ export function ProcessosTableRowDesktop({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-brand-teal/20 dark:border-brand-cyan/20 font-bold text-brand-navy dark:text-white bg-white dark:bg-brand-navy"
+                  className="border-brand-teal/20 dark:border-brand-cyan/20 font-bold text-brand-navy dark:text-white bg-white dark:bg-brand-navy min-h-[44px]"
                   onClick={(e) => {
                     e.stopPropagation()
                     onOpenModal('history', p)
@@ -151,7 +151,7 @@ export function ProcessosTableRowDesktop({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-brand-teal/20 dark:border-brand-cyan/20 font-bold text-brand-navy dark:text-white bg-white dark:bg-brand-navy"
+                  className="border-brand-teal/20 dark:border-brand-cyan/20 font-bold text-brand-navy dark:text-white bg-white dark:bg-brand-navy min-h-[44px]"
                   onClick={(e) => {
                     e.stopPropagation()
                     onOpenModal('obs', p)
@@ -162,7 +162,7 @@ export function ProcessosTableRowDesktop({
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-brand-teal/20 dark:border-brand-cyan/20 font-bold text-brand-navy dark:text-white bg-white dark:bg-brand-navy"
+                  className="border-brand-teal/20 dark:border-brand-cyan/20 font-bold text-brand-navy dark:text-white bg-white dark:bg-brand-navy min-h-[44px]"
                   onClick={(e) => {
                     e.stopPropagation()
                     onOpenModal('pos', p)
