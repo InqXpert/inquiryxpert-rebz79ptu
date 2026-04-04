@@ -15,9 +15,10 @@ import {
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
-import { ArrowLeft, Trash2, Save, X } from 'lucide-react'
+import { ArrowLeft, Trash2, Save, X, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
 import { calculateDiasTotais } from '@/services/processosService'
+import { determineSupervisor } from '@/services/allocationService'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -79,6 +80,10 @@ export default function ProcessoDetalhesPage() {
   const [solicitantes, setSolicitantes] = useState<any[]>([])
   const [supervisores, setSupervisores] = useState<any[]>([])
 
+  const [isSuggesting, setIsSuggesting] = useState(false)
+  const [suggestedSupervisorId, setSuggestedSupervisorId] = useState<string | null>(null)
+  const [warningSupervisor, setWarningSupervisor] = useState('')
+
   useEffect(() => {
     pb.collection('agentes')
       .getFullList()
@@ -99,15 +104,37 @@ export default function ProcessoDetalhesPage() {
   }, [processo])
 
   useEffect(() => {
-    if (
-      formData.cia &&
-      formData.orientacoes &&
-      supervisores.length > 0 &&
-      !formData.supervisor_id
-    ) {
-      setFormData((prev: any) => ({ ...prev, supervisor_id: supervisores[0].id }))
+    if (formData.cia || formData.orientacoes) {
+      const isInitial =
+        processo && processo.cia === formData.cia && processo.orientacoes === formData.orientacoes
+
+      setIsSuggesting(true)
+      const timer = setTimeout(() => {
+        const suggested = determineSupervisor(
+          formData.orientacoes || '',
+          formData.cia || '',
+          supervisores,
+        )
+        if (suggested) {
+          setSuggestedSupervisorId(suggested)
+          setWarningSupervisor('')
+          if (!isInitial) {
+            setFormData((prev: any) => ({ ...prev, supervisor_id: suggested }))
+          }
+        } else if (formData.orientacoes) {
+          setSuggestedSupervisorId(null)
+          setWarningSupervisor(
+            'Nenhum supervisor disponível para essa combinação. Selecione manualmente.',
+          )
+        } else {
+          setSuggestedSupervisorId(null)
+          setWarningSupervisor('')
+        }
+        setIsSuggesting(false)
+      }, 500)
+      return () => clearTimeout(timer)
     }
-  }, [formData.cia, formData.orientacoes, supervisores])
+  }, [formData.cia, formData.orientacoes, supervisores, processo])
 
   const canEdit =
     user?.role === 'c-level' ||
@@ -319,6 +346,40 @@ export default function ProcessoDetalhesPage() {
                       ))}
                     </SelectContent>
                   </Select>
+                )}
+
+                {field.key === 'supervisor_id' && (
+                  <div className="mt-2 min-h-[24px]">
+                    {isSuggesting ? (
+                      <div className="flex items-center text-xs text-brand-gray">
+                        <Loader2 className="w-3 h-3 mr-2 animate-spin" />
+                        Calculando alocação...
+                      </div>
+                    ) : suggestedSupervisorId ? (
+                      <div className="flex flex-col gap-2">
+                        <p className="text-xs text-green-600 dark:text-green-400 font-medium">
+                          Supervisor sugerido:{' '}
+                          {supervisores.find((u) => u.id === suggestedSupervisorId)?.name ||
+                            'Desconhecido'}
+                        </p>
+                        {formData.supervisor_id !== suggestedSupervisorId && canEdit && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-7 px-2 text-xs w-max border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/30"
+                            onClick={() => handleChange('supervisor_id', suggestedSupervisorId)}
+                          >
+                            Usar Sugestão
+                          </Button>
+                        )}
+                      </div>
+                    ) : warningSupervisor ? (
+                      <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">
+                        {warningSupervisor}
+                      </p>
+                    ) : null}
+                  </div>
                 )}
               </div>
             ))}

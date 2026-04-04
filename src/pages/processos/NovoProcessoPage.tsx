@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuth } from '@/hooks/use-auth'
 import { useNovoProcesso } from '@/hooks/useNovoProcesso'
 import { novoProcessoSchema, type NovoProcessoFormData } from '@/schemas/processoSchemas'
-import { suggestSupervisor } from '@/services/validacaoService'
+import { determineSupervisor } from '@/services/allocationService'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -88,6 +88,8 @@ export default function NovoProcessoPage() {
   } = useNovoProcesso()
 
   const [warningSupervisor, setWarningSupervisor] = useState('')
+  const [isSuggesting, setIsSuggesting] = useState(false)
+  const [suggestedSupervisorId, setSuggestedSupervisorId] = useState<string | null>(null)
 
   const form = useForm<NovoProcessoFormData>({
     resolver: zodResolver(novoProcessoSchema),
@@ -452,37 +454,65 @@ export default function NovoProcessoPage() {
             <FormField
               control={form.control}
               name="supervisor_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Supervisor <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={errors.supervisor_id ? 'border-red-500' : ''}>
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {users
-                        .filter((u) => ['supervisor', 'admin', 'c-level'].includes(u.role))
-                        .map((u) => (
-                          <SelectItem key={u.id} value={u.id}>
-                            {u.name || u.email}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-red-500" />
-                  {warningSupervisor && (
-                    <p className="text-xs text-yellow-600 dark:text-yellow-400 mt-1">
-                      {warningSupervisor}
-                    </p>
-                  )}
-                </FormItem>
-              )}
-            />
+              render={({ field }) => {
+                const suggestedUser = users.find((u) => u.id === suggestedSupervisorId)
 
+                return (
+                  <FormItem>
+                    <FormLabel>
+                      Supervisor <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className={errors.supervisor_id ? 'border-red-500' : ''}>
+                          <SelectValue placeholder="Selecione..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {users
+                          .filter((u) => ['supervisor', 'admin', 'c-level'].includes(u.role))
+                          .map((u) => (
+                            <SelectItem key={u.id} value={u.id}>
+                              {u.name || u.email}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-red-500" />
+
+                    <div className="mt-2 min-h-[24px]">
+                      {isSuggesting ? (
+                        <div className="flex items-center text-xs text-brand-gray">
+                          <Loader2 className="w-3 h-3 mr-2 animate-spin" />
+                          Calculando alocação...
+                        </div>
+                      ) : suggestedSupervisorId ? (
+                        <div className="flex flex-col gap-2">
+                          <p className="text-xs text-green-600 dark:text-green-400 font-medium">
+                            Supervisor sugerido: {suggestedUser?.name || 'Desconhecido'}
+                          </p>
+                          {field.value !== suggestedSupervisorId && (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="h-7 px-2 text-xs w-max border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/30"
+                              onClick={() => field.onChange(suggestedSupervisorId)}
+                            >
+                              Usar Sugestão
+                            </Button>
+                          )}
+                        </div>
+                      ) : warningSupervisor ? (
+                        <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">
+                          {warningSupervisor}
+                        </p>
+                      ) : null}
+                    </div>
+                  </FormItem>
+                )
+              }}
+            />
             <FormField
               control={form.control}
               name="status"

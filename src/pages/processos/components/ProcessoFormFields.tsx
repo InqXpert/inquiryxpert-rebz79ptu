@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
 import { FormSelect, FormInput, FormCombobox } from './FormHelpers'
+import { determineSupervisor } from '@/services/allocationService'
 
 const SEGURADORAS = [
   'ZURICH',
@@ -55,10 +56,10 @@ export function ProcessoFormFields({
   const watchStatus = form.watch('status')
 
   useEffect(() => {
-    if (watchCia && watchTipo) {
-      const suggested = users.find((u) => u.role === 'supervisor')
-      if (suggested && !form.getValues('supervisor_id')) {
-        form.setValue('supervisor_id', suggested.id, { shouldValidate: true })
+    if (watchCia || watchTipo) {
+      const suggestedId = determineSupervisor(watchTipo || '', watchCia || '', users)
+      if (suggestedId) {
+        form.setValue('supervisor_id', suggestedId, { shouldValidate: true })
       }
     }
   }, [watchCia, watchTipo, users, form])
