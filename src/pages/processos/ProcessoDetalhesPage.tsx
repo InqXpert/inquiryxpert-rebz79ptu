@@ -4,7 +4,9 @@ import { useProcessoDetalhes } from '@/hooks/useProcessoDetalhes'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
   Select,
   SelectContent,
@@ -12,187 +14,88 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Label } from '@/components/ui/label'
-import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
-import { ArrowLeft, Trash2, Save, X, Loader2 } from 'lucide-react'
-import { usePlacaValidation, useInsuredValidation } from '@/hooks/usePlacaValidation'
-import { PlateValidationUI, InsuredValidationUI } from '@/components/processos/ValidationIndicators'
+import { ArrowLeft, CheckCircle2, Info, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
-import { calculateDiasTotais } from '@/services/processosService'
-import { determineSupervisor } from '@/services/allocationService'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import pb from '@/lib/pocketbase/client'
 
-const SEGURADORAS = [
-  'ZURICH',
-  'MAPFRE',
-  'SUHAI',
-  'BRADESCO',
-  'NEO',
-  'SPLIT RISK',
-  'COOPERLINK',
-  'KVOR',
-  'MAIS BRASIL',
-  'AUTOINSP',
-  'SEVEN',
-]
-const NATUREZAS = [
-  'COLISÃO COM TERCEIRO',
-  'COLISÃO SEM TERCEIRO',
-  'INCÊNDIO',
-  'ROUBO',
-  'FURTO',
-  'ENCHENTE',
-  'PROPERTY',
-  'I.E',
-]
-const TIPOS_INVESTIGACAO = [
-  'AUTO',
-  'BUSCA B.O DOCS',
-  'PERFIL',
-  'FAST',
-  'PROPERTY RES D.E',
-  'PROPERTY MÁQUINAS',
-  'PROPERTY FURTO ROUBO',
-  'PROPERTY RES EQUIP',
-  'REMOTA',
-  'I.E',
-]
 const STATUSES = ['ANALISE_INICIAL', 'EM_EXECUCAO', 'EM_ELABORACAO', 'FINALIZADO', 'CANCELADO']
 
 export default function ProcessoDetalhesPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { processo, loading, error, save, remove } = useProcessoDetalhes(id)
+  const { processo, loading, error, save } = useProcessoDetalhes(id)
 
-  const [formData, setFormData] = useState<any>({})
-  const [agentes, setAgentes] = useState<any[]>([])
-  const [solicitantes, setSolicitantes] = useState<any[]>([])
-  const [supervisores, setSupervisores] = useState<any[]>([])
-
-  const [isSuggesting, setIsSuggesting] = useState(false)
-  const [suggestedSupervisorId, setSuggestedSupervisorId] = useState<string | null>(null)
-  const [warningSupervisor, setWarningSupervisor] = useState('')
-
-  const plateValidation = usePlacaValidation(formData.placas_veiculos || '', id)
-  const insuredValidation = useInsuredValidation(formData.nome_segurado || '', id)
+  const [actionType, setActionType] = useState<'MANTER' | 'ALTERAR'>('MANTER')
+  const [newStatus, setNewStatus] = useState('')
+  const [posicao, setPosicao] = useState('')
+  const [observacao, setObservacao] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
-    pb.collection('agentes')
-      .getFullList()
-      .then(setAgentes)
-      .catch(() => {})
-    pb.collection('users')
-      .getFullList({ filter: 'role="analista" || role="admin" || role="c-level"' })
-      .then(setSolicitantes)
-      .catch(() => {})
-    pb.collection('users')
-      .getFullList({ filter: 'role="supervisor" || role="admin" || role="c-level"' })
-      .then(setSupervisores)
-      .catch(() => {})
-  }, [])
-
-  useEffect(() => {
-    if (processo) setFormData({ ...processo })
-  }, [processo])
-
-  useEffect(() => {
-    if (formData.cia || formData.orientacoes) {
-      const isInitial =
-        processo && processo.cia === formData.cia && processo.orientacoes === formData.orientacoes
-
-      setIsSuggesting(true)
-      const timer = setTimeout(() => {
-        const suggested = determineSupervisor(
-          formData.orientacoes || '',
-          formData.cia || '',
-          supervisores,
-        )
-        if (suggested) {
-          setSuggestedSupervisorId(suggested)
-          setWarningSupervisor('')
-          if (!isInitial) {
-            setFormData((prev: any) => ({ ...prev, supervisor_id: suggested }))
-          }
-        } else if (formData.orientacoes) {
-          setSuggestedSupervisorId(null)
-          setWarningSupervisor(
-            'Nenhum supervisor disponível para essa combinação. Selecione manualmente.',
-          )
-        } else {
-          setSuggestedSupervisorId(null)
-          setWarningSupervisor('')
-        }
-        setIsSuggesting(false)
-      }, 500)
-      return () => clearTimeout(timer)
+    if (processo && !newStatus) {
+      setNewStatus(processo.status || '')
     }
-  }, [formData.cia, formData.orientacoes, supervisores, processo])
+  }, [processo, newStatus])
 
-  const canEdit =
-    user?.role === 'c-level' ||
-    user?.role === 'admin' ||
-    (user?.role === 'supervisor' && processo?.supervisor_id === user?.id)
+  const handleResolve = async () => {
+    if (actionType === 'MANTER' && !observacao.trim()) {
+      toast.error('O campo de observações é obrigatório ao manter o status.')
+      return
+    }
+    if (actionType === 'ALTERAR' && !newStatus) {
+      toast.error('Selecione o novo status.')
+      return
+    }
 
-  const handleChange = (field: string, value: any) => {
-    setFormData((prev: any) => {
-      const uppercaseFields = [
-        'nome_segurado',
-        'controle_cia',
-        'regiao_sinistro',
-        'placas_veiculos',
-      ]
-      const next = {
-        ...prev,
-        [field]:
-          uppercaseFields.includes(field) && typeof value === 'string'
-            ? value.toUpperCase()
-            : value,
-      }
-      if (field === 'status') {
+    setIsSubmitting(true)
+    try {
+      const dataToUpdate: any = {}
+      let actionLog = 'POSICAO_ADICIONADA'
+
+      if (actionType === 'ALTERAR' && newStatus !== processo?.status) {
+        dataToUpdate.status = newStatus
+        actionLog = 'STATUS_ALTERADO'
+
         const dStr = format(new Date(), 'dd/MM/yyyy')
-        if (value === 'EM_ELABORACAO' && !prev.data_retorno) next.data_retorno = dStr
-        if (value === 'FINALIZADO' && !prev.data_saida) next.data_saida = dStr
+        if (newStatus === 'EM_ELABORACAO' && !processo?.data_retorno)
+          dataToUpdate.data_retorno = dStr
+        if (newStatus === 'FINALIZADO' && !processo?.data_saida) dataToUpdate.data_saida = dStr
       }
-      return next
-    })
-  }
 
-  const handleSave = async () => {
-    if (!formData.cia || !formData.status)
-      return toast.error('Preencha os campos obrigatórios (Seguradora e Status).')
-    try {
-      await save(formData)
-      toast.success('Processo salvo com sucesso!')
+      const prevPosicoes = Array.isArray(processo?.posicoes_json) ? processo.posicoes_json : []
+      if (posicao.trim()) {
+        dataToUpdate.posicoes_json = [
+          ...prevPosicoes,
+          { data: new Date().toISOString(), texto: posicao, user: user?.name || user?.email },
+        ]
+      }
+
+      const prevObs = Array.isArray(processo?.observacoes_json) ? processo.observacoes_json : []
+      if (observacao.trim()) {
+        dataToUpdate.observacoes_json = [
+          ...prevObs,
+          { data: new Date().toISOString(), texto: observacao, user: user?.name || user?.email },
+        ]
+      }
+
+      await save(dataToUpdate, actionLog, {
+        ...processo,
+        ...dataToUpdate,
+        nova_posicao: posicao,
+        nova_observacao: observacao,
+      })
+
+      toast.success('Resolução confirmada com sucesso!')
       navigate('/processos')
     } catch {
-      toast.error('Erro ao salvar processo.')
+      toast.error('Erro ao salvar resolução.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
-  const handleDelete = async () => {
-    try {
-      await remove()
-      toast.success('Processo deletado com sucesso!')
-      navigate('/processos')
-    } catch {
-      toast.error('Erro ao deletar processo.')
-    }
-  }
-
-  if (loading)
+  if (loading) {
     return (
       <div className="p-6 space-y-6">
         <Skeleton className="h-10 w-1/3" />
@@ -200,8 +103,9 @@ export default function ProcessoDetalhesPage() {
         <Skeleton className="h-[400px]" />
       </div>
     )
+  }
 
-  if (error || !processo)
+  if (error || !processo) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
         <p className="text-xl text-muted-foreground">{error || 'Processo não encontrado'}</p>
@@ -210,255 +114,159 @@ export default function ProcessoDetalhesPage() {
         </Button>
       </div>
     )
+  }
 
-  const dTotais = calculateDiasTotais(formData.data_entrada, formData.data_saida)
-
-  const formFields = [
-    { key: 'cia', type: 'select', label: 'Seguradora', opts: SEGURADORAS, req: true },
-    { key: 'tipo_servico', type: 'select', label: 'Natureza do Sinistro', opts: NATUREZAS },
-    { key: 'orientacoes', type: 'select', label: 'Tipo de Investigação', opts: TIPOS_INVESTIGACAO },
-    { key: 'status', type: 'select', label: 'Status', opts: STATUSES, req: true },
-    { key: 'controle_cia', type: 'input', label: 'Controle Cia' },
-    { key: 'regiao_sinistro', type: 'input', label: 'Região do Sinistro', ph: 'ESTADO / CIDADE' },
-    { key: 'nome_segurado', type: 'input', label: 'Nome do Segurado' },
-    { key: 'placas_veiculos', type: 'input', label: 'Placas dos Veículos' },
-    {
-      key: 'solicitante_id',
-      type: 'relation',
-      label: 'Solicitante',
-      opts: solicitantes,
-      d: (x: any) => x.name || x.email,
-    },
-    {
-      key: 'agente_id',
-      type: 'relation',
-      label: 'Agente',
-      opts: agentes,
-      d: (x: any) => x.nomeCompleto || x.nome,
-    },
-    {
-      key: 'supervisor_id',
-      type: 'relation',
-      label: 'Supervisor',
-      opts: supervisores,
-      d: (x: any) => x.name || x.email,
-    },
-  ]
+  const InfoItem = ({ label, value }: { label: string; value: React.ReactNode }) => (
+    <div className="flex flex-col space-y-1 bg-brand-light/30 dark:bg-black/10 p-3 rounded-[6px] border border-brand-teal/10 dark:border-brand-cyan/10">
+      <span className="text-xs font-bold text-brand-gray dark:text-brand-light uppercase tracking-wider">
+        {label}
+      </span>
+      <span className="text-sm font-medium text-brand-navy dark:text-white break-all">
+        {value || '-'}
+      </span>
+    </div>
+  )
 
   return (
     <div className="p-6 max-w-5xl mx-auto animate-in fade-in duration-300 fill-mode-both">
       <div className="flex items-center space-x-4 mb-6">
         <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate(-1)}
-          aria-label="Voltar"
-          className="text-brand-gray min-w-[44px] min-h-[44px] hover:text-brand-navy dark:text-brand-light dark:hover:text-white active:scale-[0.98] transition-transform duration-100"
+          variant="outline"
+          onClick={() => navigate('/processos')}
+          className="text-brand-navy dark:text-white h-10 px-4 active:scale-[0.98] transition-transform duration-100 border-brand-teal/20"
         >
-          {' '}
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-4 h-4 mr-2" /> Voltar para Processos
         </Button>
         <div>
-          <h1 className="text-[28px] font-bold tracking-tight text-brand-navy dark:text-white">
+          <h1 className="text-[28px] font-bold tracking-tight text-brand-navy dark:text-white flex items-center gap-3">
             Processo {processo.numero_controle || processo.id}
+            <Badge
+              variant="outline"
+              className="border-brand-teal/30 text-brand-navy dark:text-brand-light text-sm bg-white dark:bg-brand-navy/50"
+            >
+              {String(processo.status || 'Sem Status').replace(/_/g, ' ')}
+            </Badge>
           </h1>
-          <Badge
-            variant="outline"
-            className="mt-1 border-brand-teal/30 text-brand-navy dark:text-brand-light"
-          >
-            {String(formData.status || 'Sem Status').replace(/_/g, ' ')}
-          </Badge>
         </div>
       </div>
 
       <div className="space-y-6">
-        <div className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 shadow-sm">
-          <h2 className="text-[18px] font-bold text-brand-navy dark:text-white mb-4">
-            Informações Básicas
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            {[
-              { l: 'ID', v: processo.id },
-              { l: 'Data Entrada', v: formData.data_entrada || '-' },
-              { l: 'Data Retorno', v: formData.data_retorno || '-' },
-              { l: 'Data Saída', v: formData.data_saida || '-' },
-              { l: 'Dias Totais', v: dTotais },
-            ].map((i, idx) => (
-              <div
-                key={i.l}
-                className="bg-brand-light/30 dark:bg-black/10 p-3 rounded-[6px] flex flex-col space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both border border-brand-teal/10 dark:border-brand-cyan/10"
-                style={{ animationDelay: `${(idx + 1) * 50}ms` }}
-              >
-                <span className="text-xs font-bold text-brand-gray dark:text-brand-light uppercase tracking-wider">
-                  {i.l}
-                </span>
-                <span className="text-sm font-medium text-brand-navy dark:text-white break-all">
-                  {i.v}
-                </span>
-              </div>
-            ))}
+        {/* Read-Only Info Panel */}
+        <div className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both delay-100">
+          <div className="flex items-center gap-2 mb-4">
+            <Info className="w-5 h-5 text-brand-cyan" />
+            <h2 className="text-[18px] font-bold text-brand-navy dark:text-white">
+              Informações Básicas
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <InfoItem label="Seguradora" value={processo.cia} />
+            <InfoItem label="Natureza do Sinistro" value={processo.tipo_servico} />
+            <InfoItem label="Tipo de Investigação" value={processo.orientacoes} />
+            <InfoItem label="Controle Cia" value={processo.controle_cia} />
+            <InfoItem
+              label="Agente"
+              value={processo.expand?.agente_id?.nomeCompleto || processo.expand?.agente_id?.nome}
+            />
+            <InfoItem label="Solicitante" value={processo.expand?.solicitante_id?.name} />
+            <InfoItem label="Supervisor" value={processo.expand?.supervisor_id?.name} />
+            <InfoItem label="Região do Sinistro" value={processo.regiao_sinistro} />
+            <InfoItem label="Nome do Segurado" value={processo.nome_segurado} />
+            <InfoItem label="Placas dos Veículos" value={processo.placas_veiculos} />
+            <InfoItem label="Data de Entrada" value={processo.data_entrada} />
+            <InfoItem label="Dias Úteis" value={processo.dias_uteis} />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 shadow-sm">
-          <h2 className="text-[18px] font-bold text-brand-navy dark:text-white mb-4">
-            Dados do Processo
+        {/* Resolution Center */}
+        <div className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both delay-200">
+          <h2 className="text-[18px] font-bold text-brand-navy dark:text-white mb-6 flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-brand-teal" /> Central de Resolução
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {formFields.map((field, idx) => (
-              <div
-                key={field.key}
-                className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
-                style={{ animationDelay: `${(idx + 6) * 50}ms` }}
+
+          <div className="space-y-6 max-w-3xl">
+            <div className="space-y-3">
+              <Label className="text-base font-bold text-brand-navy dark:text-white">
+                Ação de Status
+              </Label>
+              <RadioGroup
+                value={actionType}
+                onValueChange={(v) => setActionType(v as 'MANTER' | 'ALTERAR')}
+                className="flex flex-col sm:flex-row gap-4"
               >
-                <Label className="text-sm font-bold text-brand-navy dark:text-white">
-                  {field.label} {field.req && <span className="text-brand-coral">*</span>}
-                </Label>
+                <div className="flex items-center space-x-2 bg-brand-light/20 dark:bg-black/20 p-3 rounded-lg border border-brand-teal/10 dark:border-brand-cyan/10">
+                  <RadioGroupItem value="MANTER" id="manter" />
+                  <Label htmlFor="manter" className="cursor-pointer font-medium">
+                    MANTER STATUS
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 bg-brand-light/20 dark:bg-black/20 p-3 rounded-lg border border-brand-teal/10 dark:border-brand-cyan/10">
+                  <RadioGroupItem value="ALTERAR" id="alterar" />
+                  <Label htmlFor="alterar" className="cursor-pointer font-medium">
+                    ALTERAR STATUS
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
 
-                {field.type === 'select' && (
-                  <Select
-                    disabled={!canEdit}
-                    value={formData[field.key] || ''}
-                    onValueChange={(v) => handleChange(field.key, v)}
-                  >
-                    <SelectTrigger className="focus:ring-brand-cyan focus:border-brand-cyan border-brand-teal/20 dark:border-brand-cyan/20">
-                      <SelectValue placeholder="Selecione..." />
-                    </SelectTrigger>
-                    <SelectContent className="border-brand-teal/20 dark:border-brand-cyan/20">
-                      {field.opts?.map((o: any) => (
-                        <SelectItem key={o} value={o}>
-                          {String(o).replace(/_/g, ' ')}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-
-                {field.type === 'input' && (
-                  <>
-                    <Input
-                      disabled={!canEdit}
-                      placeholder={field.ph}
-                      value={formData[field.key] || ''}
-                      onChange={(e) => handleChange(field.key, e.target.value)}
-                      className="focus-visible:ring-brand-cyan focus-visible:border-brand-cyan border-brand-teal/20 dark:border-brand-cyan/20"
-                    />
-                    {field.key === 'nome_segurado' && (
-                      <InsuredValidationUI validation={insuredValidation} />
-                    )}
-                    {field.key === 'placas_veiculos' && (
-                      <PlateValidationUI validation={plateValidation} />
-                    )}
-                  </>
-                )}
-
-                {field.type === 'relation' && (
-                  <Select
-                    disabled={!canEdit}
-                    value={formData[field.key] || ''}
-                    onValueChange={(v) => handleChange(field.key, v)}
-                  >
-                    <SelectTrigger className="focus:ring-brand-cyan focus:border-brand-cyan border-brand-teal/20 dark:border-brand-cyan/20">
-                      <SelectValue placeholder="Selecione..." />
-                    </SelectTrigger>
-                    <SelectContent className="border-brand-teal/20 dark:border-brand-cyan/20">
-                      {field.opts?.map((o: any) => (
-                        <SelectItem key={o.id} value={o.id}>
-                          {field.d ? field.d(o) : o.id}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-
-                {field.key === 'supervisor_id' && (
-                  <div className="mt-2 min-h-[24px]">
-                    {isSuggesting ? (
-                      <div className="flex items-center text-xs text-brand-gray">
-                        <Loader2 className="w-3 h-3 mr-2 animate-spin" />
-                        Calculando alocação...
-                      </div>
-                    ) : suggestedSupervisorId ? (
-                      <div className="flex flex-col gap-2">
-                        <p className="text-xs text-green-600 dark:text-green-400 font-medium">
-                          Supervisor sugerido:{' '}
-                          {supervisores.find((u) => u.id === suggestedSupervisorId)?.name ||
-                            'Desconhecido'}
-                        </p>
-                        {formData.supervisor_id !== suggestedSupervisorId && canEdit && (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-7 px-2 text-xs w-max border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/30"
-                            onClick={() => handleChange('supervisor_id', suggestedSupervisorId)}
-                          >
-                            Usar Sugestão
-                          </Button>
-                        )}
-                      </div>
-                    ) : warningSupervisor ? (
-                      <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">
-                        {warningSupervisor}
-                      </p>
-                    ) : null}
-                  </div>
-                )}
+            {actionType === 'ALTERAR' && (
+              <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+                <Label className="font-bold text-brand-navy dark:text-white">Novo Status</Label>
+                <Select value={newStatus} onValueChange={setNewStatus}>
+                  <SelectTrigger className="w-full sm:w-[300px] border-brand-teal/20 dark:border-brand-cyan/20 focus:ring-brand-cyan">
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STATUSES.map((s) => (
+                      <SelectItem key={s} value={s}>
+                        {s.replace(/_/g, ' ')}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            ))}
+            )}
+
+            <div className="space-y-2">
+              <Label className="font-bold text-brand-navy dark:text-white">Atualizar Posição</Label>
+              <textarea
+                className="flex min-h-[100px] w-full rounded-md border border-brand-teal/20 bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-cyan disabled:cursor-not-allowed disabled:opacity-50 dark:border-brand-cyan/20 dark:text-white resize-y"
+                placeholder="Registre o progresso ou atualização operacional..."
+                value={posicao}
+                onChange={(e) => setPosicao(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-bold text-brand-navy dark:text-white">
+                Adicionar Observações{' '}
+                {actionType === 'MANTER' && <span className="text-red-500">*</span>}
+              </Label>
+              <textarea
+                className="flex min-h-[100px] w-full rounded-md border border-brand-teal/20 bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-cyan disabled:cursor-not-allowed disabled:opacity-50 dark:border-brand-cyan/20 dark:text-white resize-y"
+                placeholder="Insira notas internas ou justificativas..."
+                value={observacao}
+                onChange={(e) => setObservacao(e.target.value)}
+              />
+            </div>
+
+            <div className="pt-4 flex justify-end">
+              <Button
+                onClick={handleResolve}
+                disabled={isSubmitting}
+                className="h-12 px-6 bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold text-base w-full sm:w-auto active:scale-[0.98] transition-transform duration-100"
+              >
+                {isSubmitting ? (
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="w-5 h-5 mr-2" />
+                )}
+                Confirmar Resolução
+              </Button>
+            </div>
           </div>
         </div>
       </div>
-
-      {canEdit && (
-        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-end items-center">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="destructive"
-                className="h-11 min-h-[44px] w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 bg-brand-coral hover:bg-brand-coral/90 text-white"
-              >
-                <Trash2 className="w-4 h-4 mr-2" /> Deletar
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white dark:bg-brand-navy">
-              <AlertDialogHeader>
-                <AlertDialogTitle className="text-brand-navy dark:text-white">
-                  Tem certeza?
-                </AlertDialogTitle>
-                <AlertDialogDescription className="text-brand-gray dark:text-brand-light">
-                  Esta ação é irreversível.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="border-brand-teal text-brand-navy dark:text-white">
-                  Cancelar
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleDelete}
-                  className="bg-brand-coral text-white hover:bg-brand-coral/90"
-                >
-                  Deletar
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-
-          <Button
-            variant="outline"
-            className="h-11 min-h-[44px] w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 border-brand-teal text-brand-navy dark:text-white"
-            onClick={() => navigate(-1)}
-          >
-            <X className="w-4 h-4 mr-2" /> Cancelar
-          </Button>
-          <Button
-            className="h-11 min-h-[44px] w-full sm:w-auto active:scale-[0.98] transition-transform duration-100 bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold"
-            onClick={handleSave}
-          >
-            <Save className="w-4 h-4 mr-2" /> Salvar
-          </Button>
-        </div>
-      )}
     </div>
   )
 }

@@ -34,10 +34,16 @@ export function useProcessoDetalhes(id: string | undefined) {
     loadData()
   }, [loadData])
 
-  const save = async (data: Partial<Processo>) => {
+  const save = async (data: Partial<Processo>, customAction?: string, customAuditData?: any) => {
     if (!id || !processo) return null
     const updated = await updateProcesso(id, data)
-    await createAuditLog(id, 'EDITADO', user?.id, processo, updated)
+    await createAuditLog(
+      id,
+      customAction || 'EDITADO',
+      user?.id,
+      processo,
+      customAuditData || updated,
+    )
     setProcesso(updated)
     return updated
   }
