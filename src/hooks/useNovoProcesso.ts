@@ -6,24 +6,11 @@ import {
   createProcesso,
   createAuditLog,
 } from '@/services/processosService'
-import type { NovoProcesso } from '@/types/processo'
 import { useAuth } from '@/hooks/use-auth'
+import { sanitizeInput } from '@/services/validacaoService'
 
 export const useNovoProcesso = () => {
   const { user } = useAuth()
-  const [formData, setFormData] = useState<NovoProcesso>({
-    seguradora: '',
-    controle_cia: '',
-    natureza_sinistro: '',
-    tipo_investigacao: '',
-    regiao_sinistro: '',
-    nome_segurado: '',
-    placas_veiculos: '',
-    solicitante_id: '',
-    agente_id: '',
-    status: 'ANALISE_INICIAL',
-    supervisor_id: '',
-  })
   const [agentes, setAgentes] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
   const [loadingInitial, setLoadingInitial] = useState(true)
@@ -48,52 +35,34 @@ export const useNovoProcesso = () => {
     fetchData()
   }, [])
 
-  const handleChange = (field: keyof NovoProcesso, value: string) => {
-    let finalValue = value
-    if (field === 'nome_segurado' || field === 'placas_veiculos') {
-      finalValue = value.toUpperCase()
-    }
-    setFormData((prev) => {
-      const next = { ...prev, [field]: finalValue }
-
-      if (field === 'seguradora' || field === 'tipo_investigacao') {
-        const possibleSupervisors = users.filter((u) => u.role === 'supervisor')
-        if (possibleSupervisors.length > 0 && next.seguradora && next.tipo_investigacao) {
-          next.supervisor_id = possibleSupervisors[0].id
-        }
-      }
-
-      return next
-    })
+  const checkDuplicate = async (nomeSegurado: string, placas: string) => {
+    if (!nomeSegurado || !placas) return null
+    return await validateDuplicidade(nomeSegurado, placas)
   }
 
-  const checkDuplicate = async () => {
-    if (!formData.nome_segurado || !formData.placas_veiculos) return null
-    return await validateDuplicidade(formData.nome_segurado, formData.placas_veiculos)
-  }
-
-  const submit = async () => {
+  const submit = async (data: any) => {
     setIsSubmitting(true)
     try {
+      const sanitized = sanitizeInput(data)
       const numControle = await generateNumeroControle(
-        formData.seguradora,
-        formData.natureza_sinistro,
+        sanitized.seguradora,
+        sanitized.natureza_sinistro,
       )
 
       const payload = {
         numero_controle: numControle,
-        status: formData.status,
-        cia: formData.seguradora,
-        descricao: formData.natureza_sinistro,
-        tipo_servico: formData.tipo_investigacao,
-        regiao_sinistro: formData.regiao_sinistro,
-        controle_cia: formData.controle_cia,
-        nome_segurado: formData.nome_segurado,
-        placas_veiculos: formData.placas_veiculos,
-        solicitante_id: formData.solicitante_id,
-        agente_id: formData.agente_id,
-        supervisor_id: formData.supervisor_id,
-        data_entrada: new Date().toISOString(),
+        status: sanitized.status,
+        cia: sanitized.seguradora,
+        descricao: sanitized.natureza_sinistro,
+        tipo_servico: sanitized.tipo_investigacao,
+        regiao_sinistro: sanitized.regiao_sinistro,
+        controle_cia: sanitized.controle_cia,
+        nome_segurado: sanitized.nome_segurado,
+        placas_veiculos: sanitized.placas_veiculos,
+        solicitante_id: sanitized.solicitante_id,
+        agente_id: sanitized.agente_id,
+        supervisor_id: sanitized.supervisor_id,
+        data_entrada: new Date().toLocaleDateString('pt-BR'),
         user_id: user?.id,
       }
 
@@ -106,8 +75,6 @@ export const useNovoProcesso = () => {
   }
 
   return {
-    formData,
-    handleChange,
     agentes,
     users,
     loadingInitial,
