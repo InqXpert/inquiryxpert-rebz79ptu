@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useProcessoDetalhes } from '@/hooks/useProcessoDetalhes'
+import { useProcessoFinanceiro } from '@/hooks/useProcessoFinanceiro'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -25,6 +26,7 @@ export default function ProcessoDetalhesPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { processo, loading, error, save } = useProcessoDetalhes(id)
+  const { statusFinanceiro, loading: loadingFinanceiro } = useProcessoFinanceiro(processo)
 
   const [actionType, setActionType] = useState<'MANTER' | 'ALTERAR'>('MANTER')
   const [newStatus, setNewStatus] = useState('')
@@ -146,6 +148,16 @@ export default function ProcessoDetalhesPage() {
             >
               {String(processo.status || 'Sem Status').replace(/_/g, ' ')}
             </Badge>
+            {loadingFinanceiro ? (
+              <Skeleton className="h-6 w-32 rounded-full" />
+            ) : statusFinanceiro ? (
+              <Badge
+                variant="outline"
+                className={`text-sm border-transparent ${statusFinanceiro.className}`}
+              >
+                Financeiro: {statusFinanceiro.label}
+              </Badge>
+            ) : null}
           </h1>
         </div>
       </div>
