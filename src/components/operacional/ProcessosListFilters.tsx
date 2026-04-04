@@ -44,7 +44,7 @@ export function ProcessosListFilters({
   }, [])
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 w-full items-center">
+    <div className="flex flex-col lg:flex-row gap-4 w-full items-center bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-4 shadow-sm transition-all">
       <div className="relative w-full lg:w-[300px] shrink-0">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
