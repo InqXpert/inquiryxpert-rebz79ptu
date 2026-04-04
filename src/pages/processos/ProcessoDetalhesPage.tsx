@@ -4,7 +4,6 @@ import { useProcessoDetalhes } from '@/hooks/useProcessoDetalhes'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -117,7 +116,11 @@ export default function ProcessoDetalhesPage() {
 
   const handleChange = (field: string, value: any) => {
     setFormData((prev: any) => {
-      const next = { ...prev, [field]: field === 'nome_segurado' ? value.toUpperCase() : value }
+      const next = {
+        ...prev,
+        [field]:
+          field === 'nome_segurado' && typeof value === 'string' ? value.toUpperCase() : value,
+      }
       if (field === 'status') {
         const dStr = format(new Date(), 'dd/MM/yyyy')
         if (value === 'EM_ELABORACAO') next.data_retorno = dStr
@@ -152,11 +155,12 @@ export default function ProcessoDetalhesPage() {
   if (loading)
     return (
       <div className="p-6 space-y-6">
-        <Skeleton className="h-8 w-1/4" />
+        <Skeleton className="h-10 w-1/3" />
         <Skeleton className="h-[200px]" />
         <Skeleton className="h-[400px]" />
       </div>
     )
+
   if (error || !processo)
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
@@ -169,172 +173,192 @@ export default function ProcessoDetalhesPage() {
 
   const dTotais = calculateDiasTotais(formData.data_entrada, formData.data_saida)
 
+  const formFields = [
+    { key: 'cia', type: 'select', label: 'Seguradora', opts: SEGURADORAS, req: true },
+    { key: 'tipo_servico', type: 'select', label: 'Natureza do Sinistro', opts: NATUREZAS },
+    { key: 'orientacoes', type: 'select', label: 'Tipo de Investigação', opts: TIPOS_INVESTIGACAO },
+    { key: 'status', type: 'select', label: 'Status', opts: STATUSES, req: true },
+    { key: 'controle_cia', type: 'input', label: 'Controle Cia' },
+    { key: 'regiao_sinistro', type: 'input', label: 'Região do Sinistro', ph: 'ESTADO / CIDADE' },
+    { key: 'nome_segurado', type: 'input', label: 'Nome do Segurado' },
+    { key: 'placas_veiculos', type: 'input', label: 'Placas dos Veículos' },
+    {
+      key: 'solicitante_id',
+      type: 'relation',
+      label: 'Solicitante',
+      opts: solicitantes,
+      d: (x: any) => x.name || x.email,
+    },
+    {
+      key: 'agente_id',
+      type: 'relation',
+      label: 'Agente',
+      opts: agentes,
+      d: (x: any) => x.nomeCompleto || x.nome,
+    },
+    {
+      key: 'supervisor_id',
+      type: 'relation',
+      label: 'Supervisor',
+      opts: supervisores,
+      d: (x: any) => x.name || x.email,
+    },
+  ]
+
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-            <ArrowLeft className="w-5 h-5" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">
-              Processo {processo.numero_controle || processo.id}
-            </h1>
-            <Badge variant="outline" className="mt-1">
-              {formData.status || 'Sem Status'}
-            </Badge>
-          </div>
+    <div className="p-6 max-w-5xl mx-auto animate-in fade-in duration-300 fill-mode-both">
+      <div className="flex items-center space-x-4 mb-6">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate(-1)}
+          className="active:scale-[0.98] transition-transform duration-100"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </Button>
+        <div>
+          <h1 className="text-[28px] font-bold tracking-tight text-foreground">
+            Processo {processo.numero_controle || processo.id}
+          </h1>
+          <Badge variant="outline" className="mt-1">
+            {formData.status || 'Sem Status'}
+          </Badge>
         </div>
-        {canEdit && (
-          <div className="flex items-center space-x-2">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive" size="icon">
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
-                  <AlertDialogDescription>Esta ação é irreversível.</AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDelete}
-                    className="bg-destructive text-destructive-foreground"
-                  >
-                    Deletar
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              <X className="w-4 h-4 mr-2" /> Cancelar
-            </Button>
-            <Button onClick={handleSave}>
-              <Save className="w-4 h-4 mr-2" /> Salvar
-            </Button>
-          </div>
-        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="md:col-span-1 h-fit">
-          <CardHeader>
-            <CardTitle className="text-lg">Informações Básicas</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      <div className="space-y-6">
+        <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
+          <h2 className="text-[18px] font-bold text-foreground mb-4">Informações Básicas</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {[
               { l: 'ID', v: processo.id },
               { l: 'Data Entrada', v: formData.data_entrada || '-' },
               { l: 'Data Retorno', v: formData.data_retorno || '-' },
               { l: 'Data Saída', v: formData.data_saida || '-' },
-            ].map((i) => (
-              <div key={i.l}>
-                <Label className="text-muted-foreground">{i.l}</Label>
-                <p className="font-medium">{i.v}</p>
+              { l: 'Dias Totais', v: dTotais },
+            ].map((i, idx) => (
+              <div
+                key={i.l}
+                className="bg-muted/50 p-3 rounded-[6px] flex flex-col space-y-1 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
+                style={{ animationDelay: `${(idx + 1) * 50}ms` }}
+              >
+                <span className="text-sm font-bold text-foreground">{i.l}</span>
+                <span className="text-base text-foreground break-all">{i.v}</span>
               </div>
             ))}
-            <div>
-              <Label className="text-muted-foreground">Dias Totais</Label>
-              <p className="font-medium text-2xl">{dTotais}</p>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-lg">Dados do Processo</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              { label: 'Seguradora', f: 'cia', opts: SEGURADORAS },
-              { label: 'Natureza do Sinistro', f: 'tipo_servico', opts: NATUREZAS },
-              { label: 'Tipo de Investigação', f: 'orientacoes', opts: TIPOS_INVESTIGACAO },
-              { label: 'Status', f: 'status', opts: STATUSES },
-            ].map((s) => (
-              <div key={s.f} className="space-y-2">
-                <Label>{s.label}</Label>
-                <Select
-                  disabled={!canEdit}
-                  value={formData[s.f] || ''}
-                  onValueChange={(v) => handleChange(s.f, v)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {s.opts.map((o) => (
-                      <SelectItem key={o} value={o}>
-                        {o}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            ))}
+        <div className="bg-card border border-border rounded-lg p-5 shadow-sm">
+          <h2 className="text-[18px] font-bold text-foreground mb-4">Dados do Processo</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {formFields.map((field, idx) => (
+              <div
+                key={field.key}
+                className="space-y-2 animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both"
+                style={{ animationDelay: `${(idx + 6) * 50}ms` }}
+              >
+                <Label className="text-sm font-bold text-foreground">
+                  {field.label} {field.req && <span className="text-primary">*</span>}
+                </Label>
 
-            {[
-              { label: 'Controle Cia', f: 'controle_cia' },
-              { label: 'Região do Sinistro', f: 'regiao_sinistro', ph: 'ESTADO / CIDADE' },
-              { label: 'Nome do Segurado', f: 'nome_segurado' },
-              { label: 'Placas dos Veículos', f: 'placas_veiculos' },
-            ].map((i) => (
-              <div key={i.f} className="space-y-2">
-                <Label>{i.label}</Label>
-                <Input
-                  disabled={!canEdit}
-                  placeholder={i.ph}
-                  value={formData[i.f] || ''}
-                  onChange={(e) => handleChange(i.f, e.target.value)}
-                />
-              </div>
-            ))}
+                {field.type === 'select' && (
+                  <Select
+                    disabled={!canEdit}
+                    value={formData[field.key] || ''}
+                    onValueChange={(v) => handleChange(field.key, v)}
+                  >
+                    <SelectTrigger className="focus:ring-primary focus:border-primary">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {field.opts?.map((o: any) => (
+                        <SelectItem key={o} value={o}>
+                          {o}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
 
-            {[
-              {
-                label: 'Solicitante',
-                f: 'solicitante_id',
-                opts: solicitantes,
-                d: (x: any) => x.name || x.email,
-              },
-              {
-                label: 'Agente',
-                f: 'agente_id',
-                opts: agentes,
-                d: (x: any) => x.nomeCompleto || x.nome,
-              },
-              {
-                label: 'Supervisor',
-                f: 'supervisor_id',
-                opts: supervisores,
-                d: (x: any) => x.name || x.email,
-              },
-            ].map((s) => (
-              <div key={s.f} className="space-y-2">
-                <Label>{s.label}</Label>
-                <Select
-                  disabled={!canEdit}
-                  value={formData[s.f] || ''}
-                  onValueChange={(v) => handleChange(s.f, v)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {s.opts.map((o) => (
-                      <SelectItem key={o.id} value={o.id}>
-                        {s.d(o)}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {field.type === 'input' && (
+                  <Input
+                    disabled={!canEdit}
+                    placeholder={field.ph}
+                    value={formData[field.key] || ''}
+                    onChange={(e) => handleChange(field.key, e.target.value)}
+                    className="focus-visible:ring-primary focus-visible:border-primary"
+                  />
+                )}
+
+                {field.type === 'relation' && (
+                  <Select
+                    disabled={!canEdit}
+                    value={formData[field.key] || ''}
+                    onValueChange={(v) => handleChange(field.key, v)}
+                  >
+                    <SelectTrigger className="focus:ring-primary focus:border-primary">
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {field.opts?.map((o: any) => (
+                        <SelectItem key={o.id} value={o.id}>
+                          {field.d ? field.d(o) : o.id}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
+
+      {canEdit && (
+        <div className="mt-6 flex flex-col sm:flex-row gap-3 justify-end items-center">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="destructive"
+                className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100"
+              >
+                <Trash2 className="w-4 h-4 mr-2" /> Deletar
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
+                <AlertDialogDescription>Esta ação é irreversível.</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDelete}
+                  className="bg-destructive text-destructive-foreground"
+                >
+                  Deletar
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          <Button
+            variant="secondary"
+            className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100"
+            onClick={() => navigate(-1)}
+          >
+            <X className="w-4 h-4 mr-2" /> Cancelar
+          </Button>
+          <Button
+            variant="default"
+            className="h-10 w-full sm:w-auto active:scale-[0.98] transition-transform duration-100"
+            onClick={handleSave}
+          >
+            <Save className="w-4 h-4 mr-2" /> Salvar
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
