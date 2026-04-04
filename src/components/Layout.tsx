@@ -34,9 +34,13 @@ export default function Layout() {
   const location = useLocation()
 
   const navItems = [
-    { title: 'Dashboard', url: '/dashboard' },
+    ...(user?.role === 'c-level' || user?.role === 'admin'
+      ? [{ title: 'Dashboard', url: '/dashboard' }]
+      : []),
     { title: 'Processos', url: '/processos' },
-    { title: 'Financeiro', url: '/financeiro' },
+    ...(user?.role === 'c-level' || user?.role === 'admin'
+      ? [{ title: 'Financeiro', url: '/financeiro' }]
+      : []),
     { title: 'Agentes', url: '/agentes' },
     ...(user?.role === 'c-level' ||
     user?.role === 'admin' ||
@@ -44,7 +48,9 @@ export default function Layout() {
     user?.role === 'agente'
       ? [{ title: 'Portal do Agente', url: '/gestao-agentes' }]
       : []),
-    ...(user?.role === 'c-level' ? [{ title: 'Gestão de Usuários', url: '/gestao-usuarios' }] : []),
+    ...(user?.role === 'c-level' || user?.role === 'admin'
+      ? [{ title: 'Gestão de Usuários', url: '/gestao-usuarios' }]
+      : []),
     ...(user?.role === 'c-level' || user?.role === 'admin'
       ? [{ title: 'Performance', url: '/gestao/performance-supervisores' }]
       : []),

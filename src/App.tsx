@@ -113,7 +113,7 @@ export default function App() {
                     <Route path="faturamento" element={<GestaoAgentesFaturamento />} />
                   </Route>
 
-                  <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Route>
               </Route>
             </Routes>
