@@ -11,7 +11,6 @@ import pb from '@/lib/pocketbase/client'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import { Label } from '@/components/ui/label'
 import {
   Table,
   TableHeader,
