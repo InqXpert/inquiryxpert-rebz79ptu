@@ -1,7 +1,8 @@
 import React from 'react'
 import { Processo } from '@/types/processo'
-import { calculateDayColor, calculateTags } from '@/services/processosService'
+import { calculateDayColor, calculateTags, getTagColor } from '@/services/processosService'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { History, MessageSquare, Flag, Edit2, ChevronDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn, formatDateBr } from '@/lib/utils'
@@ -82,15 +83,23 @@ export function ProcessosTableRowMobile({
         </div>
       </div>
 
-      {tags.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-1">
+      {(tags.length > 0 || (p.tags && p.tags.length > 0)) && (
+        <div className="flex flex-wrap gap-1 mb-1 mt-2">
           {tags.map((t, idx) => (
             <span
-              key={idx}
+              key={`calc-${idx}`}
               className={cn('text-[11px] font-bold px-2 py-1 rounded-[4px] shadow-sm', t.color)}
             >
               {t.label}
             </span>
+          ))}
+          {p.tags?.map((tag: string, idx: number) => (
+            <Badge
+              key={`tag-${idx}`}
+              className={cn('text-[10px] px-2 py-0.5 rounded-[4px]', getTagColor(tag))}
+            >
+              {tag}
+            </Badge>
           ))}
         </div>
       )}

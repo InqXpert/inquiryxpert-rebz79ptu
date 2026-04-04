@@ -1,6 +1,17 @@
 import pb from '@/lib/pocketbase/client'
 import type { Processo } from '@/types/processo'
 
+export const getTagColor = (tag: string) => {
+  const t = tag.toUpperCase()
+  if (t === 'URGENTE') return 'bg-red-500 hover:bg-red-600 text-white border-transparent'
+  if (t === 'DOCUMENTAÇÃO PENDENTE')
+    return 'bg-amber-500 hover:bg-amber-600 text-white border-transparent'
+  if (t === 'AGUARDANDO TERCEIRO')
+    return 'bg-blue-500 hover:bg-blue-600 text-white border-transparent'
+  if (t === 'EM ANÁLISE') return 'bg-purple-500 hover:bg-purple-600 text-white border-transparent'
+  return 'bg-brand-gray/20 hover:bg-brand-gray/30 text-brand-navy dark:bg-brand-light/20 dark:hover:bg-brand-light/30 dark:text-brand-light border-transparent'
+}
+
 export const fetchProcessos = async (): Promise<Processo[]> => {
   return await pb.collection('processos_operacionais').getFullList<Processo>({
     sort: '-created',
@@ -39,6 +50,7 @@ export const searchProcessos = (processos: Processo[], search: string) => {
       JSON.stringify(p.posicoes_json || {})
         .toLowerCase()
         .includes(lower) ||
+      (p.tags && p.tags.some((t) => t.toLowerCase().includes(lower))) ||
       (p.observacoes || '').toLowerCase().includes(lower),
   )
 }

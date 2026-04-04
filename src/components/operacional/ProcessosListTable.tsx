@@ -35,23 +35,26 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
           <Table className="table-fixed w-full">
             <TableHeader className="bg-brand-light/30 dark:bg-black/10">
               <TableRow className="hover:bg-transparent border-b-brand-teal/20 dark:border-b-brand-cyan/20">
-                <TableHead className="w-[16%] font-bold text-brand-navy dark:text-white text-xs">
+                <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
                   ID / CONTROLE
                 </TableHead>
-                <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
+                <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
                   STATUS
                 </TableHead>
-                <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
+                <TableHead className="w-[10%] font-bold text-brand-navy dark:text-white text-xs">
                   SUPERVISOR
                 </TableHead>
-                <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
+                <TableHead className="w-[10%] font-bold text-brand-navy dark:text-white text-xs">
                   SEGURADORA
                 </TableHead>
-                <TableHead className="w-[18%] font-bold text-brand-navy dark:text-white text-xs">
+                <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
                   TIPO
                 </TableHead>
                 <TableHead className="w-[10%] hidden lg:table-cell font-bold text-brand-navy dark:text-white text-xs">
                   AGENTE
+                </TableHead>
+                <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
+                  TAGS
                 </TableHead>
                 <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
                   ENTRADA
@@ -82,6 +85,9 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
                   </TableCell>
                   <TableCell className="hidden lg:table-cell">
                     <Skeleton className="h-4 w-[90%]" />
+                  </TableCell>
+                  <TableCell>
+                    <Skeleton className="h-6 w-[80%]" />
                   </TableCell>
                   <TableCell>
                     <Skeleton className="h-4 w-[70%]" />
@@ -139,23 +145,26 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
         <Table className="table-fixed w-full">
           <TableHeader className="bg-brand-light/30 dark:bg-black/10">
             <TableRow className="hover:bg-transparent border-b-brand-teal/20 dark:border-b-brand-cyan/20">
-              <TableHead className="w-[16%] font-bold text-brand-navy dark:text-white text-xs">
+              <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
                 ID / CONTROLE
               </TableHead>
-              <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
+              <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
                 STATUS
               </TableHead>
-              <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
+              <TableHead className="w-[10%] font-bold text-brand-navy dark:text-white text-xs">
                 SUPERVISOR
               </TableHead>
-              <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
+              <TableHead className="w-[10%] font-bold text-brand-navy dark:text-white text-xs">
                 SEGURADORA
               </TableHead>
-              <TableHead className="w-[18%] font-bold text-brand-navy dark:text-white text-xs">
+              <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
                 TIPO
               </TableHead>
               <TableHead className="w-[10%] hidden lg:table-cell font-bold text-brand-navy dark:text-white text-xs">
                 AGENTE
+              </TableHead>
+              <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
+                TAGS
               </TableHead>
               <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
                 ENTRADA

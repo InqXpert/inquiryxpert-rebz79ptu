@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-04T16:30:37.046Z",
+  "generatedAt": "2026-04-04T16:38:02.206Z",
   "collections": [
     {
       "name": "users",
@@ -708,6 +708,12 @@
         },
         {
           "name": "posicoes_json",
+          "type": "json",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "tags",
           "type": "json",
           "required": false,
           "system": false

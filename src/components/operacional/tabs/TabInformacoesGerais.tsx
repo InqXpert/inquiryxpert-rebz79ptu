@@ -10,7 +10,10 @@ import {
 } from '@/components/ui/select'
 import { useState } from 'react'
 import { Pencil } from 'lucide-react'
-import { formatDateBr } from '@/lib/utils'
+import { formatDateBr, cn } from '@/lib/utils'
+import { TagInput } from '../TagInput'
+import { Badge } from '@/components/ui/badge'
+import { getTagColor } from '@/services/processosService'
 
 interface Props {
   processo: ProcessoOperacional
@@ -61,6 +64,9 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
     { key: 'revisor', label: 'Revisor' },
   ]
 
+  const tags = (formData.tags as string[]) || []
+  const currentTags = (processo.tags as string[]) || []
+
   return (
     <div className="pt-2 relative">
       {canEdit && !isEditing && (
@@ -74,7 +80,31 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
         </Button>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px]">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-[16px] mb-4">
+        <div className="flex flex-col gap-[4px] md:col-span-2">
+          <span className="text-[12px] font-bold text-brand-gray dark:text-brand-light tracking-wider uppercase">
+            Tags do Processo
+          </span>
+          {isEditing ? (
+            <TagInput
+              tags={tags}
+              onChange={(newTags) => handleChange('tags' as any, newTags as any)}
+            />
+          ) : (
+            <div className="flex flex-wrap gap-2 mt-1">
+              {currentTags.length > 0 ? (
+                currentTags.map((tag) => (
+                  <Badge key={tag} className={cn('text-[11px] px-2 py-0.5', getTagColor(tag))}>
+                    {tag}
+                  </Badge>
+                ))
+              ) : (
+                <span className="text-[13px] text-brand-gray">Nenhuma tag atribuída</span>
+              )}
+            </div>
+          )}
+        </div>
+
         {fields.map((f) => (
           <div key={f.key} className="flex flex-col gap-[4px]">
             <span className="text-[12px] font-bold text-brand-gray dark:text-brand-light tracking-wider uppercase">

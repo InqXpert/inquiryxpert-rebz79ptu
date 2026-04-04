@@ -1,8 +1,9 @@
 import React from 'react'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { Processo } from '@/types/processo'
-import { calculateDayColor, calculateTags } from '@/services/processosService'
+import { calculateDayColor, calculateTags, getTagColor } from '@/services/processosService'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { History, MessageSquare, Flag, Edit2, ChevronDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn, formatDateBr } from '@/lib/utils'
@@ -103,6 +104,34 @@ export function ProcessosTableRowDesktop({
         >
           {agenteFirstName}
         </TableCell>
+        <TableCell>
+          <div className="flex flex-wrap gap-1">
+            {p.tags && p.tags.length > 0 ? (
+              p.tags.slice(0, 2).map((tag: string) => (
+                <Badge
+                  key={tag}
+                  className={cn(
+                    'text-[9px] px-1.5 py-0 rounded-[4px] leading-tight whitespace-nowrap',
+                    getTagColor(tag),
+                  )}
+                  title={tag}
+                >
+                  {tag.length > 15 ? tag.substring(0, 15) + '...' : tag}
+                </Badge>
+              ))
+            ) : (
+              <span className="text-xs text-brand-gray/50">-</span>
+            )}
+            {p.tags && p.tags.length > 2 && (
+              <Badge
+                className="text-[9px] px-1.5 py-0 rounded-[4px] bg-brand-light text-brand-gray dark:bg-black/50 dark:text-brand-light border-transparent leading-tight"
+                title={p.tags.slice(2).join(', ')}
+              >
+                +{p.tags.length - 2}
+              </Badge>
+            )}
+          </div>
+        </TableCell>
         <TableCell
           className="font-medium text-xs text-brand-gray dark:text-brand-light whitespace-nowrap"
           title={formatDateBr(p.data_entrada)}
@@ -122,7 +151,7 @@ export function ProcessosTableRowDesktop({
       {expanded && (
         <TableRow className="bg-brand-light/30 dark:bg-black/20 hover:bg-brand-light/30 dark:hover:bg-black/20 border-b-brand-teal/20 dark:border-b-brand-cyan/20">
           <TableCell
-            colSpan={8}
+            colSpan={9}
             className="p-0 border-t border-brand-teal/10 dark:border-brand-cyan/10"
           >
             <div className="p-4 md:p-6 animate-in slide-in-from-top-2 fade-in duration-200">

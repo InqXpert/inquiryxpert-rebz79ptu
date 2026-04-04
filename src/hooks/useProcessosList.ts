@@ -20,6 +20,7 @@ export function useProcessosList() {
   const [statusFilter, setStatusFilter] = useState('Todos')
   const [dateFilter, setDateFilter] = useState('Todos')
   const [customDateRange, setCustomDateRange] = useState<{ from?: Date; to?: Date }>({})
+  const [tagFilter, setTagFilter] = useState('Todos')
   const [supervisorFilter, setSupervisorFilter] = useState('Todos')
   const [search, setSearch] = useState('')
 
@@ -73,6 +74,10 @@ export function useProcessosList() {
       result = filterByDate(result, dateFilter, customDateRange)
     }
 
+    if (tagFilter !== 'Todos') {
+      result = result.filter((p) => p.tags && Array.isArray(p.tags) && p.tags.includes(tagFilter))
+    }
+
     if (supervisorFilter !== 'Todos') {
       result = result.filter((p) => p.supervisor_id === supervisorFilter)
     }
@@ -82,7 +87,7 @@ export function useProcessosList() {
     }
 
     return result
-  }, [data, statusFilter, dateFilter, customDateRange, supervisorFilter, search])
+  }, [data, statusFilter, dateFilter, customDateRange, tagFilter, supervisorFilter, search])
 
   const paginatedData = useMemo(() => {
     return filteredData.slice(0, page * pageSize)
@@ -96,6 +101,7 @@ export function useProcessosList() {
     setStatusFilter('Todos')
     setDateFilter('Todos')
     setCustomDateRange({})
+    setTagFilter('Todos')
     setSupervisorFilter('Todos')
     setSearch('')
     setPage(1)
@@ -104,7 +110,7 @@ export function useProcessosList() {
   // reset page on filter change
   useEffect(() => {
     setPage(1)
-  }, [statusFilter, dateFilter, customDateRange, supervisorFilter, search])
+  }, [statusFilter, dateFilter, customDateRange, tagFilter, supervisorFilter, search])
 
   return {
     data: paginatedData,
@@ -117,6 +123,8 @@ export function useProcessosList() {
     setDateFilter,
     customDateRange,
     setCustomDateRange,
+    tagFilter,
+    setTagFilter,
     supervisorFilter,
     setSupervisorFilter,
     search,

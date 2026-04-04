@@ -16,6 +16,7 @@ export interface Processo {
   observacoes?: string
   observacoes_json?: any
   posicoes_json?: any
+  tags?: string[]
   expand?: any
   [key: string]: any
 }

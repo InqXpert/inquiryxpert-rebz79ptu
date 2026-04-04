@@ -17,6 +17,8 @@ export function ProcessosListFilters({
   setStatusFilter,
   dateFilter,
   setDateFilter,
+  tagFilter,
+  setTagFilter,
   supervisorFilter,
   setSupervisorFilter,
   search,
@@ -55,7 +57,7 @@ export function ProcessosListFilters({
           aria-label="Buscar processos"
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full lg:flex-1">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 w-full lg:flex-1">
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="h-11 min-h-[44px]" aria-label="Filtrar por Status">
             <SelectValue placeholder="Status" />
@@ -78,6 +80,18 @@ export function ProcessosListFilters({
             <SelectItem value="7days">Últimos 7 dias</SelectItem>
             <SelectItem value="30days">Últimos 30 dias</SelectItem>
             <SelectItem value="custom">Customizado</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={tagFilter} onValueChange={setTagFilter}>
+          <SelectTrigger className="h-11 min-h-[44px]" aria-label="Filtrar por Tag">
+            <SelectValue placeholder="Tag" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Todos">Todas as Tags</SelectItem>
+            <SelectItem value="Urgente">Urgente</SelectItem>
+            <SelectItem value="Documentação Pendente">Documentação Pendente</SelectItem>
+            <SelectItem value="Aguardando Terceiro">Aguardando Terceiro</SelectItem>
+            <SelectItem value="Em Análise">Em Análise</SelectItem>
           </SelectContent>
         </Select>
         <div className="flex gap-2">
