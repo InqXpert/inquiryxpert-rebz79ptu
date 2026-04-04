@@ -11,6 +11,7 @@ import { TrackActivity } from '@/components/TrackActivity'
 import Login from '@/pages/Login'
 
 // Main App Lazy Loads
+const HubPage = lazy(() => import('./pages/HubPage'))
 const Dashboard = lazy(() => import('./pages/Dashboard'))
 const NovoProcessoPage = lazy(() => import('./pages/processos/NovoProcessoPage'))
 const Processos = lazy(() => import('./pages/Processos'))
@@ -69,8 +70,9 @@ export default function App() {
                     </TrackActivity>
                   }
                 >
-                  <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/" element={<HubPage />} />
                   <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/dashboard-executivo" element={<Dashboard />} />
                   <Route path="/processos" element={<Processos />} />
                   <Route path="/processos/novo" element={<NovoProcessoPage />} />
                   <Route path="/processos/:id" element={<ProcessoDetalhesPage />} />
