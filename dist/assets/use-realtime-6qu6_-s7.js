@@ -1,1 +1,0 @@
-import{i as e,s as t}from"./utils-Dv9pNI7t.js";import{t as n}from"./client-BhZg8s5Y.js";var r=t(e(),1);function i(e,t,i=!0){let a=(0,r.useRef)(t);a.current=t,(0,r.useEffect)(()=>{if(!i)return;let t,r=!1;return n.collection(e).subscribe(`*`,e=>{a.current(e)}).then(e=>{r?e().catch(()=>{}):t=e}),()=>{r=!0,t&&t().catch(()=>{})}},[e,i])}export{i as t};
