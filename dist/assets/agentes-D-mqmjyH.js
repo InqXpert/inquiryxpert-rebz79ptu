@@ -1,1 +1,0 @@
-import{t as e}from"./client-TTuNRuZO.js";var t=()=>e.collection(`agentes`).getFullList({sort:`-created`}),n=t=>e.collection(`agentes`).getOne(t),r=t=>e.collection(`agentes`).create(t),i=(t,n)=>e.collection(`agentes`).update(t,n),a=t=>e.collection(`agentes`).delete(t);export{i as a,t as i,a as n,n as r,r as t};
