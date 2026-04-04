@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { toast } from 'sonner'
+import { formatDateBr } from '@/lib/utils'
 import { usuariosService } from '@/services/usuariosService'
 import type { User } from '@/types'
 import UsuarioHistoricoDialog from './UsuarioHistoricoDialog'
@@ -226,12 +227,7 @@ export function UsuariosTable({
                       </TooltipProvider>
                     </TableCell>
                     <TableCell className="text-[13px] text-brand-gray dark:text-brand-light whitespace-nowrap">
-                      {u.ultimo_login
-                        ? formatDistanceToNow(new Date(u.ultimo_login), {
-                            addSuffix: true,
-                            locale: ptBR,
-                          })
-                        : 'Nunca acessou'}
+                      {u.ultimo_login ? formatDateBr(u.ultimo_login) : 'Nunca acessou'}
                     </TableCell>
                     <TableCell className="text-[13px] font-bold text-brand-navy dark:text-white whitespace-nowrap">
                       {Math.floor((u.tempo_uso_total || 0) / 60)}h {(u.tempo_uso_total || 0) % 60}m

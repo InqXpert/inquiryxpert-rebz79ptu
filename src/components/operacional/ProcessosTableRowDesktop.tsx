@@ -5,7 +5,7 @@ import { calculateDayColor, calculateTags } from '@/services/processosService'
 import { Button } from '@/components/ui/button'
 import { History, MessageSquare, Flag, Edit2, ChevronDown } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { cn } from '@/lib/utils'
+import { cn, formatDateBr } from '@/lib/utils'
 import { ProcessoTimeline } from './ProcessoTimeline'
 
 interface Props {
@@ -105,9 +105,9 @@ export function ProcessosTableRowDesktop({
         </TableCell>
         <TableCell
           className="font-medium text-xs text-brand-gray dark:text-brand-light whitespace-nowrap"
-          title={p.data_entrada || 'N/A'}
+          title={formatDateBr(p.data_entrada)}
         >
-          {p.data_entrada || 'N/A'}
+          {formatDateBr(p.data_entrada)}
         </TableCell>
         <TableCell className="text-right pr-4">
           <ChevronDown

@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/select'
 import { useState } from 'react'
 import { Pencil } from 'lucide-react'
+import { formatDateBr } from '@/lib/utils'
 
 interface Props {
   processo: ProcessoOperacional
@@ -107,7 +108,9 @@ export function TabInformacoesGerais({ processo, canEdit, onSave }: Props) {
             ) : (
               <span className="text-[13px] font-medium text-brand-navy dark:text-white capitalize">
                 {(processo as any)[f.key]
-                  ? String((processo as any)[f.key]).replace('_', ' ')
+                  ? f.type === 'date'
+                    ? formatDateBr((processo as any)[f.key])
+                    : String((processo as any)[f.key]).replace('_', ' ')
                   : '-'}
               </span>
             )}

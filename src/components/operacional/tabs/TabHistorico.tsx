@@ -1,4 +1,5 @@
 import { ProcessoHistorico } from '@/types'
+import { formatDateBr } from '@/lib/utils'
 
 interface Props {
   historico: ProcessoHistorico[]
@@ -26,7 +27,7 @@ export function TabHistorico({ historico }: Props) {
                   {h.descricao}
                 </span>
                 <span className="text-[11px] text-brand-gray/80 dark:text-brand-light/80 mt-[4px] font-medium">
-                  {new Date(h.created).toLocaleString()} por {h.user_name}
+                  {formatDateBr(h.created)} por {h.user_name}
                 </span>
 
                 {h.data_anteriores && h.data_novos && (

@@ -40,6 +40,7 @@ import { useDebounce } from '@/hooks/use-debounce'
 import { useProcessosAgente } from '@/hooks/useProcessosAgente'
 import { ProcessoQuickViewSheet } from '@/components/operacional/ProcessoQuickViewSheet'
 import { Processo } from '@/types/processo'
+import { formatDateBr } from '@/lib/utils'
 
 export default function GestaoAgentesProcessos() {
   const navigate = useNavigate()
@@ -128,9 +129,7 @@ export default function GestaoAgentesProcessos() {
   }
 
   const safeFormat = (dateStr?: string) => {
-    if (!dateStr) return '-'
-    const d = parseISO(dateStr)
-    return isValid(d) ? format(d, 'dd/MM/yyyy') : '-'
+    return formatDateBr(dateStr)
   }
 
   const handleRowClick = (proc: Processo) => {

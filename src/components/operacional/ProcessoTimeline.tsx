@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import pb from '@/lib/pocketbase/client'
 import { Skeleton } from '@/components/ui/skeleton'
+import { formatDateBr } from '@/lib/utils'
 
 export function ProcessoTimeline({ processoId }: { processoId: string }) {
   const [historico, setHistorico] = useState<any[]>([])
@@ -69,7 +70,7 @@ export function ProcessoTimeline({ processoId }: { processoId: string }) {
                 {h.user_name || 'Sistema'}
               </span>
               <span className="text-brand-gray dark:text-brand-light font-medium">
-                {new Date(h.created).toLocaleString('pt-BR')}
+                {formatDateBr(h.created)}
               </span>
             </div>
           </div>

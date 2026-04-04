@@ -26,7 +26,7 @@ import { fetchProcessos } from '@/services/procesosOperacionais'
 import { Agente, ProcessoOperacional } from '@/types'
 import { useToast } from '@/hooks/use-toast'
 import { useRealtime } from '@/hooks/use-realtime'
-import { cn } from '@/lib/utils'
+import { cn, formatDateBr } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EditAgenteModal } from '@/components/agentes/EditAgenteModal'
 
@@ -497,7 +497,7 @@ export default function ProfileAgente() {
                       {proc.status || 'Pendente'}
                     </div>
                     <span className="text-[13px] text-muted-foreground font-semibold">
-                      {proc.data_entrada?.split(' ')[0] || '-'}
+                      {formatDateBr(proc.data_entrada)}
                     </span>
                   </div>
                 </div>

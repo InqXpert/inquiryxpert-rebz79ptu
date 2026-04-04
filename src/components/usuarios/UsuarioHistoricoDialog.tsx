@@ -5,6 +5,7 @@ import type { UsuarioHistorico } from '@/types'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Activity } from 'lucide-react'
+import { formatDateBr } from '@/lib/utils'
 
 export default function UsuarioHistoricoDialog({
   open,
@@ -63,7 +64,7 @@ export default function UsuarioHistoricoDialog({
                         {log.acao.replace(/_/g, ' ')}
                       </span>
                       <span className="text-[11px] font-bold text-brand-gray dark:text-white bg-brand-light dark:bg-white/10 px-2 py-0.5 rounded-md">
-                        {format(new Date(log.created), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
+                        {formatDateBr(log.created)}
                       </span>
                     </div>
                     <span className="text-xs text-brand-gray dark:text-brand-light/70 font-mono">

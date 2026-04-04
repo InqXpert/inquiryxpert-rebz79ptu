@@ -12,6 +12,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { FolderOpen, ArrowDown, ArrowUp, Eye } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useState } from 'react'
+import { formatDateBr } from '@/lib/utils'
 
 interface Props {
   processos: ProcessoOperacional[]
@@ -187,7 +188,7 @@ export function ProcessosOperacionaisTable({
                 {p.agente_prestador || '-'}
               </TableCell>
               <TableCell className="text-brand-gray dark:text-brand-light">
-                {p.data_entrada || '-'}
+                {formatDateBr(p.data_entrada)}
               </TableCell>
               <TableCell className="text-brand-gray dark:text-brand-light">
                 {p.analista_solicitante || '-'}

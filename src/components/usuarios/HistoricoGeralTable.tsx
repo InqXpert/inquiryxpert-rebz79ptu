@@ -16,6 +16,7 @@ import { Search, Download, FilterX, ChevronLeft, ChevronRight } from 'lucide-rea
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { formatDateBr } from '@/lib/utils'
 import {
   Select,
   SelectContent,
@@ -123,7 +124,7 @@ export function HistoricoGeralTable() {
       })
 
       const rows = fullLogs.map((log) => [
-        log.created,
+        formatDateBr(log.created),
         log.expand?.user_id?.name || 'Sistema',
         log.acao,
         log.expand?.usuario_afetado_id?.name || '-',
@@ -263,15 +264,7 @@ export function HistoricoGeralTable() {
                 >
                   <TableCell className="text-[13px] text-brand-gray dark:text-brand-light whitespace-nowrap">
                     <div className="flex flex-col">
-                      <span className="font-bold">
-                        {formatDistanceToNow(new Date(log.created), {
-                          addSuffix: true,
-                          locale: ptBR,
-                        })}
-                      </span>
-                      <span className="text-[11px]">
-                        {format(new Date(log.created), 'dd/MM/yyyy HH:mm')}
-                      </span>
+                      <span className="font-bold">{formatDateBr(log.created)}</span>
                     </div>
                   </TableCell>
                   <TableCell>
