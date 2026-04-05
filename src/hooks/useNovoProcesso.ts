@@ -70,7 +70,9 @@ export const useNovoProcesso = () => {
               contrato = await pb
                 .collection('clientes_contratos')
                 .getFirstListItem(`razao_social = "${clienteRef.nome}"`)
-            } catch (__) {}
+            } catch (__) {
+              // Ignore if no contract is found by client name
+            }
           }
         }
 
@@ -79,7 +81,9 @@ export const useNovoProcesso = () => {
             contrato = await pb
               .collection('clientes_contratos')
               .getFirstListItem(`razao_social = "${sanitized.seguradora}"`)
-          } catch (_) {}
+          } catch (_) {
+            // Ignore if no contract is found by insurer name
+          }
         }
 
         let tipo_id = sanitized.tipo_investigacao_id
@@ -89,7 +93,9 @@ export const useNovoProcesso = () => {
               .collection('tipos_investigacao')
               .getFirstListItem(`nome = "${sanitized.tipo_investigacao}"`)
             tipo_id = t.id
-          } catch (_) {}
+          } catch (_) {
+            // Ignore if no investigation type is found
+          }
         }
 
         if (contrato && contrato.regras_sla && tipo_id) {
