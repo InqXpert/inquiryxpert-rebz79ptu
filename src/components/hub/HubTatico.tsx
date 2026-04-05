@@ -32,19 +32,16 @@ export function HubTatico({ data }: { data: HubData }) {
               {data.resolverHoje?.length === 0 && (
                 <p className="text-sm text-muted-foreground">Tudo em dia!</p>
               )}
-              {data.resolverHoje?.map((proc, i) => {
-                const isCobrar = i % 2 === 0
+              {data.resolverHoje?.map((task) => {
+                const isCobrar = task.taskTitle?.startsWith('Cobrar')
                 return (
                   <div
-                    key={proc.id}
+                    key={task.taskId || task.id}
                     className={`p-4 rounded-md border-l-4 shadow-sm bg-card border ${isCobrar ? 'border-l-destructive' : 'border-l-[#f97316]'}`}
                   >
-                    <p className="font-semibold text-sm mb-1">
-                      {isCobrar ? 'Cobrar Agente' : 'Enviar Posição'} -{' '}
-                      {proc.numero_processo || proc.numero_controle || 'Processo'}
-                    </p>
+                    <p className="font-semibold text-sm mb-1">{task.taskTitle}</p>
                     <p className="text-xs text-muted-foreground mb-3 truncate">
-                      Agente: {proc.expand?.agente_id?.nomeCompleto || 'N/A'}
+                      Agente: {task.expand?.agente_id?.nomeCompleto || 'N/A'}
                     </p>
                     <Button
                       size="sm"
@@ -52,7 +49,7 @@ export function HubTatico({ data }: { data: HubData }) {
                       variant="outline"
                       className="w-full h-8 text-xs font-bold"
                     >
-                      <Link to={`/processos/${proc.id}`}>Tratar</Link>
+                      <Link to={`/processos/${task.id}`}>Tratar</Link>
                     </Button>
                   </div>
                 )
@@ -76,7 +73,10 @@ export function HubTatico({ data }: { data: HubData }) {
                     <FileText className="w-5 h-5 text-[#14b8a6] shrink-0" />
                     <div className="overflow-hidden">
                       <p className="font-semibold text-sm truncate">
-                        {proc.expand?.tipo_investigacao_id?.nome || 'Investigação'}
+                        {proc.numero_processo || proc.numero_controle || 'Processo'}
+                      </p>
+                      <p className="font-bold text-xs truncate mb-1">
+                        Tipo: {proc.expand?.tipo_investigacao_id?.nome || 'N/A'}
                       </p>
                       <p className="text-xs text-muted-foreground truncate">
                         {proc.expand?.agente_id?.nomeCompleto || 'N/A'}

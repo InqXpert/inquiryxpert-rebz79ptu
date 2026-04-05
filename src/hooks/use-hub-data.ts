@@ -81,7 +81,7 @@ export function useHubData() {
 
           const twoDaysAgoStr = formatISO(subDays(now, 2), { representation: 'date' })
           const resolverHojeRes = await pb.collection('processos_operacionais').getList(1, 10, {
-            filter: `${baseFilter ? baseFilter + ' && ' : ''}status = 'EM_EXECUCAO' && data_entrada <= "${twoDaysAgoStr} 23:59:59"`,
+            filter: `${baseFilter ? baseFilter + ' && ' : ''}status = 'EM_EXECUCAO' && data_entrada >= "${twoDaysAgoStr} 00:00:00" && data_entrada <= "${twoDaysAgoStr} 23:59:59"`,
             expand: 'agente_id',
           })
 
@@ -99,9 +99,21 @@ export function useHubData() {
             sort: 'data_prazo',
           })
 
-          let resolverHojeItems = resolverHojeRes.items
+          let resolverHojeItems = resolverHojeRes.items.flatMap((proc) => [
+            {
+              ...proc,
+              taskId: `${proc.id}-cobrar`,
+              taskTitle: `Cobrar Agente - ${proc.numero_processo || proc.numero_controle || proc.id}`,
+            },
+            {
+              ...proc,
+              taskId: `${proc.id}-posicao`,
+              taskTitle: `Enviar Posição - ${proc.numero_processo || proc.numero_controle || proc.id}`,
+            },
+          ])
+
           if (resolverHojeItems.length === 0) {
-            resolverHojeItems = [
+            const mockProcs = [
               {
                 id: 'mock1',
                 numero_processo: 'PRC-2026-001',
@@ -113,6 +125,18 @@ export function useHubData() {
                 expand: { agente_id: { nomeCompleto: 'Maria Souza' } },
               },
             ]
+            resolverHojeItems = mockProcs.flatMap((proc) => [
+              {
+                ...proc,
+                taskId: `${proc.id}-cobrar`,
+                taskTitle: `Cobrar Agente - ${proc.numero_processo}`,
+              },
+              {
+                ...proc,
+                taskId: `${proc.id}-posicao`,
+                taskTitle: `Enviar Posição - ${proc.numero_processo}`,
+              },
+            ])
           }
 
           let aguardandoRevisaoItems = aguardandoRevisaoRes.items
@@ -120,6 +144,7 @@ export function useHubData() {
             aguardandoRevisaoItems = [
               {
                 id: 'mock3',
+                numero_processo: 'PRC-2026-003',
                 expand: {
                   tipo_investigacao_id: { nome: 'Sindicância Vida' },
                   agente_id: { nomeCompleto: 'Carlos Santos' },
