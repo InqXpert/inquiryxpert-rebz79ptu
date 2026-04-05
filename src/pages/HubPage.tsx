@@ -38,7 +38,7 @@ export default function HubPage() {
             <h1 className="text-[28px] font-bold text-[#1e293b] leading-tight">
               Olá, {user?.name || user?.nome || 'Usuário'}
             </h1>
-            <span className="bg-secondary text-secondary-foreground text-xs uppercase font-semibold px-2.5 py-0.5 rounded-full">
+            <span className="bg-secondary text-white text-xs uppercase font-semibold px-2.5 py-0.5 rounded-full">
               {roleName}
             </span>
           </div>

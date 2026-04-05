@@ -22,7 +22,7 @@ export function ActionCard({
   const content = (
     <div
       className={cn(
-        'group flex flex-col h-full bg-white p-6 rounded-xl border border-border shadow-sm hover:shadow-md hover:-translate-y-[2px] transition-all duration-200',
+        'group flex flex-col h-full bg-white p-6 rounded-lg border border-border shadow-sm hover:shadow-md hover:-translate-y-[2px] transition-all duration-200',
         primary
           ? 'bg-primary text-primary-foreground border-primary hover:border-primary/90'
           : 'hover:border-primary',
