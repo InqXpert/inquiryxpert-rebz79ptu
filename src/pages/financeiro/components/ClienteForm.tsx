@@ -26,6 +26,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
 import { createCliente, updateCliente, getCliente } from '@/services/clientes_contratos'
 import { useAuth } from '@/hooks/use-auth'
+import pb from '@/lib/pocketbase/client'
 
 const formatCNPJ = (value: string) => {
   return value
@@ -52,6 +53,16 @@ const clienteSchema = z
     aliquota_imposto: z.coerce.number().optional().or(z.literal('')),
     retencao_na_fonte: z.boolean().default(false),
     aliquota_retencao: z.coerce.number().optional().or(z.literal('')),
+    regras_sla: z
+      .array(
+        z.object({
+          tipo_id: z.string(),
+          dias: z.coerce.number().min(0),
+          tipo_contagem: z.enum(['corridos', 'uteis']),
+        }),
+      )
+      .optional()
+      .default([]),
   })
   .superRefine((data, ctx) => {
     if (data.periodo_faturamento !== 'por_demanda' && !data.dia_corte) {
@@ -89,6 +100,7 @@ export function ClienteForm({ id }: ClienteFormProps) {
   const isSupervisor = user?.role === 'supervisor'
   const [loading, setLoading] = useState(!!id)
   const [saving, setSaving] = useState(false)
+  const [tiposInvestigacao, setTiposInvestigacao] = useState<any[]>([])
 
   const form = useForm<ClienteFormValues>({
     resolver: zodResolver(clienteSchema),
@@ -106,12 +118,21 @@ export function ClienteForm({ id }: ClienteFormProps) {
       aliquota_imposto: '',
       retencao_na_fonte: false,
       aliquota_retencao: '',
+      regras_sla: [],
     },
   })
 
   const watchPeriodo = form.watch('periodo_faturamento')
   const watchTipoImposto = form.watch('tipo_imposto')
   const watchRetencao = form.watch('retencao_na_fonte')
+  const regrasSla = form.watch('regras_sla') || []
+
+  useEffect(() => {
+    pb.collection('tipos_investigacao')
+      .getFullList({ filter: 'ativo = true', sort: 'nome' })
+      .then(setTiposInvestigacao)
+      .catch(console.error)
+  }, [])
 
   useEffect(() => {
     if (watchPeriodo === 'por_demanda') {
@@ -140,6 +161,7 @@ export function ClienteForm({ id }: ClienteFormProps) {
             dia_corte: data.dia_corte || '',
             aliquota_imposto: data.aliquota_imposto || '',
             aliquota_retencao: data.aliquota_retencao || '',
+            regras_sla: data.regras_sla || [],
           })
         })
         .catch(() => {
@@ -149,6 +171,21 @@ export function ClienteForm({ id }: ClienteFormProps) {
         .finally(() => setLoading(false))
     }
   }, [id, form, navigate])
+
+  const handleRegraChange = (tipo_id: string, field: 'dias' | 'tipo_contagem', value: any) => {
+    const newRegras = [...regrasSla]
+    const index = newRegras.findIndex((r) => r.tipo_id === tipo_id)
+    if (index >= 0) {
+      newRegras[index] = { ...newRegras[index], [field]: value }
+    } else {
+      newRegras.push({
+        tipo_id,
+        dias: field === 'dias' ? value : 0,
+        tipo_contagem: field === 'tipo_contagem' ? value : 'uteis',
+      })
+    }
+    form.setValue('regras_sla', newRegras, { shouldValidate: true, shouldDirty: true })
+  }
 
   const onSubmit = async (values: ClienteFormValues) => {
     if (isSupervisor) return
@@ -497,6 +534,60 @@ export function ClienteForm({ id }: ClienteFormProps) {
                   </div>
                 )}
               </div>
+            </div>
+          </section>
+
+          <Separator />
+
+          {/* Section 4: SLAs por Tipo de Investigacao */}
+          <section>
+            <h2 className="text-lg font-bold text-[#0a2540] dark:text-white mb-4">
+              SLAs por Tipo de Investigação
+            </h2>
+            <div className="grid grid-cols-1 gap-4 border-b border-border pb-4">
+              {tiposInvestigacao.map((tipo) => {
+                const regra = regrasSla.find((r) => r.tipo_id === tipo.id) || {
+                  dias: 0,
+                  tipo_contagem: 'uteis',
+                }
+                return (
+                  <div key={tipo.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                    <div className="font-bold text-[#0a2540] dark:text-white">{tipo.nome}</div>
+                    <div>
+                      <FormLabel className="md:hidden">Dias</FormLabel>
+                      <Input
+                        type="number"
+                        min="0"
+                        placeholder="Dias"
+                        disabled={isSupervisor}
+                        value={regra.dias}
+                        onChange={(e) => handleRegraChange(tipo.id, 'dias', Number(e.target.value))}
+                      />
+                    </div>
+                    <div>
+                      <FormLabel className="md:hidden">Tipo Contagem</FormLabel>
+                      <Select
+                        disabled={isSupervisor}
+                        value={regra.tipo_contagem}
+                        onValueChange={(val) => handleRegraChange(tipo.id, 'tipo_contagem', val)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="corridos">Dias Corridos</SelectItem>
+                          <SelectItem value="uteis">Dias Úteis</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )
+              })}
+              {tiposInvestigacao.length === 0 && (
+                <div className="text-sm text-muted-foreground italic">
+                  Nenhum tipo de investigação cadastrado.
+                </div>
+              )}
             </div>
           </section>
 

@@ -8,6 +8,7 @@ import {
 } from '@/services/processosService'
 import { useAuth } from '@/hooks/use-auth'
 import { sanitizeInput } from '@/services/validacaoService'
+import { toast } from 'sonner'
 
 export const useNovoProcesso = () => {
   const { user } = useAuth()
@@ -55,6 +56,77 @@ export const useNovoProcesso = () => {
         sanitized.natureza_sinistro,
       )
 
+      let data_prazo: string | undefined = undefined
+
+      try {
+        let contrato: any = null
+
+        if (sanitized.cliente_id) {
+          try {
+            contrato = await pb.collection('clientes_contratos').getOne(sanitized.cliente_id)
+          } catch (_) {
+            try {
+              const clienteRef = await pb.collection('clientes').getOne(sanitized.cliente_id)
+              contrato = await pb
+                .collection('clientes_contratos')
+                .getFirstListItem(`razao_social = "${clienteRef.nome}"`)
+            } catch (__) {}
+          }
+        }
+
+        if (!contrato && sanitized.seguradora) {
+          try {
+            contrato = await pb
+              .collection('clientes_contratos')
+              .getFirstListItem(`razao_social = "${sanitized.seguradora}"`)
+          } catch (_) {}
+        }
+
+        let tipo_id = sanitized.tipo_investigacao_id
+        if (!tipo_id && sanitized.tipo_investigacao) {
+          try {
+            const t = await pb
+              .collection('tipos_investigacao')
+              .getFirstListItem(`nome = "${sanitized.tipo_investigacao}"`)
+            tipo_id = t.id
+          } catch (_) {}
+        }
+
+        if (contrato && contrato.regras_sla && tipo_id) {
+          const regras = contrato.regras_sla as Array<{
+            tipo_id: string
+            dias: number
+            tipo_contagem: string
+          }>
+          const regra = regras.find((r) => r.tipo_id === tipo_id)
+
+          if (!regra) {
+            throw new Error('SLA rule missing')
+          }
+
+          if (regra && typeof regra.dias === 'number') {
+            const dataAtual = new Date()
+            let diasAdicionados = 0
+
+            if (regra.tipo_contagem === 'uteis') {
+              while (diasAdicionados < regra.dias) {
+                dataAtual.setDate(dataAtual.getDate() + 1)
+                const diaSemana = dataAtual.getDay()
+                if (diaSemana !== 0 && diaSemana !== 6) {
+                  diasAdicionados++
+                }
+              }
+            } else {
+              dataAtual.setDate(dataAtual.getDate() + regra.dias)
+            }
+            data_prazo = dataAtual.toISOString()
+          }
+        }
+      } catch (e) {
+        console.error('Erro ao calcular prazo de SLA', e)
+        toast.error('Erro ao calcular prazo de SLA')
+      }
+
       const payload = {
         numero_controle: numControle,
         status: sanitized.status,
@@ -69,6 +141,9 @@ export const useNovoProcesso = () => {
         agente_id: sanitized.agente_id,
         supervisor_id: sanitized.supervisor_id,
         data_entrada: new Date().toLocaleDateString('pt-BR'),
+        data_prazo: data_prazo,
+        cliente_id: sanitized.cliente_id,
+        tipo_investigacao_id: sanitized.tipo_investigacao_id,
         user_id: user?.id,
       }
 

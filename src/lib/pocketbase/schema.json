@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-04T22:23:21.334Z",
+  "generatedAt": "2026-04-05T00:24:20.456Z",
   "collections": [
     {
       "name": "users",
@@ -1706,6 +1706,12 @@
           "required": false,
           "system": false,
           "autodateTriggers": ["onCreate", "onUpdate"]
+        },
+        {
+          "name": "regras_sla",
+          "type": "json",
+          "required": false,
+          "system": false
         }
       ],
       "indexes": ["CREATE UNIQUE INDEX idx_clientes_contratos_cnpj ON clientes_contratos (cnpj)"]
