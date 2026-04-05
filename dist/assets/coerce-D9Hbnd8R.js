@@ -1,1 +1,0 @@
-import{c as e,t}from"./schemas-22NhH8Xi.js";function n(n){return e(t,n)}export{n as t};
