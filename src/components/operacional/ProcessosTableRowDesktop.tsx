@@ -29,10 +29,10 @@ export function ProcessosTableRowDesktop({
   const tags = calculateTags(p.data_entrada)
 
   const supervisorName = p.expand?.supervisor_id?.name || ''
-  const supervisorFirstName = supervisorName.split(' ')[0] || 'N/A'
+  const supervisorFirstName = supervisorName ? supervisorName.split(' ')[0] : '-'
 
   const agenteName = p.expand?.agente_id?.nomeCompleto || p.agente_prestador || ''
-  const agenteFirstName = agenteName.split(' ')[0] || 'N/A'
+  const agenteFirstName = agenteName ? agenteName.split(' ')[0] : 'Não informado'
 
   return (
     <React.Fragment>
@@ -50,17 +50,31 @@ export function ProcessosTableRowDesktop({
       >
         <TableCell
           className="font-bold text-xs text-brand-navy dark:text-white"
-          title={p.numero_controle || p.id}
+          title={p.numero_controle || p.id || '-'}
         >
-          {p.numero_controle || p.id}
+          {p.numero_controle || p.id || '-'}
         </TableCell>
         <TableCell>
           <div className="flex flex-col gap-1.5 items-start">
             <span
-              className="font-bold text-xs uppercase truncate w-full text-brand-navy dark:text-white"
+              className="font-bold text-xs uppercase truncate w-full text-brand-navy dark:text-white flex items-center gap-1"
               title={p.status?.replace(/_/g, ' ')}
             >
-              {p.status?.replace(/_/g, ' ')}
+              {p.status ? p.status.replace(/_/g, ' ') : '-'}
+              {p.prioridade && (
+                <span
+                  className={cn(
+                    'px-1.5 py-0.5 rounded text-[9px] font-bold',
+                    p.prioridade === 'alta'
+                      ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                      : p.prioridade === 'media'
+                        ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400'
+                        : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+                  )}
+                >
+                  {p.prioridade}
+                </span>
+              )}
             </span>
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-1 w-full">
@@ -82,61 +96,69 @@ export function ProcessosTableRowDesktop({
         </TableCell>
         <TableCell
           className="font-medium text-xs text-brand-gray dark:text-brand-light truncate"
-          title={supervisorName || 'N/A'}
+          title={supervisorName || '-'}
         >
           {supervisorFirstName}
         </TableCell>
         <TableCell
           className="text-xs text-brand-gray dark:text-brand-light truncate"
-          title={p.cia || 'N/A'}
+          title={p.cia || '-'}
         >
-          {p.cia || 'N/A'}
+          {p.cia || '-'}
         </TableCell>
         <TableCell
           className="text-xs text-brand-gray dark:text-brand-light break-words"
-          title={p.tipo_servico || 'N/A'}
+          title={p.tipo_servico || '-'}
         >
-          {p.tipo_servico || 'N/A'}
+          {p.tipo_servico || '-'}
         </TableCell>
         <TableCell
           className="text-xs text-brand-gray dark:text-brand-light truncate hidden lg:table-cell"
-          title={agenteName || 'N/A'}
+          title={agenteName || 'Não informado'}
         >
           {agenteFirstName}
         </TableCell>
         <TableCell>
           <div className="flex flex-wrap gap-1">
-            {Array.isArray(p.tags) && p.tags.length > 0 ? (
-              p.tags.slice(0, 2).map((tag: string) => (
-                <Badge
-                  key={tag}
-                  className={cn(
-                    'text-[9px] px-1.5 py-0 rounded-[4px] leading-tight whitespace-nowrap',
-                    getTagColor(tag),
-                  )}
-                  title={tag}
-                >
-                  {tag.length > 15 ? tag.substring(0, 15) + '...' : tag}
-                </Badge>
-              ))
+            {Array.isArray(p.tags) &&
+            p.tags.filter((t) => typeof t === 'string' && t.trim() !== '').length > 0 ? (
+              p.tags
+                .filter((t): t is string => typeof t === 'string' && t.trim() !== '')
+                .slice(0, 2)
+                .map((tag: string, idx: number) => (
+                  <Badge
+                    key={`${tag}-${idx}`}
+                    className={cn(
+                      'text-[9px] px-1.5 py-0 rounded-[4px] leading-tight whitespace-nowrap',
+                      getTagColor(tag),
+                    )}
+                    title={tag}
+                  >
+                    {tag.length > 15 ? tag.substring(0, 15) + '...' : tag}
+                  </Badge>
+                ))
             ) : (
               <span className="text-xs text-brand-gray/50">-</span>
             )}
-            {Array.isArray(p.tags) && p.tags.length > 2 && (
-              <Badge
-                className="text-[9px] px-1.5 py-0 rounded-[4px] bg-brand-light text-brand-gray dark:bg-black/50 dark:text-brand-light border-transparent leading-tight"
-                title={p.tags.slice(2).join(', ')}
-              >
-                +{p.tags.length - 2}
-              </Badge>
-            )}
+            {Array.isArray(p.tags) &&
+              p.tags.filter((t) => typeof t === 'string' && t.trim() !== '').length > 2 && (
+                <Badge
+                  className="text-[9px] px-1.5 py-0 rounded-[4px] bg-brand-light text-brand-gray dark:bg-black/50 dark:text-brand-light border-transparent leading-tight"
+                  title={p.tags
+                    .filter((t) => typeof t === 'string' && t.trim() !== '')
+                    .slice(2)
+                    .join(', ')}
+                >
+                  +{p.tags.filter((t) => typeof t === 'string' && t.trim() !== '').length - 2}
+                </Badge>
+              )}
           </div>
         </TableCell>
         <TableCell
           className="font-medium text-xs text-brand-gray dark:text-brand-light whitespace-nowrap"
-          title={formatDateBr(p.data_entrada)}
+          title={p.data_entrada ? formatDateBr(p.data_entrada) : '-'}
         >
-          {formatDateBr(p.data_entrada)}
+          {p.data_entrada ? formatDateBr(p.data_entrada) : '-'}
         </TableCell>
         <TableCell className="text-right pr-4">
           <ChevronDown

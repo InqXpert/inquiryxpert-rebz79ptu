@@ -80,7 +80,7 @@ export function ProcessosOperacionaisTable({
         <Table className="border-0 border-t border-transparent rounded-none">
           <TableHeader>
             <TableRow>
-              {Array.from({ length: 8 }).map((_, i) => (
+              {Array.from({ length: 9 }).map((_, i) => (
                 <TableHead key={i}>
                   <Skeleton className="h-4 w-20 bg-brand-light dark:bg-white/10" />
                 </TableHead>
@@ -90,7 +90,7 @@ export function ProcessosOperacionaisTable({
           <TableBody>
             {Array.from({ length: 5 }).map((_, i) => (
               <TableRow key={i}>
-                <TableCell colSpan={8}>
+                <TableCell colSpan={9}>
                   <Skeleton className="h-6 w-full bg-brand-light dark:bg-white/10" />
                 </TableCell>
               </TableRow>
@@ -142,9 +142,9 @@ export function ProcessosOperacionaisTable({
             </TableHead>
             <TableHead
               className="cursor-pointer hover:text-brand-cyan transition-colors"
-              onClick={() => handleSort('nome_segurado')}
+              onClick={() => handleSort('tipo_servico')}
             >
-              Segurado <SortIcon colKey="nome_segurado" />
+              Tipo Serviço <SortIcon colKey="tipo_servico" />
             </TableHead>
             <TableHead
               className="cursor-pointer hover:text-brand-cyan transition-colors"
@@ -160,10 +160,11 @@ export function ProcessosOperacionaisTable({
             </TableHead>
             <TableHead
               className="cursor-pointer hover:text-brand-cyan transition-colors"
-              onClick={() => handleSort('analista_solicitante')}
+              onClick={() => handleSort('prioridade')}
             >
-              Analista <SortIcon colKey="analista_solicitante" />
+              Prioridade <SortIcon colKey="prioridade" />
             </TableHead>
+            <TableHead>Tags</TableHead>
             <TableHead className="text-right">Ação</TableHead>
           </TableRow>
         </TableHeader>
@@ -183,15 +184,43 @@ export function ProcessosOperacionaisTable({
               <TableCell className="text-brand-gray dark:text-brand-light">
                 {p.cia || '-'}
               </TableCell>
-              <TableCell className="font-medium">{p.nome_segurado || '-'}</TableCell>
-              <TableCell className="text-brand-gray dark:text-brand-light">
-                {p.agente_prestador || '-'}
+              <TableCell className="font-medium text-brand-navy dark:text-white">
+                {p.tipo_servico || '-'}
               </TableCell>
               <TableCell className="text-brand-gray dark:text-brand-light">
-                {formatDateBr(p.data_entrada)}
+                {p.expand?.agente_id?.nomeCompleto || p.agente_prestador || 'Não informado'}
               </TableCell>
               <TableCell className="text-brand-gray dark:text-brand-light">
-                {p.analista_solicitante || '-'}
+                {p.data_entrada ? formatDateBr(p.data_entrada) : '-'}
+              </TableCell>
+              <TableCell className="text-brand-gray dark:text-brand-light uppercase text-[11px] font-bold">
+                {p.prioridade || '-'}
+              </TableCell>
+              <TableCell>
+                <div className="flex flex-wrap gap-1">
+                  {Array.isArray(p.tags) &&
+                  p.tags.filter((t) => typeof t === 'string' && t.trim() !== '').length > 0 ? (
+                    p.tags
+                      .filter((t): t is string => typeof t === 'string' && t.trim() !== '')
+                      .slice(0, 2)
+                      .map((tag: string, idx: number) => (
+                        <span
+                          key={idx}
+                          className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-brand-light text-brand-gray dark:bg-black/50 dark:text-brand-light"
+                        >
+                          {tag.length > 15 ? tag.substring(0, 15) + '...' : tag}
+                        </span>
+                      ))
+                  ) : (
+                    <span className="text-xs text-brand-gray/50">-</span>
+                  )}
+                  {Array.isArray(p.tags) &&
+                    p.tags.filter((t) => typeof t === 'string' && t.trim() !== '').length > 2 && (
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-brand-light text-brand-gray dark:bg-black/50 dark:text-brand-light">
+                        +{p.tags.filter((t) => typeof t === 'string' && t.trim() !== '').length - 2}
+                      </span>
+                    )}
+                </div>
               </TableCell>
               <TableCell className="text-right">
                 <TooltipProvider>

@@ -7,6 +7,7 @@ import { ProcessosListFilters } from '@/components/operacional/ProcessosListFilt
 import { useAuth } from '@/hooks/use-auth'
 import { useAlertas } from '@/hooks/useAlertas'
 import { cn } from '@/lib/utils'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 export default function Processos() {
   const state = useProcessosList()
@@ -82,13 +83,15 @@ export default function Processos() {
         <ProcessosListFilters {...state} />
       </div>
 
-      <ProcessosListTable
-        processos={state.data}
-        loading={state.loading}
-        hasMore={state.hasMore}
-        onLoadMore={state.loadMore}
-        rawCount={state.rawCount}
-      />
+      <ErrorBoundary>
+        <ProcessosListTable
+          processos={state.data}
+          loading={state.loading}
+          hasMore={state.hasMore}
+          onLoadMore={state.loadMore}
+          rawCount={state.rawCount}
+        />
+      </ErrorBoundary>
     </div>
   )
 }

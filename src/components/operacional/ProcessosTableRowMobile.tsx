@@ -43,15 +43,15 @@ export function ProcessosTableRowMobile({
       <div className="flex justify-between items-start mb-3">
         <div>
           <p className="font-bold text-brand-navy dark:text-white text-sm mb-1">
-            {p.numero_controle || p.id}
+            {p.numero_controle || p.id || '-'}
           </p>
           <p className="font-bold text-xs uppercase text-brand-gray dark:text-brand-light">
-            {p.status?.replace(/_/g, ' ')}
+            {p.status ? p.status.replace(/_/g, ' ') : '-'}
           </p>
         </div>
         <div className="flex flex-col items-end gap-2">
           <p className="text-xs text-brand-gray dark:text-brand-light font-medium">
-            {formatDateBr(p.data_entrada)}
+            {p.data_entrada ? formatDateBr(p.data_entrada) : '-'}
           </p>
           <ChevronDown
             className={cn(
@@ -66,24 +66,38 @@ export function ProcessosTableRowMobile({
         <div className="flex justify-between">
           <span className="text-brand-gray dark:text-brand-light">Seguradora:</span>
           <span className="font-medium text-brand-navy dark:text-white truncate max-w-[180px]">
-            {p.cia || 'N/A'}
+            {p.cia || '-'}
           </span>
         </div>
         <div className="flex justify-between">
           <span className="text-brand-gray dark:text-brand-light">Tipo:</span>
           <span className="font-medium text-brand-navy dark:text-white truncate max-w-[180px]">
-            {p.tipo_servico || 'N/A'}
+            {p.tipo_servico || '-'}
           </span>
         </div>
         <div className="flex justify-between">
           <span className="text-brand-gray dark:text-brand-light">Supervisor:</span>
           <span className="font-medium text-brand-navy dark:text-white truncate max-w-[180px]">
-            {p.expand?.supervisor_id?.name || 'N/A'}
+            {p.expand?.supervisor_id?.name || '-'}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-brand-gray dark:text-brand-light">Prestador:</span>
+          <span className="font-medium text-brand-navy dark:text-white truncate max-w-[180px]">
+            {p.expand?.agente_id?.nomeCompleto || p.agente_prestador || 'Não informado'}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-brand-gray dark:text-brand-light">Prioridade:</span>
+          <span className="font-medium text-brand-navy dark:text-white uppercase text-[11px]">
+            {p.prioridade || '-'}
           </span>
         </div>
       </div>
 
-      {(tags.length > 0 || (Array.isArray(p.tags) && p.tags.length > 0)) && (
+      {(tags.length > 0 ||
+        (Array.isArray(p.tags) &&
+          p.tags.filter((t) => typeof t === 'string' && t.trim() !== '').length > 0)) && (
         <div className="flex flex-wrap gap-1 mb-1 mt-2">
           {tags.map((t, idx) => (
             <span
@@ -94,14 +108,16 @@ export function ProcessosTableRowMobile({
             </span>
           ))}
           {Array.isArray(p.tags) &&
-            p.tags.map((tag: string, idx: number) => (
-              <Badge
-                key={`tag-${idx}`}
-                className={cn('text-[10px] px-2 py-0.5 rounded-[4px]', getTagColor(tag))}
-              >
-                {tag}
-              </Badge>
-            ))}
+            p.tags
+              .filter((t): t is string => typeof t === 'string' && t.trim() !== '')
+              .map((tag: string, idx: number) => (
+                <Badge
+                  key={`tag-${idx}`}
+                  className={cn('text-[10px] px-2 py-0.5 rounded-[4px]', getTagColor(tag))}
+                >
+                  {tag}
+                </Badge>
+              ))}
         </div>
       )}
 
