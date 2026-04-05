@@ -106,7 +106,7 @@ export function ProcessosTableRowDesktop({
         </TableCell>
         <TableCell>
           <div className="flex flex-wrap gap-1">
-            {p.tags && p.tags.length > 0 ? (
+            {Array.isArray(p.tags) && p.tags.length > 0 ? (
               p.tags.slice(0, 2).map((tag: string) => (
                 <Badge
                   key={tag}
@@ -122,7 +122,7 @@ export function ProcessosTableRowDesktop({
             ) : (
               <span className="text-xs text-brand-gray/50">-</span>
             )}
-            {p.tags && p.tags.length > 2 && (
+            {Array.isArray(p.tags) && p.tags.length > 2 && (
               <Badge
                 className="text-[9px] px-1.5 py-0 rounded-[4px] bg-brand-light text-brand-gray dark:bg-black/50 dark:text-brand-light border-transparent leading-tight"
                 title={p.tags.slice(2).join(', ')}

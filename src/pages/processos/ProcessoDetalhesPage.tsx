@@ -110,7 +110,9 @@ export default function ProcessoDetalhesPage() {
   if (error || !processo) {
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
-        <p className="text-xl text-muted-foreground">{error || 'Processo não encontrado'}</p>
+        <p className="text-xl text-muted-foreground font-medium">
+          {error || 'Processo não encontrado'}
+        </p>
         <Button variant="outline" onClick={() => navigate('/processos')}>
           Voltar
         </Button>
@@ -124,7 +126,7 @@ export default function ProcessoDetalhesPage() {
         {label}
       </span>
       <span className="text-sm font-medium text-brand-navy dark:text-white break-all">
-        {value || '-'}
+        {value || 'Não informado'}
       </span>
     </div>
   )
@@ -172,21 +174,40 @@ export default function ProcessoDetalhesPage() {
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <InfoItem label="Seguradora" value={processo.cia} />
-            <InfoItem label="Natureza do Sinistro" value={processo.tipo_servico} />
-            <InfoItem label="Tipo de Investigação" value={processo.orientacoes} />
+            <InfoItem
+              label="Cliente"
+              value={processo.expand?.cliente_id?.nome || processo.expand?.cliente_id?.razao_social}
+            />
+            <InfoItem
+              label="Seguradora"
+              value={processo.expand?.seguradora_id?.nome || processo.cia}
+            />
+            <InfoItem
+              label="Natureza do Sinistro"
+              value={processo.expand?.natureza_sinistro_id?.nome || processo.tipo_servico}
+            />
+            <InfoItem
+              label="Tipo de Investigação"
+              value={processo.expand?.tipo_investigacao_id?.nome || processo.orientacoes}
+            />
             <InfoItem label="Controle Cia" value={processo.controle_cia} />
             <InfoItem
               label="Agente"
-              value={processo.expand?.agente_id?.nomeCompleto || processo.expand?.agente_id?.nome}
+              value={
+                processo.expand?.agente_id?.nomeCompleto ||
+                processo.expand?.agente_id?.nome ||
+                processo.agente_prestador
+              }
             />
-            <InfoItem label="Solicitante" value={processo.expand?.solicitante_id?.name} />
+            <InfoItem
+              label="Solicitante"
+              value={processo.expand?.solicitante_id?.name || processo.analista_solicitante}
+            />
             <InfoItem label="Supervisor" value={processo.expand?.supervisor_id?.name} />
             <InfoItem label="Região do Sinistro" value={processo.regiao_sinistro} />
             <InfoItem label="Nome do Segurado" value={processo.nome_segurado} />
             <InfoItem label="Placas dos Veículos" value={processo.placas_veiculos} />
             <InfoItem label="Data de Entrada" value={processo.data_entrada} />
-            <InfoItem label="Dias Úteis" value={processo.dias_uteis} />
           </div>
         </div>
 

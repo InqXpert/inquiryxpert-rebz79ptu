@@ -50,7 +50,7 @@ export const searchProcessos = (processos: Processo[], search: string) => {
       JSON.stringify(p.posicoes_json || {})
         .toLowerCase()
         .includes(lower) ||
-      (p.tags && p.tags.some((t) => t.toLowerCase().includes(lower))) ||
+      (Array.isArray(p.tags) && p.tags.some((t: string) => t.toLowerCase().includes(lower))) ||
       (p.observacoes || '').toLowerCase().includes(lower),
   )
 }
@@ -223,7 +223,8 @@ export const filterByPriority = (processos: Processo[], priority: string) => {
 
 export const fetchProcessoById = async (id: string): Promise<Processo> => {
   return await pb.collection('processos_operacionais').getOne<Processo>(id, {
-    expand: 'agente_id,supervisor_id,solicitante_id',
+    expand:
+      'agente_id,supervisor_id,cliente_id,seguradora_id,natureza_sinistro_id,tipo_investigacao_id,solicitante_id',
   })
 }
 

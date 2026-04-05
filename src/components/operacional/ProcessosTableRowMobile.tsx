@@ -83,7 +83,7 @@ export function ProcessosTableRowMobile({
         </div>
       </div>
 
-      {(tags.length > 0 || (p.tags && p.tags.length > 0)) && (
+      {(tags.length > 0 || (Array.isArray(p.tags) && p.tags.length > 0)) && (
         <div className="flex flex-wrap gap-1 mb-1 mt-2">
           {tags.map((t, idx) => (
             <span
@@ -93,14 +93,15 @@ export function ProcessosTableRowMobile({
               {t.label}
             </span>
           ))}
-          {p.tags?.map((tag: string, idx: number) => (
-            <Badge
-              key={`tag-${idx}`}
-              className={cn('text-[10px] px-2 py-0.5 rounded-[4px]', getTagColor(tag))}
-            >
-              {tag}
-            </Badge>
-          ))}
+          {Array.isArray(p.tags) &&
+            p.tags.map((tag: string, idx: number) => (
+              <Badge
+                key={`tag-${idx}`}
+                className={cn('text-[10px] px-2 py-0.5 rounded-[4px]', getTagColor(tag))}
+              >
+                {tag}
+              </Badge>
+            ))}
         </div>
       )}
 

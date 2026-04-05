@@ -22,9 +22,19 @@ export function useProcessoDetalhes(id: string | undefined) {
       const data = await fetchProcessoById(id)
       setProcesso(data)
       setError(null)
-    } catch (err) {
-      setError('Erro ao carregar processo.')
-      toast.error('Erro ao carregar processo.')
+    } catch (err: any) {
+      let errorMessage = 'Erro ao carregar processo.'
+      if (err?.status === 404 || err?.message?.includes('404')) {
+        errorMessage = 'Processo não encontrado.'
+      } else if (
+        err?.status === 403 ||
+        err?.message?.includes('403') ||
+        err?.message?.includes('autho')
+      ) {
+        errorMessage = 'Acesso negado ao processo.'
+      }
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
       setLoading(false)
     }
