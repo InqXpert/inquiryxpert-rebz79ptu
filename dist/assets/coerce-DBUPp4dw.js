@@ -1,1 +1,0 @@
-import{l as e,t}from"./schemas-BG_S5Htk.js";function n(n){return e(t,n)}export{n as t};
