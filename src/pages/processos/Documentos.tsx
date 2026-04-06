@@ -65,7 +65,9 @@ export default function ProcessoDocumentosPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-4 sticky top-6">
+        <div className="lg:col-span-4 sticky top-6 space-y-6">
+          <ProcessStatus processoId={id!} currentStatus={processo.status} />
+          <BannerAviso />
           <FileUploadZone processoId={id!} agenteId={agenteId} />
         </div>
         <div className="lg:col-span-8 h-full min-h-[600px] flex flex-col">

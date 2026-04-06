@@ -15,9 +15,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { toast } from 'sonner'
 import { ArrowLeft, CheckCircle2, Info, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
+import pb from '@/lib/pocketbase/client'
 
 const STATUSES = ['ANALISE_INICIAL', 'EM_EXECUCAO', 'EM_ELABORACAO', 'FINALIZADO', 'CANCELADO']
 
@@ -34,11 +45,42 @@ export default function ProcessoDetalhesPage() {
   const [observacao, setObservacao] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const [isChecking, setIsChecking] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+
   useEffect(() => {
     if (processo && !newStatus) {
       setNewStatus(processo.status || '')
     }
   }, [processo, newStatus])
+
+  const handleConcluir = async () => {
+    if (!processo) return
+    setIsChecking(true)
+    try {
+      const res = await pb.send(`/backend/v1/processos/${processo.id}/check-completion`, {
+        method: 'POST',
+      })
+      if (res.can_conclude) {
+        await save(
+          {
+            status: 'PENDENTE_VALIDACAO',
+            data_conclusao: new Date().toISOString(),
+          },
+          'concluir_processo_com_documentos',
+          { ...processo, status: 'PENDENTE_VALIDACAO' },
+        )
+        toast.success('Processo concluído. Aguardando validação.')
+        navigate('/processos')
+      } else {
+        setShowModal(true)
+      }
+    } catch (e) {
+      toast.error('Erro ao verificar documentos.')
+    } finally {
+      setIsChecking(false)
+    }
+  }
 
   const handleResolve = async () => {
     if (actionType === 'MANTER' && !observacao.trim()) {
@@ -133,16 +175,16 @@ export default function ProcessoDetalhesPage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto animate-in fade-in duration-300 fill-mode-both">
-      <div className="flex items-center space-x-4 mb-6">
+      <div className="flex flex-col md:flex-row md:items-center space-y-4 md:space-y-0 md:space-x-4 mb-6">
         <Button
           variant="outline"
           onClick={() => navigate('/processos')}
-          className="text-brand-navy dark:text-white h-10 px-4 active:scale-[0.98] transition-transform duration-100 border-brand-teal/20"
+          className="text-brand-navy dark:text-white h-10 px-4 active:scale-[0.98] transition-transform duration-100 border-brand-teal/20 w-fit"
         >
           <ArrowLeft className="w-4 h-4 mr-2" /> Voltar para Processos
         </Button>
-        <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <h1 className="text-[28px] font-bold tracking-tight text-brand-navy dark:text-white flex items-center gap-3">
+        <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <h1 className="text-[24px] sm:text-[28px] font-bold tracking-tight text-brand-navy dark:text-white flex flex-wrap items-center gap-3">
             Processo {processo.numero_controle || processo.id}
             <Badge
               variant="outline"
@@ -161,17 +203,31 @@ export default function ProcessoDetalhesPage() {
               </Badge>
             ) : null}
           </h1>
-          <Button
-            onClick={() => navigate(`/processos/${processo.id}/documentos`)}
-            className="bg-brand-navy hover:bg-brand-navy/90 text-white shrink-0 shadow-sm"
-          >
-            Gerenciar Documentos
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              onClick={() => navigate(`/processos/${processo.id}/documentos`)}
+              variant="outline"
+              className="border-brand-teal/30 text-brand-navy dark:text-white shrink-0"
+            >
+              Gerenciar Documentos
+            </Button>
+            <Button
+              onClick={handleConcluir}
+              disabled={isChecking || processo.status === 'FINALIZADO'}
+              className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold shadow-sm shrink-0"
+            >
+              {isChecking ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : (
+                <CheckCircle2 className="w-4 h-4 mr-2" />
+              )}
+              Concluir Processo
+            </Button>
+          </div>
         </div>
       </div>
 
       <div className="space-y-6">
-        {/* Read-Only Info Panel */}
         <div className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both delay-100">
           <div className="flex items-center gap-2 mb-4">
             <Info className="w-5 h-5 text-brand-cyan" />
@@ -217,7 +273,6 @@ export default function ProcessoDetalhesPage() {
           </div>
         </div>
 
-        {/* Resolution Center */}
         <div className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both delay-200">
           <h2 className="text-[18px] font-bold text-brand-navy dark:text-white mb-6 flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-brand-teal" /> Central de Resolução
@@ -306,6 +361,28 @@ export default function ProcessoDetalhesPage() {
           </div>
         </div>
       </div>
+
+      <AlertDialog open={showModal} onOpenChange={setShowModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Documentos Obrigatórios Faltando</AlertDialogTitle>
+            <AlertDialogDescription>
+              Envie gravações de entrevista e arquivo de despesas antes de concluir.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowModal(false)}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setShowModal(false)
+                navigate(`/processos/${processo?.id}/documentos`)
+              }}
+            >
+              Ir para Upload
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

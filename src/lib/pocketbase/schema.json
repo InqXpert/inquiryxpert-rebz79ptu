@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-06T04:08:27.978Z",
+  "generatedAt": "2026-04-06T04:13:57.666Z",
   "collections": [
     {
       "name": "users",
@@ -943,7 +943,9 @@
             "upload_audio",
             "validar_audio",
             "bloquear_processo_sem_audio",
-            "liberar_para_pagamento"
+            "liberar_para_pagamento",
+            "concluir_processo_com_documentos",
+            "notificacao_arquivo_enviado"
           ]
         },
         {
@@ -1277,7 +1279,8 @@
             "prazo_proximo",
             "mensagem",
             "treinamento",
-            "audio_obrigatorio_faltando"
+            "audio_obrigatorio_faltando",
+            "arquivo_enviado"
           ]
         },
         {
@@ -1880,8 +1883,8 @@
         "list": "@request.auth.id != '' && (agente_id.user_id = @request.auth.id || @request.auth.role = 'supervisor' || @request.auth.role = 'admin' || @request.auth.role = 'c-level')",
         "view": "@request.auth.id != '' && (agente_id.user_id = @request.auth.id || @request.auth.role = 'supervisor' || @request.auth.role = 'admin' || @request.auth.role = 'c-level')",
         "create": "@request.auth.id != '' && agente_id.user_id = @request.auth.id",
-        "update": "@request.auth.role = 'admin' || @request.auth.role = 'c-level' || (agente_id.user_id = @request.auth.id && status = 'enviado')",
-        "delete": "@request.auth.role = 'admin' || @request.auth.role = 'c-level' || (agente_id.user_id = @request.auth.id && status = 'enviado')"
+        "update": "@request.auth.role = 'admin' || @request.auth.role = 'c-level' || @request.auth.role = 'supervisor' || (agente_id.user_id = @request.auth.id && status != 'validado')",
+        "delete": "@request.auth.role = 'admin' || @request.auth.role = 'c-level' || @request.auth.role = 'supervisor' || (agente_id.user_id = @request.auth.id && status != 'validado')"
       },
       "fields": [
         {
