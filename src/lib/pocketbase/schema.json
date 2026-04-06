@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-06T03:57:19.369Z",
+  "generatedAt": "2026-04-06T04:08:27.978Z",
   "collections": [
     {
       "name": "users",
@@ -1872,6 +1872,86 @@
         }
       ],
       "indexes": ["CREATE UNIQUE INDEX idx_notas_fiscais_numero_nf ON notas_fiscais (numero_nf)"]
+    },
+    {
+      "name": "arquivos_processo",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != '' && (agente_id.user_id = @request.auth.id || @request.auth.role = 'supervisor' || @request.auth.role = 'admin' || @request.auth.role = 'c-level')",
+        "view": "@request.auth.id != '' && (agente_id.user_id = @request.auth.id || @request.auth.role = 'supervisor' || @request.auth.role = 'admin' || @request.auth.role = 'c-level')",
+        "create": "@request.auth.id != '' && agente_id.user_id = @request.auth.id",
+        "update": "@request.auth.role = 'admin' || @request.auth.role = 'c-level' || (agente_id.user_id = @request.auth.id && status = 'enviado')",
+        "delete": "@request.auth.role = 'admin' || @request.auth.role = 'c-level' || (agente_id.user_id = @request.auth.id && status = 'enviado')"
+      },
+      "fields": [
+        {
+          "name": "processo_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "processos_operacionais"
+        },
+        {
+          "name": "agente_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "agentes"
+        },
+        {
+          "name": "arquivo",
+          "type": "file",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "nome_arquivo",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "tipo_arquivo",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["foto", "audio", "documento", "despesas"]
+        },
+        {
+          "name": "tamanho_bytes",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["enviado", "validando", "validado", "rejeitado"]
+        },
+        {
+          "name": "motivo_rejeicao",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
     }
   ]
 }

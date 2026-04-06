@@ -1,117 +1,76 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import {
-  ChevronRight,
-  ArrowLeft,
-  FileText,
-  LayoutDashboard,
-  BookOpen,
-  MessageSquare,
-  User,
-  FileCheck,
-} from 'lucide-react'
+import React from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useProcessoDetalhes } from '@/hooks/useProcessoDetalhes'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { ArrowLeft, FolderOpen } from 'lucide-react'
 import { FileUploadZone } from './components/FileUploadZone'
 import { DocumentList } from './components/DocumentList'
-import { ProcessStatus } from './components/ProcessStatus'
-import { BannerAviso } from './components/BannerAviso'
-
-const sidebarLinks = [
-  { name: 'Processos', path: '/gestao-agentes/processos', icon: LayoutDashboard },
-  { name: 'Relatórios', path: '/gestao-agentes/relatorios', icon: FileText },
-  { name: 'Treinamentos', path: '/gestao-agentes/treinamentos', icon: BookOpen },
-  { name: 'Mensagens', path: '/gestao-agentes/mensagens', icon: MessageSquare },
-  { name: 'Perfil', path: '/gestao-agentes/perfil', icon: User },
-  { name: 'Termos', path: '/gestao-agentes/termos', icon: FileCheck },
-]
 
 export default function ProcessoDocumentosPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [processoName, setProcessoName] = useState<string>('Carregando...')
+  const { processo, loading, error } = useProcessoDetalhes(id)
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setProcessoName(`Processo #${id?.substring(0, 6) || '123'}`)
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [id])
+  if (loading) {
+    return (
+      <div className="p-6 space-y-6 max-w-7xl mx-auto w-full">
+        <Skeleton className="h-10 w-1/3" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-4">
+            <Skeleton className="h-[400px]" />
+          </div>
+          <div className="lg:col-span-8">
+            <Skeleton className="h-[600px]" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !processo) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+        <p className="text-xl text-muted-foreground font-medium">
+          {error || 'Processo não encontrado'}
+        </p>
+        <Button variant="outline" onClick={() => navigate('/processos')}>
+          Voltar
+        </Button>
+      </div>
+    )
+  }
+
+  const agenteId = processo.agente_id || processo.expand?.agente_id?.id || ''
 
   return (
-    <div className="flex h-full w-full bg-background relative z-0">
-      {/* Sidebar - Matching Agent Portal navigation */}
-      <aside className="hidden md:flex flex-col w-64 border-r border-border bg-card shrink-0">
-        <div className="p-4 border-b border-border">
-          <h2 className="font-semibold text-lg text-foreground">Portal do Agente</h2>
+    <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full animate-in fade-in duration-300">
+      <div className="flex items-center space-x-4 mb-6">
+        <Button
+          variant="outline"
+          onClick={() => navigate(`/processos/${id}`)}
+          className="text-foreground h-10 px-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" /> Voltar para Processo
+        </Button>
+        <div>
+          <h1 className="text-2xl sm:text-[28px] font-bold tracking-tight text-foreground flex items-center gap-3">
+            <FolderOpen className="w-7 h-7 text-primary" />
+            Documentos do Processo {processo.numero_controle || processo.id}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Gerencie as evidências e arquivos relacionados a este caso.
+          </p>
         </div>
-        <nav className="flex-1 overflow-y-auto py-4">
-          <ul className="space-y-1 px-2">
-            {sidebarLinks.map((link) => {
-              const Icon = link.icon
-              const isActive = link.name === 'Processos'
-              return (
-                <li key={link.name}>
-                  <Link
-                    to={link.path}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors text-sm font-medium ${
-                      isActive
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    {link.name}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-        </nav>
-      </aside>
+      </div>
 
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
-        {/* Header with Breadcrumb and Back Button */}
-        <header className="px-6 py-4 border-b border-border bg-card shrink-0 flex flex-col gap-4 sm:flex-row sm:items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => navigate('/processos')}
-              className="shrink-0 text-foreground"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                <Link to="/processos" className="hover:text-foreground transition-colors">
-                  Processos
-                </Link>
-                <ChevronRight className="w-3 h-3" />
-                <span className="truncate max-w-[120px] sm:max-w-[200px]">{processoName}</span>
-                <ChevronRight className="w-3 h-3" />
-                <span className="text-foreground font-medium">Documentos</span>
-              </div>
-              <h1 className="text-2xl font-bold text-foreground">Documentos do Processo</h1>
-            </div>
-          </div>
-        </header>
-
-        {/* Dual-Section Document Management Area */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
-          <BannerAviso />
-
-          <ProcessStatus />
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-[400px]">
-            <div className="h-full">
-              <FileUploadZone />
-            </div>
-
-            <div className="h-full">
-              <DocumentList />
-            </div>
-          </div>
-        </main>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <div className="lg:col-span-4 sticky top-6">
+          <FileUploadZone processoId={id!} agenteId={agenteId} />
+        </div>
+        <div className="lg:col-span-8 h-full min-h-[600px] flex flex-col">
+          <DocumentList processoId={id!} />
+        </div>
       </div>
     </div>
   )

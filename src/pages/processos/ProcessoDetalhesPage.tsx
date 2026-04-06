@@ -141,7 +141,7 @@ export default function ProcessoDetalhesPage() {
         >
           <ArrowLeft className="w-4 h-4 mr-2" /> Voltar para Processos
         </Button>
-        <div>
+        <div className="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <h1 className="text-[28px] font-bold tracking-tight text-brand-navy dark:text-white flex items-center gap-3">
             Processo {processo.numero_controle || processo.id}
             <Badge
@@ -161,6 +161,12 @@ export default function ProcessoDetalhesPage() {
               </Badge>
             ) : null}
           </h1>
+          <Button
+            onClick={() => navigate(`/processos/${processo.id}/documentos`)}
+            className="bg-brand-navy hover:bg-brand-navy/90 text-white shrink-0 shadow-sm"
+          >
+            Gerenciar Documentos
+          </Button>
         </div>
       </div>
 
