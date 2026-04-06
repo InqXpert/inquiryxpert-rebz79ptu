@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/hooks/use-auth'
+import { useNotifications } from '@/hooks/use-notifications'
 import { useTheme } from '@/components/ThemeProvider'
 import {
   DropdownMenu,
@@ -30,6 +31,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 export default function Layout() {
   const { user, signOut } = useAuth()
   const { theme, setTheme } = useTheme()
+  const { unreadCount } = useNotifications()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -48,6 +50,7 @@ export default function Layout() {
     user?.role === 'agente'
       ? [{ title: 'Portal do Agente', url: '/gestao-agentes' }]
       : []),
+    { title: 'Notificações', url: '/notificacoes' },
     ...(user?.role === 'c-level' || user?.role === 'admin'
       ? [{ title: 'Gestão de Usuários', url: '/gestao-usuarios' }]
       : []),
@@ -171,10 +174,14 @@ export default function Layout() {
             variant="ghost"
             size="icon"
             className="text-white/80 hover:text-white hover:bg-white/10 h-8 w-8 relative"
-            onClick={() => navigate('/processos/alertas')}
+            onClick={() => navigate('/notificacoes')}
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-brand-coral rounded-full"></span>
+            {unreadCount > 0 && (
+              <span className="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand-coral text-[9px] font-bold text-white ring-2 ring-slate-900">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
           </Button>
 
           <DropdownMenu>

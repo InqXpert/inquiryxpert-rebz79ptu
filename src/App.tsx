@@ -24,6 +24,7 @@ const NovoAgente = lazy(() => import('./pages/agentes/Novo'))
 const ProfileAgente = lazy(() => import('./pages/agentes/Profile'))
 const SindicanciaAgente = lazy(() => import('./pages/agentes/Sindicancia'))
 const Configuracoes = lazy(() => import('./pages/Configuracoes'))
+const NotificacoesPage = lazy(() => import('./pages/Notificacoes'))
 const Ajuda = lazy(() => import('./pages/Ajuda'))
 const GestaoUsuarios = lazy(() => import('./pages/GestaoUsuarios'))
 const Perfil = lazy(() => import('./pages/Perfil'))
@@ -80,6 +81,7 @@ export default function App() {
                   <Route path="/processos/:id/editar" element={<ProcessoEdit />} />
                   <Route path="/processos/:id/documentos" element={<ProcessoDocumentosPage />} />
                   <Route path="/processos/alertas" element={<Alertas />} />
+                  <Route path="/notificacoes" element={<NotificacoesPage />} />
                   <Route path="/relatorios" element={<Relatorios />} />
                   <Route path="/agentes" element={<AgentesList />} />
                   <Route path="/agentes/novo" element={<NovoAgente />} />
