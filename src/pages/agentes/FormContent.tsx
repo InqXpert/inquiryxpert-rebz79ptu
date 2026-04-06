@@ -32,7 +32,7 @@ const COMPLIANCE_OPTIONS = [
   { label: 'COMPLIANCE ZERO (ALTO RISCO)', value: 'COMPLIANCE ZERO (ALTO RISCO)' },
 ]
 
-export function FormContent() {
+export function FormContent({ isNew = false }: { isNew?: boolean }) {
   const { watch } = useFormContext()
   const { toast } = useToast()
   const { states, getCitiesByState } = useMunicipios()
@@ -114,6 +114,17 @@ export function FormContent() {
           <FInput name="cepBase" label="CEP de saída da base" />
           <FInput name="telefone" label="Telefone" />
           <FInput name="email" label="E-mail" type="email" />
+
+          {isNew && (
+            <>
+              <div className="col-span-full border-t border-border my-2" />
+              <div className="col-span-full font-bold text-primary text-[15px] uppercase tracking-wider mb-2">
+                Credenciais de Acesso
+              </div>
+              <FInput name="senha" label="Senha" type="password" />
+              <FInput name="confirmarSenha" label="Confirmar Senha" type="password" />
+            </>
+          )}
 
           <div className="col-span-full border-t border-border my-2" />
           <div className="col-span-full font-bold text-primary text-[15px] uppercase tracking-wider mb-2">

@@ -1,23 +1,22 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { agenteSchema, AgenteFormValues } from '@/schemas/agente'
+import { novoAgenteSchema, NovoAgenteFormValues } from '@/schemas/agente'
 import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { FormContent } from './FormContent'
-import { createAgente } from '@/services/agentes'
-import { getErrorMessage } from '@/lib/pocketbase/errors'
 import { useState, useEffect } from 'react'
 import { ImportedFieldsContext } from '@/components/agentes/FormHelpers'
-import { ChevronLeft, Save, Upload } from 'lucide-react'
+import { ChevronLeft, Save, Upload, Loader2 } from 'lucide-react'
 import { ImportAgenteModal } from '@/components/agentes/ImportAgenteModal'
+import { useCreateAgent } from '@/hooks/use-create-agent'
 
 export default function NovoAgente() {
   const navigate = useNavigate()
   const location = useLocation()
   const { toast } = useToast()
-  const [saving, setSaving] = useState(false)
+  const { createAgent, loading: saving } = useCreateAgent()
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
   const [initialData] = useState(() => location.state?.importedData || {})
@@ -32,8 +31,8 @@ export default function NovoAgente() {
     return `AGT-${today}-${rnd}`
   })
 
-  const form = useForm<AgenteFormValues>({
-    resolver: zodResolver(agenteSchema),
+  const form = useForm<NovoAgenteFormValues>({
+    resolver: zodResolver(novoAgenteSchema),
     defaultValues: {
       numero_controle: generatedId,
       possuiCnpj: 'Não',
@@ -42,6 +41,8 @@ export default function NovoAgente() {
       dadosBancariosTerceiros: 'Não',
       ativo: 'Sim',
       naBlackList: 'Não',
+      senha: '',
+      confirmarSenha: '',
       ...initialData,
     },
   })
@@ -59,20 +60,18 @@ export default function NovoAgente() {
     }
   }, [location.state, navigate, toast, form])
 
-  const onSubmit = async (data: AgenteFormValues) => {
-    setSaving(true)
+  const onSubmit = async (data: NovoAgenteFormValues) => {
     try {
-      await createAgente(data as any)
-      toast({ title: 'Sucesso', description: 'Agente cadastrado com sucesso!' })
+      await createAgent(data)
+      toast({ title: 'Sucesso', description: 'Agente criado com sucesso!' })
       navigate('/agentes')
     } catch (error) {
       toast({
         title: 'Erro ao salvar',
-        description: getErrorMessage(error),
+        description:
+          error instanceof Error ? error.message : 'Erro ao criar conta. Tente novamente',
         variant: 'destructive',
       })
-    } finally {
-      setSaving(false)
     }
   }
 
@@ -119,7 +118,9 @@ export default function NovoAgente() {
             disabled={saving}
           >
             {saving ? (
-              'Salvando...'
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" /> Salvando...
+              </>
             ) : (
               <>
                 <Save className="w-5 h-5 mr-2" /> Salvar Agente
@@ -131,9 +132,11 @@ export default function NovoAgente() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <ImportedFieldsContext.Provider value={importedFields}>
-            <FormContent />
-          </ImportedFieldsContext.Provider>
+          <fieldset disabled={saving} className="group min-w-0">
+            <ImportedFieldsContext.Provider value={importedFields}>
+              <FormContent isNew={true} />
+            </ImportedFieldsContext.Provider>
+          </fieldset>
         </form>
       </Form>
 

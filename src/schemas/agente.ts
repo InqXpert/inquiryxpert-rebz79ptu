@@ -46,6 +46,20 @@ export const agenteSchema = z.object({
   qualidade_nivel: z.string().optional(),
   experiencia_nivel: z.string().optional(),
   compliance_nivel: z.string().optional(),
+
+  senha: z.string().optional(),
+  confirmarSenha: z.string().optional(),
 })
 
+export const novoAgenteSchema = agenteSchema
+  .extend({
+    senha: z.string().min(8, 'Minimo 8 caracteres'),
+    confirmarSenha: z.string().min(1, 'Confirmar senha é obrigatório'),
+  })
+  .refine((data) => data.senha === data.confirmarSenha, {
+    message: 'As senhas nao coincidem',
+    path: ['confirmarSenha'],
+  })
+
 export type AgenteFormValues = z.infer<typeof agenteSchema>
+export type NovoAgenteFormValues = z.infer<typeof novoAgenteSchema>
