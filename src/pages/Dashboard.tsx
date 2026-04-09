@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { CheckCircle2, Clock, Activity, FileText } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { useRealtime } from '@/hooks/use-realtime'
 import { fetchProcessos } from '@/services/procesosOperacionais'
 import { ProcessoOperacional } from '@/types'
+import { EncaminharSindicanciaModal } from '@/components/sindicancia/EncaminharSindicanciaModal'
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--muted-foreground))']
 
@@ -108,16 +110,36 @@ export default function Dashboard() {
     value: { label: 'Processos', color: 'hsl(var(--secondary))' },
   }
 
+  const [encaminharModalOpen, setEncaminharModalOpen] = useState(false)
+
   return (
     <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8">
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-primary mb-3">
-          Dashboard
-        </h1>
-        <p className="text-base text-muted-foreground">
-          Monitore todos os indicadores da operação em tempo real
-        </p>
+      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-primary mb-3">
+            Dashboard
+          </h1>
+          <p className="text-base text-muted-foreground">
+            Monitore todos os indicadores da operação em tempo real
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <Button
+            onClick={() => setEncaminharModalOpen(true)}
+            className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold"
+            disabled={processos.length === 0}
+          >
+            <FileText className="mr-2 h-4 w-4" />
+            Encaminhar Sindicância
+          </Button>
+        </div>
       </div>
+
+      <EncaminharSindicanciaModal
+        isOpen={encaminharModalOpen}
+        onClose={() => setEncaminharModalOpen(false)}
+        processos={processos}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {kpis.map((kpi, i) => (

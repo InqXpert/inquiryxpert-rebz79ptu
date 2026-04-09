@@ -15,16 +15,17 @@ import { useState } from 'react'
 import { HistoricoModal, ObservacoesModal, PosicoesModal } from './ProcessoInlineModals'
 import { ProcessosTableRowDesktop } from './ProcessosTableRowDesktop'
 import { ProcessosTableRowMobile } from './ProcessosTableRowMobile'
+import { EncaminharSindicanciaModal } from '@/components/sindicancia/EncaminharSindicanciaModal'
 
 export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, rawCount }: any) {
   const navigate = useNavigate()
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [modalState, setModalState] = useState<{
-    type: 'history' | 'obs' | 'pos' | null
+    type: 'history' | 'obs' | 'pos' | 'encaminhar' | null
     proc: Processo | null
   }>({ type: null, proc: null })
 
-  const handleOpenModal = (type: 'history' | 'obs' | 'pos', proc: Processo) => {
+  const handleOpenModal = (type: 'history' | 'obs' | 'pos' | 'encaminhar', proc: Processo) => {
     setModalState({ type, proc })
   }
 
@@ -225,6 +226,11 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
         processo={modalState.type === 'pos' ? modalState.proc : null}
         isOpen={modalState.type === 'pos'}
         onClose={() => setModalState({ type: null, proc: null })}
+      />
+      <EncaminharSindicanciaModal
+        isOpen={modalState.type === 'encaminhar'}
+        onClose={() => setModalState({ type: null, proc: null })}
+        processo={modalState.proc}
       />
     </>
   )

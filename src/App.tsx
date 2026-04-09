@@ -50,6 +50,7 @@ const GestaoAgentesPerfil = lazy(() => import('./pages/gestao-agentes/Perfil'))
 const GestaoAgentesTermos = lazy(() => import('./pages/gestao-agentes/Termos'))
 const GestaoAgentesFaturamento = lazy(() => import('./pages/gestao-agentes/Faturamento'))
 const ProcessoDocumentosPage = lazy(() => import('./pages/processos/Documentos'))
+const SindicanciaDetail = lazy(() => import('./pages/sindicancia/SindicanciaDetail'))
 
 export default function App() {
   return (
@@ -81,6 +82,7 @@ export default function App() {
                   <Route path="/processos/:id/editar" element={<ProcessoEdit />} />
                   <Route path="/processos/:id/documentos" element={<ProcessoDocumentosPage />} />
                   <Route path="/processos/alertas" element={<Alertas />} />
+                  <Route path="/sindicancia/:id" element={<SindicanciaDetail />} />
                   <Route path="/notificacoes" element={<NotificacoesPage />} />
                   <Route path="/relatorios" element={<Relatorios />} />
                   <Route path="/agentes" element={<AgentesList />} />
