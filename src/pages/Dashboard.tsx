@@ -34,6 +34,8 @@ export default function Dashboard() {
     loadData()
   })
 
+  const [encaminharModalOpen, setEncaminharModalOpen] = useState(false)
+
   if (loading) {
     return (
       <div className="p-8 text-center text-muted-foreground animate-pulse">
@@ -109,8 +111,6 @@ export default function Dashboard() {
   const chartConfig = {
     value: { label: 'Processos', color: 'hsl(var(--secondary))' },
   }
-
-  const [encaminharModalOpen, setEncaminharModalOpen] = useState(false)
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 py-6 md:py-8 pb-12 space-y-8">
