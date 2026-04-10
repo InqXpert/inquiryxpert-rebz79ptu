@@ -76,7 +76,7 @@ export default function AgentesList() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 max-w-[1600px] mx-auto w-full gap-6">
           <div className="flex flex-col">
             <h1 className="text-3xl md:text-4xl font-bold text-[#2A3B4C] flex items-center gap-2 tracking-tight mb-2">
-              Agentes
+              Gestão de Agentes
               <ChevronDown className="w-6 h-6 text-muted-foreground mt-0.5 cursor-pointer hover:text-[#00A8B5] transition-colors" />
             </h1>
             <p className="text-base text-muted-foreground font-medium">{filtered.length} records</p>
@@ -108,13 +108,13 @@ export default function AgentesList() {
           <TabsList className="w-full justify-start gap-8 bg-transparent p-0 border-none h-auto">
             <TabsTrigger
               value="list"
-              className="px-2 py-4 text-[15px] font-semibold text-muted-foreground data-[state=active]:text-[#00A8B5] data-[state=active]:border-[#00A8B5] data-[state=active]:border-b-[3px] border-b-[3px] border-transparent rounded-none bg-transparent hover:bg-transparent shadow-none transition-all"
+              className="px-2 py-4 font-semibold text-muted-foreground data-[state=active]:text-[#00A8B5] data-[state=active]:border-[#00A8B5] data-[state=active]:border-b-[3px] border-b-[3px] border-transparent rounded-none bg-transparent hover:bg-transparent shadow-none transition-all text-[14px]"
             >
               Todos os agentes
             </TabsTrigger>
             <TabsTrigger
               value="map"
-              className="px-2 py-4 text-[15px] font-semibold text-muted-foreground data-[state=active]:text-[#00A8B5] data-[state=active]:border-[#00A8B5] data-[state=active]:border-b-[3px] border-b-[3px] border-transparent rounded-none bg-transparent hover:bg-transparent shadow-none transition-all"
+              className="px-2 py-4 font-semibold text-muted-foreground data-[state=active]:text-[#00A8B5] data-[state=active]:border-[#00A8B5] data-[state=active]:border-b-[3px] border-b-[3px] border-transparent rounded-none bg-transparent hover:bg-transparent shadow-none transition-all text-[15px]"
             >
               Visão do mapa
             </TabsTrigger>

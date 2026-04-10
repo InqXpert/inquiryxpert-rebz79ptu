@@ -39,7 +39,7 @@ export function HubEstrategico({ data }: { data: HubData }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Fogo Alto */}
           <div className="bg-white p-6 rounded-lg shadow-sm border border-border border-l-4 border-l-destructive">
-            <h3 className="text-lg font-bold text-foreground mb-4">🔥 Fogo Alto</h3>
+            <h3 className="text-lg font-bold text-foreground mb-4">🔥 Requer ação urgente</h3>
             <div className="space-y-4">
               {data.nfsVencidas?.length === 0 && (
                 <p className="text-sm text-muted-foreground">Nenhuma nota vencida.</p>

@@ -112,10 +112,7 @@ export default function Layout() {
           </Sheet>
 
           <Link to="/" className="flex items-center gap-2 mr-2 sm:mr-6 shrink-0">
-            <div className="w-8 h-8 rounded bg-brand-coral flex items-center justify-center font-bold text-sm text-white shadow-sm">
-              IX
-            </div>
-            <span className="font-bold text-lg tracking-tight hidden md:block">InquiryXpert</span>
+            <span className="font-bold text-lg tracking-tight hidden md:block">InquiryHub</span>
           </Link>
 
           <nav className="hidden md:flex items-center h-full overflow-x-auto no-scrollbar">
