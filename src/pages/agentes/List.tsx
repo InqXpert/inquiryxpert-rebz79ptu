@@ -75,7 +75,7 @@ export default function AgentesList() {
       <div className="bg-white border-b border-border pt-6 md:pt-8 px-4 sm:px-6 md:px-8 flex-shrink-0 shadow-sm z-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 max-w-[1600px] mx-auto w-full gap-6">
           <div className="flex flex-col">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#2A3B4C] flex items-center gap-2 tracking-tight mb-2">
+            <h1 className="font-bold text-[#2A3B4C] flex items-center gap-2 tracking-tight mb-2 text-[28px]">
               Gestão de Agentes
               <ChevronDown className="w-6 h-6 text-muted-foreground mt-0.5 cursor-pointer hover:text-[#00A8B5] transition-colors" />
             </h1>
