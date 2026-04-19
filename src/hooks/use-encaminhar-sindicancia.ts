@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { DocumentoType } from '@/types/sindicancia'
 import {
   createEncaminhamento,
+  updateEncaminhamento,
   createRascunho,
   sendSindicanciaEmail,
   sendSindicanciaWhatsapp,
@@ -59,24 +60,39 @@ export function useEncaminharSindicancia(onClose: () => void, onSuccess?: (id: s
         if (doc.file) formData.append('documentos', doc.file)
       })
 
-      const emailRes = await sendSindicanciaEmail({
-        email_destinatario: 'agente@exemplo.com',
-        orientacoes,
-        processo_id: selectedId,
-      })
-
       const wppRes = await sendSindicanciaWhatsapp({
         whatsapp_destinatario: '5511999999999',
         orientacoes,
         processo_id: selectedId,
       })
 
-      formData.append('email_enviado', emailRes?.success ? 'true' : 'false')
+      formData.append('email_enviado', 'false')
       formData.append('whatsapp_enviado', wppRes?.success ? 'true' : 'false')
       formData.append('email_destinatario', 'agente@exemplo.com')
       formData.append('whatsapp_destinatario', '5511999999999')
 
       const record = await createEncaminhamento(formData)
+
+      if (record?.id) {
+        const emailRes = await sendSindicanciaEmail({
+          id: record.id,
+          processo_id: selectedId,
+          orientacoes,
+          email_destinatario: 'agente@exemplo.com',
+          user_id: user?.id || '',
+        })
+
+        await updateEncaminhamento(record.id, {
+          email_enviado: emailRes.success,
+        })
+
+        if (emailRes.success) {
+          toast.success('Email enviado com sucesso!')
+        } else {
+          toast.error('Email nao foi enviado. Tente novamente.')
+        }
+      }
+
       toast.success('Processo enviado com sucesso!')
       onClose()
       if (onSuccess && record?.id) onSuccess(record.id)
