@@ -19,40 +19,44 @@ import {
 import { Label } from '@/components/ui/label'
 import { UploadCloud, X, File as FileIcon, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import {
-  createEncaminhamento,
-  createRascunho,
-  sendSindicanciaEmail,
-  sendSindicanciaWhatsapp,
-} from '@/services/sindicancia'
-import { useAuth } from '@/hooks/use-auth'
 import { useNavigate } from 'react-router-dom'
+import { useEncaminharSindicancia } from '@/hooks/use-encaminhar-sindicancia'
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
 const ALLOWED_EXTS = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'jpg', 'jpeg', 'png', 'gif']
 
 export function EncaminharSindicanciaModal({ isOpen, onClose, processo, processos }: any) {
-  const { user } = useAuth()
   const navigate = useNavigate()
-  const [orientacoes, setOrientacoes] = useState('')
-  const [files, setFiles] = useState<File[]>([])
   const [selectedId, setSelectedId] = useState('')
-  const [loading, setLoading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const {
+    orientacoes,
+    documentos,
+    loading,
+    touchedOrientacoes,
+    touchedDocumentos,
+    validateForm,
+    handleOrientacoesChange,
+    handleDocumentosAdd,
+    handleDocumentosRemove,
+    handleSend,
+    handleDraft,
+    resetState,
+    setTouchedOrientacoes,
+    setTouchedDocumentos,
+  } = useEncaminharSindicancia(onClose, (id) => navigate(`/sindicancia/${id}`))
 
   useEffect(() => {
     if (isOpen) {
-      setOrientacoes('')
-      setFiles([])
+      resetState()
       setSelectedId(processo?.id || '')
-      setLoading(false)
     }
-  }, [isOpen, processo])
+  }, [isOpen, processo, resetState])
 
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFilesSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files)
-      const validFiles: File[] = []
       newFiles.forEach((f) => {
         if (f.size > MAX_FILE_SIZE) {
           toast.error(`Arquivo muito grande (max 10MB): ${f.name}`)
@@ -61,91 +65,35 @@ export function EncaminharSindicanciaModal({ isOpen, onClose, processo, processo
           if (!ALLOWED_EXTS.includes(ext)) {
             toast.error(`Tipo de arquivo não permitido: ${f.name}`)
           } else {
-            validFiles.push(f)
+            handleDocumentosAdd(f)
           }
         }
       })
-      if (validFiles.length > 0) {
-        setFiles((prev) => [...prev, ...validFiles].slice(0, 5))
-      }
     }
   }
 
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index))
-  }
+  const isFormValid = validateForm() && !!selectedId
 
-  const validateForm = () => {
+  const submitSend = () => {
     if (!selectedId) {
       toast.error('Selecione um processo')
-      return false
+      return
     }
-    if (orientacoes.length < 10) {
-      toast.error('Minimo 10 caracteres')
-      return false
-    }
-    return true
-  }
-
-  const handleSend = async () => {
+    setTouchedOrientacoes(true)
+    setTouchedDocumentos(true)
     if (!validateForm()) return
-    setLoading(true)
-    try {
-      const formData = new FormData()
-      formData.append('processo_id', selectedId)
-      formData.append('user_id', user.id)
-      formData.append('orientacoes', orientacoes)
-      files.forEach((f) => formData.append('documentos', f))
-
-      const emailRes = await sendSindicanciaEmail({
-        email_destinatario: 'agente@exemplo.com',
-        orientacoes,
-        processo_id: selectedId,
-      })
-
-      const wppRes = await sendSindicanciaWhatsapp({
-        whatsapp_destinatario: '5511999999999',
-        orientacoes,
-        processo_id: selectedId,
-      })
-
-      formData.append('email_enviado', emailRes.success ? 'true' : 'false')
-      formData.append('whatsapp_enviado', wppRes.success ? 'true' : 'false')
-      formData.append('email_destinatario', 'agente@exemplo.com')
-      formData.append('whatsapp_destinatario', '5511999999999')
-
-      const record = await createEncaminhamento(formData)
-      toast.success('Sindicância encaminhada com sucesso!')
-      onClose()
-      navigate(`/sindicancia/${record.id}`)
-    } catch (err: any) {
-      toast.error(err.message || 'Erro ao enviar sindicância')
-    } finally {
-      setLoading(false)
-    }
+    handleSend(selectedId)
   }
 
-  const handleDraft = async () => {
+  const submitDraft = () => {
     if (!selectedId) {
       toast.error('Selecione um processo para salvar o rascunho')
       return
     }
-    setLoading(true)
-    try {
-      const formData = new FormData()
-      formData.append('processo_id', selectedId)
-      formData.append('user_id', user.id)
-      formData.append('orientacoes', orientacoes)
-      files.forEach((f) => formData.append('documentos', f))
-
-      await createRascunho(formData)
-      toast.success('Rascunho salvo com sucesso!')
-      onClose()
-    } catch (err: any) {
-      toast.error(err.message || 'Erro ao salvar rascunho')
-    } finally {
-      setLoading(false)
-    }
+    setTouchedOrientacoes(true)
+    setTouchedDocumentos(true)
+    if (!validateForm()) return
+    handleDraft(selectedId)
   }
 
   return (
@@ -161,7 +109,7 @@ export function EncaminharSindicanciaModal({ isOpen, onClose, processo, processo
         {loading && (
           <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-white/80 dark:bg-black/80 rounded-md">
             <Loader2 className="h-8 w-8 animate-spin text-primary mb-2" />
-            <span className="font-medium text-primary">Enviando...</span>
+            <span className="font-medium text-primary">Processando...</span>
           </div>
         )}
 
@@ -188,16 +136,20 @@ export function EncaminharSindicanciaModal({ isOpen, onClose, processo, processo
             <Label>Orientações de Execução</Label>
             <Textarea
               value={orientacoes}
-              onChange={(e) => setOrientacoes(e.target.value)}
+              onChange={(e) => handleOrientacoesChange(e.target.value)}
+              onBlur={() => setTouchedOrientacoes(true)}
               placeholder="Descreva as instruções detalhadas..."
-              className="min-h-[120px] font-mono text-sm"
+              className={`min-h-[120px] font-mono text-sm ${touchedOrientacoes && orientacoes.length < 10 ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
             />
+            {touchedOrientacoes && orientacoes.length < 10 && (
+              <p className="text-sm text-red-500">Minimo 10 caracteres</p>
+            )}
           </div>
 
           <div className="space-y-2">
             <Label>Anexos (Max 5 arquivos, 10MB cada)</Label>
             <div
-              className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 flex flex-col items-center justify-center bg-muted/5 hover:bg-muted/10 transition-colors cursor-pointer"
+              className={`border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center bg-muted/5 hover:bg-muted/10 transition-colors cursor-pointer ${touchedDocumentos && documentos.length === 0 ? 'border-red-500' : 'border-muted-foreground/25'}`}
               onClick={() => fileInputRef.current?.click()}
             >
               <UploadCloud className="h-8 w-8 text-muted-foreground mb-2" />
@@ -209,30 +161,33 @@ export function EncaminharSindicanciaModal({ isOpen, onClose, processo, processo
                 multiple
                 className="hidden"
                 ref={fileInputRef}
-                onChange={handleFiles}
+                onChange={onFilesSelected}
                 accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif"
               />
             </div>
+            {touchedDocumentos && documentos.length === 0 && (
+              <p className="text-sm text-red-500">Selecione pelo menos 1 documento</p>
+            )}
 
-            {files.length > 0 && (
+            {documentos.length > 0 && (
               <div className="space-y-2 mt-4">
-                {files.map((file, idx) => (
+                {documentos.map((doc) => (
                   <div
-                    key={idx}
+                    key={doc.id}
                     className="flex items-center justify-between p-2 border rounded text-sm bg-background"
                   >
                     <div className="flex items-center gap-2 overflow-hidden">
                       <FileIcon className="h-4 w-4 text-blue-500 shrink-0" />
-                      <span className="truncate">{file.name}</span>
+                      <span className="truncate">{doc.filename}</span>
                       <span className="text-muted-foreground shrink-0 text-xs">
-                        ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                        {(doc.size / 1024 / 1024).toFixed(2)} MB
                       </span>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
                       className="h-6 w-6 shrink-0"
-                      onClick={() => removeFile(idx)}
+                      onClick={() => handleDocumentosRemove(doc.id)}
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -250,15 +205,15 @@ export function EncaminharSindicanciaModal({ isOpen, onClose, processo, processo
           <Button
             variant="secondary"
             className="bg-gray-200 text-gray-800 hover:bg-gray-300"
-            onClick={handleDraft}
-            disabled={loading}
+            onClick={submitDraft}
+            disabled={loading || !isFormValid}
           >
             Salvar Rascunho
           </Button>
           <Button
             className="bg-green-600 hover:bg-green-700 text-white"
-            onClick={handleSend}
-            disabled={loading}
+            onClick={submitSend}
+            disabled={loading || !isFormValid}
           >
             Enviar Processo
           </Button>
