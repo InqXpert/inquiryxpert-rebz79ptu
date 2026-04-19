@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { CheckCircle2, Clock, Activity, FileText } from 'lucide-react'
+import { CheckCircle2, Clock, Activity, FileText, Send } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
@@ -125,12 +126,19 @@ export default function Dashboard() {
         </div>
         <div className="flex gap-3">
           <Button
-            onClick={() => setEncaminharModalOpen(true)}
-            className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold"
-            disabled={processos.length === 0}
+            onClick={() => {
+              if (processos.length === 0) {
+                toast.error('Selecione um processo primeiro.')
+                return
+              }
+              setEncaminharModalOpen(true)
+            }}
+            variant="default"
+            className="h-11 w-11 px-0 sm:w-auto sm:px-4 flex items-center justify-center font-bold focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+            aria-label="Encaminhar sindicancia"
           >
-            <FileText className="mr-2 h-4 w-4" />
-            Encaminhar Sindicância
+            <Send className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Encaminhar Sindicância</span>
           </Button>
         </div>
       </div>

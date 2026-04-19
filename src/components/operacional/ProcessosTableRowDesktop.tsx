@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { Processo } from '@/types/processo'
 import { calculateDayColor, calculateTags, getTagColor } from '@/services/processosService'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { History, MessageSquare, Flag, Edit2, ChevronDown } from 'lucide-react'
+import { History, MessageSquare, Flag, Edit2, ChevronDown, Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn, formatDateBr } from '@/lib/utils'
 import { ProcessoTimeline } from './ProcessoTimeline'
+import { EncaminharSindicanciaModal } from '@/components/sindicancia/EncaminharSindicanciaModal'
 
 interface Props {
   processo: Processo
@@ -25,6 +26,7 @@ export function ProcessosTableRowDesktop({
   onOpenModal,
 }: Props) {
   const navigate = useNavigate()
+  const [isEncaminharModalOpen, setIsEncaminharModalOpen] = useState(false)
   const bgColor = calculateDayColor(p.data_entrada)
   const tags = calculateTags(p.data_entrada)
 
@@ -189,6 +191,19 @@ export function ProcessosTableRowDesktop({
                   <Edit2 className="w-4 h-4 mr-2" /> Editar Processo
                 </Button>
                 <Button
+                  variant="secondary"
+                  size="sm"
+                  className="h-11 w-11 px-0 sm:w-auto sm:px-3 sm:h-10 flex items-center justify-center font-bold text-brand-navy dark:text-white focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIsEncaminharModalOpen(true)
+                  }}
+                  aria-label="Encaminhar sindicancia"
+                >
+                  <Send className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Encaminhar Sindicância</span>
+                </Button>
+                <Button
                   variant="outline"
                   size="sm"
                   className="border-brand-teal/20 dark:border-brand-cyan/20 font-bold text-brand-navy dark:text-white bg-white dark:bg-brand-navy min-h-[44px]"
@@ -232,6 +247,11 @@ export function ProcessosTableRowDesktop({
           </TableCell>
         </TableRow>
       )}
+      <EncaminharSindicanciaModal
+        isOpen={isEncaminharModalOpen}
+        onClose={() => setIsEncaminharModalOpen(false)}
+        processo={p}
+      />
     </React.Fragment>
   )
 }
