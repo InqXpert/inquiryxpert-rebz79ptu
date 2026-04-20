@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Clock, CheckCircle2, TrendingUp, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -27,130 +26,127 @@ export function PerformanceSection({
   data?: AdvancedMetrics
 }) {
   return (
-    <section
-      className={cn('space-y-4 pt-4 border-t', loading ? 'pointer-events-none opacity-80' : '')}
-    >
-      <h2 className="text-xl font-bold tracking-tight">Performance Pessoal</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Pendentes/Atraso
-            </CardTitle>
-            <AlertCircle className="h-4 w-4 text-destructive" />
-          </CardHeader>
-          <CardContent>
+    <section className={cn('space-y-4 pt-4', loading ? 'pointer-events-none opacity-80' : '')}>
+      <h2 className="text-xl font-bold tracking-tight text-foreground mb-4">Performance Pessoal</h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 hover:shadow-md hover:scale-105 transition-all duration-200 ease-in-out">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-center">
+            Pendentes/Atraso
+          </span>
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-8 h-8 text-2xl text-destructive" />
             {loading ? (
               <Skeleton className="h-8 w-16" />
             ) : (
-              <div className="text-3xl font-black text-destructive">
+              <span className="text-3xl font-bold text-foreground">
                 {data?.pendentesAtraso || 0}
-              </div>
+              </span>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              SLA Médio (Dias)
-            </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
+        <div className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 hover:shadow-md hover:scale-105 transition-all duration-200 ease-in-out">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-center">
+            SLA Médio (Dias)
+          </span>
+          <div className="flex items-center gap-2">
+            <Clock className="w-8 h-8 text-2xl text-muted-foreground" />
             {loading ? (
               <Skeleton className="h-8 w-16" />
             ) : (
-              <div className="text-3xl font-black">{data?.slaMedioDias || 0}</div>
+              <span className="text-3xl font-bold text-foreground">{data?.slaMedioDias || 0}</span>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Concluídos (Mês)
-            </CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-green-500" />
-          </CardHeader>
-          <CardContent>
+        <div className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 hover:shadow-md hover:scale-105 transition-all duration-200 ease-in-out">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-center">
+            Concluídos (Mês)
+          </span>
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-8 h-8 text-2xl text-green-500" />
             {loading ? (
               <Skeleton className="h-8 w-16" />
             ) : (
-              <div className="text-3xl font-black text-green-500">{data?.concluidosMes || 0}</div>
+              <span className="text-3xl font-bold text-foreground">{data?.concluidosMes || 0}</span>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="pb-2 flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Taxa de Conclusão
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-blue-500" />
-          </CardHeader>
-          <CardContent>
+        <div className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 hover:shadow-md hover:scale-105 transition-all duration-200 ease-in-out">
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide text-center">
+            Taxa de Conclusão
+          </span>
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-8 h-8 text-2xl text-blue-500" />
             {loading ? (
               <Skeleton className="h-8 w-16" />
             ) : (
-              <div className="text-3xl font-black text-blue-500">{data?.taxaConclusao || 0}%</div>
+              <span className="text-3xl font-bold text-foreground">
+                {data?.taxaConclusao || 0}%
+              </span>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
-      <Card className="shadow-sm">
-        <CardHeader>
-          <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-            RESULTADO DOS PROCESSOS CONCLUIDOS (Ultimos 30 dias)
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="space-y-3">
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-4 w-2/3" />
-              <Skeleton className="h-4 w-1/2" />
-              <Skeleton className="h-5 w-1/4 mt-4" />
+      <div className="bg-card rounded-lg p-6 shadow-sm w-full">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
+          RESULTADO DOS PROCESSOS CONCLUIDOS (Ultimos 30 dias)
+        </h3>
+
+        {loading ? (
+          <div className="flex flex-col gap-3">
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-5 w-1/4 mt-4" />
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-foreground">REGULAR:</span>
+              <span className="text-sm text-muted-foreground">
+                {data?.statusBreakdown.regular.count || 0} (
+                {data?.statusBreakdown.regular.percentage || 0}%)
+              </span>
             </div>
-          ) : (
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between items-center py-1 border-b border-border/50">
-                <span className="font-medium">REGULAR:</span>
-                <span className="text-muted-foreground">
-                  {data?.statusBreakdown.regular.count || 0} (
-                  {data?.statusBreakdown.regular.percentage || 0}%)
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-1 border-b border-border/50">
-                <span className="font-medium">IRREGULAR:</span>
-                <span className="text-muted-foreground">
-                  {data?.statusBreakdown.irregular.count || 0} (
-                  {data?.statusBreakdown.irregular.percentage || 0}%)
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-1 border-b border-border/50">
-                <span className="font-medium">ANALISE:</span>
-                <span className="text-muted-foreground">
-                  {data?.statusBreakdown.analise.count || 0} (
-                  {data?.statusBreakdown.analise.percentage || 0}%)
-                </span>
-              </div>
-              <div className="flex justify-between items-center py-1 border-b border-border/50">
-                <span className="font-medium">CONDICIONADO:</span>
-                <span className="text-muted-foreground">
-                  {data?.statusBreakdown.condicionado.count || 0} (
-                  {data?.statusBreakdown.condicionado.percentage || 0}%)
-                </span>
-              </div>
-              <div className="pt-2 font-bold text-foreground">
-                Total: {data?.statusBreakdown.total30Days || 0} processos concluidos
-              </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-foreground">IRREGULAR:</span>
+              <span className="text-sm text-muted-foreground">
+                {data?.statusBreakdown.irregular.count || 0} (
+                {data?.statusBreakdown.irregular.percentage || 0}%)
+              </span>
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-foreground">ANALISE:</span>
+              <span className="text-sm text-muted-foreground">
+                {data?.statusBreakdown.analise.count || 0} (
+                {data?.statusBreakdown.analise.percentage || 0}%)
+              </span>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium text-foreground">CONDICIONADO:</span>
+              <span className="text-sm text-muted-foreground">
+                {data?.statusBreakdown.condicionado.count || 0} (
+                {data?.statusBreakdown.condicionado.percentage || 0}%)
+              </span>
+            </div>
+
+            <div className="flex justify-between items-center border-t border-border pt-3 mt-3">
+              <span className="text-sm font-semibold text-foreground">Total:</span>
+              <span className="text-sm font-semibold text-foreground">
+                {data?.statusBreakdown.total30Days || 0} processos concluidos
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
     </section>
   )
 }
