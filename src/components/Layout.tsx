@@ -1,20 +1,6 @@
 import { Suspense, useState } from 'react'
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
-import {
-  Bell,
-  Settings,
-  User as UserIcon,
-  LogOut,
-  LayoutDashboard,
-  Moon,
-  Sun,
-  Menu,
-  Briefcase,
-  FileText,
-  Users,
-  ShieldAlert,
-  ChevronRight,
-} from 'lucide-react'
+import { Bell, Settings, User as UserIcon, LogOut, Moon, Sun, Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/hooks/use-auth'
@@ -39,14 +25,16 @@ export default function Layout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navItems = [
-    { title: 'Dashboard', url: '/', icon: LayoutDashboard },
-    { title: 'Processos', url: '/processos', icon: FileText },
-    { title: 'Nova Sindicância', url: '/sindicancia/nova', icon: ShieldAlert },
+    { title: 'DASHBOARD', url: '/' },
+    { title: 'PROCESSOS', url: '/processos' },
+    { title: 'AGENTES', url: '/agentes' },
     ...(user?.role === 'c-level' || user?.role === 'admin'
-      ? [{ title: 'Financeiro', url: '/financeiro', icon: Briefcase }]
+      ? [{ title: 'FINANCEIRO', url: '/financeiro' }]
       : []),
-    { title: 'Agentes', url: '/agentes', icon: Users },
-    { title: 'Notificações', url: '/notificacoes', icon: Bell },
+    ...(user?.role === 'c-level' || user?.role === 'admin'
+      ? [{ title: 'GESTÃO DE USUÁRIOS', url: '/gestao-usuarios' }]
+      : []),
+    { title: 'PORTAL DO AGENTE', url: '/gestao-agentes' },
   ]
 
   const isActive = (url: string) => {
@@ -58,10 +46,9 @@ export default function Layout() {
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
-  const NavLinks = ({ onClick }: { onClick?: () => void }) => (
+  const NavLinksMobile = ({ onClick }: { onClick?: () => void }) => (
     <div className="flex flex-col gap-2 p-4">
       {navItems.map((item) => {
-        const Icon = item.icon
         const active = isActive(item.url)
         return (
           <Link
@@ -71,68 +58,53 @@ export default function Layout() {
             className={cn(
               'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
               active
-                ? 'bg-primary/10 text-primary'
+                ? 'bg-brand-cyan/10 text-brand-cyan'
                 : 'text-muted-foreground hover:bg-muted hover:text-foreground',
             )}
           >
-            <Icon className={cn('w-5 h-5', active ? 'text-primary' : 'text-muted-foreground')} />
             {item.title}
-            {active && <ChevronRight className="w-4 h-4 ml-auto opacity-50" />}
           </Link>
         )
       })}
     </div>
   )
 
+  const NavLinksDesktop = () => (
+    <nav className="hidden xl:flex items-center gap-1 mx-6">
+      {navItems.map((item) => {
+        const active = isActive(item.url)
+        return (
+          <Link
+            key={item.title}
+            to={item.url}
+            className={cn(
+              'px-3 py-2 rounded-md text-sm font-bold transition-colors duration-200 tracking-wide',
+              active
+                ? 'bg-brand-cyan/10 text-brand-cyan'
+                : 'text-brand-navy dark:text-brand-light hover:bg-muted hover:text-foreground',
+            )}
+          >
+            {item.title}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+
   return (
     <div className="min-h-screen flex bg-background font-sans">
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 border-r border-border bg-card shadow-sm z-30 shrink-0 h-screen sticky top-0">
-        <div className="h-16 flex items-center px-6 border-b border-border">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-brand-cyan flex items-center justify-center font-bold text-sm text-white shadow-sm">
-              IH
-            </div>
-            <span className="font-bold text-xl tracking-tight text-brand-navy dark:text-white">
-              Inquiry HUB
-            </span>
-          </Link>
-        </div>
-        <div className="flex-1 overflow-y-auto py-4">
-          <NavLinks />
-        </div>
-        <div className="p-4 border-t border-border">
-          <div className="flex items-center gap-3 px-3 py-2">
-            <Avatar className="h-9 w-9 border border-border">
-              <AvatarImage
-                src={`https://img.usecurling.com/ppl/thumbnail?gender=female&seed=${user?.id || 'default'}`}
-              />
-              <AvatarFallback className="bg-muted text-muted-foreground text-xs font-medium">
-                {user?.name?.substring(0, 2).toUpperCase() || 'US'}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col flex-1 min-w-0">
-              <p className="text-sm font-semibold text-foreground truncate">{user?.name}</p>
-              <p className="text-xs text-muted-foreground truncate capitalize">
-                {user?.role || 'Usuário'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         {/* Header */}
         <header className="sticky top-0 h-16 flex items-center justify-between px-4 sm:px-6 bg-card border-b border-border z-20 shrink-0">
-          <div className="flex items-center gap-4">
-            {/* Mobile Sidebar Trigger */}
+          <div className="flex items-center">
+            {/* Mobile Menu Trigger */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="md:hidden text-foreground hover:bg-muted focus-visible:ring-primary"
+                  className="xl:hidden mr-2 text-foreground hover:bg-muted focus-visible:ring-primary"
                   aria-label="Abrir menu"
                 >
                   <Menu className="h-5 w-5" />
@@ -156,71 +128,23 @@ export default function Layout() {
                   </SheetTitle>
                 </SheetHeader>
                 <div className="overflow-y-auto h-[calc(100vh-4rem)]">
-                  <NavLinks onClick={() => setMobileMenuOpen(false)} />
-                  <div className="px-4 py-2 border-t border-border flex flex-col gap-2">
-                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-3">
-                      Módulos
-                    </span>
-                    {(user?.role === 'c-level' || user?.role === 'admin') && (
-                      <Link
-                        to="/gestao-usuarios"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className={cn(
-                          'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-                          isActive('/gestao-usuarios')
-                            ? 'bg-primary/10 text-primary'
-                            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-                        )}
-                      >
-                        Gestão de Usuários
-                      </Link>
-                    )}
-                    <Link
-                      to="/gestao-agentes"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={cn(
-                        'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
-                        isActive('/gestao-agentes')
-                          ? 'bg-primary/10 text-primary'
-                          : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-                      )}
-                    >
-                      Portal do Agente
-                    </Link>
-                  </div>
+                  <NavLinksMobile onClick={() => setMobileMenuOpen(false)} />
                 </div>
               </SheetContent>
             </Sheet>
 
-            <div className="hidden sm:flex items-center text-sm text-muted-foreground">
-              <span className="font-medium text-foreground mr-4">Inquiry HUB</span>
-              <div className="flex items-center gap-4 border-l border-border pl-4">
-                {(user?.role === 'c-level' || user?.role === 'admin') && (
-                  <Link
-                    to="/gestao-usuarios"
-                    className={cn(
-                      'text-sm font-bold transition-colors hover:text-brand-cyan',
-                      isActive('/gestao-usuarios')
-                        ? 'text-brand-cyan'
-                        : 'text-brand-navy dark:text-brand-light',
-                    )}
-                  >
-                    Gestão de Usuários
-                  </Link>
-                )}
-                <Link
-                  to="/gestao-agentes"
-                  className={cn(
-                    'text-sm font-bold transition-colors hover:text-brand-cyan',
-                    isActive('/gestao-agentes')
-                      ? 'text-brand-cyan'
-                      : 'text-brand-navy dark:text-brand-light',
-                  )}
-                >
-                  Portal do Agente
-                </Link>
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded bg-brand-cyan flex items-center justify-center font-bold text-sm text-white shadow-sm">
+                IH
               </div>
-            </div>
+              <span className="font-bold text-xl tracking-tight text-brand-navy dark:text-white hidden sm:inline-block">
+                Inquiry HUB
+              </span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <NavLinksDesktop />
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
@@ -237,7 +161,7 @@ export default function Layout() {
             <Button
               variant="ghost"
               size="icon"
-              className="text-muted-foreground hover:text-foreground hover:bg-muted h-9 w-9 relative focus-visible:ring-primary lg:hidden"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted h-9 w-9 relative focus-visible:ring-primary"
               aria-label="Notificações"
               onClick={() => navigate('/notificacoes')}
             >

@@ -2,6 +2,9 @@ import React, { lazy, Suspense } from 'react'
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { ZoneErrorBoundary } from '@/components/hub/ZoneErrorBoundary'
+import { Link } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { ShieldAlert } from 'lucide-react'
 
 const UserGreeting = lazy(() =>
   import('@/components/UserGreeting').then((m) => ({ default: m.UserGreeting })),
@@ -27,11 +30,24 @@ export default function HubPage() {
     <div className="flex flex-col lg:flex-row gap-6 p-6 w-full max-w-[1600px] mx-auto animate-fade-in font-sans relative">
       {/* Main Content Column */}
       <div className="flex-1 space-y-6 min-w-0">
-        <ZoneErrorBoundary zoneName="Boas-vindas">
-          <Suspense fallback={<Skeleton className="h-[120px] w-full rounded-lg" />}>
-            <UserGreeting />
-          </Suspense>
-        </ZoneErrorBoundary>
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+          <div className="flex-1">
+            <ZoneErrorBoundary zoneName="Boas-vindas">
+              <Suspense fallback={<Skeleton className="h-[120px] w-full rounded-lg" />}>
+                <UserGreeting />
+              </Suspense>
+            </ZoneErrorBoundary>
+          </div>
+          <Button
+            asChild
+            className="bg-brand-cyan hover:bg-brand-cyan/90 text-white font-bold w-full sm:w-auto shrink-0 shadow-md"
+          >
+            <Link to="/sindicancia/nova">
+              <ShieldAlert className="w-4 h-4 mr-2" />
+              Nova Sindicância
+            </Link>
+          </Button>
+        </div>
 
         <ZoneErrorBoundary zoneName="Alertas Críticos">
           <Suspense fallback={<Skeleton className="h-[250px] w-full rounded-lg" />}>
