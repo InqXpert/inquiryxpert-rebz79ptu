@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  Plus,
-  FileText,
-  Clock,
   Search,
   PlayCircle,
   FileEdit,
@@ -12,10 +9,8 @@ import {
   Bell,
 } from 'lucide-react'
 import { formatISO, startOfDay, endOfDay, format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -26,14 +21,13 @@ import { useRealtime } from '@/hooks/use-realtime'
 import { NotificacaoAgente } from '@/services/notificacoes_agente'
 
 import { useCurrentUser } from '@/hooks/use-current-user'
-import { useDigitalClock } from '@/hooks/use-digital-clock'
 import { useProcessStats } from '@/hooks/use-process-stats'
 import { usePerformanceMetrics } from '@/hooks/use-performance-metrics'
 import { cn } from '@/lib/utils'
+import { UserGreeting } from '@/components/UserGreeting'
 
 export default function HubPage() {
-  const { user, avatarUrl } = useCurrentUser()
-  const { hours, minutes, time } = useDigitalClock()
+  const { user } = useCurrentUser()
 
   const { stats, loading: statsLoading } = useProcessStats(user?.id)
   const { metrics, loading: metricsLoading } = usePerformanceMetrics(user?.id)
@@ -95,42 +89,7 @@ export default function HubPage() {
     <div className="flex flex-col lg:flex-row gap-6 p-6 w-full max-w-[1600px] mx-auto animate-fade-in font-sans">
       <div className="flex-1 space-y-8">
         {/* Zone 1: Greeting & Quick Actions Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-card p-6 rounded-xl border shadow-sm">
-          <div className="flex items-center gap-5">
-            <Avatar className="h-16 w-16 border-2 border-primary/10">
-              <AvatarImage src={avatarUrl} />
-              <AvatarFallback className="text-xl font-medium bg-primary/10 text-primary">
-                {user?.name?.[0] || user?.nome?.[0] || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                Olá, {user?.name || user?.nome || 'Usuário'}
-              </h1>
-              <div className="flex items-center gap-2 mt-1 text-muted-foreground">
-                <Clock className="w-4 h-4" />
-                <span className="font-medium">
-                  {hours}:{minutes}
-                </span>
-                <span className="text-xs ml-2 opacity-70 hidden sm:inline-block">
-                  {format(time, "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <Button asChild size="lg" className="shadow-sm">
-              <Link to="/processos/novo">
-                <Plus className="w-4 h-4 mr-2" /> Novo Processo
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild className="shadow-sm">
-              <Link to="/sindicancia/nova">
-                <FileText className="w-4 h-4 mr-2" /> Nova Sindicância
-              </Link>
-            </Button>
-          </div>
-        </div>
+        <UserGreeting />
 
         {/* Zone 2: Critical Alerts Section */}
         <section className="space-y-4">

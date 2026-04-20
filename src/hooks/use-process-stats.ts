@@ -39,21 +39,15 @@ export function useProcessStats(userId?: string) {
           pb
             .collection('processos_operacionais')
             .getList(1, 1, { filter: `status ~ 'concluido' || status ~ 'finalizado'` }),
-          pb
-            .collection('processos_operacionais')
-            .getList(1, 1, {
-              filter: `data_prazo < "${nowStr}" && status != 'concluido' && status != 'finalizado'`,
-            }),
-          pb
-            .collection('processos_operacionais')
-            .getList(1, 1, {
-              filter: `data_prazo >= "${nowStr}" && data_prazo <= "${in48h}" && status != 'concluido' && status != 'finalizado'`,
-            }),
-          pb
-            .collection('processos_operacionais')
-            .getList(1, 1, {
-              filter: `prioridade = 'alta' && status != 'concluido' && status != 'finalizado'`,
-            }),
+          pb.collection('processos_operacionais').getList(1, 1, {
+            filter: `data_prazo < "${nowStr}" && status != 'concluido' && status != 'finalizado'`,
+          }),
+          pb.collection('processos_operacionais').getList(1, 1, {
+            filter: `data_prazo >= "${nowStr}" && data_prazo <= "${in48h}" && status != 'concluido' && status != 'finalizado'`,
+          }),
+          pb.collection('processos_operacionais').getList(1, 1, {
+            filter: `prioridade = 'alta' && status != 'concluido' && status != 'finalizado'`,
+          }),
         ])
 
         setStats({

@@ -13,6 +13,7 @@ export function useDigitalClock() {
   return {
     hours: time.getHours().toString().padStart(2, '0'),
     minutes: time.getMinutes().toString().padStart(2, '0'),
+    seconds: time.getSeconds().toString().padStart(2, '0'),
     time,
   }
 }
