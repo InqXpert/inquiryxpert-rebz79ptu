@@ -29,8 +29,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet'
-import { InteractiveCalendar } from '@/components/InteractiveCalendar'
-import { NotificationsPanel } from '@/components/NotificationsPanel'
 
 export default function Layout() {
   const { user, signOut } = useAuth()
@@ -39,7 +37,6 @@ export default function Layout() {
   const navigate = useNavigate()
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [rightSidebarOpen, setRightSidebarOpen] = useState(false)
 
   const navItems = [
     { title: 'Dashboard', url: '/', icon: LayoutDashboard },
@@ -88,9 +85,9 @@ export default function Layout() {
   )
 
   return (
-    <div className="min-h-screen flex bg-background font-sans overflow-hidden">
+    <div className="min-h-screen flex bg-background font-sans">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 border-r border-border bg-card shadow-sm z-10 shrink-0 h-screen sticky top-0">
+      <aside className="hidden md:flex flex-col w-64 border-r border-border bg-card shadow-sm z-30 shrink-0 h-screen sticky top-0">
         <div className="h-16 flex items-center px-6 border-b border-border">
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded bg-primary flex items-center justify-center font-bold text-sm text-primary-foreground shadow-sm">
@@ -123,9 +120,9 @@ export default function Layout() {
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
         {/* Header */}
-        <header className="h-16 flex items-center justify-between px-4 sm:px-6 bg-card border-b border-border z-20 shrink-0">
+        <header className="sticky top-0 h-16 flex items-center justify-between px-4 sm:px-6 bg-card border-b border-border z-20 shrink-0">
           <div className="flex items-center gap-4">
             {/* Mobile Sidebar Trigger */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -186,28 +183,18 @@ export default function Layout() {
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
 
-            <Sheet open={rightSidebarOpen} onOpenChange={setRightSidebarOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-muted-foreground hover:text-foreground hover:bg-muted h-9 w-9 relative focus-visible:ring-primary lg:hidden"
-                  aria-label="Notificações e Calendário"
-                >
-                  <Bell className="w-4 h-4" />
-                  {unreadCount > 0 && (
-                    <span className="absolute top-1.5 right-1.5 flex h-2 w-2 items-center justify-center rounded-full bg-destructive ring-2 ring-card" />
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent
-                side="right"
-                className="p-4 w-full sm:max-w-sm max-md:max-h-96 max-md:top-auto max-md:bottom-0 overflow-y-auto"
-              >
-                <InteractiveCalendar />
-                <NotificationsPanel />
-              </SheetContent>
-            </Sheet>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted h-9 w-9 relative focus-visible:ring-primary lg:hidden"
+              aria-label="Notificações"
+              onClick={() => navigate('/notificacoes')}
+            >
+              <Bell className="w-4 h-4" />
+              {unreadCount > 0 && (
+                <span className="absolute top-1.5 right-1.5 flex h-2 w-2 items-center justify-center rounded-full bg-destructive ring-2 ring-card" />
+              )}
+            </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -263,31 +250,23 @@ export default function Layout() {
           </div>
         </header>
 
-        {/* Content Area with Right Sidebar */}
-        <div className="flex-1 flex overflow-hidden">
-          <main className="flex-1 overflow-auto bg-background/50">
-            <div className="w-full max-w-7xl mx-auto h-full flex flex-col p-4 sm:p-6 lg:p-8">
-              <Suspense
-                fallback={
-                  <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground gap-4">
-                    <div className="w-8 h-8 rounded-full border-[3px] border-primary border-t-transparent animate-spin" />
-                    <span className="text-sm font-medium tracking-wide">Carregando...</span>
-                  </div>
-                }
-              >
-                <div className="w-full h-full animate-in fade-in duration-300">
-                  <Outlet />
+        {/* Content Area */}
+        <main className="flex-1 flex flex-col bg-background/50">
+          <div className="w-full max-w-7xl mx-auto flex flex-col p-4 sm:p-6 lg:p-8 flex-1">
+            <Suspense
+              fallback={
+                <div className="w-full flex-1 flex flex-col items-center justify-center text-muted-foreground gap-4">
+                  <div className="w-8 h-8 rounded-full border-[3px] border-primary border-t-transparent animate-spin" />
+                  <span className="text-sm font-medium tracking-wide">Carregando...</span>
                 </div>
-              </Suspense>
-            </div>
-          </main>
-
-          {/* Desktop Right Sidebar */}
-          <aside className="hidden lg:flex flex-col w-80 h-full border-l border-border bg-background shrink-0 overflow-y-auto p-4 gap-4">
-            <InteractiveCalendar />
-            <NotificationsPanel />
-          </aside>
-        </div>
+              }
+            >
+              <div className="w-full h-full animate-in fade-in duration-300">
+                <Outlet />
+              </div>
+            </Suspense>
+          </div>
+        </main>
       </div>
     </div>
   )
