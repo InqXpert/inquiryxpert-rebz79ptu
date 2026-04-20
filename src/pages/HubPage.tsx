@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  Search,
-  PlayCircle,
-  FileEdit,
-  CheckCircle2,
-  Calendar as CalendarIcon,
-  Bell,
-} from 'lucide-react'
+import { Calendar as CalendarIcon, Bell } from 'lucide-react'
 import { formatISO, startOfDay, endOfDay, format } from 'date-fns'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -25,6 +18,7 @@ import { useProcessStats } from '@/hooks/use-process-stats'
 import { usePerformanceMetrics } from '@/hooks/use-performance-metrics'
 import { cn } from '@/lib/utils'
 import { UserGreeting } from '@/components/UserGreeting'
+import { WorkloadCards } from '@/components/WorkloadCards'
 
 export default function HubPage() {
   const { user } = useCurrentUser()
@@ -158,66 +152,7 @@ export default function HubPage() {
         </section>
 
         {/* Zone 3: Workload Status Cards */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-bold tracking-tight">Status de Trabalho</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-medium">Em Análise</CardTitle>
-                <Search className="w-4 h-4 text-blue-500" />
-              </CardHeader>
-              <CardContent>
-                {statsLoading ? (
-                  <Skeleton className="h-8 w-16" />
-                ) : (
-                  <div className="text-2xl font-bold">{stats.emAnalise}</div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-medium">Em Execução</CardTitle>
-                <PlayCircle className="w-4 h-4 text-amber-500" />
-              </CardHeader>
-              <CardContent>
-                {statsLoading ? (
-                  <Skeleton className="h-8 w-16" />
-                ) : (
-                  <div className="text-2xl font-bold">{stats.emExecucao}</div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-medium">Em Elaboração</CardTitle>
-                <FileEdit className="w-4 h-4 text-indigo-500" />
-              </CardHeader>
-              <CardContent>
-                {statsLoading ? (
-                  <Skeleton className="h-8 w-16" />
-                ) : (
-                  <div className="text-2xl font-bold">{stats.emElaboracao}</div>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-sm hover:shadow-md transition-shadow">
-              <CardHeader className="pb-2 flex flex-row items-center justify-between">
-                <CardTitle className="text-sm font-medium">Concluídos</CardTitle>
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-              </CardHeader>
-              <CardContent>
-                {statsLoading ? (
-                  <Skeleton className="h-8 w-16" />
-                ) : (
-                  <div className="text-2xl font-bold">{stats.concluidos}</div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </section>
+        <WorkloadCards userId={user?.id} />
 
         {/* Zone 4: Personal Performance KPIs */}
         <section className="space-y-4">
