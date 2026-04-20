@@ -98,7 +98,7 @@ export function NotificationsPanel() {
   const unreadCount = notifications.filter((n) => !n.lida).length
 
   return (
-    <div className="bg-card rounded-lg p-4 shadow-sm">
+    <div className="bg-card rounded-lg p-4 shadow-sm transition-all duration-200 ease-in-out hover:shadow-md">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="text-lg font-semibold text-foreground uppercase tracking-wide">
@@ -139,7 +139,7 @@ export function NotificationsPanel() {
             <div
               key={n.id}
               className={cn(
-                'flex flex-row gap-2 p-2 rounded-md transition-colors hover:bg-secondary items-start',
+                'flex flex-row gap-2 p-2 rounded-md transition-all duration-200 ease-in-out hover:bg-secondary hover:scale-[102%] items-start',
                 !n.lida && 'bg-primary/5',
               )}
             >
@@ -161,7 +161,7 @@ export function NotificationsPanel() {
       <div className="pt-3 mt-2 border-t border-border text-center">
         <Link
           to="/notificacoes"
-          className="text-sm text-primary hover:underline font-medium transition-all"
+          className="text-sm text-primary hover:underline font-medium transition-all duration-200 ease-in-out"
         >
           Ver Todas
         </Link>

@@ -33,7 +33,7 @@ export function InteractiveCalendar() {
     : []
 
   return (
-    <div className="bg-card rounded-lg p-4 shadow-sm mb-4">
+    <div className="bg-card rounded-lg p-4 shadow-sm mb-4 transition-all duration-200 ease-in-out hover:shadow-md">
       <div className="text-lg font-semibold text-foreground flex items-center justify-center gap-2 mb-4">
         <CalendarIcon className="w-5 h-5" /> Calendário
       </div>
@@ -59,6 +59,30 @@ export function InteractiveCalendar() {
               },
             }}
             className="pointer-events-auto"
+            classNames={{
+              months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
+              month: 'space-y-4',
+              caption: 'flex justify-center pt-1 relative items-center',
+              caption_label: 'text-lg font-semibold capitalize',
+              nav: 'space-x-1 flex items-center',
+              nav_button:
+                'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 transition-all duration-200 ease-in-out',
+              nav_button_previous: 'absolute left-1',
+              nav_button_next: 'absolute right-1',
+              table: 'w-full border-collapse space-y-1',
+              head_row: 'flex w-full gap-1 mb-2',
+              head_cell: 'text-muted-foreground rounded-md w-8 font-semibold text-xs text-center',
+              row: 'flex w-full mt-1 gap-1',
+              cell: 'text-center text-sm relative p-0 h-8 w-8 focus-within:relative focus-within:z-20',
+              day: 'h-8 w-8 rounded-md p-0 font-normal hover:bg-secondary transition-all duration-200 ease-in-out aria-selected:opacity-100',
+              day_selected:
+                'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+              day_today: 'bg-accent text-accent-foreground',
+              day_outside: 'text-muted-foreground opacity-50',
+              day_disabled: 'text-muted-foreground opacity-50',
+              day_range_middle: 'aria-selected:bg-accent aria-selected:text-accent-foreground',
+              day_hidden: 'invisible',
+            }}
             modifiers={{
               overdue: overdueDates,
               shortTerm: shortTermDates,
@@ -66,11 +90,11 @@ export function InteractiveCalendar() {
             }}
             modifiersClassNames={{
               overdue:
-                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-destructive after:rounded-full",
+                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-destructive after:rounded-full",
               shortTerm:
-                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-accent after:rounded-full",
+                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-accent after:rounded-full",
               longTerm:
-                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-orange-500 after:rounded-full",
+                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-orange-500 after:rounded-full",
             }}
           />
         )}
@@ -88,11 +112,11 @@ export function InteractiveCalendar() {
             {dateProcesses.map((p) => (
               <li
                 key={p.id}
-                className="text-sm flex flex-col gap-1 bg-background p-2.5 rounded-md border shadow-sm hover:border-primary/30 transition-colors"
+                className="text-sm flex flex-col gap-1 bg-background p-2.5 rounded-md border shadow-sm hover:border-primary/30 hover:scale-[102%] transition-all duration-200 ease-in-out"
               >
                 <Link
                   to={`/processos/${p.id}`}
-                  className="font-semibold text-foreground hover:text-primary transition-colors"
+                  className="font-semibold text-foreground hover:text-primary transition-all duration-200 ease-in-out"
                 >
                   {p.numero_controle || p.numero_processo || 'Processo sem número'}
                 </Link>
