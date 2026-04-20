@@ -74,12 +74,41 @@ export default function GestaoUsuarios() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList>
-          <TabsTrigger value="lista">Lista de Usuários</TabsTrigger>
-          {roleLevel >= 3 && <TabsTrigger value="novo">Novo Usuário</TabsTrigger>}
-          {userToEdit && <TabsTrigger value="editar">Editar Usuário</TabsTrigger>}
-          <TabsTrigger value="historico">Histórico de Auditoria</TabsTrigger>
-          <TabsTrigger value="metricas">Métricas e Relatórios</TabsTrigger>
+        <TabsList className="bg-transparent border-b border-border w-full justify-start rounded-none p-0 h-auto gap-2 md:gap-6 overflow-x-auto overflow-y-hidden">
+          <TabsTrigger
+            value="lista"
+            className="data-[state=active]:bg-brand-navy data-[state=active]:text-white rounded-t-md rounded-b-none px-4 md:px-6 py-2.5 data-[state=active]:shadow-none bg-transparent text-brand-gray hover:text-brand-navy dark:hover:text-white"
+          >
+            Lista de Usuários
+          </TabsTrigger>
+          {roleLevel >= 3 && (
+            <TabsTrigger
+              value="novo"
+              className="data-[state=active]:bg-brand-navy data-[state=active]:text-white rounded-t-md rounded-b-none px-4 md:px-6 py-2.5 data-[state=active]:shadow-none bg-transparent text-brand-gray hover:text-brand-navy dark:hover:text-white"
+            >
+              Novo Usuário
+            </TabsTrigger>
+          )}
+          {userToEdit && (
+            <TabsTrigger
+              value="editar"
+              className="data-[state=active]:bg-brand-navy data-[state=active]:text-white rounded-t-md rounded-b-none px-4 md:px-6 py-2.5 data-[state=active]:shadow-none bg-transparent text-brand-gray hover:text-brand-navy dark:hover:text-white"
+            >
+              Editar Usuário
+            </TabsTrigger>
+          )}
+          <TabsTrigger
+            value="historico"
+            className="data-[state=active]:bg-brand-navy data-[state=active]:text-white rounded-t-md rounded-b-none px-4 md:px-6 py-2.5 data-[state=active]:shadow-none bg-transparent text-brand-gray hover:text-brand-navy dark:hover:text-white"
+          >
+            Histórico de Auditoria
+          </TabsTrigger>
+          <TabsTrigger
+            value="metricas"
+            className="data-[state=active]:bg-brand-navy data-[state=active]:text-white rounded-t-md rounded-b-none px-4 md:px-6 py-2.5 data-[state=active]:shadow-none bg-transparent text-brand-gray hover:text-brand-navy dark:hover:text-white"
+          >
+            Métricas e Relatórios
+          </TabsTrigger>
         </TabsList>
 
         <div className="animate-in fade-in duration-300">

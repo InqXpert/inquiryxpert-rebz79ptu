@@ -90,10 +90,12 @@ export default function Layout() {
       <aside className="hidden md:flex flex-col w-64 border-r border-border bg-card shadow-sm z-30 shrink-0 h-screen sticky top-0">
         <div className="h-16 flex items-center px-6 border-b border-border">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-primary flex items-center justify-center font-bold text-sm text-primary-foreground shadow-sm">
-              CR
+            <div className="w-8 h-8 rounded bg-brand-cyan flex items-center justify-center font-bold text-sm text-white shadow-sm">
+              IH
             </div>
-            <span className="font-bold text-xl tracking-tight text-foreground">Crextio</span>
+            <span className="font-bold text-xl tracking-tight text-brand-navy dark:text-white">
+              Inquiry HUB
+            </span>
           </Link>
         </div>
         <div className="flex-1 overflow-y-auto py-4">
@@ -144,31 +146,80 @@ export default function Layout() {
                       className="flex items-center gap-2 mr-auto"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <div className="w-8 h-8 rounded bg-primary flex items-center justify-center font-bold text-sm text-primary-foreground shadow-sm">
-                        CR
+                      <div className="w-8 h-8 rounded bg-brand-cyan flex items-center justify-center font-bold text-sm text-white shadow-sm">
+                        IH
                       </div>
-                      <span className="font-bold text-xl tracking-tight text-foreground">
-                        Crextio
+                      <span className="font-bold text-xl tracking-tight text-brand-navy dark:text-white">
+                        Inquiry HUB
                       </span>
                     </Link>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="overflow-y-auto h-[calc(100vh-4rem)]">
                   <NavLinks onClick={() => setMobileMenuOpen(false)} />
+                  <div className="px-4 py-2 border-t border-border flex flex-col gap-2">
+                    <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-3">
+                      Módulos
+                    </span>
+                    {(user?.role === 'c-level' || user?.role === 'admin') && (
+                      <Link
+                        to="/gestao-usuarios"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className={cn(
+                          'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                          isActive('/gestao-usuarios')
+                            ? 'bg-primary/10 text-primary'
+                            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                        )}
+                      >
+                        Gestão de Usuários
+                      </Link>
+                    )}
+                    <Link
+                      to="/gestao-agentes"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+                        isActive('/gestao-agentes')
+                          ? 'bg-primary/10 text-primary'
+                          : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                      )}
+                    >
+                      Portal do Agente
+                    </Link>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
 
             <div className="hidden sm:flex items-center text-sm text-muted-foreground">
-              <span className="font-medium text-foreground">Bem-vindo(a)</span>
-              <span className="mx-2">•</span>
-              <span>
-                {new Date().toLocaleDateString('pt-BR', {
-                  weekday: 'long',
-                  day: 'numeric',
-                  month: 'long',
-                })}
-              </span>
+              <span className="font-medium text-foreground mr-4">Inquiry HUB</span>
+              <div className="flex items-center gap-4 border-l border-border pl-4">
+                {(user?.role === 'c-level' || user?.role === 'admin') && (
+                  <Link
+                    to="/gestao-usuarios"
+                    className={cn(
+                      'text-sm font-bold transition-colors hover:text-brand-cyan',
+                      isActive('/gestao-usuarios')
+                        ? 'text-brand-cyan'
+                        : 'text-brand-navy dark:text-brand-light',
+                    )}
+                  >
+                    Gestão de Usuários
+                  </Link>
+                )}
+                <Link
+                  to="/gestao-agentes"
+                  className={cn(
+                    'text-sm font-bold transition-colors hover:text-brand-cyan',
+                    isActive('/gestao-agentes')
+                      ? 'text-brand-cyan'
+                      : 'text-brand-navy dark:text-brand-light',
+                  )}
+                >
+                  Portal do Agente
+                </Link>
+              </div>
             </div>
           </div>
 
