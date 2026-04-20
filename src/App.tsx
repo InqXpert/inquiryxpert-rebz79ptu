@@ -8,6 +8,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { AuthGuard } from '@/components/AuthGuard'
 import { GuestGuard } from '@/components/GuestGuard'
 import { TrackActivity } from '@/components/TrackActivity'
+import { HubPageProvider } from '@/contexts/hub-page-context'
 import Login from '@/pages/Login'
 
 // Main App Lazy Loads
@@ -70,7 +71,9 @@ export default function App() {
                 <Route
                   element={
                     <TrackActivity>
-                      <Layout />
+                      <HubPageProvider>
+                        <Layout />
+                      </HubPageProvider>
                     </TrackActivity>
                   }
                 >
