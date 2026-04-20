@@ -1,3 +1,4 @@
+import { memo, useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
@@ -7,37 +8,49 @@ import { Calendar } from '@/components/ui/calendar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useInteractiveCalendar } from '@/hooks/use-interactive-calendar'
 import { useCurrentUser } from '@/hooks/use-current-user'
+import { useHubPage } from '@/contexts/hub-page-context'
 
-export function InteractiveCalendar() {
+export const InteractiveCalendar = memo(function InteractiveCalendar() {
   const { user } = useCurrentUser()
-  const {
-    selectedDate,
-    setSelectedDate,
-    processes,
-    loading,
-    overdueDates,
-    shortTermDates,
-    longTermDates,
-  } = useInteractiveCalendar(user?.id)
+  const { selectedDate: contextDate, setSelectedDate: setContextDate } = useHubPage()
+  const [localDate, setLocalDate] = useState<Date | undefined>(contextDate)
 
-  const dateProcesses = selectedDate
+  const { processes, loading, overdueDates, shortTermDates, longTermDates, error } =
+    useInteractiveCalendar(user?.id)
+
+  if (error) {
+    throw error
+  }
+
+  // Debounce context update by 300ms
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localDate?.getTime() !== contextDate?.getTime()) {
+        setContextDate(localDate)
+      }
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [localDate, contextDate, setContextDate])
+
+  const dateProcesses = localDate
     ? processes.filter((p) => {
         if (!p.data_prazo) return false
         const pd = new Date(p.data_prazo)
         return (
-          pd.getDate() === selectedDate.getDate() &&
-          pd.getMonth() === selectedDate.getMonth() &&
-          pd.getFullYear() === selectedDate.getFullYear()
+          pd.getDate() === localDate.getDate() &&
+          pd.getMonth() === localDate.getMonth() &&
+          pd.getFullYear() === localDate.getFullYear()
         )
       })
     : []
 
   return (
-    <div className="bg-card rounded-lg p-4 shadow-sm mb-4 transition-all duration-200 ease-in-out hover:shadow-md">
-      <div className="text-lg font-semibold text-foreground flex items-center justify-center gap-2 mb-4">
+    <div className="bg-card rounded-lg p-4 shadow-sm border border-border mb-4 transition-all duration-200 ease-in-out hover:shadow-md h-full flex flex-col">
+      <div className="text-lg font-semibold text-foreground flex items-center justify-center gap-2 mb-4 shrink-0">
         <CalendarIcon className="w-5 h-5" /> Calendário
       </div>
-      <div className="flex justify-center min-h-[300px]">
+
+      <div className="flex justify-center min-h-[300px] shrink-0">
         {loading && processes.length === 0 ? (
           <div className="flex items-center justify-center w-full">
             <Skeleton className="w-[280px] h-[280px] rounded-md" />
@@ -45,8 +58,8 @@ export function InteractiveCalendar() {
         ) : (
           <Calendar
             mode="single"
-            selected={selectedDate}
-            onSelect={setSelectedDate}
+            selected={localDate}
+            onSelect={setLocalDate}
             locale={ptBR}
             formatters={{
               formatWeekdayName: (date) => {
@@ -99,9 +112,10 @@ export function InteractiveCalendar() {
           />
         )}
       </div>
-      <div className="pt-4 border-t border-border max-h-[250px] overflow-y-auto mt-2">
+
+      <div className="pt-4 border-t border-border overflow-y-auto mt-2 flex-1">
         <h4 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
-          {selectedDate ? `Processos para ${format(selectedDate, 'dd/MM')}` : 'Selecione uma data'}
+          {localDate ? `Processos para ${format(localDate, 'dd/MM')}` : 'Selecione uma data'}
         </h4>
         {dateProcesses.length === 0 ? (
           <p className="text-sm text-muted-foreground/80 py-2 text-center">
@@ -112,11 +126,11 @@ export function InteractiveCalendar() {
             {dateProcesses.map((p) => (
               <li
                 key={p.id}
-                className="text-sm flex flex-col gap-1 bg-background p-2.5 rounded-md border shadow-sm hover:border-primary/30 hover:scale-[102%] transition-all duration-200 ease-in-out"
+                className="text-sm flex flex-col gap-1 bg-background p-2.5 rounded-md border border-border shadow-sm hover:border-primary/30 transition-all duration-200 ease-in-out"
               >
                 <Link
                   to={`/processos/${p.id}`}
-                  className="font-semibold text-foreground hover:text-primary transition-all duration-200 ease-in-out"
+                  className="font-semibold text-foreground hover:text-primary transition-colors"
                 >
                   {p.numero_controle || p.numero_processo || 'Processo sem número'}
                 </Link>
@@ -128,4 +142,4 @@ export function InteractiveCalendar() {
       </div>
     </div>
   )
-}
+})

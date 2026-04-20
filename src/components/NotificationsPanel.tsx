@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { memo, useEffect, useState, useCallback } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Link } from 'react-router-dom'
@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import pb from '@/lib/pocketbase/client'
 import { useRealtime } from '@/hooks/use-realtime'
 import { useCurrentUser } from '@/hooks/use-current-user'
-import { useToast } from '@/hooks/use-toast'
+import { useHubPage } from '@/contexts/hub-page-context'
 import type { NotificacaoAgente } from '@/services/notificacoes_agente'
 import { cn } from '@/lib/utils'
 
@@ -54,55 +54,55 @@ function getNotificationIcon(titulo: string, tipo: string) {
   return <Info className="w-5 h-5 flex-shrink-0 text-blue-500" />
 }
 
-export function NotificationsPanel() {
+export const NotificationsPanel = memo(function NotificationsPanel() {
   const { user } = useCurrentUser()
+  const { setNotificationCount } = useHubPage()
   const [notifications, setNotifications] = useState<NotificacaoAgente[]>([])
   const [loading, setLoading] = useState(true)
-  const { toast } = useToast()
+  const [error, setError] = useState<Error | null>(null)
 
   const fetchNotifications = useCallback(async () => {
     if (!user?.id) return
     try {
       setLoading(true)
-      const res = await pb.collection('notificacoes_agente').getList<NotificacaoAgente>(1, 5, {
+      setError(null)
+      const res = await pb.collection('notificacoes_agente').getList<NotificacaoAgente>(1, 10, {
         filter: `agente_id.user_id = "${user.id}"`,
         sort: '-created',
       })
       setNotifications(res.items)
-    } catch (error) {
-      console.error(error)
-      toast({
-        title: 'Erro',
-        description: 'Nao foi possivel carregar notificacoes',
-        variant: 'destructive',
-      })
+    } catch (err: any) {
+      console.error(err)
+      setError(err)
     } finally {
       setLoading(false)
     }
-  }, [user?.id, toast])
+  }, [user?.id])
 
   useEffect(() => {
     fetchNotifications()
   }, [fetchNotifications])
 
   useRealtime('notificacoes_agente', () => {
-    fetchNotifications().catch(() => {
-      toast({
-        title: 'Erro de conexão',
-        description: 'Falha ao atualizar notificações em tempo real. Tente atualizar manualmente.',
-        variant: 'destructive',
-      })
-    })
+    fetchNotifications().catch(console.error)
   })
 
   const unreadCount = notifications.filter((n) => !n.lida).length
 
+  useEffect(() => {
+    setNotificationCount(unreadCount)
+  }, [unreadCount, setNotificationCount])
+
+  if (error) {
+    throw error
+  }
+
   return (
-    <div className="bg-card rounded-lg p-4 shadow-sm transition-all duration-200 ease-in-out hover:shadow-md">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-card rounded-lg p-4 shadow-sm border border-border transition-all duration-200 ease-in-out hover:shadow-md h-full flex flex-col">
+      <div className="flex items-center justify-between mb-4 shrink-0">
         <div className="flex items-center gap-2">
           <span className="text-lg font-semibold text-foreground uppercase tracking-wide">
-            NOTIFICACOES (Tempo Real)
+            NOTIFICAÇÕES
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -121,9 +121,10 @@ export function NotificationsPanel() {
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-2 max-h-96 overflow-y-auto">
+
+      <div className="flex flex-col gap-2 overflow-y-auto flex-1 min-h-[250px]">
         {loading && notifications.length === 0 ? (
-          Array.from({ length: 3 }).map((_, i) => (
+          Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="p-2 rounded-md flex gap-2">
               <Skeleton className="w-5 h-5 rounded-full shrink-0" />
               <div className="space-y-2 flex-1">
@@ -133,39 +134,46 @@ export function NotificationsPanel() {
             </div>
           ))
         ) : notifications.length === 0 ? (
-          <p className="text-sm text-muted-foreground/80 py-4 text-center">Nenhuma notificacao</p>
+          <div className="flex flex-col items-center justify-center h-full space-y-2 text-muted-foreground py-8">
+            <CheckCircle className="w-8 h-8 opacity-20" />
+            <p className="text-sm font-medium">Você está em dia!</p>
+            <p className="text-xs opacity-70">Nenhuma notificação recente.</p>
+          </div>
         ) : (
           notifications.map((n) => (
             <div
               key={n.id}
               className={cn(
-                'flex flex-row gap-2 p-2 rounded-md transition-all duration-200 ease-in-out hover:bg-secondary hover:scale-[102%] items-start',
-                !n.lida && 'bg-primary/5',
+                'flex flex-row gap-3 p-2.5 rounded-md border border-transparent transition-all duration-200 ease-in-out items-start hover:border-border hover:bg-muted/50',
+                !n.lida && 'bg-primary/5 border-primary/10',
               )}
             >
-              {getNotificationIcon(n.titulo, n.tipo)}
+              <div className="mt-0.5">{getNotificationIcon(n.titulo, n.tipo)}</div>
               <div className="flex flex-col flex-1 min-w-0">
-                <p className="text-sm text-foreground font-medium truncate">{n.titulo}</p>
-                <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{n.descricao}</p>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-sm text-foreground font-semibold truncate">{n.titulo}</p>
+                <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5 leading-relaxed">
+                  {n.descricao}
+                </p>
+                <p className="text-[10px] font-medium text-muted-foreground/70 mt-1.5 uppercase">
                   {formatDistanceToNow(new Date(n.created), { addSuffix: true, locale: ptBR })}
                 </p>
               </div>
               {!n.lida && (
-                <span className="w-2 h-2 rounded-full bg-destructive shrink-0 mt-1"></span>
+                <span className="w-2 h-2 rounded-full bg-destructive shrink-0 mt-1 shadow-sm shadow-destructive/50"></span>
               )}
             </div>
           ))
         )}
       </div>
-      <div className="pt-3 mt-2 border-t border-border text-center">
+
+      <div className="pt-3 mt-2 border-t border-border text-center shrink-0">
         <Link
           to="/notificacoes"
-          className="text-sm text-primary hover:underline font-medium transition-all duration-200 ease-in-out"
+          className="text-sm text-primary hover:underline font-medium transition-all duration-200"
         >
-          Ver Todas
+          Ver Todas &rarr;
         </Link>
       </div>
     </div>
   )
-}
+})

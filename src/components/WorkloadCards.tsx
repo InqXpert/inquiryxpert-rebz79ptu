@@ -1,23 +1,17 @@
-import { useEffect } from 'react'
+import { memo } from 'react'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useToast } from '@/hooks/use-toast'
 import { useWorkloadStats } from '@/hooks/use-workload-stats'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { cn } from '@/lib/utils'
 
-export function WorkloadCards({ userId }: { userId?: string }) {
-  const { counts, loading, error } = useWorkloadStats(userId)
-  const { toast } = useToast()
+export const WorkloadCards = memo(function WorkloadCards() {
+  const { user } = useCurrentUser()
+  const { counts, loading, error } = useWorkloadStats(user?.id)
 
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: 'Erro',
-        description: 'Nao foi possivel carregar carga de trabalho',
-        variant: 'destructive',
-      })
-    }
-  }, [error, toast])
+  if (error) {
+    throw error
+  }
 
   return (
     <section className="mb-6">
@@ -28,7 +22,7 @@ export function WorkloadCards({ userId }: { userId?: string }) {
           loading && 'pointer-events-none',
         )}
       >
-        <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 ease-in-out hover:shadow-md hover:scale-105 border-border">
+        <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 hover:shadow-md hover:scale-105 border-border">
           <div
             className="w-8 h-8 text-2xl flex items-center justify-center"
             role="img"
@@ -46,7 +40,7 @@ export function WorkloadCards({ userId }: { userId?: string }) {
           )}
         </Card>
 
-        <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 ease-in-out hover:shadow-md hover:scale-105 border-border">
+        <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 hover:shadow-md hover:scale-105 border-border">
           <div
             className="w-8 h-8 text-2xl flex items-center justify-center"
             role="img"
@@ -64,7 +58,7 @@ export function WorkloadCards({ userId }: { userId?: string }) {
           )}
         </Card>
 
-        <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 ease-in-out hover:shadow-md hover:scale-105 border-border">
+        <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 hover:shadow-md hover:scale-105 border-border">
           <div
             className="w-8 h-8 text-2xl flex items-center justify-center"
             role="img"
@@ -82,7 +76,7 @@ export function WorkloadCards({ userId }: { userId?: string }) {
           )}
         </Card>
 
-        <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 ease-in-out hover:shadow-md hover:scale-105 border-border">
+        <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 hover:shadow-md hover:scale-105 border-border">
           <div
             className="w-8 h-8 text-2xl flex items-center justify-center"
             role="img"
@@ -102,4 +96,4 @@ export function WorkloadCards({ userId }: { userId?: string }) {
       </div>
     </section>
   )
-}
+})
