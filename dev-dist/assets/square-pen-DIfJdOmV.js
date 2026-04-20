@@ -1,0 +1,35 @@
+import { t as createLucideIcon } from "./createLucideIcon-vP0w25-2.js";
+var Key = createLucideIcon("key", [
+	["path", {
+		d: "m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4",
+		key: "g0fldk"
+	}],
+	["path", {
+		d: "m21 2-9.6 9.6",
+		key: "1j0ho8"
+	}],
+	["circle", {
+		cx: "7.5",
+		cy: "15.5",
+		r: "5.5",
+		key: "yqb3hr"
+	}]
+]);
+var ShieldCheck = createLucideIcon("shield-check", [["path", {
+	d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+	key: "oel41y"
+}], ["path", {
+	d: "m9 12 2 2 4-4",
+	key: "dzmm74"
+}]]);
+var SquarePen = createLucideIcon("square-pen", [["path", {
+	d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7",
+	key: "1m0v6g"
+}], ["path", {
+	d: "M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z",
+	key: "ohrbg2"
+}]]);
+//#endregion
+export { ShieldCheck as n, Key as r, SquarePen as t };
+
+//# sourceMappingURL=square-pen-DIfJdOmV.js.map

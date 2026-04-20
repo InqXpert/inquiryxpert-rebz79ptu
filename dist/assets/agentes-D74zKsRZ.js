@@ -1,1 +1,0 @@
-import{t as e}from"./client-BY9V4vOt.js";var t=()=>e.collection(`agentes`).getFullList({sort:`-created`}),n=t=>e.collection(`agentes`).getOne(t),r=(t,n)=>e.collection(`agentes`).update(t,n),i=t=>e.collection(`agentes`).delete(t);export{r as i,n,t as r,i as t};
