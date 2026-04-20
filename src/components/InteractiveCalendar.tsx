@@ -3,7 +3,6 @@ import { ptBR } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { Calendar } from '@/components/ui/calendar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useInteractiveCalendar } from '@/hooks/use-interactive-calendar'
@@ -34,13 +33,11 @@ export function InteractiveCalendar() {
     : []
 
   return (
-    <Card className="shadow-sm overflow-hidden border-none ring-1 ring-border">
-      <CardHeader className="p-4 border-b bg-card">
-        <CardTitle className="text-base font-semibold flex items-center gap-2">
-          <CalendarIcon className="w-4 h-4" /> Calendário
-        </CardTitle>
-      </CardHeader>
-      <div className="p-3 flex justify-center bg-card min-h-[300px]">
+    <div className="bg-card rounded-lg p-4 shadow-sm mb-4">
+      <div className="text-lg font-semibold text-foreground flex items-center justify-center gap-2 mb-4">
+        <CalendarIcon className="w-5 h-5" /> Calendário
+      </div>
+      <div className="flex justify-center min-h-[300px]">
         {loading && processes.length === 0 ? (
           <div className="flex items-center justify-center w-full">
             <Skeleton className="w-[280px] h-[280px] rounded-md" />
@@ -61,7 +58,7 @@ export function InteractiveCalendar() {
                 return m.charAt(0).toUpperCase() + m.slice(1)
               },
             }}
-            className="rounded-md pointer-events-auto"
+            className="pointer-events-auto"
             modifiers={{
               overdue: overdueDates,
               shortTerm: shortTermDates,
@@ -69,16 +66,16 @@ export function InteractiveCalendar() {
             }}
             modifiersClassNames={{
               overdue:
-                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-red-500 after:rounded-full",
+                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-destructive after:rounded-full",
               shortTerm:
-                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-yellow-500 after:rounded-full",
+                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-accent after:rounded-full",
               longTerm:
-                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-orange-500 after:rounded-full",
+                "relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-2 after:h-2 after:bg-orange-500 after:rounded-full",
             }}
           />
         )}
       </div>
-      <div className="p-4 border-t bg-muted/40 max-h-[250px] overflow-y-auto">
+      <div className="pt-4 border-t border-border max-h-[250px] overflow-y-auto mt-2">
         <h4 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
           {selectedDate ? `Processos para ${format(selectedDate, 'dd/MM')}` : 'Selecione uma data'}
         </h4>
@@ -105,6 +102,6 @@ export function InteractiveCalendar() {
           </ul>
         )}
       </div>
-    </Card>
+    </div>
   )
 }
