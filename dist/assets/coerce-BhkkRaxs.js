@@ -1,0 +1,1 @@
+import{l as e,t}from"./schemas-CA290lYV.js";function n(n){return e(t,n)}export{n as t};
