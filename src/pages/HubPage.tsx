@@ -19,12 +19,13 @@ import { usePerformanceMetrics } from '@/hooks/use-performance-metrics'
 import { cn } from '@/lib/utils'
 import { UserGreeting } from '@/components/UserGreeting'
 import { WorkloadCards } from '@/components/WorkloadCards'
+import { PerformanceSection } from '@/components/PerformanceSection'
 
 export default function HubPage() {
   const { user } = useCurrentUser()
 
   const { stats, loading: statsLoading } = useProcessStats(user?.id)
-  const { metrics, loading: metricsLoading } = usePerformanceMetrics(user?.id)
+  const { metrics, advancedMetrics, loading: metricsLoading } = usePerformanceMetrics(user?.id)
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
   const [dateProcesses, setDateProcesses] = useState<any[]>([])
@@ -222,6 +223,9 @@ export default function HubPage() {
             </Card>
           </div>
         </section>
+
+        {/* Zone 6: Performance Pessoal */}
+        <PerformanceSection loading={metricsLoading} data={advancedMetrics} />
       </div>
 
       {/* Zone 5: Interactive Sidebar */}
