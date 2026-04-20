@@ -1,12 +1,10 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus, FileText, Clock } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { toast } from 'sonner'
 
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { useDigitalClock } from '@/hooks/use-digital-clock'
@@ -23,23 +21,18 @@ export function UserGreeting() {
 
   if (loading) {
     return (
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-card p-6 rounded-xl border shadow-sm">
-        <div className="flex items-center gap-5">
-          <div className="space-y-2">
-            <Skeleton className="h-8 w-64" />
-            <Skeleton className="h-4 w-48" />
-          </div>
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4 bg-card rounded-lg p-6 shadow-sm mb-6">
+        <div className="flex flex-col gap-1 w-full lg:w-auto items-center lg:items-start">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-48" />
+          <Skeleton className="h-6 w-32" />
         </div>
-        <div className="flex flex-col-reverse md:flex-row items-center gap-6">
-          <div className="flex gap-3">
-            <Button disabled size="lg" className="shadow-sm">
-              <Plus className="w-4 h-4 mr-2" /> Novo Processo
-            </Button>
-            <Button disabled variant="outline" size="lg" className="shadow-sm">
-              <FileText className="w-4 h-4 mr-2" /> Nova Sindicância
-            </Button>
+        <div className="flex flex-col items-center lg:items-end gap-3 w-full lg:w-auto">
+          <Skeleton className="w-12 h-12 md:w-16 md:h-16 rounded-full" />
+          <div className="flex flex-row gap-2 w-full lg:w-auto">
+            <Skeleton className="h-10 w-full lg:w-32 rounded-md" />
+            <Skeleton className="h-10 w-full lg:w-36 rounded-md" />
           </div>
-          <Skeleton className="h-[60px] w-[60px] rounded-full shrink-0" />
         </div>
       </div>
     )
@@ -53,40 +46,39 @@ export function UserGreeting() {
     .join(' ')
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-card p-6 rounded-xl border shadow-sm">
-      <div className="flex items-center gap-5">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Olá, {user?.name || user?.nome || 'Usuário'}
-          </h1>
-          <div className="flex items-center gap-2 mt-1 text-muted-foreground">
-            <Clock className="w-4 h-4" />
-            <span className="font-medium tabular-nums">
-              {hours}:{minutes}:{seconds}
-            </span>
-            <span className="text-sm ml-2">{formattedDate}</span>
-          </div>
-        </div>
+    <div className="flex flex-col lg:flex-row items-center justify-between gap-4 bg-card rounded-lg p-6 shadow-sm mb-6">
+      <div className="flex flex-col gap-1 w-full lg:w-auto items-center lg:items-start text-center lg:text-left">
+        <h1 className="text-2xl font-bold text-foreground">
+          Olá, {user?.name || user?.nome || 'Usuário'}
+        </h1>
+        <span className="text-sm text-muted-foreground">{formattedDate}</span>
+        <span className="text-lg font-mono text-primary font-semibold">
+          {hours}:{minutes}:{seconds}
+        </span>
       </div>
-      <div className="flex flex-col-reverse md:flex-row items-center gap-6">
-        <div className="flex gap-3">
-          <Button asChild size="lg" className="shadow-sm" disabled={loading}>
-            <Link to="/processos/novo">
-              <Plus className="w-4 h-4 mr-2" /> Novo Processo
-            </Link>
-          </Button>
-          <Button variant="outline" size="lg" asChild className="shadow-sm" disabled={loading}>
-            <Link to="/sindicancia/nova">
-              <FileText className="w-4 h-4 mr-2" /> Nova Sindicância
-            </Link>
-          </Button>
-        </div>
-        <Avatar className="h-[60px] w-[60px] border-2 border-primary/10 shrink-0">
-          <AvatarImage src={avatarUrl} />
-          <AvatarFallback className="text-xl font-medium bg-primary/10 text-primary">
+
+      <div className="flex flex-col items-center lg:items-end gap-3 w-full lg:w-auto">
+        <Avatar className="w-12 h-12 md:w-16 md:h-16 rounded-full border-2 border-primary">
+          <AvatarImage src={avatarUrl} className="object-cover" />
+          <AvatarFallback className="flex items-center justify-center bg-secondary text-secondary-foreground w-full h-full">
             {user?.name?.[0] || user?.nome?.[0] || 'U'}
           </AvatarFallback>
         </Avatar>
+
+        <div className="flex flex-row gap-2 w-full lg:w-auto">
+          <Link
+            to="/processos/novo"
+            className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-md font-semibold hover:opacity-90 text-center"
+          >
+            Novo Processo
+          </Link>
+          <Link
+            to="/sindicancia/nova"
+            className="w-full bg-secondary text-secondary-foreground px-4 py-2 rounded-md font-semibold hover:opacity-90 text-center"
+          >
+            Nova Sindicância
+          </Link>
+        </div>
       </div>
     </div>
   )
