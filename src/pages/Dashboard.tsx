@@ -9,6 +9,7 @@ import { useRealtime } from '@/hooks/use-realtime'
 import { fetchProcessos } from '@/services/procesosOperacionais'
 import { ProcessoOperacional } from '@/types'
 import { EncaminharSindicanciaModal } from '@/components/sindicancia/EncaminharSindicanciaModal'
+import { AlertsBlock } from '@/components/dashboard/AlertsBlock'
 
 const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--muted-foreground))']
 
@@ -167,6 +168,14 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      <div
+        className="space-y-4 animate-in fade-in duration-700 fill-mode-both"
+        style={{ animationDelay: '400ms' }}
+      >
+        <h2 className="text-xl font-bold text-primary px-1">Alertas Críticos</h2>
+        <AlertsBlock />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
