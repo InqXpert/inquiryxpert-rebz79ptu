@@ -1,17 +1,19 @@
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom'
 import {
-  Search,
   Bell,
   Settings,
-  HelpCircle,
   User as UserIcon,
   LogOut,
   LayoutDashboard,
-  BarChart3,
   Moon,
   Sun,
   Menu,
+  Briefcase,
+  FileText,
+  Users,
+  ShieldAlert,
+  ChevronRight,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -26,7 +28,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/components/ui/sheet'
 
 export default function Layout() {
   const { user, signOut } = useAuth()
@@ -34,29 +36,17 @@ export default function Layout() {
   const { unreadCount } = useNotifications()
   const navigate = useNavigate()
   const location = useLocation()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navItems = [
+    { title: 'Dashboard', url: '/', icon: LayoutDashboard },
+    { title: 'Processos', url: '/processos', icon: FileText },
+    { title: 'Nova Sindicância', url: '/sindicancia/nova', icon: ShieldAlert },
     ...(user?.role === 'c-level' || user?.role === 'admin'
-      ? [{ title: 'Dashboard', url: '/dashboard' }]
+      ? [{ title: 'Financeiro', url: '/financeiro', icon: Briefcase }]
       : []),
-    { title: 'Processos', url: '/processos' },
-    ...(user?.role === 'c-level' || user?.role === 'admin'
-      ? [{ title: 'Financeiro', url: '/financeiro' }]
-      : []),
-    { title: 'Agentes', url: '/agentes' },
-    ...(user?.role === 'c-level' ||
-    user?.role === 'admin' ||
-    user?.role === 'supervisor' ||
-    user?.role === 'agente'
-      ? [{ title: 'Portal do Agente', url: '/gestao-agentes' }]
-      : []),
-    { title: 'Notificações', url: '/notificacoes' },
-    ...(user?.role === 'c-level' || user?.role === 'admin'
-      ? [{ title: 'Gestão de Usuários', url: '/gestao-usuarios' }]
-      : []),
-    ...(user?.role === 'c-level' || user?.role === 'admin'
-      ? [{ title: 'Performance', url: '/gestao/performance-supervisores' }]
-      : []),
+    { title: 'Agentes', url: '/agentes', icon: Users },
+    { title: 'Notificações', url: '/notificacoes', icon: Bell },
   ]
 
   const isActive = (url: string) => {
@@ -68,215 +58,216 @@ export default function Layout() {
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
-  return (
-    <div className="min-h-screen flex flex-col bg-muted/30 font-sans">
-      <header className="flex h-14 items-center justify-between px-4 bg-slate-900 text-white shadow-md z-30 shrink-0">
-        <div className="flex items-center h-full overflow-hidden">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="mr-2 md:hidden text-white hover:bg-white/10"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="left"
-              className="bg-slate-900 text-white border-r-brand-teal/30 p-0 w-64"
-            >
-              <div className="p-4 border-b border-white/10 flex items-center gap-3">
-                <div className="w-8 h-8 rounded bg-brand-coral flex items-center justify-center font-bold text-sm text-white shadow-sm">
-                  IX
-                </div>
-                <span className="font-bold text-lg tracking-tight">InquiryXpert</span>
-              </div>
-              <div className="flex flex-col py-4">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.title}
-                    to={item.url}
-                    className={cn(
-                      'px-6 py-3 text-[14px] font-medium transition-colors hover:bg-white/10',
-                      isActive(item.url)
-                        ? 'text-brand-cyan bg-white/5 border-l-2 border-brand-cyan'
-                        : 'text-white/80 border-l-2 border-transparent',
-                    )}
-                  >
-                    {item.title}
-                  </Link>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
-
-          <Link to="/" className="flex items-center gap-2 mr-2 sm:mr-6 shrink-0">
-            <span className="font-bold text-lg tracking-tight hidden md:block">InquiryHub</span>
-          </Link>
-
-          <nav className="hidden md:flex items-center h-full overflow-x-auto no-scrollbar">
-            {navItems.map((item) => (
-              <Link
-                key={item.title}
-                to={item.url}
-                className={cn(
-                  'px-3 lg:px-4 h-full flex items-center text-[13px] font-medium transition-colors hover:bg-white/10 relative whitespace-nowrap',
-                  isActive(item.url) ? 'text-white bg-white/10' : 'text-white/80',
-                )}
-              >
-                {item.title}
-                {isActive(item.url) && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-brand-cyan" />
-                )}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleTheme}
-            className="text-white/80 hover:text-white hover:bg-white/10 h-8 w-8"
-            aria-label="Alternar tema"
-          >
-            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white/80 hover:text-white hover:bg-white/10 h-8 w-8 hidden sm:flex"
-          >
-            <Search className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white/80 hover:text-white hover:bg-white/10 h-8 w-8 hidden sm:flex"
-            onClick={() => navigate('/configuracoes')}
-          >
-            <Settings className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white/80 hover:text-white hover:bg-white/10 h-8 w-8 relative hidden sm:flex"
-            onClick={() => navigate('/ajuda')}
-          >
-            <HelpCircle className="w-4 h-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-white/80 hover:text-white hover:bg-white/10 h-8 w-8 relative"
-            onClick={() => navigate('/notificacoes')}
-          >
-            <Bell className="w-4 h-4" />
-            {unreadCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-brand-coral text-[9px] font-bold text-white ring-2 ring-slate-900">
-                {unreadCount > 99 ? '99+' : unreadCount}
-              </span>
+  const NavLinks = ({ onClick }: { onClick?: () => void }) => (
+    <div className="flex flex-col gap-2 p-4">
+      {navItems.map((item) => {
+        const Icon = item.icon
+        const active = isActive(item.url)
+        return (
+          <Link
+            key={item.title}
+            to={item.url}
+            onClick={onClick}
+            className={cn(
+              'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200',
+              active
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground',
             )}
-          </Button>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="relative h-8 w-8 rounded-full ml-1 focus-visible:ring-1 focus-visible:ring-brand-cyan p-0"
-              >
-                <Avatar className="h-8 w-8 border border-white/20">
-                  <AvatarImage
-                    src={`https://img.usecurling.com/ppl/thumbnail?gender=female&seed=${user?.id || 'default'}`}
-                  />
-                  <AvatarFallback className="bg-white/10 text-white text-xs font-medium">
-                    {user?.name?.substring(0, 2).toUpperCase() || 'AD'}
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-64 mt-2 rounded-xl shadow-lg border-border"
-            >
-              <div className="flex items-center justify-start gap-3 p-3">
-                <Avatar className="h-10 w-10 border border-border">
-                  <AvatarImage
-                    src={`https://img.usecurling.com/ppl/thumbnail?gender=female&seed=${user?.id || 'default'}`}
-                  />
-                  <AvatarFallback>
-                    {user?.name?.substring(0, 2).toUpperCase() || 'AD'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col space-y-0.5 leading-none">
-                  <p className="font-semibold text-sm text-foreground">{user?.name}</p>
-                  <p className="w-[160px] truncate text-xs text-muted-foreground">{user?.email}</p>
-                </div>
-              </div>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3">
-                <Link to="/perfil" className="w-full flex items-center">
-                  <UserIcon className="mr-2.5 h-4 w-4 text-brand-cyan" />
-                  <span className="font-medium text-[13px]">Meu Perfil</span>
-                </Link>
-              </DropdownMenuItem>
-              {(user?.role === 'c-level' || user?.role === 'admin') && (
-                <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3">
-                  <Link to="/gestao/performance-supervisores" className="w-full flex items-center">
-                    <BarChart3 className="mr-2.5 h-4 w-4 text-brand-cyan" />
-                    <span className="font-medium text-[13px]">Performance</span>
-                  </Link>
-                </DropdownMenuItem>
-              )}
-              {(user?.role === 'c-level' ||
-                user?.role === 'admin' ||
-                user?.role === 'supervisor' ||
-                user?.role === 'agente') && (
-                <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3">
-                  <Link to="/gestao-agentes" className="w-full flex items-center">
-                    <LayoutDashboard className="mr-2.5 h-4 w-4 text-brand-cyan" />
-                    <span className="font-medium text-[13px]">Portal do Agente</span>
-                  </Link>
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3">
-                <Link to="/configuracoes" className="w-full flex items-center">
-                  <Settings className="mr-2.5 h-4 w-4 text-brand-cyan" />
-                  <span className="font-medium text-[13px]">Configurações</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={signOut}
-                className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive py-2.5 px-3"
-              >
-                <LogOut className="mr-2.5 h-4 w-4" />
-                <span className="font-medium text-[13px]">Sair do sistema</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col relative w-full h-full items-center justify-start overflow-auto">
-        <div className="w-full max-w-[1400px] mx-auto flex-1 flex flex-col">
-          <Suspense
-            fallback={
-              <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground gap-4">
-                <div className="w-8 h-8 rounded-full border-[3px] border-brand-cyan border-t-transparent animate-spin" />
-                <span className="text-sm font-medium tracking-wide">Carregando...</span>
-              </div>
-            }
           >
-            <div className="w-full h-full flex flex-col animate-in fade-in duration-300">
-              <Outlet />
+            <Icon className={cn('w-5 h-5', active ? 'text-primary' : 'text-muted-foreground')} />
+            {item.title}
+            {active && <ChevronRight className="w-4 h-4 ml-auto opacity-50" />}
+          </Link>
+        )
+      })}
+    </div>
+  )
+
+  return (
+    <div className="min-h-screen flex bg-background font-sans overflow-hidden">
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex flex-col w-64 border-r border-border bg-card shadow-sm z-10 shrink-0 h-screen sticky top-0">
+        <div className="h-16 flex items-center px-6 border-b border-border">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded bg-primary flex items-center justify-center font-bold text-sm text-primary-foreground shadow-sm">
+              CR
             </div>
-          </Suspense>
+            <span className="font-bold text-xl tracking-tight text-foreground">Crextio</span>
+          </Link>
         </div>
-      </main>
+        <div className="flex-1 overflow-y-auto py-4">
+          <NavLinks />
+        </div>
+        <div className="p-4 border-t border-border">
+          <div className="flex items-center gap-3 px-3 py-2">
+            <Avatar className="h-9 w-9 border border-border">
+              <AvatarImage
+                src={`https://img.usecurling.com/ppl/thumbnail?gender=female&seed=${user?.id || 'default'}`}
+              />
+              <AvatarFallback className="bg-muted text-muted-foreground text-xs font-medium">
+                {user?.name?.substring(0, 2).toUpperCase() || 'US'}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col flex-1 min-w-0">
+              <p className="text-sm font-semibold text-foreground truncate">{user?.name}</p>
+              <p className="text-xs text-muted-foreground truncate capitalize">
+                {user?.role || 'Usuário'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
+        {/* Header */}
+        <header className="h-16 flex items-center justify-between px-4 sm:px-6 bg-card border-b border-border z-20 shrink-0">
+          <div className="flex items-center gap-4">
+            {/* Mobile Sidebar Trigger */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden text-foreground hover:bg-muted focus-visible:ring-primary"
+                  aria-label="Abrir menu"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0 w-72 bg-card border-r-border">
+                <SheetHeader className="h-16 flex items-center justify-center px-6 border-b border-border text-left">
+                  <SheetTitle asChild>
+                    <Link
+                      to="/"
+                      className="flex items-center gap-2 mr-auto"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <div className="w-8 h-8 rounded bg-primary flex items-center justify-center font-bold text-sm text-primary-foreground shadow-sm">
+                        CR
+                      </div>
+                      <span className="font-bold text-xl tracking-tight text-foreground">
+                        Crextio
+                      </span>
+                    </Link>
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="overflow-y-auto h-[calc(100vh-4rem)]">
+                  <NavLinks onClick={() => setMobileMenuOpen(false)} />
+                </div>
+              </SheetContent>
+            </Sheet>
+
+            <div className="hidden sm:flex items-center text-sm text-muted-foreground">
+              <span className="font-medium text-foreground">Bem-vindo(a)</span>
+              <span className="mx-2">•</span>
+              <span>
+                {new Date().toLocaleDateString('pt-BR', {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long',
+                })}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              className="text-muted-foreground hover:text-foreground hover:bg-muted h-9 w-9 focus-visible:ring-primary"
+              aria-label="Alternar tema"
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-foreground hover:bg-muted h-9 w-9 relative focus-visible:ring-primary"
+              onClick={() => navigate('/notificacoes')}
+              aria-label="Notificações"
+            >
+              <Bell className="w-4 h-4" />
+              {unreadCount > 0 && (
+                <span className="absolute top-1.5 right-1.5 flex h-2 w-2 items-center justify-center rounded-full bg-destructive ring-2 ring-card" />
+              )}
+            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="relative h-9 w-9 rounded-full ml-1 focus-visible:ring-2 focus-visible:ring-primary p-0"
+                >
+                  <Avatar className="h-9 w-9 border border-border">
+                    <AvatarImage
+                      src={`https://img.usecurling.com/ppl/thumbnail?gender=female&seed=${user?.id || 'default'}`}
+                    />
+                    <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">
+                      {user?.name?.substring(0, 2).toUpperCase() || 'AD'}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="w-56 mt-2 rounded-xl shadow-lg border-border"
+              >
+                <div className="flex items-center justify-start gap-3 p-3">
+                  <div className="flex flex-col space-y-0.5 leading-none">
+                    <p className="font-semibold text-sm text-foreground">{user?.name}</p>
+                    <p className="truncate text-xs text-muted-foreground max-w-[180px]">
+                      {user?.email}
+                    </p>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3">
+                  <Link to="/perfil" className="w-full flex items-center">
+                    <UserIcon className="mr-2.5 h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium text-[13px]">Meu Perfil</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild className="cursor-pointer py-2.5 px-3">
+                  <Link to="/configuracoes" className="w-full flex items-center">
+                    <Settings className="mr-2.5 h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium text-[13px]">Configurações</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={signOut}
+                  className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive py-2.5 px-3"
+                >
+                  <LogOut className="mr-2.5 h-4 w-4" />
+                  <span className="font-medium text-[13px]">Sair do sistema</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
+
+        {/* Content Area */}
+        <main className="flex-1 overflow-auto bg-background/50">
+          <div className="w-full max-w-7xl mx-auto h-full flex flex-col p-4 sm:p-6 lg:p-8">
+            <Suspense
+              fallback={
+                <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground gap-4">
+                  <div className="w-8 h-8 rounded-full border-[3px] border-primary border-t-transparent animate-spin" />
+                  <span className="text-sm font-medium tracking-wide">Carregando...</span>
+                </div>
+              }
+            >
+              <div className="w-full h-full animate-in fade-in duration-300">
+                <Outlet />
+              </div>
+            </Suspense>
+          </div>
+        </main>
+      </div>
     </div>
   )
 }
