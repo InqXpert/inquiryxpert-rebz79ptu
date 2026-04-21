@@ -2,24 +2,30 @@ import { memo, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useProcessAlerts, ProcessoAlert } from '@/hooks/use-process-alerts'
-import { AlertCircle, Clock, ClipboardList } from 'lucide-react'
+import { useAlertas } from '@/hooks/useAlertas'
+import { Alerta } from '@/types/alerta'
+import { ShieldAlert, Clock, ClipboardList } from 'lucide-react'
 import { useHubPage } from '@/contexts/hub-page-context'
 
 export const AlertsBlock = memo(function AlertsBlock() {
-  const { overdue, upcoming, priority, loading, error } = useProcessAlerts()
+  const { alertas, loading, error, dismissedIds } = useAlertas()
   const { selectedDate } = useHubPage()
   const navigate = useNavigate()
 
   if (error) {
-    throw error
+    throw new Error(error)
   }
 
-  const filterByDate = (list: ProcessoAlert[]) => {
+  const activeAlerts = useMemo(
+    () => alertas.filter((a) => !dismissedIds.includes(a.id)),
+    [alertas, dismissedIds],
+  )
+
+  const filterByDate = (list: Alerta[]) => {
     if (!selectedDate) return list
     return list.filter((item) => {
-      if (!item.data_prazo) return false
-      const d = new Date(item.data_prazo)
+      if (!item.data) return false
+      const d = new Date(item.data)
       return (
         d.getDate() === selectedDate.getDate() &&
         d.getMonth() === selectedDate.getMonth() &&
@@ -28,24 +34,33 @@ export const AlertsBlock = memo(function AlertsBlock() {
     })
   }
 
+  const overdue = useMemo(() => activeAlerts.filter((a) => a.tipo === 'VENCIDO'), [activeAlerts])
+  const upcoming = useMemo(
+    () => activeAlerts.filter((a) => a.tipo === 'PROXIMO_VENCIMENTO'),
+    [activeAlerts],
+  )
+  const priority = useMemo(
+    () => activeAlerts.filter((a) => a.tipo === 'ALTA_PRIORIDADE'),
+    [activeAlerts],
+  )
+
   const filteredOverdue = useMemo(() => filterByDate(overdue), [overdue, selectedDate])
   const filteredUpcoming = useMemo(() => filterByDate(upcoming), [upcoming, selectedDate])
   const filteredPriority = useMemo(() => filterByDate(priority), [priority, selectedDate])
 
   const dateQuery = selectedDate ? `&date=${format(selectedDate, 'yyyy-MM-dd')}` : ''
 
-  const renderItem = (item: ProcessoAlert, highlightClass: string, text: string) => (
+  const renderItem = (item: Alerta, highlightClass: string, text: string) => (
     <div
       key={item.id}
       className="flex flex-row justify-between items-center text-sm text-muted-foreground"
     >
-      <span
-        className="font-mono text-foreground truncate mr-2"
-        title={item.numero_processo || item.numero_controle || item.id}
-      >
-        {item.numero_processo || item.numero_controle || item.id}
+      <span className="font-mono text-foreground truncate mr-2" title={item.numeroProcesso}>
+        {item.numeroProcesso}
       </span>
-      <span className={`text-xs whitespace-nowrap ${highlightClass}`}>{text}</span>
+      <span className={`text-xs whitespace-nowrap ${highlightClass}`} title={item.mensagem}>
+        {text}
+      </span>
     </div>
   )
 
@@ -75,7 +90,7 @@ export const AlertsBlock = memo(function AlertsBlock() {
     <div className="bg-card rounded-lg p-6 shadow-sm mb-6 border border-border">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-destructive" /> Alertas Críticos
+          <ShieldAlert className="w-5 h-5 text-red-600 dark:text-red-500" /> Alertas Críticos
         </h2>
         {selectedDate && (
           <span className="text-sm font-medium bg-primary/10 text-primary px-3 py-1 rounded-full">
@@ -85,40 +100,34 @@ export const AlertsBlock = memo(function AlertsBlock() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Atrasados */}
-        <div className="bg-card rounded-lg p-4 border-l-4 border-l-destructive shadow-sm hover:shadow-md transition-all duration-200">
+        {/* Vencidos */}
+        <div className="bg-card rounded-lg p-4 border-l-4 border-red-600 dark:border-red-500 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="flex items-center mb-3">
-            <AlertCircle className="w-5 h-5 mr-2 text-destructive" />
-            <h3 className="text-lg font-semibold text-foreground">Atrasados</h3>
+            <ShieldAlert className="w-5 h-5 mr-2 text-red-600 dark:text-red-500" />
+            <h3 className="text-lg font-semibold text-foreground">Vencidos</h3>
           </div>
           {filteredOverdue.length === 0 ? (
-            <p className="text-sm text-muted-foreground py-2">Nenhum processo atrasado</p>
+            <p className="text-sm text-muted-foreground py-2">Nenhum processo vencido</p>
           ) : (
             <div className="flex flex-col gap-2">
               {filteredOverdue
                 .slice(0, 3)
-                .map((item) =>
-                  renderItem(
-                    item,
-                    'text-destructive',
-                    `(${item.dias_atrasado} ${item.dias_atrasado === 1 ? 'dia' : 'dias'})`,
-                  ),
-                )}
+                .map((item) => renderItem(item, 'text-red-600 dark:text-red-500', `Vencido`))}
               <Link
-                to={`/processos?filter=overdue${dateQuery}`}
-                className="text-sm text-primary cursor-pointer hover:underline mt-2 block font-medium"
+                to={`/processos/alertas?tipo=VENCIDO${dateQuery}`}
+                className="text-sm text-red-600 dark:text-red-500 cursor-pointer hover:underline mt-2 block font-medium"
               >
-                Ver Todos &rarr;
+                Ver Todos ({filteredOverdue.length}) &rarr;
               </Link>
             </div>
           )}
         </div>
 
         {/* Próximos */}
-        <div className="bg-card rounded-lg p-4 border-l-4 border-l-accent shadow-sm hover:shadow-md transition-all duration-200">
+        <div className="bg-card rounded-lg p-4 border-l-4 border-orange-600 dark:border-orange-500 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="flex items-center mb-3">
-            <Clock className="w-5 h-5 mr-2 text-accent" />
-            <h3 className="text-lg font-semibold text-foreground">Próximos</h3>
+            <Clock className="w-5 h-5 mr-2 text-orange-600 dark:text-orange-500" />
+            <h3 className="text-lg font-semibold text-foreground">Próximos do Vencimento</h3>
           </div>
           {filteredUpcoming.length === 0 ? (
             <p className="text-sm text-muted-foreground py-2">Nenhum processo próximo</p>
@@ -126,27 +135,21 @@ export const AlertsBlock = memo(function AlertsBlock() {
             <div className="flex flex-col gap-2">
               {filteredUpcoming
                 .slice(0, 3)
-                .map((item) =>
-                  renderItem(
-                    item,
-                    'text-accent',
-                    `(em ${item.dias_para_vencer} ${item.dias_para_vencer === 1 ? 'dia' : 'dias'})`,
-                  ),
-                )}
+                .map((item) => renderItem(item, 'text-orange-600 dark:text-orange-500', `Atenção`))}
               <Link
-                to={`/processos?filter=upcoming${dateQuery}`}
-                className="text-sm text-primary cursor-pointer hover:underline mt-2 block font-medium"
+                to={`/processos/alertas?tipo=PROXIMO_VENCIMENTO${dateQuery}`}
+                className="text-sm text-orange-600 dark:text-orange-500 cursor-pointer hover:underline mt-2 block font-medium"
               >
-                Ver Todos &rarr;
+                Ver Todos ({filteredUpcoming.length}) &rarr;
               </Link>
             </div>
           )}
         </div>
 
         {/* Prioritários */}
-        <div className="bg-card rounded-lg p-4 border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all duration-200">
+        <div className="bg-card rounded-lg p-4 border-l-4 border-fuchsia-600 dark:border-fuchsia-500 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="flex items-center mb-3">
-            <ClipboardList className="w-5 h-5 mr-2 text-primary" />
+            <ClipboardList className="w-5 h-5 mr-2 text-fuchsia-600 dark:text-fuchsia-500" />
             <h3 className="text-lg font-semibold text-foreground">Prioritários</h3>
           </div>
           {filteredPriority.length === 0 ? (
@@ -156,13 +159,13 @@ export const AlertsBlock = memo(function AlertsBlock() {
               {filteredPriority
                 .slice(0, 3)
                 .map((item) =>
-                  renderItem(item, 'text-primary uppercase', item.prioridade || 'alta'),
+                  renderItem(item, 'text-fuchsia-600 dark:text-fuchsia-500 uppercase', 'Alta'),
                 )}
               <Link
-                to={`/processos?filter=priority${dateQuery}`}
-                className="text-sm text-primary cursor-pointer hover:underline mt-2 block font-medium"
+                to={`/processos/alertas?tipo=ALTA_PRIORIDADE${dateQuery}`}
+                className="text-sm text-fuchsia-600 dark:text-fuchsia-500 cursor-pointer hover:underline mt-2 block font-medium"
               >
-                Ver Todos &rarr;
+                Ver Todos ({filteredPriority.length}) &rarr;
               </Link>
             </div>
           )}
@@ -171,10 +174,10 @@ export const AlertsBlock = memo(function AlertsBlock() {
 
       <div className="flex flex-col sm:flex-row gap-2 mt-6">
         <button
-          onClick={() => navigate('/processos')}
+          onClick={() => navigate('/processos/alertas')}
           className="bg-primary text-primary-foreground px-6 py-2 rounded-md font-semibold hover:opacity-90 transition-opacity w-full sm:w-auto"
         >
-          Meus Processos
+          Central de Alertas
         </button>
       </div>
     </div>

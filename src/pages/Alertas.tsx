@@ -27,7 +27,7 @@ import {
 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import pb from '@/lib/pocketbase/client'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/hooks/use-auth'
@@ -44,6 +44,8 @@ const AlertIcon = ({ tipo, className }: { tipo: string; className?: string }) =>
       return <FileText className={className} />
     case 'DUPLICADO':
       return <Layers className={className} />
+    case 'ALTA_PRIORIDADE':
+      return <BellRing className={className} />
     default:
       return <BellRing className={className} />
   }
@@ -68,6 +70,8 @@ const getActionText = (tipo: string) => {
       return 'Enviar Relatório'
     case 'DUPLICADO':
       return 'Ver Processo Relacionado'
+    case 'ALTA_PRIORIDADE':
+      return 'Tratar Prioridade'
     default:
       return 'Ver Processo'
   }
@@ -76,6 +80,7 @@ const getActionText = (tipo: string) => {
 export default function Alertas() {
   const { user } = useAuth()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const {
     alertas,
     loading,
@@ -89,11 +94,28 @@ export default function Alertas() {
   const [supervisores, setSupervisores] = useState<any[]>([])
   const [seguradoras, setSeguradoras] = useState<any[]>([])
 
-  const [filtroTipo, setFiltroTipo] = useState<string>('ALL')
+  const initialTipo = searchParams.get('tipo') || 'ALL'
+  const [filtroTipo, setFiltroTipo] = useState<string>(initialTipo)
   const [filtroSupervisor, setFiltroSupervisor] = useState<string>('ALL')
   const [filtroSeguradora, setFiltroSeguradora] = useState<string>('ALL')
   const [page, setPage] = useState(1)
   const itemsPerPage = 10
+
+  useEffect(() => {
+    const tipo = searchParams.get('tipo')
+    if (tipo && tipo !== filtroTipo) {
+      setFiltroTipo(tipo)
+    }
+  }, [searchParams])
+
+  const handleFiltroTipoChange = (val: string) => {
+    setFiltroTipo(val)
+    setSearchParams((prev) => {
+      if (val === 'ALL') prev.delete('tipo')
+      else prev.set('tipo', val)
+      return prev
+    })
+  }
 
   useEffect(() => {
     const fetchFilters = async () => {
@@ -178,6 +200,10 @@ export default function Alertas() {
     setFiltroTipo('ALL')
     setFiltroSupervisor('ALL')
     setFiltroSeguradora('ALL')
+    setSearchParams((prev) => {
+      prev.delete('tipo')
+      return prev
+    })
   }
 
   return (
@@ -266,7 +292,7 @@ export default function Alertas() {
         <CardContent className="p-4 flex flex-col md:flex-row items-end md:items-center gap-4">
           <div className="space-y-1 w-full md:w-auto flex-1">
             <label className="text-xs font-medium text-muted-foreground">Tipo de Alerta</label>
-            <Select value={filtroTipo} onValueChange={setFiltroTipo}>
+            <Select value={filtroTipo} onValueChange={handleFiltroTipoChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Todos os Tipos" />
               </SelectTrigger>
@@ -277,6 +303,7 @@ export default function Alertas() {
                 <SelectItem value="SEM_ATUALIZACAO">Sem Atualização</SelectItem>
                 <SelectItem value="AGUARDANDO_RELATORIO">Aguardando Relatório</SelectItem>
                 <SelectItem value="DUPLICADO">Placa Duplicada</SelectItem>
+                <SelectItem value="ALTA_PRIORIDADE">Alta Prioridade</SelectItem>
               </SelectContent>
             </Select>
           </div>

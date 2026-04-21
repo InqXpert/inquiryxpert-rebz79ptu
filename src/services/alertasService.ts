@@ -4,7 +4,7 @@ import { differenceInDays } from 'date-fns'
 
 export const fetchAlertas = async () => {
   return await pb.collection('processos_operacionais').getFullList({
-    filter: "status != 'FINALIZADO'",
+    filter: "status != 'FINALIZADO' && data_conclusao = ''",
     expand: 'supervisor_id,seguradora_id',
   })
 }
@@ -44,7 +44,7 @@ export const calculateAlertLevel = (
       expand: p.expand,
     }
 
-    const dataRefStr = p.data_saida || p.data_prazo
+    const dataRefStr = p.data_prazo
     if (dataRefStr) {
       const dueDate = new Date(dataRefStr)
       if (!isNaN(dueDate.getTime())) {
@@ -107,6 +107,20 @@ export const calculateAlertLevel = (
         corTexto: 'text-blue-600 dark:text-blue-500',
         corFundo: 'bg-blue-50 dark:bg-blue-950/20',
         corBorda: 'border-blue-600 dark:border-blue-500',
+        data: p.updated,
+      })
+    }
+
+    if (p.prioridade === 'alta') {
+      alertas.push({
+        ...baseAlerta,
+        id: `${p.id}-ALTA_PRIORIDADE`,
+        tipo: 'ALTA_PRIORIDADE',
+        mensagem: `Processo marcado como alta prioridade.`,
+        severidade: 4.5,
+        corTexto: 'text-fuchsia-600 dark:text-fuchsia-500',
+        corFundo: 'bg-fuchsia-50 dark:bg-fuchsia-950/20',
+        corBorda: 'border-fuchsia-600 dark:border-fuchsia-500',
         data: p.updated,
       })
     }

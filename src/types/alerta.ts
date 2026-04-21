@@ -4,6 +4,7 @@ export type TipoAlerta =
   | 'SEM_ATUALIZACAO'
   | 'AGUARDANDO_RELATORIO'
   | 'DUPLICADO'
+  | 'ALTA_PRIORIDADE'
 
 export interface Alerta {
   id: string
