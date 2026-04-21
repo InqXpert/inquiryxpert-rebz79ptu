@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -214,6 +215,10 @@ export default function NovoProcessoPage() {
   const handleCreateAnalista = async () => {
     if (!novoAnalista.nome.trim()) {
       toast({ title: 'Nome do analista é obrigatório', variant: 'destructive' })
+      return
+    }
+    if (novoAnalista.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(novoAnalista.email)) {
+      toast({ title: 'E-mail inválido', variant: 'destructive' })
       return
     }
     if (!selectedCia) {
@@ -881,9 +886,9 @@ export default function NovoProcessoPage() {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <FormLabel>
+              <Label>
                 Nome <span className="text-destructive">*</span>
-              </FormLabel>
+              </Label>
               <Input
                 value={novoAnalista.nome}
                 onChange={(e) => setNovoAnalista({ ...novoAnalista, nome: e.target.value })}
@@ -891,7 +896,7 @@ export default function NovoProcessoPage() {
               />
             </div>
             <div className="space-y-2">
-              <FormLabel>E-mail</FormLabel>
+              <Label>E-mail</Label>
               <Input
                 type="email"
                 value={novoAnalista.email}
@@ -900,7 +905,7 @@ export default function NovoProcessoPage() {
               />
             </div>
             <div className="space-y-2">
-              <FormLabel>Telefone</FormLabel>
+              <Label>Telefone</Label>
               <Input
                 value={novoAnalista.telefone}
                 onChange={(e) => setNovoAnalista({ ...novoAnalista, telefone: e.target.value })}
@@ -908,7 +913,7 @@ export default function NovoProcessoPage() {
               />
             </div>
             <div className="space-y-2">
-              <FormLabel>Cargo</FormLabel>
+              <Label>Cargo</Label>
               <Input
                 value={novoAnalista.cargo}
                 onChange={(e) => setNovoAnalista({ ...novoAnalista, cargo: e.target.value })}
