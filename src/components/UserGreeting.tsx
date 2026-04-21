@@ -68,12 +68,6 @@ export const UserGreeting = memo(function UserGreeting() {
           >
             Novo Processo
           </Link>
-          <Link
-            to="/sindicancia/nova"
-            className="w-full bg-secondary text-secondary-foreground px-4 py-2 rounded-md font-semibold hover:opacity-90 text-center transition-opacity"
-          >
-            Nova Sindicância
-          </Link>
         </div>
       </div>
     </div>
