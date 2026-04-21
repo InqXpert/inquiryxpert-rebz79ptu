@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuth } from '@/hooks/use-auth'
 import { useNovoProcesso } from '@/hooks/useNovoProcesso'
@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
-import { ArrowLeft, Loader2, AlertTriangle } from 'lucide-react'
+import { ArrowLeft, Loader2, AlertTriangle, Plus, Trash2 } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -35,6 +35,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { usePlacaValidation, useInsuredValidation } from '@/hooks/usePlacaValidation'
 import { PlateValidationUI, InsuredValidationUI } from '@/components/processos/ValidationIndicators'
+import { Separator } from '@/components/ui/separator'
 
 const SEGURADORAS = [
   'ZURICH',
@@ -74,6 +75,15 @@ const TIPOS_INV = [
   'VIDA PREGRESSA',
 ]
 
+const formatCPF = (value: string) => {
+  return value
+    .replace(/\D/g, '')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+    .replace(/(-\d{2})\d+?$/, '$1')
+}
+
 export default function NovoProcessoPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -82,6 +92,8 @@ export default function NovoProcessoPage() {
     agentes,
     users,
     supervisores,
+    clientes,
+    analistas,
     loadingInitial,
     isSubmitting,
     duplicateFound,
@@ -91,7 +103,6 @@ export default function NovoProcessoPage() {
   } = useNovoProcesso()
 
   const [warningSupervisor, setWarningSupervisor] = useState('')
-  const [isSuggesting, setIsSuggesting] = useState(false)
   const [suggestedSupervisorId, setSuggestedSupervisorId] = useState<string | null>(null)
 
   const form = useForm<NovoProcessoFormData>({
@@ -103,13 +114,27 @@ export default function NovoProcessoPage() {
       tipo_investigacao: '',
       regiao_sinistro: '',
       nome_segurado: '',
+      cpf_segurado: '',
+      nome_condutor: '',
+      cpf_condutor: '',
       placas_veiculos: '',
       solicitante_id: '',
+      analista_cliente_id: '',
       agente_id: '',
       supervisor_id: '',
       status: 'ANALISE_INICIAL',
+      dados_terceiros: [],
     },
     mode: 'onSubmit',
+  })
+
+  const {
+    fields: terceirosFields,
+    append: appendTerceiro,
+    remove: removeTerceiro,
+  } = useFieldArray({
+    control: form.control,
+    name: 'dados_terceiros',
   })
 
   const {
@@ -117,13 +142,23 @@ export default function NovoProcessoPage() {
     setValue,
     formState: { errors },
   } = form
+
   const watchSeguradora = watch('seguradora')
   const watchTipoInvestigacao = watch('tipo_investigacao')
   const watchPlacas = watch('placas_veiculos')
   const watchNomeSegurado = watch('nome_segurado')
+  const watchNatureza = watch('natureza_sinistro')
 
   const plateValidation = usePlacaValidation(watchPlacas || '')
   const insuredValidation = useInsuredValidation(watchNomeSegurado || '')
+
+  const isProperty =
+    watchNatureza === 'PROPERTY' ||
+    (watchTipoInvestigacao && watchTipoInvestigacao.includes('PROPERTY'))
+  const isColisaoTerceiro = watchNatureza === 'COLISAO COM TERCEIRO'
+
+  const selectedCia = clientes.find((c) => c.razao_social === watchSeguradora)
+  const analistasFiltrados = analistas.filter((a) => a.cliente_id === selectedCia?.id)
 
   useEffect(() => {
     if (user && !['c-level', 'admin', 'supervisor'].includes(user.role)) {
@@ -152,7 +187,16 @@ export default function NovoProcessoPage() {
     }
   }, [watchSeguradora, watchTipoInvestigacao, supervisores, setValue])
 
-  const onBlurUppercase = (field: keyof NovoProcessoFormData) => {
+  useEffect(() => {
+    if (isProperty && watchPlacas) {
+      setValue('placas_veiculos', '')
+    }
+    if (!isColisaoTerceiro && terceirosFields.length > 0) {
+      setValue('dados_terceiros', [])
+    }
+  }, [isProperty, isColisaoTerceiro])
+
+  const onBlurUppercase = (field: any) => {
     const val = form.getValues(field)
     if (typeof val === 'string' && val !== val.toUpperCase()) {
       setValue(field, val.toUpperCase(), { shouldValidate: true })
@@ -160,7 +204,7 @@ export default function NovoProcessoPage() {
   }
 
   const onSubmit = async (data: NovoProcessoFormData) => {
-    const duplicate = await checkDuplicate(data.nome_segurado, data.placas_veiculos)
+    const duplicate = await checkDuplicate(data.nome_segurado, data.placas_veiculos || '')
     if (duplicate) {
       setDuplicateFound({ ...duplicate, pendingData: data })
     } else {
@@ -171,7 +215,7 @@ export default function NovoProcessoPage() {
   const onError = () => {
     toast({
       title: 'Erro de validação',
-      description: 'Preencha todos os campos obrigatorios corretamente.',
+      description: 'Preencha todos os campos obrigatórios corretamente.',
       variant: 'destructive',
     })
   }
@@ -184,22 +228,6 @@ export default function NovoProcessoPage() {
     } catch (err) {
       toast({ title: 'Erro ao criar processo.', variant: 'destructive' })
     }
-  }
-
-  const isFormFilled = () => {
-    const vals = form.getValues()
-    return !!(
-      vals.seguradora &&
-      vals.controle_cia &&
-      vals.natureza_sinistro &&
-      vals.tipo_investigacao &&
-      vals.regiao_sinistro &&
-      vals.nome_segurado &&
-      vals.placas_veiculos &&
-      vals.solicitante_id &&
-      vals.agente_id &&
-      vals.supervisor_id
-    )
   }
 
   if (loadingInitial) {
@@ -231,259 +259,448 @@ export default function NovoProcessoPage() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit, onError)}
-          className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 sm:p-8 shadow-sm space-y-6"
+          className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 sm:p-8 shadow-sm space-y-8"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="seguradora"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Seguradora <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={errors.seguradora ? 'border-red-500' : ''}>
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {SEGURADORAS.map((s) => (
-                        <SelectItem key={s} value={s}>
-                          {s}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="controle_cia"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Controle Cia <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      onBlur={() => {
-                        field.onBlur()
-                        onBlurUppercase('controle_cia')
-                      }}
-                      className={errors.controle_cia ? 'border-red-500 uppercase' : 'uppercase'}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="natureza_sinistro"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Natureza do Sinistro <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={errors.natureza_sinistro ? 'border-red-500' : ''}>
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {NATUREZAS.map((n) => (
-                        <SelectItem key={n} value={n}>
-                          {n}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="tipo_investigacao"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Tipo de Investigação <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={errors.tipo_investigacao ? 'border-red-500' : ''}>
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {TIPOS_INV.map((t) => (
-                        <SelectItem key={t} value={t}>
-                          {t}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="regiao_sinistro"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Região do Sinistro (ESTADO / CIDADE) <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="Ex: SP / SAO PAULO"
-                      onBlur={() => {
-                        field.onBlur()
-                        onBlurUppercase('regiao_sinistro')
-                      }}
-                      className={errors.regiao_sinistro ? 'border-red-500 uppercase' : 'uppercase'}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="nome_segurado"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Nome do Segurado <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      onBlur={() => {
-                        field.onBlur()
-                        onBlurUppercase('nome_segurado')
-                      }}
-                      className={errors.nome_segurado ? 'border-red-500 uppercase' : 'uppercase'}
-                    />
-                  </FormControl>
-                  <InsuredValidationUI validation={insuredValidation} />
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="placas_veiculos"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Placas dos Veículos <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      placeholder="ABC-1234, ABC1D34"
-                      onBlur={() => {
-                        field.onBlur()
-                        onBlurUppercase('placas_veiculos')
-                      }}
-                      className={errors.placas_veiculos ? 'border-red-500 uppercase' : 'uppercase'}
-                    />
-                  </FormControl>
-                  <PlateValidationUI validation={plateValidation} />
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="solicitante_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Solicitante <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={errors.solicitante_id ? 'border-red-500' : ''}>
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {users.map((u) => (
-                        <SelectItem key={u.id} value={u.id}>
-                          {u.name || u.email}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="agente_id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Agente <span className="text-destructive">*</span>
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={errors.agente_id ? 'border-red-500' : ''}>
-                        <SelectValue placeholder="Selecione..." />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {agentes.map((a) => (
-                        <SelectItem key={a.id} value={a.id}>
-                          {a.nomeCompleto}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage className="text-red-500" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="supervisor_id"
-              render={({ field }) => {
-                const suggestedUser = supervisores.find((u) => u.id === suggestedSupervisorId)
-
-                return (
+          <section className="space-y-6">
+            <h2 className="text-lg font-bold text-brand-navy dark:text-brand-light">
+              Dados do Sinistro
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="seguradora"
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Supervisor <span className="text-destructive">*</span>
+                      Seguradora <span className="text-destructive">*</span>
                     </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={(val) => {
+                        field.onChange(val)
+                        setValue('analista_cliente_id', '')
+                      }}
+                      value={field.value}
+                    >
                       <FormControl>
-                        <SelectTrigger className={errors.supervisor_id ? 'border-red-500' : ''}>
+                        <SelectTrigger className={errors.seguradora ? 'border-red-500' : ''}>
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {supervisores.map((u) => (
+                        {SEGURADORAS.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="controle_cia"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Controle Cia <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        onBlur={() => {
+                          field.onBlur()
+                          onBlurUppercase('controle_cia')
+                        }}
+                        className={errors.controle_cia ? 'border-red-500 uppercase' : 'uppercase'}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="natureza_sinistro"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Natureza do Sinistro <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className={errors.natureza_sinistro ? 'border-red-500' : ''}>
+                          <SelectValue placeholder="Selecione..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {NATUREZAS.map((n) => (
+                          <SelectItem key={n} value={n}>
+                            {n}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="tipo_investigacao"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Tipo de Investigação <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className={errors.tipo_investigacao ? 'border-red-500' : ''}>
+                          <SelectValue placeholder="Selecione..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {TIPOS_INV.map((t) => (
+                          <SelectItem key={t} value={t}>
+                            {t}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="regiao_sinistro"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Região do Sinistro (ESTADO / CIDADE){' '}
+                      <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Ex: SP / SAO PAULO"
+                        onBlur={() => {
+                          field.onBlur()
+                          onBlurUppercase('regiao_sinistro')
+                        }}
+                        className={
+                          errors.regiao_sinistro ? 'border-red-500 uppercase' : 'uppercase'
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              {!isProperty && (
+                <FormField
+                  control={form.control}
+                  name="placas_veiculos"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Placas dos Veículos <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder="ABC-1234, ABC1D34"
+                          onBlur={() => {
+                            field.onBlur()
+                            onBlurUppercase('placas_veiculos')
+                          }}
+                          className={
+                            errors.placas_veiculos ? 'border-red-500 uppercase' : 'uppercase'
+                          }
+                        />
+                      </FormControl>
+                      <PlateValidationUI validation={plateValidation} />
+                      <FormMessage className="text-red-500" />
+                    </FormItem>
+                  )}
+                />
+              )}
+            </div>
+          </section>
+
+          <Separator />
+          <section className="space-y-6">
+            <h2 className="text-lg font-bold text-brand-navy dark:text-brand-light">
+              Dados do Segurado e Condutor
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="nome_segurado"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Nome do Segurado <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        onBlur={() => {
+                          field.onBlur()
+                          onBlurUppercase('nome_segurado')
+                        }}
+                        className={errors.nome_segurado ? 'border-red-500 uppercase' : 'uppercase'}
+                      />
+                    </FormControl>
+                    <InsuredValidationUI validation={insuredValidation} />
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="cpf_segurado"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>CPF do Segurado</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="000.000.000-00"
+                        onChange={(e) => field.onChange(formatCPF(e.target.value))}
+                        className={errors.cpf_segurado ? 'border-red-500' : ''}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="nome_condutor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nome do Condutor</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        onBlur={() => {
+                          field.onBlur()
+                          onBlurUppercase('nome_condutor')
+                        }}
+                        className={errors.nome_condutor ? 'border-red-500 uppercase' : 'uppercase'}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="cpf_condutor"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>CPF do Condutor</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="000.000.000-00"
+                        onChange={(e) => field.onChange(formatCPF(e.target.value))}
+                        className={errors.cpf_condutor ? 'border-red-500' : ''}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </section>
+
+          {isColisaoTerceiro && (
+            <>
+              <Separator />
+              <section className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-bold text-brand-navy dark:text-brand-light">
+                    Dados de Terceiros
+                  </h2>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => appendTerceiro({ nome: '', cpf: '', veiculo: '', placa: '' })}
+                    className="border-brand-teal text-brand-navy dark:text-brand-light hover:bg-brand-teal/10"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Adicionar Terceiro
+                  </Button>
+                </div>
+
+                {terceirosFields.length === 0 && (
+                  <p className="text-sm text-brand-gray italic">Nenhum terceiro adicionado.</p>
+                )}
+
+                <div className="space-y-4">
+                  {terceirosFields.map((item, index) => (
+                    <div
+                      key={item.id}
+                      className="p-4 border border-brand-teal/30 rounded-lg bg-brand-light/10 dark:bg-brand-navy/50 relative"
+                    >
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeTerceiro(index)}
+                        className="absolute right-2 top-2 text-red-500 hover:text-red-700 hover:bg-red-100"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                        <FormField
+                          control={form.control}
+                          name={`dados_terceiros.${index}.nome`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                Nome do Terceiro <span className="text-destructive">*</span>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  className="uppercase"
+                                  onBlur={() => field.onChange(field.value.toUpperCase())}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`dados_terceiros.${index}.cpf`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>CPF do Terceiro</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  onChange={(e) => field.onChange(formatCPF(e.target.value))}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`dados_terceiros.${index}.veiculo`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Veículo do Terceiro</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  className="uppercase"
+                                  onBlur={() => field.onChange(field.value?.toUpperCase())}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`dados_terceiros.${index}.placa`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Placa do Terceiro</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  className="uppercase"
+                                  onBlur={() => field.onChange(field.value?.toUpperCase())}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </>
+          )}
+
+          <Separator />
+          <section className="space-y-6">
+            <h2 className="text-lg font-bold text-brand-navy dark:text-brand-light">
+              Atribuições e Equipe
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="analista_cliente_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Analista da Seguradora</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      disabled={!selectedCia || analistasFiltrados.length === 0}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={
+                              !selectedCia
+                                ? 'Selecione a seguradora primeiro'
+                                : analistasFiltrados.length === 0
+                                  ? 'Nenhum analista cadastrado'
+                                  : 'Selecione...'
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {analistasFiltrados.map((a) => (
+                          <SelectItem key={a.id} value={a.id}>
+                            {a.nome}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="solicitante_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Solicitante Interno <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className={errors.solicitante_id ? 'border-red-500' : ''}>
+                          <SelectValue placeholder="Selecione..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {users.map((u) => (
                           <SelectItem key={u.id} value={u.id}>
                             {u.name || u.email}
                           </SelectItem>
@@ -491,57 +708,97 @@ export default function NovoProcessoPage() {
                       </SelectContent>
                     </Select>
                     <FormMessage className="text-red-500" />
-
-                    <div className="mt-2 min-h-[24px]">
-                      {suggestedSupervisorId ? (
-                        <div className="flex flex-col gap-2">
-                          <p className="text-xs text-green-600 dark:text-green-400 font-medium">
-                            Supervisor sugerido: {suggestedUser?.name || 'Desconhecido'}
-                          </p>
-                          {field.value !== suggestedSupervisorId && (
-                            <Button
-                              type="button"
-                              variant="outline"
-                              size="sm"
-                              className="h-7 px-2 text-xs w-max border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/30"
-                              onClick={() => field.onChange(suggestedSupervisorId)}
-                            >
-                              Usar Sugestão
-                            </Button>
-                          )}
-                        </div>
-                      ) : warningSupervisor ? (
-                        <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">
-                          {warningSupervisor}
-                        </p>
-                      ) : null}
-                    </div>
                   </FormItem>
-                )
-              }}
-            />
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem className="md:col-span-2">
-                  <FormLabel>Status</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      readOnly
-                      className="bg-muted font-medium text-muted-foreground"
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="supervisor_id"
+                render={({ field }) => {
+                  const suggestedUser = supervisores.find((u) => u.id === suggestedSupervisorId)
+
+                  return (
+                    <FormItem>
+                      <FormLabel>
+                        Supervisor <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className={errors.supervisor_id ? 'border-red-500' : ''}>
+                            <SelectValue placeholder="Selecione..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {supervisores.map((u) => (
+                            <SelectItem key={u.id} value={u.id}>
+                              {u.name || u.email}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage className="text-red-500" />
+
+                      <div className="mt-2 min-h-[24px]">
+                        {suggestedSupervisorId ? (
+                          <div className="flex flex-col gap-2">
+                            <p className="text-xs text-green-600 dark:text-green-400 font-medium">
+                              Supervisor sugerido: {suggestedUser?.name || 'Desconhecido'}
+                            </p>
+                            {field.value !== suggestedSupervisorId && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                className="h-7 px-2 text-xs w-max border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/30"
+                                onClick={() => field.onChange(suggestedSupervisorId)}
+                              >
+                                Usar Sugestão
+                              </Button>
+                            )}
+                          </div>
+                        ) : warningSupervisor ? (
+                          <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">
+                            {warningSupervisor}
+                          </p>
+                        ) : null}
+                      </div>
+                    </FormItem>
+                  )
+                }}
+              />
+
+              <FormField
+                control={form.control}
+                name="agente_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Agente Atribuído</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger className={errors.agente_id ? 'border-red-500' : ''}>
+                          <SelectValue placeholder="Nenhum (atribuir depois)" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {agentes.map((a) => (
+                          <SelectItem key={a.id} value={a.id}>
+                            {a.nomeCompleto}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </section>
 
           <div className="flex justify-end pt-6 border-t border-brand-teal/20 dark:border-brand-cyan/20">
             <Button
               type="submit"
-              disabled={isSubmitting || !isFormFilled()}
+              disabled={isSubmitting}
               className="w-full md:w-auto h-11 px-8 font-bold bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 shadow-sm"
             >
               {isSubmitting && <Loader2 className="w-4 h-4 mr-2 animate-spin text-brand-navy" />}

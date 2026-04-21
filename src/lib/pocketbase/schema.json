@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-21T16:46:46.266Z",
+  "generatedAt": "2026-04-21T19:10:21.869Z",
   "collections": [
     {
       "name": "users",
@@ -714,6 +714,37 @@
         },
         {
           "name": "tags",
+          "type": "json",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "cpf_segurado",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "nome_condutor",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "cpf_condutor",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "analista_cliente_id",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "clientes_analistas"
+        },
+        {
+          "name": "dados_terceiros",
           "type": "json",
           "required": false,
           "system": false
@@ -2103,6 +2134,71 @@
         }
       ],
       "indexes": ["CREATE INDEX idx_sind_rasc_proc ON sindicancia_rascunhos (processo_id)"]
+    },
+    {
+      "name": "clientes_analistas",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != ''",
+        "view": "@request.auth.id != ''",
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'"
+      },
+      "fields": [
+        {
+          "name": "cliente_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "clientes_contratos"
+        },
+        {
+          "name": "nome",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "telefone",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "cargo",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "ativo",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
     }
   ]
 }

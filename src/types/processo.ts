@@ -9,13 +9,18 @@ export interface Processo {
   created: string
   agente_id?: string
   supervisor_id?: string
+  analista_cliente_id?: string
   nome_segurado?: string
+  cpf_segurado?: string
+  nome_condutor?: string
+  cpf_condutor?: string
   descricao?: string
   lido?: boolean
   is_favorite?: boolean
   observacoes?: string
   observacoes_json?: any
   posicoes_json?: any
+  dados_terceiros?: any
   tags?: string[]
   expand?: any
   [key: string]: any

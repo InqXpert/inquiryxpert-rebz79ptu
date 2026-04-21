@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
+import { Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -24,7 +25,15 @@ import {
 } from '@/components/ui/form'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Separator } from '@/components/ui/separator'
-import { createCliente, updateCliente, getCliente } from '@/services/clientes_contratos'
+import {
+  createCliente,
+  updateCliente,
+  getCliente,
+  getAnalistasPorCliente,
+  createAnalista,
+  updateAnalista,
+  deleteAnalista,
+} from '@/services/clientes_contratos'
 import { useAuth } from '@/hooks/use-auth'
 import pb from '@/lib/pocketbase/client'
 
@@ -37,6 +46,15 @@ const formatCNPJ = (value: string) => {
     .replace(/(\d{4})(\d)/, '$1-$2')
     .substring(0, 18)
 }
+
+const analistaSchema = z.object({
+  id: z.string().optional(),
+  nome: z.string().min(1, 'Nome é obrigatório'),
+  email: z.string().email('Email inválido').optional().or(z.literal('')),
+  telefone: z.string().optional().or(z.literal('')),
+  cargo: z.string().optional().or(z.literal('')),
+  ativo: z.boolean().default(true),
+})
 
 const clienteSchema = z
   .object({
@@ -63,6 +81,7 @@ const clienteSchema = z
       )
       .optional()
       .default([]),
+    analistas: z.array(analistaSchema).optional().default([]),
   })
   .superRefine((data, ctx) => {
     if (data.periodo_faturamento !== 'por_demanda' && !data.dia_corte) {
@@ -119,7 +138,17 @@ export function ClienteForm({ id }: ClienteFormProps) {
       retencao_na_fonte: false,
       aliquota_retencao: '',
       regras_sla: [],
+      analistas: [],
     },
+  })
+
+  const {
+    fields: analistasFields,
+    append: appendAnalista,
+    remove: removeAnalista,
+  } = useFieldArray({
+    control: form.control,
+    name: 'analistas',
   })
 
   const watchPeriodo = form.watch('periodo_faturamento')
@@ -154,14 +183,22 @@ export function ClienteForm({ id }: ClienteFormProps) {
 
   useEffect(() => {
     if (id) {
-      getCliente(id)
-        .then((data) => {
+      Promise.all([getCliente(id), getAnalistasPorCliente(id).catch(() => [])])
+        .then(([data, analistasData]) => {
           form.reset({
             ...data,
             dia_corte: data.dia_corte || '',
             aliquota_imposto: data.aliquota_imposto || '',
             aliquota_retencao: data.aliquota_retencao || '',
             regras_sla: data.regras_sla || [],
+            analistas: analistasData.map((a) => ({
+              id: a.id,
+              nome: a.nome,
+              email: a.email || '',
+              telefone: a.telefone || '',
+              cargo: a.cargo || '',
+              ativo: a.ativo,
+            })),
           })
         })
         .catch(() => {
@@ -192,21 +229,69 @@ export function ClienteForm({ id }: ClienteFormProps) {
     setSaving(true)
     try {
       const payload = {
-        ...values,
+        razao_social: values.razao_social,
+        cnpj: values.cnpj,
+        email_contato: values.email_contato,
+        status: values.status,
+        tipo_emissao: values.tipo_emissao,
+        periodo_faturamento: values.periodo_faturamento,
         dia_corte: values.dia_corte === '' ? 0 : Number(values.dia_corte),
+        agrupamento: values.agrupamento,
+        condicao_pagamento: values.condicao_pagamento,
+        tipo_imposto: values.tipo_imposto,
         aliquota_imposto: values.aliquota_imposto === '' ? 0 : Number(values.aliquota_imposto),
+        retencao_na_fonte: values.retencao_na_fonte,
         aliquota_retencao: values.aliquota_retencao === '' ? 0 : Number(values.aliquota_retencao),
+        regras_sla: values.regras_sla,
       }
 
+      let clienteId = id
       if (id) {
         await updateCliente(id, payload)
       } else {
-        await createCliente(payload)
+        const created = await createCliente(payload)
+        clienteId = created.id
       }
-      toast.success('Cliente salvo com sucesso!')
+
+      // Handle Analysts
+      if (clienteId) {
+        const currentAnalistas = id ? await getAnalistasPorCliente(id) : []
+        const submittedAnalistas = values.analistas || []
+
+        // Delete removed
+        const toDelete = currentAnalistas.filter(
+          (ca) => !submittedAnalistas.find((sa) => sa.id === ca.id),
+        )
+        for (const d of toDelete) await deleteAnalista(d.id)
+
+        // Create or Update
+        for (const a of submittedAnalistas) {
+          if (a.id) {
+            await updateAnalista(a.id, {
+              nome: a.nome,
+              email: a.email,
+              telefone: a.telefone,
+              cargo: a.cargo,
+              ativo: a.ativo,
+            })
+          } else {
+            await createAnalista({
+              cliente_id: clienteId,
+              nome: a.nome,
+              email: a.email,
+              telefone: a.telefone,
+              cargo: a.cargo,
+              ativo: a.ativo,
+            })
+          }
+        }
+      }
+
+      toast.success('Cliente e Analistas salvos com sucesso!')
       navigate('/financeiro/clientes')
     } catch (error) {
       toast.error('Erro ao salvar cliente.')
+      console.error(error)
     } finally {
       setSaving(false)
     }
@@ -301,6 +386,126 @@ export function ClienteForm({ id }: ClienteFormProps) {
                 )}
               />
             </div>
+          </section>
+
+          <Separator />
+
+          {/* Analistas da Seguradora */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-[#0a2540] dark:text-white">
+                Analistas da Seguradora
+              </h2>
+              {!isSupervisor && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    appendAnalista({ nome: '', email: '', telefone: '', cargo: '', ativo: true })
+                  }
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Adicionar Analista
+                </Button>
+              )}
+            </div>
+
+            {analistasFields.length === 0 ? (
+              <p className="text-sm text-muted-foreground italic">
+                Nenhum analista cadastrado para este cliente.
+              </p>
+            ) : (
+              <div className="space-y-4">
+                {analistasFields.map((item, index) => (
+                  <div key={item.id} className="p-4 border rounded-lg bg-muted/10 relative">
+                    {!isSupervisor && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeAnalista(index)}
+                        className="absolute right-2 top-2 text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                      <FormField
+                        control={form.control}
+                        name={`analistas.${index}.nome`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Nome <span className="text-destructive">*</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Input disabled={isSupervisor} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`analistas.${index}.email`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                              <Input disabled={isSupervisor} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`analistas.${index}.telefone`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Telefone</FormLabel>
+                            <FormControl>
+                              <Input disabled={isSupervisor} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`analistas.${index}.cargo`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Cargo</FormLabel>
+                            <FormControl>
+                              <Input disabled={isSupervisor} {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`analistas.${index}.ativo`}
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center space-x-3 space-y-0 pt-2">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                                disabled={isSupervisor}
+                              />
+                            </FormControl>
+                            <FormLabel className="cursor-pointer font-normal">Ativo</FormLabel>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
 
           <Separator />

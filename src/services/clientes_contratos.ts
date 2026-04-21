@@ -41,3 +41,34 @@ export const updateCliente = async (id: string, data: Partial<ClienteContrato>) 
 export const deleteCliente = async (id: string) => {
   return pb.collection('clientes_contratos').delete(id)
 }
+
+export interface ClienteAnalista {
+  id: string
+  cliente_id: string
+  nome: string
+  email: string
+  telefone: string
+  cargo: string
+  ativo: boolean
+  created?: string
+  updated?: string
+}
+
+export const getAnalistasPorCliente = async (clienteId: string) => {
+  return pb.collection('clientes_analistas').getFullList<ClienteAnalista>({
+    filter: `cliente_id = "${clienteId}"`,
+    sort: 'nome',
+  })
+}
+
+export const createAnalista = async (data: Partial<ClienteAnalista>) => {
+  return pb.collection('clientes_analistas').create<ClienteAnalista>(data)
+}
+
+export const updateAnalista = async (id: string, data: Partial<ClienteAnalista>) => {
+  return pb.collection('clientes_analistas').update<ClienteAnalista>(id, data)
+}
+
+export const deleteAnalista = async (id: string) => {
+  return pb.collection('clientes_analistas').delete(id)
+}

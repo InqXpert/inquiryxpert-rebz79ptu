@@ -6,6 +6,7 @@ import {
   createProcesso,
   createAuditLog,
 } from '@/services/processosService'
+import { ClienteContrato, ClienteAnalista } from '@/services/clientes_contratos'
 import { useAuth } from '@/hooks/use-auth'
 import { sanitizeInput } from '@/services/validacaoService'
 import { toast } from 'sonner'
@@ -15,6 +16,8 @@ export const useNovoProcesso = () => {
   const [agentes, setAgentes] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])
   const [supervisores, setSupervisores] = useState<any[]>([])
+  const [clientes, setClientes] = useState<ClienteContrato[]>([])
+  const [analistas, setAnalistas] = useState<ClienteAnalista[]>([])
   const [loadingInitial, setLoadingInitial] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [duplicateFound, setDuplicateFound] = useState<any | null>(null)
@@ -22,17 +25,26 @@ export const useNovoProcesso = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [agentesRes, usersRes, supervisoresRes] = await Promise.all([
-          pb.collection('agentes').getFullList({ sort: 'nomeCompleto' }),
-          pb.collection('users').getFullList({ sort: 'name' }),
-          pb.collection('users').getFullList({
-            sort: 'name',
-            filter: "role='c-level' || role='admin' || role='supervisor'",
-          }),
-        ])
+        const [agentesRes, usersRes, supervisoresRes, clientesRes, analistasRes] =
+          await Promise.all([
+            pb.collection('agentes').getFullList({ sort: 'nomeCompleto' }),
+            pb.collection('users').getFullList({ sort: 'name' }),
+            pb.collection('users').getFullList({
+              sort: 'name',
+              filter: "role='c-level' || role='admin' || role='supervisor'",
+            }),
+            pb
+              .collection('clientes_contratos')
+              .getFullList<ClienteContrato>({ sort: 'razao_social' }),
+            pb
+              .collection('clientes_analistas')
+              .getFullList<ClienteAnalista>({ filter: 'ativo = true', sort: 'nome' }),
+          ])
         setAgentes(agentesRes)
         setUsers(usersRes)
         setSupervisores(supervisoresRes)
+        setClientes(clientesRes)
+        setAnalistas(analistasRes)
       } catch (err) {
         console.error('Failed to load form data dependencies', err)
       } finally {
@@ -43,8 +55,8 @@ export const useNovoProcesso = () => {
   }, [])
 
   const checkDuplicate = async (nomeSegurado: string, placas: string) => {
-    if (!nomeSegurado || !placas) return null
-    return await validateDuplicidade(nomeSegurado, placas)
+    if (!nomeSegurado) return null
+    return await validateDuplicidade(nomeSegurado, placas || '')
   }
 
   const submit = async (data: any) => {
@@ -142,14 +154,19 @@ export const useNovoProcesso = () => {
         regiao_sinistro: sanitized.regiao_sinistro,
         controle_cia: sanitized.controle_cia,
         nome_segurado: sanitized.nome_segurado,
-        placas_veiculos: sanitized.placas_veiculos,
+        cpf_segurado: sanitized.cpf_segurado || null,
+        nome_condutor: sanitized.nome_condutor || null,
+        cpf_condutor: sanitized.cpf_condutor || null,
+        placas_veiculos: sanitized.placas_veiculos || '',
         solicitante_id: sanitized.solicitante_id,
-        agente_id: sanitized.agente_id,
+        analista_cliente_id: sanitized.analista_cliente_id || null,
+        agente_id: sanitized.agente_id || null,
         supervisor_id: sanitized.supervisor_id,
         data_entrada: new Date().toLocaleDateString('pt-BR'),
         data_prazo: data_prazo,
         cliente_id: sanitized.cliente_id,
         tipo_investigacao_id: sanitized.tipo_investigacao_id,
+        dados_terceiros: sanitized.dados_terceiros || [],
         user_id: user?.id,
       }
 
@@ -165,6 +182,8 @@ export const useNovoProcesso = () => {
     agentes,
     users,
     supervisores,
+    clientes,
+    analistas,
     loadingInitial,
     isSubmitting,
     duplicateFound,
