@@ -176,12 +176,6 @@ export const AlertsBlock = memo(function AlertsBlock() {
         >
           Meus Processos
         </button>
-        <button
-          onClick={() => navigate('/notificacoes')}
-          className="bg-secondary text-secondary-foreground px-6 py-2 rounded-md font-semibold hover:opacity-90 transition-opacity w-full sm:w-auto"
-        >
-          Notificações
-        </button>
       </div>
     </div>
   )
