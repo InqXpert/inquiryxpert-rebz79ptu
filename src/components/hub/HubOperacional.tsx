@@ -1,5 +1,5 @@
 import { ActionCard } from './ActionCard'
-import { PlusCircle, Search, Bell, FileText } from 'lucide-react'
+import { PlusCircle, Search, Bell, FileText, Send } from 'lucide-react'
 import { HubData } from '@/hooks/use-hub-data'
 import { differenceInDays, parseISO } from 'date-fns'
 import { Link } from 'react-router-dom'
@@ -15,8 +15,9 @@ export function HubOperacional({ data }: { data: HubData }) {
     <div className="space-y-8">
       <section>
         <h2 className="text-[18px] font-bold text-[#1e293b] mt-8 mb-4">Ações Rápidas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           <ActionCard to="/processos/novo" icon={PlusCircle} title="Novo Processo" primary />
+          <ActionCard to="/sindicancia/encaminhar" icon={Send} title="Nova Sindicância" />
           <ActionCard to="#" onClick={handleSearchFocus} icon={Search} title="Buscar Processo" />
           <ActionCard to="/processos/alertas" icon={Bell} title="Central de Alertas" />
         </div>

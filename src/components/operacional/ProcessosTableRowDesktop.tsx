@@ -8,7 +8,6 @@ import { History, MessageSquare, Flag, Edit2, ChevronDown, Send } from 'lucide-r
 import { useNavigate } from 'react-router-dom'
 import { cn, formatDateBr } from '@/lib/utils'
 import { ProcessoTimeline } from './ProcessoTimeline'
-import { EncaminharSindicanciaModal } from '@/components/sindicancia/EncaminharSindicanciaModal'
 
 interface Props {
   processo: Processo
@@ -26,7 +25,6 @@ export function ProcessosTableRowDesktop({
   onOpenModal,
 }: Props) {
   const navigate = useNavigate()
-  const [isEncaminharModalOpen, setIsEncaminharModalOpen] = useState(false)
   const bgColor = calculateDayColor(p.data_entrada)
   const tags = calculateTags(p.data_entrada)
 
@@ -193,10 +191,12 @@ export function ProcessosTableRowDesktop({
                 <Button
                   variant="secondary"
                   size="sm"
-                  className="h-11 w-11 px-0 sm:w-auto sm:px-3 sm:h-10 flex items-center justify-center font-bold text-brand-navy dark:text-white focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+                  className="h-11 w-11 px-0 sm:w-auto sm:px-3 sm:h-10 flex items-center justify-center font-bold text-brand-navy dark:text-white focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none bg-brand-light hover:bg-brand-light/80 dark:bg-brand-navy dark:hover:bg-brand-navy/80"
                   onClick={(e) => {
                     e.stopPropagation()
-                    setIsEncaminharModalOpen(true)
+                    navigate(
+                      `/sindicancia/encaminhar?processo_id=${p.id}&agente_id=${p.agente_id || ''}`,
+                    )
                   }}
                   aria-label="Encaminhar sindicancia"
                 >
@@ -247,11 +247,6 @@ export function ProcessosTableRowDesktop({
           </TableCell>
         </TableRow>
       )}
-      <EncaminharSindicanciaModal
-        isOpen={isEncaminharModalOpen}
-        onClose={() => setIsEncaminharModalOpen(false)}
-        processo={p}
-      />
     </React.Fragment>
   )
 }

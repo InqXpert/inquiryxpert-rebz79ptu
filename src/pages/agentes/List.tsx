@@ -96,6 +96,12 @@ export default function AgentesList() {
               Importar
             </Button>
             <Button
+              className="h-11 text-[14px] font-semibold bg-[#00A8B5] hover:bg-[#00A8B5]/90 text-white shadow-sm px-6 rounded-xl flex-1 sm:flex-none hidden lg:flex items-center justify-center"
+              onClick={() => navigate('/sindicancia/encaminhar')}
+            >
+              Encaminhar Sindicância
+            </Button>
+            <Button
               className="h-11 text-[14px] font-semibold bg-[#F2485C] hover:bg-[#F2485C]/90 text-white shadow-sm px-6 rounded-xl flex-1 sm:flex-none"
               onClick={() => navigate('/agentes/novo')}
             >
