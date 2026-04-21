@@ -41,7 +41,12 @@ export default function HubPage() {
           <Button
             asChild
             className="bg-brand-cyan hover:bg-brand-cyan/90 text-white font-bold w-full sm:w-auto shrink-0 shadow-md"
-          ></Button>
+          >
+            <Link to="/sindicancia/encaminhar">
+              <ShieldAlert className="w-4 h-4 mr-2" />
+              NOVA SINDICÂNCIA
+            </Link>
+          </Button>
         </div>
 
         <ZoneErrorBoundary zoneName="Alertas Críticos">

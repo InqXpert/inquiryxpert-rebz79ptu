@@ -26,7 +26,11 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
   }>({ type: null, proc: null })
 
   const handleOpenModal = (type: 'history' | 'obs' | 'pos' | 'encaminhar', proc: Processo) => {
-    setModalState({ type, proc })
+    if (type === 'encaminhar') {
+      navigate(`/sindicancia/encaminhar?processo_id=${proc.id}`)
+    } else {
+      setModalState({ type, proc })
+    }
   }
 
   if (loading && processos.length === 0) {
@@ -226,11 +230,6 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
         processo={modalState.type === 'pos' ? modalState.proc : null}
         isOpen={modalState.type === 'pos'}
         onClose={() => setModalState({ type: null, proc: null })}
-      />
-      <EncaminharSindicanciaModal
-        isOpen={modalState.type === 'encaminhar'}
-        onClose={() => setModalState({ type: null, proc: null })}
-        processo={modalState.proc}
       />
     </>
   )

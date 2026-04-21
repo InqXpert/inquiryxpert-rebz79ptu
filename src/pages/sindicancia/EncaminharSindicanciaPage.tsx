@@ -17,13 +17,14 @@ import { toast } from 'sonner'
 import {
   Loader2,
   ArrowLeft,
-  Send,
   Check,
   ChevronsUpDown,
   UploadCloud,
   X,
   FileIcon,
   Save,
+  Mail,
+  MessageCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useEncaminharSindicancia } from '@/hooks/use-encaminhar-sindicancia'
@@ -129,8 +130,8 @@ export default function EncaminharSindicanciaPage() {
   const selectedProcesso = processos.find((p) => p.id === processoId)
   const selectedAgente = agentes.find((a) => a.id === agenteId)
 
-  const submitSend = async () => {
-    await handleSend(processoId, selectedAgente)
+  const submitSend = async (method: 'email' | 'whatsapp' | 'both') => {
+    await handleSend(processoId, selectedAgente, method)
   }
 
   const submitDraft = async () => {
@@ -365,13 +366,24 @@ export default function EncaminharSindicanciaPage() {
             <Save className="w-4 h-4 mr-2" />
             Salvar Rascunho
           </Button>
+
           <Button
-            className="h-12 px-8 rounded-xl font-bold bg-brand-cyan hover:bg-brand-cyan/90 text-brand-navy shadow-sm"
-            onClick={submitSend}
+            variant="secondary"
+            className="h-12 px-6 rounded-xl font-bold shadow-sm"
+            onClick={() => submitSend('email')}
             disabled={loading || fetching}
           >
-            <Send className="w-4 h-4 mr-2" />
-            Encaminhar Sindicância
+            <Mail className="w-4 h-4 mr-2" />
+            Enviar por E-mail
+          </Button>
+
+          <Button
+            className="h-12 px-6 rounded-xl font-bold bg-[#25D366] hover:bg-[#25D366]/90 text-white shadow-sm"
+            onClick={() => submitSend('whatsapp')}
+            disabled={loading || fetching}
+          >
+            <MessageCircle className="w-4 h-4 mr-2" />
+            Enviar por WhatsApp
           </Button>
         </div>
       </div>

@@ -1,0 +1,12 @@
+import { t as createLucideIcon } from "./createLucideIcon-BKUPXi8U.js";
+var X = createLucideIcon("x", [["path", {
+	d: "M18 6 6 18",
+	key: "1bl5f8"
+}], ["path", {
+	d: "m6 6 12 12",
+	key: "d8bk6v"
+}]]);
+//#endregion
+export { X as t };
+
+//# sourceMappingURL=x-nD_q85R3.js.map

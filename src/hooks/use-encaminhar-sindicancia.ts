@@ -51,7 +51,11 @@ export function useEncaminharSindicancia(onSuccess?: (id: string) => void) {
     setDocumentos((prev) => prev.filter((doc) => doc.id !== id))
   }
 
-  const handleSend = async (processoId: string, agente: any) => {
+  const handleSend = async (
+    processoId: string,
+    agente: any,
+    method: 'email' | 'whatsapp' | 'both',
+  ) => {
     if (!validateForm(processoId, agente?.id)) return false
     setLoading(true)
     try {
@@ -69,18 +73,21 @@ export function useEncaminharSindicancia(onSuccess?: (id: string) => void) {
         if (doc.file) formData.append('documentos', doc.file)
       })
 
-      const wppRes = await sendSindicanciaWhatsapp({
-        whatsapp_destinatario: wppDest,
-        orientacoes,
-        processo_id: processoId,
-      })
+      let wppRes: any = { success: false }
+      if (method === 'whatsapp' || method === 'both') {
+        wppRes = await sendSindicanciaWhatsapp({
+          whatsapp_destinatario: wppDest,
+          orientacoes,
+          processo_id: processoId,
+        })
+      }
 
       formData.append('email_enviado', 'false')
       formData.append('whatsapp_enviado', wppRes?.success ? 'true' : 'false')
 
       const record = await createEncaminhamento(formData)
 
-      if (record?.id) {
+      if (record?.id && (method === 'email' || method === 'both')) {
         const emailRes = await sendSindicanciaEmail({
           id: record.id,
           processo_id: processoId,
@@ -100,7 +107,14 @@ export function useEncaminharSindicancia(onSuccess?: (id: string) => void) {
         }
       }
 
-      toast.success('Sindicância encaminhada com sucesso!')
+      if (method === 'whatsapp') {
+        toast.success(
+          wppRes?.success ? 'WhatsApp enviado com sucesso!' : 'Falha ao enviar WhatsApp',
+        )
+      } else if (method === 'both') {
+        toast.success('Sindicância encaminhada com sucesso!')
+      }
+
       if (onSuccess && record?.id) onSuccess(record.id)
       return true
     } catch (err: any) {

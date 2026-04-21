@@ -195,10 +195,10 @@ export default function ProfileAgente() {
           <Button
             variant="secondary"
             className="rounded-xl h-11 px-6 gap-2 font-semibold shadow-sm w-full sm:w-auto"
-            onClick={() => navigate(`/agentes/${p.id}/sindicancia`)}
+            onClick={() => navigate(`/sindicancia/encaminhar?agente_id=${p.id}`)}
           >
             <Briefcase className="w-4 h-4" />
-            Encaminhar sindicância
+            Encaminhar Sindicância
           </Button>
         </div>
       </div>
@@ -469,7 +469,7 @@ export default function ProfileAgente() {
               className="font-bold rounded-xl text-primary h-10 px-5 border-border"
               asChild
             >
-              <Link to={`/agentes/${p.id}/sindicancia`}>Nova Sindicância</Link>
+              <Link to={`/sindicancia/encaminhar?agente_id=${p.id}`}>Nova Sindicância</Link>
             </Button>
           </div>
           <div className="flex flex-col divide-y divide-border/50">
