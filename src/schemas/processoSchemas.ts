@@ -65,7 +65,6 @@ export const novoProcessoSchema = z
         const placas = val.split(',').map((p) => p.trim())
         return placas.every((p) => placaRegex.test(p))
       }, 'Formato de placa invalido. Use ABC-1234 ou ABC1D34'),
-    solicitante_id: z.string().min(1, 'Preencha todos os campos obrigatorios'),
     analista_cliente_id: z.string().optional().or(z.literal('')),
     agente_id: z.string().optional().or(z.literal('')),
     supervisor_id: z.string().min(1, 'Preencha todos os campos obrigatorios'),

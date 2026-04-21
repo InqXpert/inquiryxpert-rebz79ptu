@@ -100,10 +100,15 @@ export default function NovoProcessoPage() {
     setDuplicateFound,
     checkDuplicate,
     submit,
+    createAnalista,
   } = useNovoProcesso()
 
   const [warningSupervisor, setWarningSupervisor] = useState('')
   const [suggestedSupervisorId, setSuggestedSupervisorId] = useState<string | null>(null)
+
+  const [isAnalistaModalOpen, setIsAnalistaModalOpen] = useState(false)
+  const [novoAnalista, setNovoAnalista] = useState({ nome: '', email: '', telefone: '', cargo: '' })
+  const [isCreatingAnalista, setIsCreatingAnalista] = useState(false)
 
   const form = useForm<NovoProcessoFormData>({
     resolver: zodResolver(novoProcessoSchema),
@@ -118,7 +123,6 @@ export default function NovoProcessoPage() {
       nome_condutor: '',
       cpf_condutor: '',
       placas_veiculos: '',
-      solicitante_id: '',
       analista_cliente_id: '',
       agente_id: '',
       supervisor_id: '',
@@ -218,6 +222,32 @@ export default function NovoProcessoPage() {
       description: 'Preencha todos os campos obrigatórios corretamente.',
       variant: 'destructive',
     })
+  }
+
+  const handleCreateAnalista = async () => {
+    if (!novoAnalista.nome.trim()) {
+      toast({ title: 'Nome do analista é obrigatório', variant: 'destructive' })
+      return
+    }
+    if (!selectedCia) {
+      toast({ title: 'Selecione uma seguradora primeiro', variant: 'destructive' })
+      return
+    }
+    setIsCreatingAnalista(true)
+    try {
+      const created = await createAnalista({
+        ...novoAnalista,
+        cliente_id: selectedCia.id,
+      })
+      toast({ title: 'Analista criado com sucesso' })
+      setValue('analista_cliente_id', created.id, { shouldValidate: true })
+      setIsAnalistaModalOpen(false)
+      setNovoAnalista({ nome: '', email: '', telefone: '', cargo: '' })
+    } catch (err) {
+      toast({ title: 'Erro ao criar analista', variant: 'destructive' })
+    } finally {
+      setIsCreatingAnalista(false)
+    }
   }
 
   const handleFinalSubmit = async (data: NovoProcessoFormData) => {
@@ -410,12 +440,12 @@ export default function NovoProcessoPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Placas dos Veículos <span className="text-destructive">*</span>
+                        Placa do Veículo Segurado <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="ABC-1234, ABC1D34"
+                          placeholder="ABC-1234"
                           onBlur={() => {
                             field.onBlur()
                             onBlurUppercase('placas_veiculos')
@@ -654,59 +684,44 @@ export default function NovoProcessoPage() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Analista da Seguradora</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      disabled={!selectedCia || analistasFiltrados.length === 0}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            placeholder={
-                              !selectedCia
-                                ? 'Selecione a seguradora primeiro'
-                                : analistasFiltrados.length === 0
-                                  ? 'Nenhum analista cadastrado'
-                                  : 'Selecione...'
-                            }
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {analistasFiltrados.map((a) => (
-                          <SelectItem key={a.id} value={a.id}>
-                            {a.nome}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="text-red-500" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="solicitante_id"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Solicitante Interno <span className="text-destructive">*</span>
-                    </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className={errors.solicitante_id ? 'border-red-500' : ''}>
-                          <SelectValue placeholder="Selecione..." />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {users.map((u) => (
-                          <SelectItem key={u.id} value={u.id}>
-                            {u.name || u.email}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="flex gap-2">
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={!selectedCia}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="flex-1">
+                            <SelectValue
+                              placeholder={
+                                !selectedCia
+                                  ? 'Selecione a seguradora primeiro'
+                                  : analistasFiltrados.length === 0
+                                    ? 'Nenhum analista cadastrado'
+                                    : 'Selecione...'
+                              }
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {analistasFiltrados.map((a) => (
+                            <SelectItem key={a.id} value={a.id}>
+                              {a.nome}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        disabled={!selectedCia}
+                        onClick={() => setIsAnalistaModalOpen(true)}
+                        title="Cadastrar novo analista"
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
                     <FormMessage className="text-red-500" />
                   </FormItem>
                 )}
@@ -862,6 +877,63 @@ export default function NovoProcessoPage() {
                 <Loader2 className="w-4 h-4 mr-2 animate-spin text-brand-navy" />
               ) : null}
               Criar Novo Mesmo Assim
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAnalistaModalOpen} onOpenChange={setIsAnalistaModalOpen}>
+        <DialogContent className="sm:max-w-md bg-white dark:bg-brand-navy border-brand-teal/20">
+          <DialogHeader>
+            <DialogTitle>Cadastrar Novo Analista</DialogTitle>
+            <DialogDescription>
+              Adicione um novo analista para a seguradora {selectedCia?.razao_social}.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <FormLabel>
+                Nome <span className="text-destructive">*</span>
+              </FormLabel>
+              <Input
+                value={novoAnalista.nome}
+                onChange={(e) => setNovoAnalista({ ...novoAnalista, nome: e.target.value })}
+                placeholder="Nome do analista"
+              />
+            </div>
+            <div className="space-y-2">
+              <FormLabel>E-mail</FormLabel>
+              <Input
+                type="email"
+                value={novoAnalista.email}
+                onChange={(e) => setNovoAnalista({ ...novoAnalista, email: e.target.value })}
+                placeholder="email@exemplo.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <FormLabel>Telefone</FormLabel>
+              <Input
+                value={novoAnalista.telefone}
+                onChange={(e) => setNovoAnalista({ ...novoAnalista, telefone: e.target.value })}
+                placeholder="(00) 00000-0000"
+              />
+            </div>
+            <div className="space-y-2">
+              <FormLabel>Cargo</FormLabel>
+              <Input
+                value={novoAnalista.cargo}
+                onChange={(e) => setNovoAnalista({ ...novoAnalista, cargo: e.target.value })}
+                placeholder="Ex: Analista Sênior"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setIsAnalistaModalOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleCreateAnalista} disabled={isCreatingAnalista}>
+              {isCreatingAnalista && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              Salvar
             </Button>
           </div>
         </DialogContent>

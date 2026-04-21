@@ -106,17 +106,7 @@ export function ProcessoFormFields({
       <FormInput form={form} name="cpf_segurado" label="CPF do Segurado" />
       <FormInput form={form} name="nome_condutor" label="Nome do Condutor" uppercase />
       <FormInput form={form} name="cpf_condutor" label="CPF do Condutor" />
-      <FormInput
-        form={form}
-        name="placas_veiculos"
-        label="Placas dos Veículos (separadas por vírgula)"
-      />
-      <FormCombobox
-        form={form}
-        name="solicitante_id"
-        label="Solicitante Interno"
-        options={userOptions}
-      />
+      <FormInput form={form} name="placas_veiculos" label="Placa do Veículo Segurado" />
       <FormCombobox form={form} name="agente_id" label="Agente" options={agenteOptions} />
       <FormSelect form={form} name="status" label="Status" options={STATUSES} />
       <FormCombobox form={form} name="supervisor_id" label="Supervisor" options={superOptions} />

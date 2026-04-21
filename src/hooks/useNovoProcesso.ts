@@ -158,7 +158,6 @@ export const useNovoProcesso = () => {
         nome_condutor: sanitized.nome_condutor || null,
         cpf_condutor: sanitized.cpf_condutor || null,
         placas_veiculos: sanitized.placas_veiculos || '',
-        solicitante_id: sanitized.solicitante_id,
         analista_cliente_id: sanitized.analista_cliente_id || null,
         agente_id: sanitized.agente_id || null,
         supervisor_id: sanitized.supervisor_id,
@@ -178,6 +177,20 @@ export const useNovoProcesso = () => {
     }
   }
 
+  const createAnalista = async (data: Partial<ClienteAnalista>) => {
+    try {
+      const created = await pb.collection('clientes_analistas').create<ClienteAnalista>({
+        ...data,
+        ativo: true,
+      })
+      setAnalistas((prev) => [...prev, created].sort((a, b) => a.nome.localeCompare(b.nome)))
+      return created
+    } catch (error) {
+      console.error('Failed to create analista', error)
+      throw error
+    }
+  }
+
   return {
     agentes,
     users,
@@ -190,5 +203,6 @@ export const useNovoProcesso = () => {
     setDuplicateFound,
     checkDuplicate,
     submit,
+    createAnalista,
   }
 }
