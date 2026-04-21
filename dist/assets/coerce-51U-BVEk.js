@@ -1,1 +1,0 @@
-import{l as e,t}from"./schemas-CRTm3ZPt.js";function n(n){return e(t,n)}export{n as t};
