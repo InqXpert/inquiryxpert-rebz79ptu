@@ -38,15 +38,23 @@ export default function HubPage() {
               </Suspense>
             </ZoneErrorBoundary>
           </div>
-          <Button
-            asChild
-            className="bg-brand-cyan hover:bg-brand-cyan/90 text-white font-bold w-full sm:w-auto shrink-0 shadow-md"
-          >
-            <Link to="/sindicancia/encaminhar">
-              <ShieldAlert className="w-4 h-4 mr-2" />
-              NOVA SINDICÂNCIA
+          <div className="flex flex-col gap-2 w-full sm:w-auto shrink-0">
+            <Link
+              to="/processos/novo"
+              className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-md font-semibold hover:opacity-90 text-center transition-opacity"
+            >
+              Novo Processo
             </Link>
-          </Button>
+            <Button
+              asChild
+              className="bg-brand-cyan hover:bg-brand-cyan/90 text-white font-bold w-full shadow-md"
+            >
+              <Link to="/sindicancia/encaminhar">
+                <ShieldAlert className="w-4 h-4 mr-2" />
+                NOVA SINDICÂNCIA
+              </Link>
+            </Button>
+          </div>
         </div>
 
         <ZoneErrorBoundary zoneName="Alertas Críticos">

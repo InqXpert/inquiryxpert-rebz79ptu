@@ -1,5 +1,4 @@
 import { memo } from 'react'
-import { Link } from 'react-router-dom'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -26,10 +25,6 @@ export const UserGreeting = memo(function UserGreeting() {
         </div>
         <div className="flex flex-col items-center lg:items-end gap-3 w-full lg:w-auto">
           <Skeleton className="w-12 h-12 md:w-16 md:h-16 rounded-full" />
-          <div className="flex flex-row gap-2 w-full lg:w-auto">
-            <Skeleton className="h-10 w-full lg:w-32 rounded-md" />
-            <Skeleton className="h-10 w-full lg:w-36 rounded-md" />
-          </div>
         </div>
       </div>
     )
@@ -60,15 +55,6 @@ export const UserGreeting = memo(function UserGreeting() {
             {user?.name?.[0] || user?.nome?.[0] || 'U'}
           </AvatarFallback>
         </Avatar>
-
-        <div className="flex flex-row gap-2 w-full lg:w-auto">
-          <Link
-            to="/processos/novo"
-            className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-md font-semibold hover:opacity-90 text-center transition-opacity"
-          >
-            Novo Processo
-          </Link>
-        </div>
       </div>
     </div>
   )
