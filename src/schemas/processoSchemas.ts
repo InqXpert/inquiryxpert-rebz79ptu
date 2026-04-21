@@ -22,6 +22,7 @@ export const terceiroSchema = z.object({
 
 export const novoProcessoSchema = z
   .object({
+    cliente_id: z.string().optional(),
     seguradora: z.string().min(1, 'Preencha todos os campos obrigatorios'),
     controle_cia: z
       .string()

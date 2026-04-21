@@ -37,20 +37,6 @@ import { usePlacaValidation, useInsuredValidation } from '@/hooks/usePlacaValida
 import { PlateValidationUI, InsuredValidationUI } from '@/components/processos/ValidationIndicators'
 import { Separator } from '@/components/ui/separator'
 
-const SEGURADORAS = [
-  'ZURICH',
-  'MAPFRE',
-  'SUHAI',
-  'BRADESCO',
-  'NEO',
-  'SPLIT RISK',
-  'COOPERLINK',
-  'KVOR',
-  'MAIS BRASIL',
-  'AUTOINSP',
-  'SEVEN',
-  'CARDIF',
-]
 const NATUREZAS = [
   'COLISAO COM TERCEIRO',
   'COLISAO SEM TERCEIRO',
@@ -113,6 +99,7 @@ export default function NovoProcessoPage() {
   const form = useForm<NovoProcessoFormData>({
     resolver: zodResolver(novoProcessoSchema),
     defaultValues: {
+      cliente_id: '',
       seguradora: '',
       controle_cia: '',
       natureza_sinistro: '',
@@ -307,7 +294,9 @@ export default function NovoProcessoPage() {
                     <Select
                       onValueChange={(val) => {
                         field.onChange(val)
-                        setValue('analista_cliente_id', '')
+                        const c = clientes.find((x) => x.razao_social === val)
+                        if (c) setValue('cliente_id', c.id)
+                        setValue('analista_cliente_id', '', { shouldValidate: true })
                       }}
                       value={field.value}
                     >
@@ -317,9 +306,9 @@ export default function NovoProcessoPage() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {SEGURADORAS.map((s) => (
-                          <SelectItem key={s} value={s}>
-                            {s}
+                        {clientes.map((c) => (
+                          <SelectItem key={c.id} value={c.razao_social}>
+                            {c.razao_social}
                           </SelectItem>
                         ))}
                       </SelectContent>
