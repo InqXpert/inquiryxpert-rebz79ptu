@@ -43,7 +43,7 @@ export default function HubPage() {
               to="/processos/novo"
               className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-md font-semibold hover:opacity-90 text-center transition-opacity"
             >
-              Novo Processo
+              NOVO PROCESSO
             </Link>
             <Button
               asChild
