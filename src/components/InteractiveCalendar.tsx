@@ -50,10 +50,10 @@ export const InteractiveCalendar = memo(function InteractiveCalendar() {
         <CalendarIcon className="w-5 h-5" /> Calendário
       </div>
 
-      <div className="flex justify-center min-h-[300px] shrink-0">
+      <div className="flex justify-center min-h-[300px] shrink-0 w-full px-2">
         {loading && processes.length === 0 ? (
           <div className="flex items-center justify-center w-full">
-            <Skeleton className="w-[280px] h-[280px] rounded-md" />
+            <Skeleton className="w-full max-w-[280px] h-[280px] rounded-md" />
           </div>
         ) : (
           <Calendar
@@ -63,7 +63,7 @@ export const InteractiveCalendar = memo(function InteractiveCalendar() {
             locale={ptBR}
             formatters={{
               formatWeekdayName: (date) => {
-                const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
+                const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB']
                 return days[date.getDay()]
               },
               formatCaption: (month) => {
@@ -71,23 +71,26 @@ export const InteractiveCalendar = memo(function InteractiveCalendar() {
                 return m.charAt(0).toUpperCase() + m.slice(1)
               },
             }}
-            className="pointer-events-auto"
+            className="pointer-events-auto flex flex-col w-full items-center"
             classNames={{
-              months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
-              month: 'space-y-4',
-              caption: 'flex justify-center pt-1 relative items-center',
-              caption_label: 'text-lg font-semibold capitalize',
-              nav: 'space-x-1 flex items-center',
+              root: 'flex flex-col w-full',
+              months: 'flex flex-col w-full',
+              month: 'space-y-4 w-full flex flex-col',
+              caption: 'contents',
+              caption_label:
+                'text-lg font-semibold capitalize pt-1 w-full text-center order-1 mb-2',
+              nav: 'flex items-center justify-center gap-6 order-3 mt-4 w-full !space-x-0',
               nav_button:
-                'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 transition-all duration-200 ease-in-out',
-              nav_button_previous: 'absolute left-1',
-              nav_button_next: 'absolute right-1',
-              table: 'w-full border-collapse space-y-1',
-              head_row: 'flex w-full gap-1 mb-2',
-              head_cell: 'text-muted-foreground rounded-md w-8 font-semibold text-xs text-center',
-              row: 'flex w-full mt-1 gap-1',
-              cell: 'text-center text-sm relative p-0 h-8 w-8 focus-within:relative focus-within:z-20',
-              day: 'h-8 w-8 rounded-md p-0 font-normal hover:bg-secondary transition-all duration-200 ease-in-out aria-selected:opacity-100',
+                'h-9 w-14 bg-background border border-input rounded-md flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-all duration-200 ease-in-out',
+              nav_button_previous: 'static',
+              nav_button_next: 'static',
+              table: 'w-full border-collapse order-2',
+              head_row: 'grid grid-cols-7 w-full mb-2',
+              head_cell:
+                'text-muted-foreground font-semibold text-xs text-center flex items-center justify-center',
+              row: 'grid grid-cols-7 w-full mt-1',
+              cell: 'text-center text-sm relative p-0 flex items-center justify-center focus-within:relative focus-within:z-20',
+              day: 'h-8 w-8 sm:h-9 sm:w-9 rounded-md p-0 font-normal hover:bg-secondary transition-all duration-200 ease-in-out aria-selected:opacity-100 flex items-center justify-center mx-auto',
               day_selected:
                 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
               day_today: 'bg-accent text-accent-foreground',
@@ -113,9 +116,9 @@ export const InteractiveCalendar = memo(function InteractiveCalendar() {
         )}
       </div>
 
-      <div className="pt-4 border-t border-border overflow-y-auto mt-2 flex-1">
+      <div className="pt-4 border-t border-border overflow-y-auto mt-2 flex-1 w-full px-2">
         <h4 className="text-xs font-semibold text-muted-foreground mb-3 uppercase tracking-wider">
-          {localDate ? `Processos para ${format(localDate, 'dd/MM')}` : 'Selecione uma data'}
+          {localDate ? `Processos para ${format(localDate, 'dd/MM')}` : 'SELECIONE UMA DATA'}
         </h4>
         {dateProcesses.length === 0 ? (
           <p className="text-sm text-muted-foreground/80 py-2 text-center">
