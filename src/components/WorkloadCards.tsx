@@ -23,13 +23,6 @@ export const WorkloadCards = memo(function WorkloadCards() {
         )}
       >
         <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 hover:shadow-md hover:scale-105 border-border">
-          <div
-            className="w-8 h-8 text-2xl flex items-center justify-center"
-            role="img"
-            aria-label="blue circle icon"
-          >
-            🔵
-          </div>
           <div className="text-sm font-semibold text-muted-foreground uppercase tracking-widest text-center">
             EM ANALISE
           </div>
@@ -41,13 +34,6 @@ export const WorkloadCards = memo(function WorkloadCards() {
         </Card>
 
         <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 hover:shadow-md hover:scale-105 border-border">
-          <div
-            className="w-8 h-8 text-2xl flex items-center justify-center"
-            role="img"
-            aria-label="yellow circle icon"
-          >
-            🟡
-          </div>
           <div className="text-sm font-semibold text-muted-foreground uppercase tracking-widest text-center">
             EM EXECUCAO
           </div>
@@ -59,13 +45,6 @@ export const WorkloadCards = memo(function WorkloadCards() {
         </Card>
 
         <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 hover:shadow-md hover:scale-105 border-border">
-          <div
-            className="w-8 h-8 text-2xl flex items-center justify-center"
-            role="img"
-            aria-label="orange circle icon"
-          >
-            🟠
-          </div>
           <div className="text-sm font-semibold text-muted-foreground uppercase tracking-widest text-center">
             EM ELABORACAO
           </div>
@@ -77,13 +56,6 @@ export const WorkloadCards = memo(function WorkloadCards() {
         </Card>
 
         <Card className="bg-card rounded-lg p-4 shadow-sm flex flex-col items-center justify-center gap-2 min-h-24 transition-all duration-200 hover:shadow-md hover:scale-105 border-border">
-          <div
-            className="w-8 h-8 text-2xl flex items-center justify-center"
-            role="img"
-            aria-label="green circle icon"
-          >
-            🟢
-          </div>
           <div className="text-sm font-semibold text-muted-foreground uppercase tracking-widest text-center">
             CONCLUIDOS
           </div>
