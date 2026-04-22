@@ -19,8 +19,10 @@ export const UserGreeting = memo(function UserGreeting() {
   const [localAvatarUrl, setLocalAvatarUrl] = useState<string | null>(null)
 
   useEffect(() => {
-    setLocalAvatarUrl(avatarUrl || null)
-  }, [avatarUrl])
+    if (!isUploading) {
+      setLocalAvatarUrl(avatarUrl || null)
+    }
+  }, [avatarUrl, isUploading])
 
   if (error) {
     throw error

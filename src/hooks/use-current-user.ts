@@ -17,12 +17,20 @@ export function useCurrentUser() {
       return
     }
 
-    // Set initial user data from auth cache
-    setUser(authUser)
+    // Set initial user data from auth cache and clear stale computed url if image changed
+    setUser((prev: any) => {
+      if (!prev) return authUser
+      const hasImageChanged =
+        prev.foto_perfil !== authUser.foto_perfil || prev.avatar !== authUser.avatar
+      return {
+        ...prev,
+        ...authUser,
+        computedAvatarUrl: hasImageChanged ? undefined : prev.computedAvatarUrl,
+      }
+    })
 
     const fetchUser = async () => {
       try {
-        setLoading(true)
         // Fetch specific fields per acceptance criteria
         const record = await pb.collection('users').getOne(authUser.id, {
           fields: 'id,name,email,foto_perfil,avatar,role',
