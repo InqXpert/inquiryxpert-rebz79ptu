@@ -53,7 +53,7 @@ export const UserGreeting = memo(function UserGreeting() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 bg-card rounded-lg p-6 shadow-sm mb-6 border border-gray-200 dark:border-gray-800">
-      <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground text-center uppercase tracking-tight">
+      <h1 className="font-bold text-foreground text-center uppercase tracking-tight text-[1.24rem]">
         {greetingString}
       </h1>
 
@@ -68,7 +68,7 @@ export const UserGreeting = memo(function UserGreeting() {
         {formattedDate}
       </p>
 
-      <div className="text-4xl md:text-5xl font-bold text-foreground tracking-tighter">
+      <div className="font-bold text-foreground tracking-tighter text-[2.33rem]">
         {hours}:{minutes}
       </div>
     </div>
