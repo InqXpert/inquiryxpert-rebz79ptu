@@ -18,7 +18,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { PermissoesChecklist } from './PermissoesChecklist'
-import { Loader2, Eye, EyeOff, ShieldCheck, RefreshCw } from 'lucide-react'
+import { Loader2, Eye, EyeOff, ShieldCheck, RefreshCw, Upload } from 'lucide-react'
 import { getAvatarUrl } from '@/utils/fileUtils'
 import { totpService } from '@/services/totpService'
 import { TwoFactorModal } from './TwoFactorModal'
@@ -234,6 +234,70 @@ export function UsuarioForm({
               </div>
 
               <div className="space-y-4">
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-brand-teal/50 bg-brand-light flex items-center justify-center">
+                    {photoPreview ? (
+                      <img
+                        src={photoPreview}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-brand-gray text-xs text-center leading-tight">
+                        Sem
+                        <br />
+                        Foto
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-brand-navy dark:text-brand-light text-sm">
+                      Foto de Perfil
+                    </Label>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-xs h-8"
+                        onClick={() => document.getElementById('foto-upload')?.click()}
+                      >
+                        <Upload className="w-3 h-3 mr-2" />
+                        Escolher foto
+                      </Button>
+                      {photoPreview && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-xs h-8 text-brand-coral hover:text-brand-coral/80 hover:bg-brand-coral/10"
+                          onClick={() => {
+                            setPhotoFile(null)
+                            setPhotoPreview(null)
+                            const input = document.getElementById('foto-upload') as HTMLInputElement
+                            if (input) input.value = ''
+                          }}
+                        >
+                          Remover
+                        </Button>
+                      )}
+                    </div>
+                    <input
+                      id="foto-upload"
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          setPhotoFile(file)
+                          setPhotoPreview(URL.createObjectURL(file))
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label className="text-brand-navy dark:text-brand-light">
                     Nome Completo <span className="text-brand-coral">*</span>

@@ -25,9 +25,31 @@ export function useCurrentUser() {
         setLoading(true)
         // Fetch specific fields per acceptance criteria
         const record = await pb.collection('users').getOne(authUser.id, {
-          fields: 'id,name,email,foto_perfil',
+          fields: 'id,name,email,foto_perfil,avatar,role',
         })
-        setUser(record)
+
+        let finalAvatarUrl: string | undefined = undefined
+
+        if (record.foto_perfil) {
+          finalAvatarUrl = pb.files.getUrl(record, record.foto_perfil)
+        } else if (record.avatar) {
+          finalAvatarUrl = pb.files.getUrl(record, record.avatar)
+        } else if (record.role === 'agente') {
+          try {
+            const agenteRecord = await pb
+              .collection('agentes')
+              .getFirstListItem(`user_id="${record.id}"`, {
+                fields: 'id,foto_perfil',
+              })
+            if (agenteRecord?.foto_perfil) {
+              finalAvatarUrl = pb.files.getUrl(agenteRecord, agenteRecord.foto_perfil)
+            }
+          } catch (e) {
+            // Not found or error
+          }
+        }
+
+        setUser({ ...record, computedAvatarUrl: finalAvatarUrl })
         setError(null)
       } catch (err: any) {
         setError(err)
@@ -39,8 +61,14 @@ export function useCurrentUser() {
     fetchUser()
   }, [authUser, authLoading])
 
-  const avatarUrl =
-    user && user.foto_perfil ? pb.files.getUrl(user as any, user.foto_perfil) : undefined
+  let avatarUrl = user?.computedAvatarUrl
+  if (!avatarUrl && user) {
+    if (user.foto_perfil) {
+      avatarUrl = pb.files.getUrl(user, user.foto_perfil)
+    } else if (user.avatar) {
+      avatarUrl = pb.files.getUrl(user, user.avatar)
+    }
+  }
 
   return { user, avatarUrl, loading, error }
 }

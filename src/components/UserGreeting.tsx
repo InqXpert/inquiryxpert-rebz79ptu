@@ -18,11 +18,11 @@ export const UserGreeting = memo(function UserGreeting() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center gap-4 bg-card rounded-lg p-6 shadow-sm mb-6 border border-gray-200 dark:border-gray-800">
-        <Skeleton className="h-8 w-64" />
-        <Skeleton className="w-24 h-24 md:w-32 md:h-32 rounded-full" />
-        <Skeleton className="h-4 w-48" />
-        <Skeleton className="h-10 w-24" />
+      <div className="flex flex-col items-center justify-center gap-3 bg-card rounded-lg p-4 shadow-sm mb-6 border border-gray-200 dark:border-gray-800">
+        <Skeleton className="h-6 w-48" />
+        <Skeleton className="w-16 h-16 md:w-20 md:h-20 rounded-full" />
+        <Skeleton className="h-4 w-40" />
+        <Skeleton className="h-8 w-20" />
       </div>
     )
   }
@@ -37,38 +37,36 @@ export const UserGreeting = memo(function UserGreeting() {
     .join(' ')
 
   const currentHour = time.getHours()
-  let saudacao = 'BOA NOITE'
+  let saudacao = 'Boa Noite'
   if (currentHour >= 5 && currentHour < 12) {
-    saudacao = 'BOM DIA'
+    saudacao = 'Bom Dia'
   } else if (currentHour >= 12 && currentHour < 18) {
-    saudacao = 'BOA TARDE'
+    saudacao = 'Boa Tarde'
   }
 
   const fullName = user?.name || user?.nome || 'Usuário'
   const firstName = fullName.trim().split(' ')[0].toUpperCase()
 
-  const greetingString = `${saudacao} ${firstName}`
-
-  const fotoPerfilUrl = user?.foto_perfil ? pb.files.getUrl(user, user.foto_perfil) : avatarUrl
+  const fotoPerfilUrl = avatarUrl
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 bg-card rounded-lg p-6 shadow-sm mb-6 border border-gray-200 dark:border-gray-800">
-      <h1 className="font-bold text-foreground text-center uppercase tracking-tight text-[1.24rem]">
-        {greetingString}
+    <div className="flex flex-col items-center justify-center gap-3 bg-card rounded-lg p-4 shadow-sm mb-6 border border-gray-200 dark:border-gray-800">
+      <h1 className="font-semibold text-foreground text-center tracking-tight text-lg md:text-xl">
+        {saudacao}, <span className="font-bold uppercase">{firstName}</span>
       </h1>
 
-      <Avatar className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-primary shadow-sm">
+      <Avatar className="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-primary shadow-sm">
         <AvatarImage src={fotoPerfilUrl} className="object-cover" />
-        <AvatarFallback className="flex items-center justify-center bg-secondary text-secondary-foreground text-3xl md:text-4xl font-bold w-full h-full uppercase">
+        <AvatarFallback className="flex items-center justify-center bg-secondary text-secondary-foreground text-xl md:text-2xl font-bold w-full h-full uppercase">
           {firstName.charAt(0)}
         </AvatarFallback>
       </Avatar>
 
-      <p className="text-muted-foreground text-sm md:text-base text-center font-medium">
+      <p className="text-muted-foreground text-xs md:text-sm text-center font-medium m-0">
         {formattedDate}
       </p>
 
-      <div className="font-bold text-foreground tracking-tighter text-[2.33rem]">
+      <div className="font-bold text-foreground tracking-tight text-2xl md:text-3xl">
         {hours}:{minutes}
       </div>
     </div>

@@ -22,7 +22,7 @@ import * as z from 'zod'
 import pb from '@/lib/pocketbase/client'
 import { toast } from 'sonner'
 import type { User } from '@/types'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Upload } from 'lucide-react'
 
 const schema = z.object({
   name: z.string().min(3, 'O nome deve ter no mínimo 3 caracteres'),
@@ -42,6 +42,8 @@ export default function UsuarioDialog({
   user: User | null
 }) {
   const [showPassword, setShowPassword] = useState(false)
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
   const {
     register,
     handleSubmit,
@@ -56,6 +58,8 @@ export default function UsuarioDialog({
   useEffect(() => {
     if (open) {
       setShowPassword(false)
+      setPhotoFile(null)
+      setPhotoPreview(user?.foto_perfil ? pb.files.getUrl(user, user.foto_perfil) : null)
       if (user) {
         reset({
           name: user.name,
@@ -76,12 +80,15 @@ export default function UsuarioDialog({
         const payload = { ...data }
         if (!payload.password) delete payload.password
         else payload.passwordConfirm = payload.password
+        if (photoFile) payload.foto_perfil = photoFile
         await pb.collection('users').update(user.id, payload)
         toast.success('Perfil do usuário atualizado com sucesso!')
       } else {
         if (!data.password)
           return toast.error('A senha é obrigatória para registrar um novo usuário.')
-        await pb.collection('users').create({ ...data, passwordConfirm: data.password })
+        const payload = { ...data, passwordConfirm: data.password }
+        if (photoFile) payload.foto_perfil = photoFile
+        await pb.collection('users').create(payload)
         toast.success('Novo usuário criado com sucesso!')
       }
       onOpenChange(false)
@@ -97,6 +104,67 @@ export default function UsuarioDialog({
           <DialogTitle>{user ? 'Edição de Perfil' : 'Registro de Usuário'}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-2">
+          <div className="flex items-center gap-4 mb-2">
+            <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-brand-teal/50 bg-brand-light flex items-center justify-center">
+              {photoPreview ? (
+                <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
+                <div className="text-brand-gray text-xs text-center leading-tight">
+                  Sem
+                  <br />
+                  Foto
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label className="text-brand-navy dark:text-brand-light text-sm">
+                Foto de Perfil
+              </Label>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="text-xs h-8"
+                  onClick={() => document.getElementById('dialog-foto-upload')?.click()}
+                >
+                  <Upload className="w-3 h-3 mr-2" />
+                  Escolher
+                </Button>
+                {photoPreview && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs h-8 text-brand-coral hover:text-brand-coral/80 hover:bg-brand-coral/10"
+                    onClick={() => {
+                      setPhotoFile(null)
+                      setPhotoPreview(null)
+                      const input = document.getElementById(
+                        'dialog-foto-upload',
+                      ) as HTMLInputElement
+                      if (input) input.value = ''
+                    }}
+                  >
+                    Remover
+                  </Button>
+                )}
+              </div>
+              <input
+                id="dialog-foto-upload"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) {
+                    setPhotoFile(file)
+                    setPhotoPreview(URL.createObjectURL(file))
+                  }
+                }}
+              />
+            </div>
+          </div>
           <div className="space-y-2">
             <Label className="text-brand-navy dark:text-brand-light">
               Nome Completo <span className="text-brand-coral">*</span>
