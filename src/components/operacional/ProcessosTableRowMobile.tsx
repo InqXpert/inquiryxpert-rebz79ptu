@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Processo } from '@/types/processo'
 import { calculateDayColor, calculateTags, getTagColor } from '@/services/processosService'
 import { Button } from '@/components/ui/button'
