@@ -2,11 +2,37 @@ import pb from '@/lib/pocketbase/client'
 import { Alerta } from '@/types/alerta'
 import { differenceInDays } from 'date-fns'
 
-export const fetchAlertas = async () => {
-  return await pb.collection('processos_operacionais').getFullList({
-    filter: "status != 'FINALIZADO' && data_conclusao = ''",
-    expand: 'supervisor_id,seguradora_id',
-  })
+let fetchPromise: Promise<any[]> | null = null
+let lastFetch = 0
+const TTL = 10000 // 10 seconds cache
+
+export const fetchAlertas = async (force: boolean = false) => {
+  const now = Date.now()
+
+  // Use cached/pending promise if not forced and within TTL
+  if (!force && fetchPromise && now - lastFetch < TTL) {
+    return fetchPromise
+  }
+
+  // If forced but a request was just started within 1 second, reuse it to prevent realtime broadcast storms
+  if (force && fetchPromise && now - lastFetch < 1000) {
+    return fetchPromise
+  }
+
+  lastFetch = now
+  fetchPromise = pb
+    .collection('processos_operacionais')
+    .getFullList({
+      filter: "status != 'FINALIZADO' && data_conclusao = ''",
+      expand: 'supervisor_id,seguradora_id',
+    })
+    .catch((err) => {
+      fetchPromise = null
+      lastFetch = 0
+      throw err
+    })
+
+  return fetchPromise
 }
 
 export const calculateAlertLevel = (

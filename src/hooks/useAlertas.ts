@@ -22,11 +22,11 @@ export function useAlertas() {
   const prevAlertasRef = useRef<Alerta[]>([])
 
   const loadData = useCallback(
-    async (isInitial = false) => {
+    async (isInitial = false, force = false) => {
       if (!user) return
       try {
         if (isInitial) setLoading(true)
-        const processos = await fetchAlertas()
+        const processos = await fetchAlertas(force)
         const calcAlertas = calculateAlertLevel(processos, user.id, user.role)
 
         if (!isInitial && prevAlertasRef.current.length > 0) {
@@ -58,7 +58,7 @@ export function useAlertas() {
   }, [loadData])
 
   useRealtime('processos_operacionais', () => {
-    loadData(false)
+    loadData(false, true)
   })
 
   const dismissAlert = (id: string) => {
@@ -79,6 +79,6 @@ export function useAlertas() {
     showDismissed,
     dismissAlert,
     toggleShowDismissed,
-    refresh: () => loadData(true),
+    refresh: () => loadData(true, true),
   }
 }
