@@ -16,6 +16,7 @@ import { updateAgente } from '@/services/agentes'
 import { useToast } from '@/hooks/use-toast'
 import { ImportedFieldsContext } from '@/components/agentes/FormHelpers'
 import { Agente } from '@/types'
+import pb from '@/lib/pocketbase/client'
 
 interface EditAgenteModalProps {
   open: boolean
@@ -43,7 +44,23 @@ export function EditAgenteModal({ open, onOpenChange, agente, onSuccess }: EditA
     if (!agente?.id) return
     setSaving(true)
     try {
-      await updateAgente(agente.id, data as any)
+      const photoFile = form.getValues('foto_perfil' as any)
+      const fd = new FormData()
+
+      for (const [key, value] of Object.entries(data)) {
+        if (value !== undefined && value !== null) {
+          fd.append(key, String(value))
+        }
+      }
+
+      if (photoFile instanceof File) {
+        fd.append('foto_perfil', photoFile)
+      } else if (photoFile === null) {
+        fd.append('foto_perfil', '')
+      }
+
+      await pb.collection('agentes').update(agente.id, fd)
+
       toast({ title: 'Sucesso', description: 'Agente atualizado com sucesso!' })
       onSuccess()
       onOpenChange(false)

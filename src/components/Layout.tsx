@@ -4,6 +4,7 @@ import { Bell, Settings, User as UserIcon, LogOut, Moon, Sun, Menu } from 'lucid
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useAuth } from '@/hooks/use-auth'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { useNotifications } from '@/hooks/use-notifications'
 import { useTheme } from '@/components/ThemeProvider'
 import {
@@ -18,6 +19,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from '@/co
 
 export default function Layout() {
   const { user, signOut } = useAuth()
+  const { avatarUrl } = useCurrentUser()
   const { theme, setTheme } = useTheme()
   const { unreadCount } = useNotifications()
   const navigate = useNavigate()
@@ -178,9 +180,7 @@ export default function Layout() {
                   className="relative h-9 w-9 rounded-full ml-1 focus-visible:ring-2 focus-visible:ring-primary p-0"
                 >
                   <Avatar className="h-9 w-9 border border-border">
-                    <AvatarImage
-                      src={`https://img.usecurling.com/ppl/thumbnail?gender=female&seed=${user?.id || 'default'}`}
-                    />
+                    <AvatarImage src={avatarUrl || ''} className="object-cover" />
                     <AvatarFallback className="bg-primary/10 text-primary text-xs font-medium">
                       {user?.name?.substring(0, 2).toUpperCase() || 'AD'}
                     </AvatarFallback>

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Upload, Loader2, User as UserIcon, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
-import { getAvatarUrl } from '@/utils/fileUtils'
 import { cn } from '@/lib/utils'
+import pb from '@/lib/pocketbase/client'
 
 export function AvatarUpload({
   user,
@@ -58,8 +58,16 @@ export function AvatarUpload({
         className,
       )}
     >
-      {user.foto_perfil ? (
-        <img src={getAvatarUrl(user)} alt="avatar" className="w-full h-full object-cover" />
+      {user.foto_perfil || user.avatar ? (
+        <img
+          src={
+            user.foto_perfil
+              ? pb.files.getUrl(user, user.foto_perfil)
+              : pb.files.getUrl(user, user.avatar)
+          }
+          alt="avatar"
+          className="w-full h-full object-cover"
+        />
       ) : (
         <div className="w-full h-full flex items-center justify-center text-brand-teal">
           <UserIcon size={20} />

@@ -19,8 +19,8 @@ import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { PermissoesChecklist } from './PermissoesChecklist'
 import { Loader2, Eye, EyeOff, ShieldCheck, RefreshCw, Upload } from 'lucide-react'
-import { getAvatarUrl } from '@/utils/fileUtils'
 import { totpService } from '@/services/totpService'
+import pb from '@/lib/pocketbase/client'
 import { TwoFactorModal } from './TwoFactorModal'
 import { DisableTwoFactorModal } from './DisableTwoFactorModal'
 import { useDebounce } from '@/hooks/use-debounce'
@@ -61,7 +61,15 @@ export function UsuarioForm({
   const isSelf = currentUser?.id === userToEdit?.id
 
   const [photoFile, setPhotoFile] = useState<File | null>(null)
-  const [photoPreview, setPhotoPreview] = useState<string | null>(getAvatarUrl(userToEdit) || null)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(
+    userToEdit
+      ? userToEdit.foto_perfil
+        ? pb.files.getUrl(userToEdit, userToEdit.foto_perfil)
+        : userToEdit.avatar
+          ? pb.files.getUrl(userToEdit, userToEdit.avatar)
+          : null
+      : null,
+  )
 
   const [tfaEnabled, setTfaEnabled] = useState(userToEdit?.two_fa_enabled || false)
   const [tfaSecret, setTfaSecret] = useState(userToEdit?.two_fa_secret || '')

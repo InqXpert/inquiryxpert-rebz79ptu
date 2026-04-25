@@ -29,6 +29,8 @@ import { useRealtime } from '@/hooks/use-realtime'
 import { cn, formatDateBr } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EditAgenteModal } from '@/components/agentes/EditAgenteModal'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import pb from '@/lib/pocketbase/client'
 
 export default function ProfileAgente() {
   const { id } = useParams()
@@ -206,11 +208,15 @@ export default function ProfileAgente() {
       <Card className="border border-border/50 shadow-sm rounded-2xl overflow-hidden animate-in fade-in duration-300 ease-out bg-card">
         <CardContent className="p-8 md:p-10 grid grid-cols-1 lg:grid-cols-[240px_1fr_1fr_1fr] gap-10 md:items-start">
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
-            <img
-              src={`https://img.usecurling.com/ppl/large?gender=male&seed=${p.id}`}
-              className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md"
-              alt="Profile"
-            />
+            <Avatar className="w-28 h-28 rounded-full border-4 border-white shadow-md">
+              <AvatarImage
+                src={p.foto_perfil ? pb.files.getUrl(p, p.foto_perfil) : ''}
+                className="object-cover"
+              />
+              <AvatarFallback className="text-3xl bg-muted text-foreground">
+                {p.nomeCompleto?.charAt(0).toUpperCase() || 'AG'}
+              </AvatarFallback>
+            </Avatar>
             <h2 className="text-3xl font-bold text-primary mt-5 leading-tight">{p.nomeCompleto}</h2>
             {p.numero_controle && (
               <div className="flex items-center gap-2 mt-3 bg-primary/5 text-primary px-4 py-2 rounded-xl border border-primary/10">

@@ -24,6 +24,8 @@ import { useAgentes } from '@/hooks/use-agentes'
 import { ImportAgenteModal } from '@/components/agentes/ImportAgenteModal'
 import { InvestigationMap } from '@/components/agentes/InvestigationMap'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import pb from '@/lib/pocketbase/client'
 
 export default function AgentesList() {
   const { agentes, loading } = useAgentes()
@@ -236,9 +238,15 @@ export default function AgentesList() {
                     </TableCell>
                     <TableCell className="py-5" onClick={() => navigate(`/agentes/${p.id}`)}>
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-[#00A8B5]/10 text-[#00A8B5] flex items-center justify-center font-bold text-[14px] shrink-0 border border-[#00A8B5]/20">
-                          {p.nomeCompleto.charAt(0).toUpperCase()}
-                        </div>
+                        <Avatar className="w-10 h-10 shrink-0 border border-[#00A8B5]/20">
+                          <AvatarImage
+                            src={p.foto_perfil ? pb.files.getUrl(p, p.foto_perfil) : ''}
+                            className="object-cover"
+                          />
+                          <AvatarFallback className="bg-[#00A8B5]/10 text-[#00A8B5] font-bold text-[14px]">
+                            {p.nomeCompleto?.charAt(0).toUpperCase() || 'A'}
+                          </AvatarFallback>
+                        </Avatar>
                         <div className="flex flex-col">
                           <span className="text-[#00A8B5] font-semibold group-hover:underline text-[15px]">
                             {p.nomeCompleto}

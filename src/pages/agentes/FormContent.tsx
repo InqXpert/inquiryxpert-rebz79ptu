@@ -1,10 +1,13 @@
+import { useState, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { FInput, FSimNao, FTextarea, FSelect, FCombobox } from '@/components/agentes/FormHelpers'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Copy } from 'lucide-react'
+import { Copy, Upload } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 import { useMunicipios } from '@/hooks/use-municipios'
+import { Label } from '@/components/ui/label'
+import pb from '@/lib/pocketbase/client'
 
 const QUALIDADE_OPTIONS = [
   {
@@ -33,11 +36,28 @@ const COMPLIANCE_OPTIONS = [
 ]
 
 export function FormContent({ isNew = false }: { isNew?: boolean }) {
-  const { watch } = useFormContext()
+  const { watch, setValue } = useFormContext()
   const { toast } = useToast()
   const { states, getCitiesByState } = useMunicipios()
 
   const numeroControle = watch('numero_controle')
+  const formValues = watch()
+
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fileOrString = formValues.foto_perfil
+    if (fileOrString instanceof File) {
+      const url = URL.createObjectURL(fileOrString)
+      setPhotoPreview(url)
+      return () => URL.revokeObjectURL(url)
+    } else if (typeof fileOrString === 'string' && fileOrString && formValues.id) {
+      setPhotoPreview(pb.files.getUrl(formValues, fileOrString))
+    } else {
+      setPhotoPreview(null)
+    }
+  }, [formValues.foto_perfil, formValues.id])
+
   const notaTerceiros = watch('notaTerceiros')
   const dadosBancariosTerceiros = watch('dadosBancariosTerceiros')
   const naBlackList = watch('naBlackList')
@@ -82,6 +102,60 @@ export function FormContent({ isNew = false }: { isNew?: boolean }) {
           </CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 sm:p-8">
+          <div className="col-span-full flex flex-col md:flex-row items-start md:items-center gap-6 mb-4">
+            <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-muted flex shrink-0 items-center justify-center bg-muted/30">
+              {photoPreview ? (
+                <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-muted-foreground font-medium text-xs text-center">
+                  Sem Foto
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label className="text-sm font-semibold text-primary">Foto de Perfil</Label>
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => document.getElementById('agente-foto-upload')?.click()}
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Carregar Imagem
+                </Button>
+                {photoPreview && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    onClick={() => {
+                      setValue('foto_perfil', null, { shouldDirty: true })
+                      const el = document.getElementById('agente-foto-upload') as HTMLInputElement
+                      if (el) el.value = ''
+                    }}
+                  >
+                    Remover
+                  </Button>
+                )}
+              </div>
+              <input
+                id="agente-foto-upload"
+                type="file"
+                className="hidden"
+                accept="image/jpeg, image/png, image/webp"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) {
+                    setValue('foto_perfil', file, { shouldDirty: true })
+                  }
+                }}
+              />
+              <p className="text-[12px] text-muted-foreground">JPG, PNG ou WEBP (máx. 5MB)</p>
+            </div>
+          </div>
+
           <FInput name="nomeCompleto" label="Nome completo" />
           <FInput name="dataNascimento" label="Data de nascimento" type="date" />
           <FInput name="cpf" label="CPF" />

@@ -2,10 +2,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/hooks/use-auth'
+import { useCurrentUser } from '@/hooks/use-current-user'
 import { Mail, Shield, Clock, Activity } from 'lucide-react'
 
 export default function Perfil() {
   const { user } = useAuth()
+  const { avatarUrl } = useCurrentUser()
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -23,9 +25,7 @@ export default function Perfil() {
         <CardContent className="px-6 sm:px-10 pb-10">
           <div className="flex flex-col sm:flex-row items-center sm:items-end gap-6 -mt-16 mb-8">
             <Avatar className="w-32 h-32 border-4 border-background shadow-md">
-              <AvatarImage
-                src={`https://img.usecurling.com/ppl/large?gender=female&seed=${user?.id || 1}`}
-              />
+              <AvatarImage src={avatarUrl || ''} className="object-cover" />
               <AvatarFallback className="text-3xl bg-muted text-foreground">
                 {user?.name?.substring(0, 2).toUpperCase() || 'US'}
               </AvatarFallback>
