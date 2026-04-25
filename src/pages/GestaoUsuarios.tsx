@@ -24,6 +24,22 @@ export default function GestaoUsuarios() {
   const [importOpen, setImportOpen] = useState(false)
   const [exportOpen, setExportOpen] = useState(false)
 
+  const roleLevel = { 'c-level': 4, admin: 3, supervisor: 2 }[user?.role as string] || 0
+
+  useRealtime(
+    'registros_auditoria_adm',
+    (e) => {
+      if (e.action === 'create' && e.record.executor_id !== user?.id) {
+        import('sonner').then((m) =>
+          m.toast.info(`Ação administrativa: ${e.record.acao}`, {
+            description: e.record.motivo,
+          }),
+        )
+      }
+    },
+    roleLevel >= 4,
+  )
+
   // Verify that an Analista cannot access the Gestao de Usuarios tab
   if (user?.role === 'analista') return <Navigate to="/dashboard" replace />
 
@@ -42,22 +58,6 @@ export default function GestaoUsuarios() {
     setActiveTab('lista')
     setUserToEdit(null)
   }
-
-  const roleLevel = { 'c-level': 4, admin: 3, supervisor: 2 }[user?.role as string] || 0
-
-  useRealtime(
-    'registros_auditoria_adm',
-    (e) => {
-      if (e.action === 'create' && e.record.executor_id !== user?.id) {
-        import('sonner').then((m) =>
-          m.toast.info(`Ação administrativa: ${e.record.acao}`, {
-            description: e.record.motivo,
-          }),
-        )
-      }
-    },
-    roleLevel >= 4,
-  )
 
   return (
     <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-6 md:py-8 pb-20 space-y-6">
