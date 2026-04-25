@@ -189,6 +189,25 @@ export const usuariosService = {
       await usuariosService.reassignActiveProcesses(id, newUserId)
     }
 
+    try {
+      const sessoes = await pb
+        .collection('usuarios_sessoes')
+        .getFullList({ filter: `user_id='${id}'` })
+      await Promise.all(sessoes.map((s) => pb.collection('usuarios_sessoes').delete(s.id)))
+
+      const notificacoes = await pb
+        .collection('notificacoes_sistema')
+        .getFullList({ filter: `user_id='${id}'` })
+      await Promise.all(notificacoes.map((n) => pb.collection('notificacoes_sistema').delete(n.id)))
+
+      const favoritos = await pb
+        .collection('processos_favoritos')
+        .getFullList({ filter: `user_id='${id}'` })
+      await Promise.all(favoritos.map((f) => pb.collection('processos_favoritos').delete(f.id)))
+    } catch (error) {
+      console.error('Erro ao limpar registros associados', error)
+    }
+
     await pb
       .collection('registros_auditoria_adm')
       .create({
