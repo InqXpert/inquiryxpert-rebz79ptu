@@ -54,6 +54,8 @@ export const usuariosService = {
     if (!sanitizedData.password || String(sanitizedData.password).trim() === '') {
       delete sanitizedData.password
       delete sanitizedData.passwordConfirm
+    }
+    if (!sanitizedData.oldPassword || String(sanitizedData.oldPassword).trim() === '') {
       delete sanitizedData.oldPassword
     }
 

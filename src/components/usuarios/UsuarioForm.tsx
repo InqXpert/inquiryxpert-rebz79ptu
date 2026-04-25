@@ -189,6 +189,8 @@ export function UsuarioForm({
       if (!payload.password || String(payload.password).trim() === '') {
         delete payload.password
         delete payload.passwordConfirm
+      }
+      if (!payload.oldPassword || String(payload.oldPassword).trim() === '') {
         delete payload.oldPassword
       }
       if (photoFile) payload.foto_perfil = photoFile
