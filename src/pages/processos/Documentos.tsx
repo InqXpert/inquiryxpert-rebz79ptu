@@ -3,9 +3,41 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useProcessoDetalhes } from '@/hooks/useProcessoDetalhes'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ArrowLeft, FolderOpen } from 'lucide-react'
+import { ArrowLeft, FolderOpen, AlertCircle } from 'lucide-react'
 import { FileUploadZone } from './components/FileUploadZone'
 import { DocumentList } from './components/DocumentList'
+
+function ProcessStatus({
+  processoId,
+  currentStatus,
+}: {
+  processoId: string
+  currentStatus: string
+}) {
+  return (
+    <div className="bg-card border rounded-lg p-4 shadow-sm">
+      <h3 className="text-sm font-medium text-muted-foreground mb-1">Status do Processo</h3>
+      <div className="font-semibold capitalize text-lg text-foreground">
+        {currentStatus || 'Não informado'}
+      </div>
+    </div>
+  )
+}
+
+function BannerAviso() {
+  return (
+    <div className="bg-amber-50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-200 p-4 rounded-lg border border-amber-200 dark:border-amber-800/50 flex gap-3 items-start">
+      <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+      <div className="text-sm">
+        <p className="font-medium mb-1">Upload de Evidências</p>
+        <p>
+          Certifique-se de que os arquivos contêm informações legíveis e estão nos formatos
+          permitidos para a plataforma.
+        </p>
+      </div>
+    </div>
+  )
+}
 
 export default function ProcessoDocumentosPage() {
   const { id } = useParams<{ id: string }>()
