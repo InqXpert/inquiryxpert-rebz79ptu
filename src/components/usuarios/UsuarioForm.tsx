@@ -57,6 +57,8 @@ export function UsuarioForm({
   const [loading, setLoading] = useState(false)
   const [showPwd, setShowPwd] = useState(false)
   const [showPwdConfirm, setShowPwdConfirm] = useState(false)
+  const [showOldPwd, setShowOldPwd] = useState(false)
+  const isSelf = currentUser?.id === userToEdit?.id
 
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [photoPreview, setPhotoPreview] = useState<string | null>(getAvatarUrl(userToEdit) || null)
@@ -88,6 +90,7 @@ export function UsuarioForm({
               .min(8, 'Senha obrigatória')
               .regex(passwordRegex, 'Mín. 8 chars, 1 maiúscula, 1 número, 1 especial.'),
         passwordConfirm: z.string().optional(),
+        oldPassword: z.string().optional(),
       })
       .refine(
         (data) => {
@@ -96,7 +99,17 @@ export function UsuarioForm({
         },
         { message: 'As senhas não conferem', path: ['passwordConfirm'] },
       )
-  }, [userToEdit])
+      .refine(
+        (data) => {
+          if (isSelf && data.password && !data.oldPassword) return false
+          return true
+        },
+        {
+          message: 'Senha atual é obrigatória ao alterar sua própria senha',
+          path: ['oldPassword'],
+        },
+      )
+  }, [userToEdit, isSelf])
 
   const {
     register,
@@ -113,6 +126,7 @@ export function UsuarioForm({
       email: userToEdit?.email || '',
       password: '',
       passwordConfirm: '',
+      oldPassword: '',
       role: userToEdit?.role || 'analista',
       status_conta: userToEdit?.status_conta || 'ativo',
       motivo_acao: '',
@@ -172,9 +186,10 @@ export function UsuarioForm({
         two_fa_enabled: tfaEnabled,
         two_fa_secret: tfaEnabled ? tfaSecret : '',
       }
-      if (!payload.password) {
+      if (!payload.password || String(payload.password).trim() === '') {
         delete payload.password
         delete payload.passwordConfirm
+        delete payload.oldPassword
       }
       if (photoFile) payload.foto_perfil = photoFile
 
@@ -333,6 +348,37 @@ export function UsuarioForm({
                     </p>
                   )}
                 </div>
+
+                {isSelf && (
+                  <div className="space-y-2 mb-4">
+                    <Label className="text-brand-navy dark:text-brand-light flex items-center justify-between">
+                      <span>Senha Atual</span>
+                      <span className="text-[11px] font-normal text-brand-gray">
+                        (Obrigatória para alterar a senha)
+                      </span>
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        {...register('oldPassword')}
+                        type={showOldPwd ? 'text' : 'password'}
+                        placeholder="Sua senha atual"
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowOldPwd(!showOldPwd)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-cyan hover:text-brand-cyan/80"
+                      >
+                        {showOldPwd ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                    {errors.oldPassword && (
+                      <p className="text-[12px] font-medium text-brand-coral">
+                        {errors.oldPassword.message as string}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">

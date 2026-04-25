@@ -78,8 +78,13 @@ export default function UsuarioDialog({
     try {
       if (user) {
         const payload = { ...data }
-        if (!payload.password) delete payload.password
-        else payload.passwordConfirm = payload.password
+        if (!payload.password || String(payload.password).trim() === '') {
+          delete payload.password
+          delete payload.passwordConfirm
+          delete payload.oldPassword
+        } else {
+          payload.passwordConfirm = payload.password
+        }
         if (photoFile) payload.foto_perfil = photoFile
         await pb.collection('users').update(user.id, payload)
         toast.success('Perfil do usuário atualizado com sucesso!')

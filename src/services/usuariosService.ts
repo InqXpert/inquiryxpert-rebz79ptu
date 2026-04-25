@@ -50,7 +50,14 @@ export const usuariosService = {
   },
 
   updateUsuario: async (id: string, data: any, motivo?: string) => {
-    const payload = buildFormData(data)
+    const sanitizedData = { ...data }
+    if (!sanitizedData.password || String(sanitizedData.password).trim() === '') {
+      delete sanitizedData.password
+      delete sanitizedData.passwordConfirm
+      delete sanitizedData.oldPassword
+    }
+
+    const payload = buildFormData(sanitizedData)
     const user = await pb.collection('users').update(id, payload)
     await trackAcao('editar_usuario', `Atualizou perfil do usuário ${user.email}`, user.id, motivo)
     return user
