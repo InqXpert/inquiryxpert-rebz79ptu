@@ -117,7 +117,7 @@ export function UsuarioForm({
     setValue,
     watch,
     getValues,
-    formState: { errors, isValid },
+    formState: { errors, isValid, dirtyFields },
   } = useForm({
     resolver: zodResolver(schema),
     mode: 'onTouched',
@@ -186,13 +186,21 @@ export function UsuarioForm({
         two_fa_enabled: tfaEnabled,
         two_fa_secret: tfaEnabled ? tfaSecret : '',
       }
-      if (!payload.password || String(payload.password).trim() === '') {
+
+      // Only append password-related data if intentionally interacted with (for updates)
+      const isPasswordIntentional =
+        !userToEdit ||
+        (dirtyFields.password && payload.password && String(payload.password).trim() !== '')
+
+      if (!isPasswordIntentional) {
         delete payload.password
         delete payload.passwordConfirm
       }
+
       if (!payload.oldPassword || String(payload.oldPassword).trim() === '') {
         delete payload.oldPassword
       }
+
       if (photoFile) payload.foto_perfil = photoFile
 
       if (userToEdit) {
@@ -365,6 +373,7 @@ export function UsuarioForm({
                         type={showOldPwd ? 'text' : 'password'}
                         placeholder="Sua senha atual"
                         className="pr-10"
+                        autoComplete="current-password"
                       />
                       <button
                         type="button"
@@ -393,6 +402,7 @@ export function UsuarioForm({
                         type={showPwd ? 'text' : 'password'}
                         placeholder={userToEdit ? '••••••••' : 'Senha segura'}
                         className="pr-10"
+                        autoComplete="new-password"
                       />
                       <button
                         type="button"
@@ -432,6 +442,7 @@ export function UsuarioForm({
                         type={showPwdConfirm ? 'text' : 'password'}
                         placeholder={userToEdit ? '••••••••' : 'Repita a senha'}
                         className="pr-10"
+                        autoComplete="new-password"
                       />
                       <button
                         type="button"

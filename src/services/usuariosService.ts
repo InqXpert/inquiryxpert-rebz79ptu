@@ -51,13 +51,14 @@ export const usuariosService = {
 
   updateUsuario: async (id: string, data: any, motivo?: string) => {
     const sanitizedData = { ...data }
-    if (!sanitizedData.password || String(sanitizedData.password).trim() === '') {
-      delete sanitizedData.password
-      delete sanitizedData.passwordConfirm
-    }
-    if (!sanitizedData.oldPassword || String(sanitizedData.oldPassword).trim() === '') {
-      delete sanitizedData.oldPassword
-    }
+
+    // Strip out any empty password-related keys to prevent validation errors
+    const passwordFields = ['password', 'passwordConfirm', 'oldPassword']
+    passwordFields.forEach((field) => {
+      if (!sanitizedData[field] || String(sanitizedData[field]).trim() === '') {
+        delete sanitizedData[field]
+      }
+    })
 
     const payload = buildFormData(sanitizedData)
     const user = await pb.collection('users').update(id, payload)
