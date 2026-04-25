@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Trash2 } from 'lucide-react'
-import { useCanDelete } from '@/hooks/useCanDelete'
 import { useState } from 'react'
 import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
 import { batchSoftDeleteProcessos } from '@/services/processosService'
@@ -20,15 +19,18 @@ export function ProcessosBatchToolbar({
   processos: Processo[]
   onRefresh: () => void
 }) {
-  const canDelete = useCanDelete()
   const { user } = useAuth()
+  const canDelete = user?.role === 'c-level' || user?.role === 'admin'
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  if (!canDelete || selectedIds.length === 0) return null
+  if (!canDelete) return null
 
   const handleSelectAll = () => {
-    if (selectedIds.length === processos.length || selectedIds.length === 100) {
+    if (
+      selectedIds.length > 0 &&
+      (selectedIds.length === processos.length || selectedIds.length === 100)
+    ) {
       setSelectedIds([])
     } else {
       const allIds = processos.map((p) => p.id).slice(0, 100)
@@ -43,10 +45,10 @@ export function ProcessosBatchToolbar({
     setLoading(true)
     try {
       await batchSoftDeleteProcessos(selectedIds, user?.id)
-      toast.success(`${selectedIds.length} processos foram deletados com sucesso.`)
+      toast.success('Processos excluídos com sucesso.')
       onRefresh()
     } catch (e) {
-      toast.error('Erro ao deletar processos.')
+      toast.error('Erro ao excluir processos.')
     } finally {
       setLoading(false)
       setConfirmOpen(false)
@@ -62,11 +64,14 @@ export function ProcessosBatchToolbar({
               selectedIds.length > 0 && selectedIds.length === Math.min(processos.length, 100)
             }
             onCheckedChange={handleSelectAll}
+            disabled={processos.length === 0}
           />
           <span className="text-sm font-bold">{selectedIds.length} processos selecionados</span>
-          <Button variant="link" size="sm" onClick={() => setSelectedIds([])} className="h-8">
-            Limpar
-          </Button>
+          {selectedIds.length > 0 && (
+            <Button variant="link" size="sm" onClick={() => setSelectedIds([])} className="h-8">
+              Limpar
+            </Button>
+          )}
         </div>
         <div>
           <Button
@@ -74,9 +79,9 @@ export function ProcessosBatchToolbar({
             size="sm"
             onClick={() => setConfirmOpen(true)}
             className="h-8 font-bold"
-            disabled={loading}
+            disabled={loading || selectedIds.length === 0}
           >
-            <Trash2 className="w-4 h-4 mr-2" /> Deletar Selecionados
+            <Trash2 className="w-4 h-4 mr-2" /> Deletar
           </Button>
         </div>
       </div>
@@ -84,8 +89,8 @@ export function ProcessosBatchToolbar({
       <DoubleConfirmDialog
         open={confirmOpen}
         onOpenChange={setConfirmOpen}
-        title="Deletar Processos em Lote"
-        description={`Tem certeza que deseja deletar ${selectedIds.length} processos?`}
+        title="Excluir Processos"
+        description={`Tem certeza que deseja excluir os ${selectedIds.length} processos selecionados? Esta ação não pode ser desfeita.`}
         onConfirm={handleBatchDelete}
       />
     </>

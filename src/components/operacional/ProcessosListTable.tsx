@@ -25,6 +25,7 @@ export function ProcessosListTable({
   rawCount,
   selectedIds,
   setSelectedIds,
+  canDelete,
 }: any) {
   const navigate = useNavigate()
   const [expandedId, setExpandedId] = useState<string | null>(null)
@@ -79,7 +80,7 @@ export function ProcessosListTable({
           <Table className="table-fixed w-full">
             <TableHeader className="bg-brand-light/30 dark:bg-black/10">
               <TableRow className="hover:bg-transparent border-b-brand-teal/20 dark:border-b-brand-cyan/20">
-                <TableHead className="w-[4%]"></TableHead>
+                {canDelete && <TableHead className="w-[4%]"></TableHead>}
                 <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
                   ID / CONTROLE
                 </TableHead>{' '}
@@ -113,9 +114,11 @@ export function ProcessosListTable({
                   key={i}
                   className="border-b-brand-teal/10 dark:border-b-brand-cyan/10 h-[64px]"
                 >
-                  <TableCell>
-                    <Skeleton className="h-4 w-[90%]" />
-                  </TableCell>
+                  {canDelete && (
+                    <TableCell>
+                      <Skeleton className="h-4 w-[90%]" />
+                    </TableCell>
+                  )}
                   <TableCell>
                     <Skeleton className="h-6 w-[80%]" />
                   </TableCell>
@@ -190,7 +193,7 @@ export function ProcessosListTable({
         <Table className="table-fixed w-full">
           <TableHeader className="bg-brand-light/30 dark:bg-black/10">
             <TableRow className="hover:bg-transparent border-b-brand-teal/20 dark:border-b-brand-cyan/20">
-              <TableHead className="w-[4%]"></TableHead>
+              {canDelete && <TableHead className="w-[4%]"></TableHead>}
               <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
                 ID / CONTROLE
               </TableHead>
@@ -232,6 +235,7 @@ export function ProcessosListTable({
                   e.stopPropagation()
                   handleSelect(p.id, i, (e.nativeEvent as MouseEvent).shiftKey)
                 }}
+                canDelete={canDelete}
               />
             ))}{' '}
           </TableBody>
@@ -252,6 +256,7 @@ export function ProcessosListTable({
               e.stopPropagation()
               handleSelect(p.id, i, false)
             }}
+            canDelete={canDelete}
           />
         ))}
       </div>

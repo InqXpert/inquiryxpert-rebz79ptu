@@ -41,6 +41,7 @@ export default function Processos() {
   const hasProximoVencimento = activeAlerts.some((a) => a.tipo === 'PROXIMO_VENCIMENTO')
 
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const canDelete = user?.role === 'c-level' || user?.role === 'admin'
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-4 md:px-6 py-6 md:py-8 animate-in fade-in duration-500">
@@ -120,6 +121,7 @@ export default function Processos() {
           rawCount={state.rawCount}
           selectedIds={selectedIds}
           setSelectedIds={setSelectedIds}
+          canDelete={canDelete}
         />
       </ErrorBoundary>
     </div>

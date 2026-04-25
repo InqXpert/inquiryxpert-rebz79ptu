@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { cn, formatDateBr } from '@/lib/utils'
 import { ProcessoTimeline } from './ProcessoTimeline'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useCanDelete } from '@/hooks/useCanDelete'
+
 import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
 import { softDeleteProcesso } from '@/services/processosService'
 import { useAuth } from '@/hooks/use-auth'
@@ -23,6 +23,7 @@ interface Props {
   onOpenModal: (type: 'history' | 'obs' | 'pos', proc: Processo) => void
   selected?: boolean
   onSelect?: (e: React.MouseEvent) => void
+  canDelete?: boolean
 }
 
 export function ProcessosTableRowDesktop({
@@ -33,6 +34,7 @@ export function ProcessosTableRowDesktop({
   onOpenModal,
   selected,
   onSelect,
+  canDelete,
 }: Props) {
   const navigate = useNavigate()
   const bgColor = calculateDayColor(p.data_entrada)
@@ -44,7 +46,6 @@ export function ProcessosTableRowDesktop({
   const agenteName = p.expand?.agente_id?.nomeCompleto || p.agente_prestador || ''
   const agenteFirstName = agenteName ? agenteName.split(' ')[0] : 'Não informado'
 
-  const canDelete = useCanDelete()
   const { user } = useAuth()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -80,9 +81,11 @@ export function ProcessosTableRowDesktop({
         }}
         onClick={onToggle}
       >
-        <TableCell onClick={(e) => e.stopPropagation()} className="px-4">
-          <Checkbox checked={selected} onClick={onSelect} />
-        </TableCell>
+        {canDelete && (
+          <TableCell onClick={(e) => e.stopPropagation()} className="px-4">
+            <Checkbox checked={selected} onClick={onSelect} />
+          </TableCell>
+        )}
         <TableCell
           className="font-bold text-xs text-brand-navy dark:text-white"
           title={p.numero_controle || p.id || '-'}
@@ -224,7 +227,7 @@ export function ProcessosTableRowDesktop({
       {expanded && (
         <TableRow className="bg-brand-light/30 dark:bg-black/20 hover:bg-brand-light/30 dark:hover:bg-black/20 border-b-brand-teal/20 dark:border-b-brand-cyan/20">
           <TableCell
-            colSpan={9}
+            colSpan={canDelete ? 10 : 9}
             className="p-0 border-t border-brand-teal/10 dark:border-brand-cyan/10"
           >
             <div className="p-4 md:p-6 animate-in slide-in-from-top-2 fade-in duration-200">

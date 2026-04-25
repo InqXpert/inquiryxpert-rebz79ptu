@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { cn, formatDateBr } from '@/lib/utils'
 import { ProcessoTimeline } from './ProcessoTimeline'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useCanDelete } from '@/hooks/useCanDelete'
+
 import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
 import { softDeleteProcesso } from '@/services/processosService'
 import { useAuth } from '@/hooks/use-auth'
@@ -22,6 +22,7 @@ interface Props {
   onOpenModal: (type: 'history' | 'obs' | 'pos', proc: Processo) => void
   selected?: boolean
   onSelect?: (e: React.MouseEvent) => void
+  canDelete?: boolean
 }
 
 export function ProcessosTableRowMobile({
@@ -32,12 +33,12 @@ export function ProcessosTableRowMobile({
   onOpenModal,
   selected,
   onSelect,
+  canDelete,
 }: Props) {
   const navigate = useNavigate()
   const bgColor = calculateDayColor(p.data_entrada)
   const tags = calculateTags(p.data_entrada)
 
-  const canDelete = useCanDelete()
   const { user } = useAuth()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -74,9 +75,11 @@ export function ProcessosTableRowMobile({
     >
       <div className="flex justify-between items-start mb-3 pr-8">
         <div className="flex items-center gap-3">
-          <div onClick={(e) => e.stopPropagation()}>
-            <Checkbox checked={selected} onClick={onSelect} />
-          </div>
+          {canDelete && (
+            <div onClick={(e) => e.stopPropagation()}>
+              <Checkbox checked={selected} onClick={onSelect} />
+            </div>
+          )}
           <div>
             <p className="font-bold text-brand-navy dark:text-white text-sm mb-1">
               {p.numero_controle || p.id || '-'}
