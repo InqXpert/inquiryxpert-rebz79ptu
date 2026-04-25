@@ -26,6 +26,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { AvatarUpload } from './AvatarUpload'
 import { Switch } from '@/components/ui/switch'
 import { useAuth } from '@/hooks/use-auth'
+import { useCanDelete } from '@/hooks/useCanDelete'
+import { Archive, Trash2 } from 'lucide-react'
+import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
+import { UserReassignDialog } from './UserReassignDialog'
 import { totpService } from '@/services/totpService'
 import { TwoFactorModal } from './TwoFactorModal'
 import { DisableTwoFactorModal } from './DisableTwoFactorModal'
@@ -53,6 +57,36 @@ export function UsuariosTable({
   const [disableTfaUser, setDisableTfaUser] = useState<{ user: User; hasSessions: boolean } | null>(
     null,
   )
+
+  const canDelete = useCanDelete()
+  const [manageUser, setManageUser] = useState<{ user: User; action: 'archive' | 'delete' } | null>(
+    null,
+  )
+  const [doubleConfirmOpen, setDoubleConfirmOpen] = useState(false)
+  const [newUserIdForManage, setNewUserIdForManage] = useState<string | undefined>()
+
+  const handleManageConfirm = (newUserId?: string) => {
+    setNewUserIdForManage(newUserId)
+    setDoubleConfirmOpen(true)
+  }
+
+  const executeManageAction = async () => {
+    if (!manageUser) return
+    try {
+      if (manageUser.action === 'archive') {
+        await usuariosService.archiveUsuario(manageUser.user.id, newUserIdForManage)
+        toast.success('Usuário arquivado com sucesso')
+      } else {
+        await usuariosService.deleteUsuario(manageUser.user.id, newUserIdForManage)
+        toast.success('Usuário deletado com sucesso')
+      }
+      setManageUser(null)
+      setDoubleConfirmOpen(false)
+      onRefresh()
+    } catch {
+      toast.error(`Erro ao ${manageUser.action === 'archive' ? 'arquivar' : 'deletar'} usuário`)
+    }
+  }
 
   const toggleSelect = (id: string) =>
     setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]))
@@ -326,6 +360,39 @@ export function UsuariosTable({
                               <TooltipContent>Permitir usuário</TooltipContent>
                             </Tooltip>
                           )}
+
+                          {canDelete && currentUser?.id !== u.id && (
+                            <>
+                              <Tooltip delayDuration={300}>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    aria-label="Arquivar"
+                                    onClick={() => setManageUser({ user: u, action: 'archive' })}
+                                    className="bg-muted text-muted-foreground hover:bg-muted/80 h-8 w-8 ml-1 rounded-md"
+                                  >
+                                    <Archive className="w-4 h-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Arquivar</TooltipContent>
+                              </Tooltip>
+                              <Tooltip delayDuration={300}>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    aria-label="Deletar"
+                                    onClick={() => setManageUser({ user: u, action: 'delete' })}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90 h-8 w-8 ml-1 rounded-md"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Deletar</TooltipContent>
+                              </Tooltip>
+                            </>
+                          )}
                         </div>
                       </TooltipProvider>
                     </TableCell>
@@ -376,6 +443,33 @@ export function UsuariosTable({
           onClose={() => setDisableTfaUser(null)}
           onConfirm={confirmDisable2FA}
           hasActiveSessions={disableTfaUser.hasSessions}
+        />
+      )}
+
+      {manageUser && (
+        <UserReassignDialog
+          open={!!manageUser && !doubleConfirmOpen}
+          onOpenChange={(op) => !op && setManageUser(null)}
+          userToManage={manageUser.user}
+          actionType={manageUser.action}
+          onConfirm={handleManageConfirm}
+          activeUsers={users}
+        />
+      )}
+
+      {manageUser && doubleConfirmOpen && (
+        <DoubleConfirmDialog
+          open={doubleConfirmOpen}
+          onOpenChange={(op) => {
+            if (!op) {
+              setDoubleConfirmOpen(false)
+              setManageUser(null)
+            }
+          }}
+          title={manageUser.action === 'archive' ? 'Arquivar Usuário' : 'Deletar Usuário'}
+          description={`Tem certeza que deseja ${manageUser.action === 'archive' ? 'arquivar' : 'deletar'} o usuário ${manageUser.user.name}?`}
+          onConfirm={executeManageAction}
+          confirmText={manageUser.action === 'archive' ? 'Arquivar' : 'Deletar'}
         />
       )}
     </>

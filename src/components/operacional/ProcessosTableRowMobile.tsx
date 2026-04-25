@@ -3,10 +3,16 @@ import { Processo } from '@/types/processo'
 import { calculateDayColor, calculateTags, getTagColor } from '@/services/processosService'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { History, MessageSquare, Flag, Edit2, ChevronDown } from 'lucide-react'
+import { History, MessageSquare, Flag, Edit2, ChevronDown, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn, formatDateBr } from '@/lib/utils'
 import { ProcessoTimeline } from './ProcessoTimeline'
+import { Checkbox } from '@/components/ui/checkbox'
+import { useCanDelete } from '@/hooks/useCanDelete'
+import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
+import { softDeleteProcesso } from '@/services/processosService'
+import { useAuth } from '@/hooks/use-auth'
+import { toast } from 'sonner'
 
 interface Props {
   processo: Processo
@@ -14,6 +20,8 @@ interface Props {
   expanded: boolean
   onToggle: () => void
   onOpenModal: (type: 'history' | 'obs' | 'pos', proc: Processo) => void
+  selected?: boolean
+  onSelect?: (e: React.MouseEvent) => void
 }
 
 export function ProcessosTableRowMobile({
@@ -22,17 +30,41 @@ export function ProcessosTableRowMobile({
   expanded,
   onToggle,
   onOpenModal,
+  selected,
+  onSelect,
 }: Props) {
   const navigate = useNavigate()
   const bgColor = calculateDayColor(p.data_entrada)
   const tags = calculateTags(p.data_entrada)
 
+  const canDelete = useCanDelete()
+  const { user } = useAuth()
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeletedLocally, setIsDeletedLocally] = useState(false)
+
+  const handleDelete = async () => {
+    setIsDeleting(true)
+    try {
+      await softDeleteProcesso(p.id, user?.id)
+      setIsDeletedLocally(true)
+      toast.success('Processo deletado com sucesso')
+    } catch (e) {
+      toast.error('Erro ao deletar processo')
+      setIsDeleting(false)
+    }
+  }
+
+  if (isDeletedLocally) return null
+
   return (
     <div
       className={cn(
-        'bg-white dark:bg-brand-navy border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-4 shadow-sm animate-in fade-in fill-mode-both duration-300 cursor-pointer transition-colors',
+        'bg-white dark:bg-brand-navy border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-4 shadow-sm animate-in fade-in fill-mode-both duration-300 cursor-pointer transition-colors relative',
         bgColor === 'transparent' && 'hover:border-brand-cyan/50',
         expanded && 'ring-2 ring-brand-cyan/50',
+        isDeleting &&
+          'animate-out fade-out slide-out-to-top-4 duration-300 opacity-0 pointer-events-none',
       )}
       style={{
         backgroundColor: bgColor !== 'transparent' ? bgColor : undefined,
@@ -40,14 +72,19 @@ export function ProcessosTableRowMobile({
       }}
       onClick={onToggle}
     >
-      <div className="flex justify-between items-start mb-3">
-        <div>
-          <p className="font-bold text-brand-navy dark:text-white text-sm mb-1">
-            {p.numero_controle || p.id || '-'}
-          </p>
-          <p className="font-bold text-xs uppercase text-brand-gray dark:text-brand-light">
-            {p.status ? p.status.replace(/_/g, ' ') : '-'}
-          </p>
+      <div className="flex justify-between items-start mb-3 pr-8">
+        <div className="flex items-center gap-3">
+          <div onClick={(e) => e.stopPropagation()}>
+            <Checkbox checked={selected} onClick={onSelect} />
+          </div>
+          <div>
+            <p className="font-bold text-brand-navy dark:text-white text-sm mb-1">
+              {p.numero_controle || p.id || '-'}
+            </p>
+            <p className="font-bold text-xs uppercase text-brand-gray dark:text-brand-light">
+              {p.status ? p.status.replace(/_/g, ' ') : '-'}
+            </p>
+          </div>
         </div>
         <div className="flex flex-col items-end gap-2">
           <p className="text-xs text-brand-gray dark:text-brand-light font-medium">
@@ -61,6 +98,22 @@ export function ProcessosTableRowMobile({
           />
         </div>
       </div>
+
+      {canDelete && (
+        <div className="absolute right-4 top-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-md"
+            onClick={(e) => {
+              e.stopPropagation()
+              setDeleteOpen(true)
+            }}
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      )}
 
       <div className="space-y-1 mb-3 text-sm">
         <div className="flex justify-between">
@@ -178,6 +231,14 @@ export function ProcessosTableRowMobile({
           </div>
         </div>
       )}
+
+      <DoubleConfirmDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        title="Deletar Processo"
+        description={`Tem certeza que deseja deletar o processo ${p.numero_controle || p.id}?`}
+        onConfirm={handleDelete}
+      />
     </div>
   )
 }

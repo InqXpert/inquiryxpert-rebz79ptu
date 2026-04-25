@@ -14,9 +14,37 @@ export const getTagColor = (tag: string) => {
 
 export const fetchProcessos = async (): Promise<Processo[]> => {
   return await pb.collection('processos_operacionais').getFullList<Processo>({
+    filter: 'deleted_at = ""',
     sort: '-created',
     expand: 'supervisor_id,agente_id',
   })
+}
+
+export const softDeleteProcesso = async (id: string, executorId?: string) => {
+  const proc = await fetchProcessoById(id)
+  const deletedAt = new Date().toISOString()
+  const updated = await updateProcesso(id, { deleted_at: deletedAt })
+
+  if (executorId) {
+    await pb
+      .collection('registros_auditoria_adm')
+      .create({
+        acao: 'DELETE_PROCESS',
+        executor_id: executorId,
+        data_evento: deletedAt,
+        registro_afetado_id: id,
+        dados_registro: proc,
+        motivo: 'Soft delete from UI',
+      })
+      .catch(console.error)
+  }
+
+  return updated
+}
+
+export const batchSoftDeleteProcessos = async (ids: string[], executorId?: string) => {
+  const promises = ids.map((id) => softDeleteProcesso(id, executorId))
+  await Promise.all(promises)
 }
 
 export const filterByStatus = (processos: Processo[], status: string) => {

@@ -8,12 +8,29 @@ import { useAuth } from '@/hooks/use-auth'
 import { useAlertas } from '@/hooks/useAlertas'
 import { cn } from '@/lib/utils'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ProcessosBatchToolbar } from '@/components/operacional/ProcessosBatchToolbar'
+import { useState } from 'react'
+import { useRealtime } from '@/hooks/use-realtime'
 
 export default function Processos() {
   const state = useProcessosList()
   const navigate = useNavigate()
   const { user } = useAuth()
   const { alertas, dismissedIds } = useAlertas()
+
+  useRealtime(
+    'registros_auditoria_adm',
+    (e) => {
+      if (e.action === 'create' && e.record.executor_id !== user?.id && user?.role === 'c-level') {
+        import('sonner').then((m) =>
+          m.toast.info(`Ação administrativa: ${e.record.acao}`, {
+            description: e.record.motivo,
+          }),
+        )
+      }
+    },
+    user?.role === 'c-level',
+  )
 
   const canViewAlerts = user?.role && ['c-level', 'admin', 'supervisor'].includes(user.role)
 
@@ -22,6 +39,8 @@ export default function Processos() {
 
   const hasVencido = activeAlerts.some((a) => a.tipo === 'VENCIDO')
   const hasProximoVencimento = activeAlerts.some((a) => a.tipo === 'PROXIMO_VENCIMENTO')
+
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   return (
     <div className="w-full max-w-[1600px] mx-auto px-4 md:px-6 py-6 md:py-8 animate-in fade-in duration-500">
@@ -79,8 +98,17 @@ export default function Processos() {
         </div>
       </div>
 
-      <div className="sticky top-0 z-20 bg-background/95 dark:bg-brand-navy/95 backdrop-blur-md py-4 px-4 md:px-6 -mx-4 md:-mx-6 mb-6">
+      <div className="sticky top-0 z-20 bg-background/95 dark:bg-brand-navy/95 backdrop-blur-md py-4 px-4 md:px-6 -mx-4 md:-mx-6 mb-6 flex flex-col gap-4">
         <ProcessosListFilters {...state} />
+        <ProcessosBatchToolbar
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
+          processos={state.data}
+          onRefresh={() => {
+            setSelectedIds([])
+            state.refresh()
+          }}
+        />
       </div>
 
       <ErrorBoundary>
@@ -90,6 +118,8 @@ export default function Processos() {
           hasMore={state.hasMore}
           onLoadMore={state.loadMore}
           rawCount={state.rawCount}
+          selectedIds={selectedIds}
+          setSelectedIds={setSelectedIds}
         />
       </ErrorBoundary>
     </div>

@@ -17,6 +17,8 @@ export function ProcessosListFilters({
   setStatusFilter,
   dateFilter,
   setDateFilter,
+  customDateRange,
+  setCustomDateRange,
   tagFilter,
   setTagFilter,
   supervisorFilter,
@@ -79,7 +81,7 @@ export function ProcessosListFilters({
             <SelectItem value="Todos">Todas as Datas</SelectItem>
             <SelectItem value="7days">Últimos 7 dias</SelectItem>
             <SelectItem value="30days">Últimos 30 dias</SelectItem>
-            <SelectItem value="custom">Customizado</SelectItem>
+            <SelectItem value="custom">Data Específica</SelectItem>
           </SelectContent>
         </Select>
         <Select value={tagFilter} onValueChange={setTagFilter}>
@@ -120,6 +122,44 @@ export function ProcessosListFilters({
           </Button>
         </div>
       </div>
+      {dateFilter === 'custom' && (
+        <div className="w-full flex flex-col md:flex-row items-center gap-4 animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-muted-foreground">De:</span>
+            <Input
+              type="date"
+              className="h-10"
+              value={
+                customDateRange?.from
+                  ? new Date(customDateRange.from).toISOString().split('T')[0]
+                  : ''
+              }
+              onChange={(e) =>
+                setCustomDateRange({
+                  ...customDateRange,
+                  from: e.target.value ? new Date(e.target.value) : undefined,
+                })
+              }
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-muted-foreground">Até:</span>
+            <Input
+              type="date"
+              className="h-10"
+              value={
+                customDateRange?.to ? new Date(customDateRange.to).toISOString().split('T')[0] : ''
+              }
+              onChange={(e) =>
+                setCustomDateRange({
+                  ...customDateRange,
+                  to: e.target.value ? new Date(e.target.value) : undefined,
+                })
+              }
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

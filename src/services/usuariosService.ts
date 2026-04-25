@@ -137,4 +137,93 @@ export const usuariosService = {
     )
     return session
   },
+
+  archiveUsuario: async (id: string, newUserId?: string) => {
+    const user = await pb.collection('users').getOne(id)
+
+    if (newUserId) {
+      await usuariosService.reassignActiveProcesses(id, newUserId)
+    }
+
+    const archivedDate = new Date().toISOString()
+    const updated = await pb.collection('users').update(id, { archived_at: archivedDate })
+
+    await pb
+      .collection('registros_auditoria_adm')
+      .create({
+        acao: 'ARCHIVE_USER',
+        executor_id: pb.authStore.record?.id,
+        data_evento: archivedDate,
+        registro_afetado_id: id,
+        dados_registro: user,
+        motivo: 'User archived manually',
+      })
+      .catch(console.error)
+
+    return updated
+  },
+
+  restoreUsuario: async (id: string) => {
+    const user = await pb.collection('users').getOne(id)
+    const updated = await pb.collection('users').update(id, { archived_at: null })
+
+    await pb
+      .collection('registros_auditoria_adm')
+      .create({
+        acao: 'RESTORE_USER',
+        executor_id: pb.authStore.record?.id,
+        data_evento: new Date().toISOString(),
+        registro_afetado_id: id,
+        dados_registro: user,
+        motivo: 'User restored manually',
+      })
+      .catch(console.error)
+
+    return updated
+  },
+
+  deleteUsuario: async (id: string, newUserId?: string) => {
+    const user = await pb.collection('users').getOne(id)
+
+    if (newUserId) {
+      await usuariosService.reassignActiveProcesses(id, newUserId)
+    }
+
+    await pb
+      .collection('registros_auditoria_adm')
+      .create({
+        acao: 'DELETE_USER',
+        executor_id: pb.authStore.record?.id,
+        data_evento: new Date().toISOString(),
+        registro_afetado_id: id,
+        dados_registro: user,
+        motivo: 'User deleted manually',
+      })
+      .catch(console.error)
+
+    await pb.collection('users').delete(id)
+    return true
+  },
+
+  getActiveProcessesForUser: async (userId: string) => {
+    try {
+      return await pb.collection('processos_operacionais').getFullList({
+        filter: `(user_id = '${userId}' || supervisor_id = '${userId}') && status != 'FINALIZADO' && status != 'CANCELADO' && deleted_at = ""`,
+      })
+    } catch {
+      return []
+    }
+  },
+
+  reassignActiveProcesses: async (oldUserId: string, newUserId: string) => {
+    const processes = await usuariosService.getActiveProcessesForUser(oldUserId)
+
+    for (const proc of processes) {
+      const dataToUpdate: any = { started_by: oldUserId }
+      if (proc.user_id === oldUserId) dataToUpdate.user_id = newUserId
+      if (proc.supervisor_id === oldUserId) dataToUpdate.supervisor_id = newUserId
+
+      await pb.collection('processos_operacionais').update(proc.id, dataToUpdate)
+    }
+  },
 }

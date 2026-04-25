@@ -17,13 +17,52 @@ import { ProcessosTableRowDesktop } from './ProcessosTableRowDesktop'
 import { ProcessosTableRowMobile } from './ProcessosTableRowMobile'
 import { EncaminharSindicanciaModal } from '@/components/sindicancia/EncaminharSindicanciaModal'
 
-export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, rawCount }: any) {
+export function ProcessosListTable({
+  processos,
+  loading,
+  hasMore,
+  onLoadMore,
+  rawCount,
+  selectedIds,
+  setSelectedIds,
+}: any) {
   const navigate = useNavigate()
   const [expandedId, setExpandedId] = useState<string | null>(null)
+  const [lastSelectedIdx, setLastSelectedIdx] = useState<number | null>(null)
   const [modalState, setModalState] = useState<{
     type: 'history' | 'obs' | 'pos' | 'encaminhar' | null
     proc: Processo | null
   }>({ type: null, proc: null })
+
+  const handleSelect = (id: string, idx: number, shiftKey: boolean) => {
+    let newSelected = [...(selectedIds || [])]
+
+    if (shiftKey && lastSelectedIdx !== null) {
+      const start = Math.min(idx, lastSelectedIdx)
+      const end = Math.max(idx, lastSelectedIdx)
+      for (let i = start; i <= end; i++) {
+        if (!newSelected.includes(processos[i].id)) {
+          newSelected.push(processos[i].id)
+        }
+      }
+    } else {
+      if (newSelected.includes(id)) {
+        newSelected = newSelected.filter((s) => s !== id)
+      } else {
+        newSelected.push(id)
+      }
+    }
+
+    if (newSelected.length > 100) {
+      newSelected = newSelected.slice(0, 100)
+      import('sonner').then((m) =>
+        m.toast.warning('Limite de 100 processos selecionados atingido.'),
+      )
+    }
+
+    setSelectedIds(newSelected)
+    setLastSelectedIdx(idx)
+  }
 
   const handleOpenModal = (type: 'history' | 'obs' | 'pos' | 'encaminhar', proc: Processo) => {
     if (type === 'encaminhar') {
@@ -40,9 +79,10 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
           <Table className="table-fixed w-full">
             <TableHeader className="bg-brand-light/30 dark:bg-black/10">
               <TableRow className="hover:bg-transparent border-b-brand-teal/20 dark:border-b-brand-cyan/20">
-                <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
+                <TableHead className="w-[4%]"></TableHead>
+                <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
                   ID / CONTROLE
-                </TableHead>
+                </TableHead>{' '}
                 <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
                   STATUS
                 </TableHead>
@@ -150,7 +190,8 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
         <Table className="table-fixed w-full">
           <TableHeader className="bg-brand-light/30 dark:bg-black/10">
             <TableRow className="hover:bg-transparent border-b-brand-teal/20 dark:border-b-brand-cyan/20">
-              <TableHead className="w-[14%] font-bold text-brand-navy dark:text-white text-xs">
+              <TableHead className="w-[4%]"></TableHead>
+              <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
                 ID / CONTROLE
               </TableHead>
               <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
@@ -186,8 +227,13 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
                 expanded={expandedId === p.id}
                 onToggle={() => setExpandedId(expandedId === p.id ? null : p.id)}
                 onOpenModal={handleOpenModal}
+                selected={selectedIds?.includes(p.id)}
+                onSelect={(e) => {
+                  e.stopPropagation()
+                  handleSelect(p.id, i, (e.nativeEvent as MouseEvent).shiftKey)
+                }}
               />
-            ))}
+            ))}{' '}
           </TableBody>
         </Table>
       </div>
@@ -201,6 +247,11 @@ export function ProcessosListTable({ processos, loading, hasMore, onLoadMore, ra
             expanded={expandedId === p.id}
             onToggle={() => setExpandedId(expandedId === p.id ? null : p.id)}
             onOpenModal={handleOpenModal}
+            selected={selectedIds?.includes(p.id)}
+            onSelect={(e) => {
+              e.stopPropagation()
+              handleSelect(p.id, i, false)
+            }}
           />
         ))}
       </div>

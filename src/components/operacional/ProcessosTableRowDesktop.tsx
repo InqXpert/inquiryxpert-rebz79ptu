@@ -4,10 +4,16 @@ import { Processo } from '@/types/processo'
 import { calculateDayColor, calculateTags, getTagColor } from '@/services/processosService'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { History, MessageSquare, Flag, Edit2, ChevronDown, Send } from 'lucide-react'
+import { History, MessageSquare, Flag, Edit2, ChevronDown, Send, Trash2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn, formatDateBr } from '@/lib/utils'
 import { ProcessoTimeline } from './ProcessoTimeline'
+import { Checkbox } from '@/components/ui/checkbox'
+import { useCanDelete } from '@/hooks/useCanDelete'
+import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
+import { softDeleteProcesso } from '@/services/processosService'
+import { useAuth } from '@/hooks/use-auth'
+import { toast } from 'sonner'
 
 interface Props {
   processo: Processo
@@ -15,6 +21,8 @@ interface Props {
   expanded: boolean
   onToggle: () => void
   onOpenModal: (type: 'history' | 'obs' | 'pos', proc: Processo) => void
+  selected?: boolean
+  onSelect?: (e: React.MouseEvent) => void
 }
 
 export function ProcessosTableRowDesktop({
@@ -23,6 +31,8 @@ export function ProcessosTableRowDesktop({
   expanded,
   onToggle,
   onOpenModal,
+  selected,
+  onSelect,
 }: Props) {
   const navigate = useNavigate()
   const bgColor = calculateDayColor(p.data_entrada)
@@ -34,6 +44,26 @@ export function ProcessosTableRowDesktop({
   const agenteName = p.expand?.agente_id?.nomeCompleto || p.agente_prestador || ''
   const agenteFirstName = agenteName ? agenteName.split(' ')[0] : 'Não informado'
 
+  const canDelete = useCanDelete()
+  const { user } = useAuth()
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeletedLocally, setIsDeletedLocally] = useState(false)
+
+  const handleDelete = async () => {
+    setIsDeleting(true)
+    try {
+      await softDeleteProcesso(p.id, user?.id)
+      setIsDeletedLocally(true)
+      toast.success('Processo deletado com sucesso')
+    } catch (e) {
+      toast.error('Erro ao deletar processo')
+      setIsDeleting(false)
+    }
+  }
+
+  if (isDeletedLocally) return null
+
   return (
     <React.Fragment>
       <TableRow
@@ -41,6 +71,8 @@ export function ProcessosTableRowDesktop({
           'cursor-pointer group animate-in fade-in fill-mode-both duration-300 border-b-brand-teal/10 dark:border-b-brand-cyan/10 h-[64px]',
           bgColor === 'transparent' && 'hover:bg-brand-teal/5 dark:hover:bg-brand-cyan/10',
           bgColor !== 'transparent' && 'hover:brightness-95',
+          isDeleting &&
+            'animate-out fade-out slide-out-to-top-4 duration-300 opacity-0 pointer-events-none',
         )}
         style={{
           backgroundColor: bgColor !== 'transparent' ? bgColor : undefined,
@@ -48,6 +80,9 @@ export function ProcessosTableRowDesktop({
         }}
         onClick={onToggle}
       >
+        <TableCell onClick={(e) => e.stopPropagation()} className="px-4">
+          <Checkbox checked={selected} onClick={onSelect} />
+        </TableCell>
         <TableCell
           className="font-bold text-xs text-brand-navy dark:text-white"
           title={p.numero_controle || p.id || '-'}
@@ -161,12 +196,28 @@ export function ProcessosTableRowDesktop({
           {p.data_entrada ? formatDateBr(p.data_entrada) : '-'}
         </TableCell>
         <TableCell className="text-right pr-4">
-          <ChevronDown
-            className={cn(
-              'h-4 w-4 text-brand-gray transition-transform duration-200 ml-auto',
-              expanded && 'rotate-180',
+          <div className="flex items-center justify-end gap-2">
+            {canDelete && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-md"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDeleteOpen(true)
+                }}
+                title="Deletar"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
             )}
-          />
+            <ChevronDown
+              className={cn(
+                'h-4 w-4 text-brand-gray transition-transform duration-200',
+                expanded && 'rotate-180',
+              )}
+            />
+          </div>
         </TableCell>
       </TableRow>
 
@@ -247,6 +298,14 @@ export function ProcessosTableRowDesktop({
           </TableCell>
         </TableRow>
       )}
+
+      <DoubleConfirmDialog
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        title="Deletar Processo"
+        description={`Tem certeza que deseja deletar o processo ${p.numero_controle || p.id}?`}
+        onConfirm={handleDelete}
+      />
     </React.Fragment>
   )
 }

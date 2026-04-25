@@ -7,6 +7,7 @@ import { useRealtime } from '@/hooks/use-realtime'
 
 export function useGestaoUsuarios() {
   const [users, setUsers] = useState<User[]>([])
+  const [archivedUsers, setArchivedUsers] = useState<User[]>([])
   const [activeSessions, setActiveSessions] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
 
@@ -14,7 +15,12 @@ export function useGestaoUsuarios() {
     try {
       setLoading(true)
       const data = await usuariosService.fetchUsuarios()
-      setUsers(data)
+
+      const active = data.filter((u) => !u.archived_at)
+      const archived = data.filter((u) => !!u.archived_at)
+
+      setUsers(active)
+      setArchivedUsers(archived)
 
       const sessoes = await pb.collection('usuarios_sessoes').getFullList<UsuarioSessao>({
         filter: 'expirada=false',
@@ -39,5 +45,5 @@ export function useGestaoUsuarios() {
   useRealtime('users', loadData)
   useRealtime('usuarios_sessoes', loadData)
 
-  return { users, activeSessions, loading, loadUsers: loadData }
+  return { users, archivedUsers, activeSessions, loading, loadUsers: loadData }
 }

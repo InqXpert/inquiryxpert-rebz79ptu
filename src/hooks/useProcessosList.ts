@@ -114,6 +114,7 @@ export function useProcessosList() {
 
   return {
     data: paginatedData,
+    refresh: () => loadData(false),
     totalCount: filteredData.length,
     rawCount: data.length,
     loading,

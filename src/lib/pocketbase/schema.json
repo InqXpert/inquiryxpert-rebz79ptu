@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-22T05:13:09.919Z",
+  "generatedAt": "2026-04-24T23:52:24.043Z",
   "collections": [
     {
       "name": "users",
@@ -94,6 +94,12 @@
           "required": false,
           "system": false,
           "collectionRef": "users"
+        },
+        {
+          "name": "archived_at",
+          "type": "date",
+          "required": false,
+          "system": false
         }
       ],
       "indexes": [
@@ -748,6 +754,19 @@
           "type": "json",
           "required": false,
           "system": false
+        },
+        {
+          "name": "deleted_at",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "started_by",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "users"
         }
       ],
       "indexes": [
@@ -2196,6 +2215,109 @@
           "required": false,
           "system": false,
           "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "registros_auditoria_adm",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level'",
+        "view": "@request.auth.role = 'c-level'",
+        "create": "@request.auth.role = 'c-level'",
+        "update": null,
+        "delete": null
+      },
+      "fields": [
+        {
+          "name": "acao",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": [
+            "DELETE_PROCESS",
+            "DELETE_USER",
+            "ARCHIVE_USER",
+            "RESTORE_USER",
+            "HARD_DELETE_PROCESS"
+          ]
+        },
+        {
+          "name": "executor_id",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "data_evento",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "registro_afetado_id",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "dados_registro",
+          "type": "json",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "motivo",
+          "type": "text",
+          "required": false,
+          "system": false
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "notificacoes_sistema",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.id != '' && user_id = @request.auth.id",
+        "view": "@request.auth.id != '' && user_id = @request.auth.id",
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "update": "@request.auth.id != '' && user_id = @request.auth.id",
+        "delete": "@request.auth.id != '' && user_id = @request.auth.id"
+      },
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "tipo",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "mensagem",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "lida",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "timestamp",
+          "type": "date",
+          "required": false,
+          "system": false
         }
       ],
       "indexes": []
