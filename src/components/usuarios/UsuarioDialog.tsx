@@ -59,7 +59,15 @@ export default function UsuarioDialog({
     if (open) {
       setShowPassword(false)
       setPhotoFile(null)
-      setPhotoPreview(user?.foto_perfil ? pb.files.getUrl(user, user.foto_perfil) : null)
+      setPhotoPreview(
+        user?.foto_url
+          ? pb.files.getUrl(user, user.foto_url)
+          : user?.foto_perfil
+            ? pb.files.getUrl(user, user.foto_perfil)
+            : user?.avatar
+              ? pb.files.getUrl(user, user.avatar)
+              : null,
+      )
       if (user) {
         reset({
           name: user.name,
@@ -85,14 +93,14 @@ export default function UsuarioDialog({
         } else {
           payload.passwordConfirm = payload.password
         }
-        if (photoFile) payload.foto_perfil = photoFile
+        if (photoFile) payload.foto_url = photoFile
         await pb.collection('users').update(user.id, payload)
         toast.success('Perfil do usuário atualizado com sucesso!')
       } else {
         if (!data.password)
           return toast.error('A senha é obrigatória para registrar um novo usuário.')
         const payload = { ...data, passwordConfirm: data.password }
-        if (photoFile) payload.foto_perfil = photoFile
+        if (photoFile) payload.foto_url = photoFile
         await pb.collection('users').create(payload)
         toast.success('Novo usuário criado com sucesso!')
       }

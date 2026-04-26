@@ -63,11 +63,13 @@ export function UsuarioForm({
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [photoPreview, setPhotoPreview] = useState<string | null>(
     userToEdit
-      ? userToEdit.foto_perfil
-        ? pb.files.getUrl(userToEdit, userToEdit.foto_perfil)
-        : userToEdit.avatar
-          ? pb.files.getUrl(userToEdit, userToEdit.avatar)
-          : null
+      ? userToEdit.foto_url
+        ? pb.files.getUrl(userToEdit, userToEdit.foto_url)
+        : userToEdit.foto_perfil
+          ? pb.files.getUrl(userToEdit, userToEdit.foto_perfil)
+          : userToEdit.avatar
+            ? pb.files.getUrl(userToEdit, userToEdit.avatar)
+            : null
       : null,
   )
 
@@ -209,7 +211,7 @@ export function UsuarioForm({
         delete payload.oldPassword
       }
 
-      if (photoFile) payload.foto_perfil = photoFile
+      if (photoFile) payload.foto_url = photoFile
 
       if (userToEdit) {
         await usuariosService.updateUsuario(userToEdit.id, payload, data.motivo_acao)

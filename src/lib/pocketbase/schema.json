@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-26T03:32:38.057Z",
+  "generatedAt": "2026-04-26T06:37:20.601Z",
   "collections": [
     {
       "name": "users",
@@ -15,12 +15,6 @@
         {
           "name": "name",
           "type": "text",
-          "required": false,
-          "system": false
-        },
-        {
-          "name": "avatar",
-          "type": "file",
           "required": false,
           "system": false
         },
@@ -65,12 +59,6 @@
           "system": false
         },
         {
-          "name": "foto_perfil",
-          "type": "file",
-          "required": false,
-          "system": false
-        },
-        {
           "name": "two_fa_enabled",
           "type": "bool",
           "required": false,
@@ -98,6 +86,12 @@
         {
           "name": "archived_at",
           "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "foto_url",
+          "type": "file",
           "required": false,
           "system": false
         }
@@ -408,17 +402,17 @@
           "selectValues": ["ativo", "suspenso", "bloqueado"]
         },
         {
-          "name": "foto_perfil",
-          "type": "file",
-          "required": false,
-          "system": false
-        },
-        {
           "name": "criado_por",
           "type": "relation",
           "required": false,
           "system": false,
           "collectionRef": "users"
+        },
+        {
+          "name": "foto_url",
+          "type": "file",
+          "required": false,
+          "system": false
         }
       ],
       "indexes": [

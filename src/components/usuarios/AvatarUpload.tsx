@@ -16,6 +16,14 @@ export function AvatarUpload({
   const [loading, setLoading] = useState(false)
   const [scanning, setScanning] = useState(false)
 
+  const imgSrc = user.foto_url
+    ? pb.files.getUrl(user, user.foto_url)
+    : user.foto_perfil
+      ? pb.files.getUrl(user, user.foto_perfil)
+      : user.avatar
+        ? pb.files.getUrl(user, user.avatar)
+        : ''
+
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -58,16 +66,8 @@ export function AvatarUpload({
         className,
       )}
     >
-      {user.foto_perfil || user.avatar ? (
-        <img
-          src={
-            user.foto_perfil
-              ? pb.files.getUrl(user, user.foto_perfil)
-              : pb.files.getUrl(user, user.avatar)
-          }
-          alt="avatar"
-          className="w-full h-full object-cover"
-        />
+      {imgSrc ? (
+        <img src={imgSrc} alt="avatar" className="w-full h-full object-cover" />
       ) : (
         <div className="w-full h-full flex items-center justify-center text-brand-teal">
           <UserIcon size={20} />
