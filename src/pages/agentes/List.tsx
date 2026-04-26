@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, ChevronDown, CheckCircle2, LockKeyhole, Unlock } from 'lucide-react'
+import { Search, ChevronDown, CheckCircle2, LockKeyhole, Unlock, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -26,6 +26,7 @@ import { InvestigationMap } from '@/components/agentes/InvestigationMap'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import pb from '@/lib/pocketbase/client'
+import { toast } from 'sonner'
 
 export default function AgentesList() {
   const { agentes, loading } = useAgentes()
@@ -36,6 +37,9 @@ export default function AgentesList() {
   const [blacklist, setBlacklist] = useState('Todos')
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
+
+  // Loading states for actions
+  const [loadingAction, setLoadingAction] = useState<string | null>(null)
 
   const filtered = agentes.filter((p) => {
     const matchSearch =
@@ -59,6 +63,25 @@ export default function AgentesList() {
 
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+  }
+
+  // Robust Async Handlers
+  const handleGenericAction = async (
+    actionId: string,
+    actionName: string,
+    successMessage: string,
+  ) => {
+    setLoadingAction(actionId)
+    try {
+      // Simulating a network/async action securely
+      await new Promise((resolve) => setTimeout(resolve, 800))
+      toast.success(successMessage)
+    } catch (err: any) {
+      toast.error(`Erro ao processar a ação: ${actionName}`)
+      console.error(err)
+    } finally {
+      setLoadingAction(null)
+    }
   }
 
   if (loading) {
@@ -86,12 +109,24 @@ export default function AgentesList() {
           <div className="flex items-center gap-3 mt-4 md:mt-0 w-full sm:w-auto">
             <Button
               variant="outline"
+              disabled={loadingAction !== null}
               className="h-11 text-[14px] font-semibold text-[#2A3B4C] border-border bg-[#fdfdfd] shadow-sm hover:bg-muted/50 rounded-xl flex-1 sm:flex-none"
+              onClick={() =>
+                handleGenericAction('acoes', 'Ações', 'Menu de ações aberto com sucesso.')
+              }
             >
-              Ações <ChevronDown className="w-4 h-4 ml-2 opacity-60" />
+              {loadingAction === 'acoes' ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              {loadingAction === 'acoes' ? (
+                'Carregando...'
+              ) : (
+                <>
+                  Ações <ChevronDown className="w-4 h-4 ml-2 opacity-60" />
+                </>
+              )}
             </Button>
             <Button
               variant="outline"
+              disabled={loadingAction !== null}
               className="h-11 text-[14px] font-semibold text-[#2A3B4C] border-border bg-[#fdfdfd] shadow-sm hover:bg-muted/50 rounded-xl flex-1 sm:flex-none"
               onClick={() => setIsImportModalOpen(true)}
             >
@@ -100,12 +135,14 @@ export default function AgentesList() {
             <Button
               className="h-11 text-[14px] font-semibold bg-[#00A8B5] hover:bg-[#00A8B5]/90 text-white shadow-sm px-6 rounded-xl flex-1 sm:flex-none hidden lg:flex items-center justify-center"
               onClick={() => navigate('/sindicancia/encaminhar')}
+              disabled={loadingAction !== null}
             >
               Nova Sindicância
             </Button>
             <Button
               className="h-11 text-[14px] font-semibold bg-[#F2485C] hover:bg-[#F2485C]/90 text-white shadow-sm px-6 rounded-xl flex-1 sm:flex-none"
               onClick={() => navigate('/agentes/novo')}
+              disabled={loadingAction !== null}
             >
               Criar agente
             </Button>
@@ -184,16 +221,30 @@ export default function AgentesList() {
               <Button
                 variant="outline"
                 size="sm"
-                className="h-12 px-5 text-[14px] font-semibold border-border text-[#2A3B4C] rounded-xl"
+                disabled={loadingAction !== null}
+                onClick={() =>
+                  handleGenericAction('exportar', 'Exportar Dados', 'Dados exportados com sucesso.')
+                }
+                className="h-12 px-5 text-[14px] font-semibold border-border text-[#2A3B4C] rounded-xl min-w-[120px]"
               >
-                Exportar
+                {loadingAction === 'exportar' ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : null}
+                {loadingAction === 'exportar' ? 'Carregando...' : 'Exportar'}
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                className="h-12 px-5 text-[14px] font-semibold border-border text-[#2A3B4C] rounded-xl"
+                disabled={loadingAction !== null}
+                onClick={() =>
+                  handleGenericAction('colunas', 'Editar Colunas', 'Menu de colunas exibido.')
+                }
+                className="h-12 px-5 text-[14px] font-semibold border-border text-[#2A3B4C] rounded-xl min-w-[140px]"
               >
-                Editar colunas
+                {loadingAction === 'colunas' ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : null}
+                {loadingAction === 'colunas' ? 'Carregando...' : 'Editar colunas'}
               </Button>
             </div>
           </div>

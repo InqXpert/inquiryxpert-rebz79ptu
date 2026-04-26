@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Table,
   TableBody,
@@ -7,13 +7,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Edit, History, Ban, CheckCircle, Activity, ShieldCheck, ShieldAlert } from 'lucide-react'
+import { Edit, History, Ban, CheckCircle, Activity, Archive, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatDistanceToNow } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { formatDateBr } from '@/lib/utils'
 import { usuariosService } from '@/services/usuariosService'
@@ -27,7 +25,7 @@ import { AvatarUpload } from './AvatarUpload'
 import { Switch } from '@/components/ui/switch'
 import { useAuth } from '@/hooks/use-auth'
 import { useCanDelete } from '@/hooks/useCanDelete'
-import { Archive, Trash2 } from 'lucide-react'
+import { useRealtime } from '@/hooks/use-realtime'
 import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
 import { UserReassignDialog } from './UserReassignDialog'
 import { totpService } from '@/services/totpService'
@@ -65,6 +63,26 @@ export function UsuariosTable({
   const [doubleConfirmOpen, setDoubleConfirmOpen] = useState(false)
   const [newUserIdForManage, setNewUserIdForManage] = useState<string | undefined>()
 
+  // Local state for real-time stabilization
+  const [localUsers, setLocalUsers] = useState<User[]>(users)
+
+  useEffect(() => {
+    setLocalUsers(users)
+  }, [users])
+
+  // Stabilized Real-time Subscriptions (Eliminates Flickering)
+  useRealtime('users', (e) => {
+    if (e.action === 'create') {
+      setLocalUsers((prev) => [e.record as unknown as User, ...prev])
+    } else if (e.action === 'update') {
+      setLocalUsers((prev) =>
+        prev.map((u) => (u.id === e.record.id ? ({ ...u, ...e.record } as unknown as User) : u)),
+      )
+    } else if (e.action === 'delete') {
+      setLocalUsers((prev) => prev.filter((u) => u.id !== e.record.id))
+    }
+  })
+
   const handleManageConfirm = (newUserId?: string) => {
     setNewUserIdForManage(newUserId)
     setDoubleConfirmOpen(true)
@@ -91,7 +109,11 @@ export function UsuariosTable({
   const toggleSelect = (id: string) =>
     setSelected((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]))
   const toggleAll = () =>
-    setSelected(selected.length === users.length && users.length > 0 ? [] : users.map((u) => u.id))
+    setSelected(
+      selected.length === localUsers.length && localUsers.length > 0
+        ? []
+        : localUsers.map((u) => u.id),
+    )
 
   const handleBulkAction = async (action: string, val?: string) => {
     if (!selected.length) return toast.error('Selecione usuários para prosseguir')
@@ -103,7 +125,7 @@ export function UsuariosTable({
         if (action === 'role' && val) await usuariosService.alterarRole(id, val)
         if (action === 'reset') {
           const pwd = await usuariosService.resetSenha(id)
-          const user = users.find((u) => u.id === id)
+          const user = localUsers.find((u) => u.id === id)
           if (user) resetResults.push({ email: user.email, pwd })
         }
       }
@@ -175,7 +197,7 @@ export function UsuariosTable({
           <TableRow>
             <TableHead className="w-12 px-4">
               <Checkbox
-                checked={selected.length === users.length && users.length > 0}
+                checked={selected.length === localUsers.length && localUsers.length > 0}
                 onCheckedChange={toggleAll}
               />
             </TableHead>
@@ -201,7 +223,7 @@ export function UsuariosTable({
                   </TableCell>
                 </TableRow>
               ))
-            : users.map((u, i) => {
+            : localUsers.map((u, i) => {
                 const sessoesCount = activeSessions[u.id] || 0
                 return (
                   <TableRow
@@ -404,7 +426,7 @@ export function UsuariosTable({
 
       <BulkActionsBar
         selectedCount={selected.length}
-        totalCount={users.length}
+        totalCount={localUsers.length}
         onClear={() => setSelected([])}
         onToggleAll={toggleAll}
         onAction={handleBulkAction}
@@ -453,7 +475,7 @@ export function UsuariosTable({
           userToManage={manageUser.user}
           actionType={manageUser.action}
           onConfirm={handleManageConfirm}
-          activeUsers={users}
+          activeUsers={localUsers}
         />
       )}
 

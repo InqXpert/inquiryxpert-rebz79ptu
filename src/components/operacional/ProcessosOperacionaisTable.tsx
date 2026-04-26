@@ -11,8 +11,9 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { FolderOpen, ArrowDown, ArrowUp, Eye } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { formatDateBr } from '@/lib/utils'
+import { useRealtime } from '@/hooks/use-realtime'
 
 interface Props {
   processos: ProcessoOperacional[]
@@ -32,6 +33,28 @@ export function ProcessosOperacionaisTable({
   const [sortKey, setSortKey] = useState<keyof ProcessoOperacional>('data_entrada')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
 
+  // Local state for real-time stabilization
+  const [localProcessos, setLocalProcessos] = useState<ProcessoOperacional[]>(processos)
+
+  useEffect(() => {
+    setLocalProcessos(processos)
+  }, [processos])
+
+  // Stabilized Real-time Subscriptions (Eliminates Flickering)
+  useRealtime('processos_operacionais', (e) => {
+    if (e.action === 'create') {
+      setLocalProcessos((prev) => [e.record as unknown as ProcessoOperacional, ...prev])
+    } else if (e.action === 'update') {
+      setLocalProcessos((prev) =>
+        prev.map((p) =>
+          p.id === e.record.id ? ({ ...p, ...e.record } as unknown as ProcessoOperacional) : p,
+        ),
+      )
+    } else if (e.action === 'delete') {
+      setLocalProcessos((prev) => prev.filter((p) => p.id !== e.record.id))
+    }
+  })
+
   const handleSort = (key: keyof ProcessoOperacional) => {
     if (sortKey === key) {
       setSortDir(sortDir === 'asc' ? 'desc' : 'asc')
@@ -41,7 +64,7 @@ export function ProcessosOperacionaisTable({
     }
   }
 
-  const sortedData = [...processos].sort((a, b) => {
+  const sortedData = [...localProcessos].sort((a, b) => {
     let valA = a[sortKey] || ''
     let valB = b[sortKey] || ''
 
@@ -101,7 +124,7 @@ export function ProcessosOperacionaisTable({
     )
   }
 
-  if (processos.length === 0) {
+  if (localProcessos.length === 0) {
     return (
       <div className="py-24 text-center flex flex-col items-center justify-center p-6 bg-white dark:bg-brand-navy/80">
         <div className="w-16 h-16 bg-brand-light dark:bg-white/10 rounded-full flex items-center justify-center mb-4">

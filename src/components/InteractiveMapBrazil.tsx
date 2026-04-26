@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { Coords, AgentGeoInfo } from '@/hooks/use-geo-distance'
 import { useToast } from '@/hooks/use-toast'
+import { Skeleton } from '@/components/ui/skeleton'
+import { MapPin } from 'lucide-react'
 
 interface Props {
   investigationCoords: Coords | null
@@ -8,6 +10,7 @@ interface Props {
   nearestAgentId: string | null
   onSelectAgent: (id: string) => void
   distances?: Record<string, number>
+  loading?: boolean
 }
 
 export function InteractiveMapBrazil({
@@ -16,12 +19,15 @@ export function InteractiveMapBrazil({
   nearestAgentId,
   onSelectAgent,
   distances,
+  loading = false,
 }: Props) {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<any>(null)
   const { toast } = useToast()
 
   useEffect(() => {
+    if (loading || (agents.length === 0 && !investigationCoords)) return
+
     const L = (window as any).L
     if (!L) {
       toast({ title: 'Erro ao carregar mapa', variant: 'destructive' })
@@ -98,12 +104,37 @@ export function InteractiveMapBrazil({
     } else {
       map.setView([-14.235, -51.9253], 4)
     }
-  }, [investigationCoords, agents, nearestAgentId, distances, onSelectAgent, toast])
+  }, [investigationCoords, agents, nearestAgentId, distances, onSelectAgent, toast, loading])
+
+  // Non-Blocking Loading Render
+  if (loading) {
+    return (
+      <div className="w-full h-[400px] md:h-full min-h-[400px] rounded-2xl overflow-hidden bg-muted/20 animate-pulse flex flex-col">
+        <Skeleton className="w-full h-full rounded-2xl" />
+      </div>
+    )
+  }
+
+  // Explicit Empty State Coverage
+  if (agents.length === 0 && !investigationCoords) {
+    return (
+      <div className="w-full h-[400px] md:h-full min-h-[400px] rounded-2xl border border-dashed border-border flex flex-col items-center justify-center bg-muted/5 text-muted-foreground p-8 text-center shadow-sm">
+        <MapPin className="w-12 h-12 mb-4 opacity-30" />
+        <p className="font-semibold text-lg text-foreground tracking-tight">
+          Nenhum dado geográfico localizado
+        </p>
+        <p className="text-sm max-w-md mt-1">
+          Ajuste os filtros de pesquisa ou selecione uma investigação para exibir informações
+          visuais no mapa.
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div
       ref={mapContainerRef}
-      className="w-full h-full rounded-2xl z-0 relative isolate"
+      className="w-full h-[400px] md:h-full min-h-[400px] rounded-2xl z-0 relative isolate shadow-sm border border-border/50 bg-brand-light/30"
       aria-label="Mapa interativo Brasil - agentes proximos"
     />
   )

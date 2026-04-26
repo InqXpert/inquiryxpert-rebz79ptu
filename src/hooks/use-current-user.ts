@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import pb from '@/lib/pocketbase/client'
+import { useRealtime } from '@/hooks/use-realtime'
 
 export function useCurrentUser() {
   const { user: authUser, loading: authLoading } = useAuth()
@@ -68,6 +69,26 @@ export function useCurrentUser() {
 
     fetchUser()
   }, [authUser, authLoading])
+
+  // Single Source of Truth for Real-time Identity Updates
+  useRealtime(
+    'users',
+    (e) => {
+      if (e.action === 'update' && authUser && e.record.id === authUser.id) {
+        setUser((prev: any) => {
+          if (!prev) return prev
+          let newAvatarUrl = prev.computedAvatarUrl
+          if (e.record.foto_perfil) {
+            newAvatarUrl = pb.files.getUrl(e.record, e.record.foto_perfil)
+          } else if (e.record.avatar) {
+            newAvatarUrl = pb.files.getUrl(e.record, e.record.avatar)
+          }
+          return { ...prev, ...e.record, computedAvatarUrl: newAvatarUrl }
+        })
+      }
+    },
+    !!authUser,
+  )
 
   let avatarUrl = user?.computedAvatarUrl
   if (!avatarUrl && user) {
