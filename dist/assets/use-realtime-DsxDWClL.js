@@ -1,1 +1,0 @@
-import{r as e}from"./chunk-DECur_0Z.js";import{t}from"./react-DhTzgwgF.js";import{t as n}from"./client-CHm_Yw8G.js";var r=e(t(),1);function i(e,t,i=!0){let a=(0,r.useRef)(t);a.current=t,(0,r.useEffect)(()=>{if(!i)return;let t,r=!1;return n.collection(e).subscribe(`*`,e=>{a.current(e)}).then(e=>{r?e().catch(()=>{}):t=e}),()=>{r=!0,t&&t().catch(()=>{})}},[e,i])}export{i as t};

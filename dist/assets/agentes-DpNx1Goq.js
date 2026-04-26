@@ -1,0 +1,1 @@
+import{t as e}from"./client-Nns4GAOe.js";var t=()=>e.collection(`agentes`).getFullList({sort:`-created`}),n=t=>e.collection(`agentes`).getOne(t),r=t=>e.collection(`agentes`).delete(t);export{n,t as r,r as t};
