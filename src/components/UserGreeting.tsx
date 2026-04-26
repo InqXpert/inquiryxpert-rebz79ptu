@@ -114,19 +114,6 @@ export const UserGreeting = memo(function UserGreeting() {
         onClick={handleAvatarClick}
         title="Alterar foto de perfil"
       >
-        <Avatar
-          className={`w-24 h-24 md:w-32 md:h-32 shadow-sm transition-opacity duration-200 ${isUploading ? 'opacity-50' : 'group-hover:opacity-90'}`}
-        >
-          <AvatarImage src={localAvatarUrl || ''} className="object-cover" />
-          <AvatarFallback className="flex items-center justify-center bg-secondary text-secondary-foreground text-3xl md:text-4xl font-bold w-full h-full uppercase">
-            {firstName.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
-
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <Camera className="w-8 h-8 text-white" />
-        </div>
-
         <input
           type="file"
           ref={fileInputRef}
