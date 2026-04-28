@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'
 import { AcoesNF } from './components/AcoesNF'
+import { AcoesPagamento } from './components/AcoesPagamento'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { FinanceiroNav } from './components/FinanceiroNav'
@@ -269,9 +270,16 @@ export default function ControleOperacionalFinanceiro() {
                   <th
                     colSpan={1}
                     rowSpan={2}
-                    className="border-b px-4 py-2 text-center bg-gray-200/60 font-semibold align-middle"
+                    className="border-b border-r px-4 py-2 text-center bg-gray-200/60 font-semibold align-middle"
                   >
                     Ações
+                  </th>
+                  <th
+                    colSpan={1}
+                    rowSpan={2}
+                    className="border-b px-4 py-2 text-center bg-gray-200/60 font-semibold align-middle"
+                  >
+                    Pagamento
                   </th>
                 </tr>
                 <tr className="bg-gray-50 text-gray-600">
@@ -359,7 +367,7 @@ export default function ControleOperacionalFinanceiro() {
                     <td className="px-3 py-2 border-r">{row.margem.toFixed(2)}%</td>
                     <td className="px-3 py-2 border-r">{row.nf}</td>
                     <td className="px-3 py-2 border-r">{formatDate(row.dataEmissaoNF)}</td>
-                    <td className="px-3 py-2">
+                    <td className="px-3 py-2 border-r">
                       <AcoesNF
                         despesaId={row.despesaId}
                         nfNumero={row.nf !== '-' ? row.nf : ''}
@@ -368,6 +376,22 @@ export default function ControleOperacionalFinanceiro() {
                         totalAReceber={row.totalAReceber}
                         totalAPagar={row.totalAPagarAgente}
                         dataRecebimento={row.dataRecebimento}
+                        userRole={user?.role}
+                        onSuccess={() => setRefreshKey((k) => k + 1)}
+                      />
+                    </td>
+                    <td className="px-3 py-2">
+                      <AcoesPagamento
+                        despesaId={row.despesaId}
+                        nfNumero={row.nf !== '-' ? row.nf : ''}
+                        dataRecebimento={row.dataRecebimento}
+                        totalAReceber={row.totalAReceber}
+                        totalAPagar={row.totalAPagarAgente}
+                        iss20={row.iss20}
+                        liquido={row.liquido}
+                        despesaComplemento={
+                          row.despesaComplemento !== '-' ? row.despesaComplemento : ''
+                        }
                         userRole={user?.role}
                         onSuccess={() => setRefreshKey((k) => k + 1)}
                       />
@@ -429,7 +453,21 @@ export default function ControleOperacionalFinanceiro() {
                     </span>
                   </div>
                 </div>
-                <div className="border-t pt-3 flex justify-end">
+                <div className="border-t pt-3 flex justify-between items-center gap-2 flex-wrap">
+                  <AcoesPagamento
+                    despesaId={item.despesaId}
+                    nfNumero={item.nf !== '-' ? item.nf : ''}
+                    dataRecebimento={item.dataRecebimento}
+                    totalAReceber={item.totalAReceber}
+                    totalAPagar={item.totalAPagarAgente}
+                    iss20={item.iss20}
+                    liquido={item.liquido}
+                    despesaComplemento={
+                      item.despesaComplemento !== '-' ? item.despesaComplemento : ''
+                    }
+                    userRole={user?.role}
+                    onSuccess={() => setRefreshKey((k) => k + 1)}
+                  />
                   <AcoesNF
                     despesaId={item.despesaId}
                     nfNumero={item.nf !== '-' ? item.nf : ''}
