@@ -3,6 +3,8 @@ import { format, parseISO } from 'date-fns'
 import { AlertTriangle, PackageOpen, RefreshCcw, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useAuth } from '@/hooks/use-auth'
+import { AcoesNF } from './components/AcoesNF'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { FinanceiroNav } from './components/FinanceiroNav'
@@ -60,6 +62,8 @@ export default function ControleOperacionalFinanceiro() {
   const [currentPage, setCurrentPage] = useState(1)
   const [data, setData] = useState<any[]>([])
   const [totalPages, setTotalPages] = useState(1)
+  const [refreshKey, setRefreshKey] = useState(0)
+  const { user } = useAuth()
   const itemsPerPage = 20
 
   useEffect(() => {
@@ -103,7 +107,7 @@ export default function ControleOperacionalFinanceiro() {
     return () => {
       isMounted = false
     }
-  }, [currentPage, appliedFilter])
+  }, [currentPage, appliedFilter, refreshKey])
 
   const mappedData = useMemo(() => {
     return data.map((proc) => {
@@ -160,6 +164,7 @@ export default function ControleOperacionalFinanceiro() {
         iss20: despesas.iss_20 || 0,
         liquido: despesas.liquido || 0,
         margem: margem,
+        despesaId: despesas.id,
         nf: despesas.nf_numero || '-',
         dataEmissaoNF: despesas.data_emissao_nf,
         originalProc: proc,
@@ -257,9 +262,16 @@ export default function ControleOperacionalFinanceiro() {
                   </th>
                   <th
                     colSpan={13}
-                    className="border-b px-4 py-2 text-center bg-gray-200/60 font-semibold"
+                    className="border-b border-r px-4 py-2 text-center bg-gray-200/60 font-semibold"
                   >
                     Block C — Valores a Receber do Cliente
+                  </th>
+                  <th
+                    colSpan={1}
+                    rowSpan={2}
+                    className="border-b px-4 py-2 text-center bg-gray-200/60 font-semibold align-middle"
+                  >
+                    Ações
                   </th>
                 </tr>
                 <tr className="bg-gray-50 text-gray-600">
@@ -346,7 +358,20 @@ export default function ControleOperacionalFinanceiro() {
                     </td>
                     <td className="px-3 py-2 border-r">{row.margem.toFixed(2)}%</td>
                     <td className="px-3 py-2 border-r">{row.nf}</td>
-                    <td className="px-3 py-2">{formatDate(row.dataEmissaoNF)}</td>
+                    <td className="px-3 py-2 border-r">{formatDate(row.dataEmissaoNF)}</td>
+                    <td className="px-3 py-2">
+                      <AcoesNF
+                        despesaId={row.despesaId}
+                        nfNumero={row.nf !== '-' ? row.nf : ''}
+                        dataEmissao={row.dataEmissaoNF}
+                        issValue={row.iss}
+                        totalAReceber={row.totalAReceber}
+                        totalAPagar={row.totalAPagarAgente}
+                        dataRecebimento={row.dataRecebimento}
+                        userRole={user?.role}
+                        onSuccess={() => setRefreshKey((k) => k + 1)}
+                      />
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -403,6 +428,19 @@ export default function ControleOperacionalFinanceiro() {
                       {formatCurrency(item.totalAReceber)}
                     </span>
                   </div>
+                </div>
+                <div className="border-t pt-3 flex justify-end">
+                  <AcoesNF
+                    despesaId={item.despesaId}
+                    nfNumero={item.nf !== '-' ? item.nf : ''}
+                    dataEmissao={item.dataEmissaoNF}
+                    issValue={item.iss}
+                    totalAReceber={item.totalAReceber}
+                    totalAPagar={item.totalAPagarAgente}
+                    dataRecebimento={item.dataRecebimento}
+                    userRole={user?.role}
+                    onSuccess={() => setRefreshKey((k) => k + 1)}
+                  />
                 </div>
               </div>
             ))}
