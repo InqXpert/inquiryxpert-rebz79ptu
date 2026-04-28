@@ -43,6 +43,7 @@ const ControleOperacionalFinanceiro = lazy(
 )
 const Adiantamentos = lazy(() => import('./pages/financeiro/Adiantamentos'))
 const MovimentacaoInter = lazy(() => import('./pages/financeiro/MovimentacaoInter'))
+const MovimentacaoItau = lazy(() => import('./pages/financeiro/MovimentacaoItau'))
 
 // Gestão de Agentes Module Lazy Loads
 const GestaoAgentesLayout = lazy(() => import('./pages/gestao-agentes/Layout'))
@@ -120,6 +121,7 @@ export default function App() {
                   <Route path="/financeiro/controle" element={<ControleOperacionalFinanceiro />} />
                   <Route path="/financeiro/adiantamentos" element={<Adiantamentos />} />
                   <Route path="/financeiro/movimentacao-inter" element={<MovimentacaoInter />} />
+                  <Route path="/financeiro/movimentacao-itau" element={<MovimentacaoItau />} />
 
                   {/* Gestão de Agentes Module */}
                   <Route path="/gestao-agentes" element={<GestaoAgentesLayout />}>

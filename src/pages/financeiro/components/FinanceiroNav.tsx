@@ -11,6 +11,7 @@ export function FinanceiroNav() {
     { title: 'Controle', url: '/financeiro/controle' },
     { title: 'Adiantamentos', url: '/financeiro/adiantamentos' },
     { title: 'Inter', url: '/financeiro/movimentacao-inter' },
+    { title: 'Itaú', url: '/financeiro/movimentacao-itau' },
   ]
 
   return (

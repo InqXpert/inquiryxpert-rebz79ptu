@@ -37,107 +37,125 @@ import {
   AlertCircle,
   PackageOpen,
   RotateCcw,
+  LineChart,
 } from 'lucide-react'
 import { format, isSameMonth } from 'date-fns'
 import { cn } from '@/lib/utils'
 
-type TransactionType = 'Retirada' | 'Devolução'
-type TransactionStatus = 'Pendente Devolução' | 'Devolvido' | 'Cancelado'
+type InterTransactionType = 'Crédito' | 'Débito'
+type InterTransactionStatus = 'Processado' | 'Pendente' | 'Cancelado'
 
-interface Transaction {
+interface InterTransaction {
   id: string
   date: string
-  cLevel: string
-  type: TransactionType
+  provider: string
+  identification: string
+  type: InterTransactionType
   amount: number
-  motive: string
-  status: TransactionStatus
-  returnDate?: string
+  status: InterTransactionStatus
   balance: number
 }
 
-const mockData: Transaction[] = [
+const mockInterData: InterTransaction[] = [
   {
     id: '1',
-    date: new Date(Date.now() - 86400000 * 2).toISOString(),
-    cLevel: 'João Silva',
-    type: 'Retirada',
-    amount: 5000,
-    motive: 'Despesa operacional',
-    status: 'Pendente Devolução',
-    balance: 5000,
+    date: new Date(Date.now() - 86400000 * 1).toISOString(),
+    provider: 'Zurich Seguros',
+    identification: 'PGTO NF 123',
+    type: 'Crédito',
+    amount: 15000,
+    status: 'Processado',
+    balance: 125000,
   },
   {
     id: '2',
-    date: new Date(Date.now() - 86400000 * 5).toISOString(),
-    cLevel: 'Maria Santos',
-    type: 'Retirada',
-    amount: 12000,
-    motive: 'Adiantamento',
-    status: 'Devolvido',
-    returnDate: new Date(Date.now() - 86400000).toISOString(),
-    balance: 0,
+    date: new Date(Date.now() - 86400000 * 2).toISOString(),
+    provider: 'Cooperlink',
+    identification: 'Serviços TI',
+    type: 'Débito',
+    amount: 3500,
+    status: 'Processado',
+    balance: 110000,
   },
   {
     id: '3',
-    date: new Date(Date.now() - 86400000).toISOString(),
-    cLevel: 'Maria Santos',
-    type: 'Devolução',
-    amount: 12000,
-    motive: 'Reembolso',
-    status: 'Devolvido',
-    balance: 0,
+    date: new Date(Date.now() - 86400000 * 3).toISOString(),
+    provider: 'Bradesco Seguros',
+    identification: 'Honorários',
+    type: 'Crédito',
+    amount: 22000,
+    status: 'Processado',
+    balance: 113500,
   },
   {
     id: '4',
-    date: new Date(Date.now() - 86400000 * 10).toISOString(),
-    cLevel: 'Carlos Oliveira',
-    type: 'Retirada',
-    amount: 3500,
-    motive: 'Viagem',
-    status: 'Pendente Devolução',
-    balance: 3500,
+    date: new Date(Date.now() - 86400000 * 4).toISOString(),
+    provider: 'Enel',
+    identification: 'Conta de Luz',
+    type: 'Débito',
+    amount: 850,
+    status: 'Processado',
+    balance: 91500,
   },
   {
     id: '5',
-    date: new Date(Date.now() - 86400000 * 15).toISOString(),
-    cLevel: 'João Silva',
-    type: 'Retirada',
-    amount: 8000,
-    motive: 'Equipamentos',
-    status: 'Cancelado',
-    balance: 0,
+    date: new Date(Date.now() - 86400000 * 5).toISOString(),
+    provider: 'Sulamérica',
+    identification: 'Adiantamento',
+    type: 'Crédito',
+    amount: 5000,
+    status: 'Pendente',
+    balance: 92350,
   },
   {
     id: '6',
-    date: new Date(Date.now() - 86400000 * 18).toISOString(),
-    cLevel: 'Carlos Oliveira',
-    type: 'Retirada',
-    amount: 2000,
-    motive: 'Evento',
-    status: 'Devolvido',
-    returnDate: new Date(Date.now() - 86400000 * 12).toISOString(),
-    balance: 0,
+    date: new Date(Date.now() - 86400000 * 6).toISOString(),
+    provider: 'Vivo',
+    identification: 'Internet',
+    type: 'Débito',
+    amount: 450,
+    status: 'Processado',
+    balance: 87350,
   },
   {
     id: '7',
-    date: new Date(Date.now() - 86400000 * 12).toISOString(),
-    cLevel: 'Carlos Oliveira',
-    type: 'Devolução',
-    amount: 2000,
-    motive: 'Reembolso evento',
-    status: 'Devolvido',
-    balance: 0,
+    date: new Date(Date.now() - 86400000 * 8).toISOString(),
+    provider: 'Mapfre',
+    identification: 'Reembolso',
+    type: 'Crédito',
+    amount: 1200,
+    status: 'Processado',
+    balance: 87800,
   },
   {
     id: '8',
-    date: new Date(Date.now() - 86400000 * 25).toISOString(),
-    cLevel: 'Maria Santos',
-    type: 'Retirada',
+    date: new Date(Date.now() - 86400000 * 10).toISOString(),
+    provider: 'Kalunga',
+    identification: 'Material Escritório',
+    type: 'Débito',
+    amount: 600,
+    status: 'Cancelado',
+    balance: 86600,
+  },
+  {
+    id: '9',
+    date: new Date(Date.now() - 86400000 * 12).toISOString(),
+    provider: 'Allianz',
+    identification: 'PGTO NF 124',
+    type: 'Crédito',
+    amount: 18000,
+    status: 'Processado',
+    balance: 86600,
+  },
+  {
+    id: '10',
+    date: new Date(Date.now() - 86400000 * 15).toISOString(),
+    provider: 'Localiza',
+    identification: 'Aluguel Frota',
+    type: 'Débito',
     amount: 4500,
-    motive: 'Adiantamento',
-    status: 'Pendente Devolução',
-    balance: 4500,
+    status: 'Processado',
+    balance: 68600,
   },
 ]
 
@@ -145,14 +163,13 @@ const formatCurrency = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
 
 export default function MovimentacaoInter() {
-  const [data, setData] = useState<Transaction[]>([])
+  const [data, setData] = useState<InterTransaction[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
 
   const [filters, setFilters] = useState({
     dateFrom: '',
     dateTo: '',
-    cLevel: 'Todos',
     type: 'Todos',
   })
   const [appliedFilters, setAppliedFilters] = useState(filters)
@@ -162,7 +179,7 @@ export default function MovimentacaoInter() {
     setIsLoading(true)
     setHasError(false)
     setTimeout(() => {
-      setData(mockData)
+      setData(mockInterData)
       setIsLoading(false)
     }, 1000)
   }
@@ -170,25 +187,26 @@ export default function MovimentacaoInter() {
   useEffect(() => {
     loadData()
   }, [])
+
   useEffect(() => {
     setPage(1)
   }, [appliedFilters])
 
   const currentMonthData = data.filter((t) => isSameMonth(new Date(t.date), new Date()))
-  const totalRetiradasMonth = currentMonthData
-    .filter((t) => t.type === 'Retirada' && t.status !== 'Cancelado')
+  const totalCreditosMonth = currentMonthData
+    .filter((t) => t.type === 'Crédito' && t.status !== 'Cancelado')
     .reduce((acc, curr) => acc + curr.amount, 0)
-  const totalDevolucoesMonth = currentMonthData
-    .filter((t) => t.type === 'Devolução')
+  const totalDebitosMonth = currentMonthData
+    .filter((t) => t.type === 'Débito' && t.status !== 'Cancelado')
     .reduce((acc, curr) => acc + curr.amount, 0)
-  const saldoLiquidoMonth = totalRetiradasMonth - totalDevolucoesMonth
-  const saldoPendenteMonth = currentMonthData
-    .filter((t) => t.status === 'Pendente Devolução')
-    .reduce((acc, curr) => acc + curr.balance, 0)
+
+  // Mock current available balance
+  const saldoDisponivel = 125000
+  // Mock projected balance
+  const saldoProjetado = 138000
 
   const filteredData = useMemo(() => {
     return data.filter((t) => {
-      if (appliedFilters.cLevel !== 'Todos' && t.cLevel !== appliedFilters.cLevel) return false
       if (appliedFilters.type !== 'Todos' && t.type !== appliedFilters.type) return false
       if (appliedFilters.dateFrom && t.date < appliedFilters.dateFrom) return false
       if (appliedFilters.dateTo && t.date > appliedFilters.dateTo + 'T23:59:59.999Z') return false
@@ -196,20 +214,20 @@ export default function MovimentacaoInter() {
     })
   }, [data, appliedFilters])
 
-  const tableTotalRetiradas = filteredData
-    .filter((t) => t.type === 'Retirada' && t.status !== 'Cancelado')
+  const tableTotalCreditos = filteredData
+    .filter((t) => t.type === 'Crédito' && t.status !== 'Cancelado')
     .reduce((a, c) => a + c.amount, 0)
-  const tableTotalDevolucoes = filteredData
-    .filter((t) => t.type === 'Devolução')
+  const tableTotalDebitos = filteredData
+    .filter((t) => t.type === 'Débito' && t.status !== 'Cancelado')
     .reduce((a, c) => a + c.amount, 0)
-  const tableSaldoLiquido = tableTotalRetiradas - tableTotalDevolucoes
+  const tableSaldoLiquido = tableTotalCreditos - tableTotalDebitos
 
   const ITEMS_PER_PAGE = 25
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE)
   const paginatedData = filteredData.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
 
   const handleClear = () => {
-    const reset = { dateFrom: '', dateTo: '', cLevel: 'Todos', type: 'Todos' }
+    const reset = { dateFrom: '', dateTo: '', type: 'Todos' }
     setFilters(reset)
     setAppliedFilters(reset)
   }
@@ -217,8 +235,10 @@ export default function MovimentacaoInter() {
   return (
     <div className="space-y-6 animate-fade-in-up">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Movimentação Bancária — Itaú</h1>
-        <p className="text-muted-foreground mt-2">Controle de retiradas e devoluções de C-Level</p>
+        <h1 className="text-3xl font-bold tracking-tight">Movimentação Bancária — Inter</h1>
+        <p className="text-muted-foreground mt-2">
+          Controle de entradas e saídas da conta principal
+        </p>
       </div>
 
       <FinanceiroNav />
@@ -226,49 +246,49 @@ export default function MovimentacaoInter() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Total Retiradas</CardTitle>
-            <ArrowUpRight className="w-4 h-4 text-orange-500" />
+            <CardTitle className="text-sm font-medium">Total Créditos</CardTitle>
+            <ArrowUpRight className="w-4 h-4 text-[#0d9488]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalRetiradasMonth)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(totalCreditosMonth)}</div>
             <p className="text-xs text-muted-foreground">Mês atual</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Total Devoluções</CardTitle>
-            <ArrowDownRight className="w-4 h-4 text-teal-600" />
+            <CardTitle className="text-sm font-medium">Total Débitos</CardTitle>
+            <ArrowDownRight className="w-4 h-4 text-[#dc2626]" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalDevolucoesMonth)}</div>
+            <div className="text-2xl font-bold">{formatCurrency(totalDebitosMonth)}</div>
             <p className="text-xs text-muted-foreground">Mês atual</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Saldo Líquido</CardTitle>
+            <CardTitle className="text-sm font-medium">Saldo Disponível</CardTitle>
             <DollarSign className="w-4 h-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(saldoLiquidoMonth)}</div>
-            <p className="text-xs text-muted-foreground">Mês atual</p>
+            <div className="text-2xl font-bold">{formatCurrency(saldoDisponivel)}</div>
+            <p className="text-xs text-muted-foreground">Atualizado hoje</p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Pendente Devolução</CardTitle>
-            <AlertCircle className="w-4 h-4 text-yellow-600" />
+            <CardTitle className="text-sm font-medium">Saldo Projetado</CardTitle>
+            <LineChart className="w-4 h-4 text-purple-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(saldoPendenteMonth)}</div>
-            <p className="text-xs text-muted-foreground">Mês atual</p>
+            <div className="text-2xl font-bold">{formatCurrency(saldoProjetado)}</div>
+            <p className="text-xs text-muted-foreground">Fim do mês</p>
           </CardContent>
         </Card>
       </div>
 
       <Card>
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-6">
             <div className="space-y-2">
               <Label>De</Label>
               <Input
@@ -286,23 +306,6 @@ export default function MovimentacaoInter() {
               />
             </div>
             <div className="space-y-2">
-              <Label>C-Level</Label>
-              <Select
-                value={filters.cLevel}
-                onValueChange={(v) => setFilters({ ...filters, cLevel: v })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="C-Level" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Todos">Todos</SelectItem>
-                  <SelectItem value="João Silva">João Silva</SelectItem>
-                  <SelectItem value="Maria Santos">Maria Santos</SelectItem>
-                  <SelectItem value="Carlos Oliveira">Carlos Oliveira</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
               <Label>Tipo</Label>
               <Select
                 value={filters.type}
@@ -313,8 +316,8 @@ export default function MovimentacaoInter() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Todos">Todos</SelectItem>
-                  <SelectItem value="Retirada">Retirada</SelectItem>
-                  <SelectItem value="Devolução">Devolução</SelectItem>
+                  <SelectItem value="Crédito">Crédito</SelectItem>
+                  <SelectItem value="Débito">Débito</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -333,20 +336,21 @@ export default function MovimentacaoInter() {
               <TableHeader className="bg-slate-100">
                 <TableRow>
                   <TableHead className="text-brand-navy font-semibold">Data</TableHead>
-                  <TableHead className="text-brand-navy font-semibold">C-Level</TableHead>
-                  <TableHead className="text-brand-navy font-semibold">Tipo</TableHead>
-                  <TableHead className="text-brand-navy font-semibold text-right">
-                    Valor (R$)
+                  <TableHead className="text-brand-navy font-semibold">
+                    Fornecedor / Descrição
                   </TableHead>
-                  <TableHead className="text-brand-navy font-semibold">Motivo</TableHead>
+                  <TableHead className="text-brand-navy font-semibold">Identificação</TableHead>
+                  <TableHead className="text-brand-navy font-semibold text-right">
+                    Débito (R$)
+                  </TableHead>
+                  <TableHead className="text-brand-navy font-semibold text-right">
+                    Crédito (R$)
+                  </TableHead>
                   <TableHead className="text-brand-navy font-semibold text-center">
                     Status
                   </TableHead>
-                  <TableHead className="text-brand-navy font-semibold text-center">
-                    Data Devolução
-                  </TableHead>
                   <TableHead className="text-brand-navy font-semibold text-right">
-                    Saldo (R$)
+                    Saldo Atual (R$)
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -354,7 +358,7 @@ export default function MovimentacaoInter() {
                 {isLoading &&
                   Array.from({ length: 5 }).map((_, i) => (
                     <TableRow key={i}>
-                      {Array.from({ length: 8 }).map((_, j) => (
+                      {Array.from({ length: 7 }).map((_, j) => (
                         <TableCell key={j}>
                           <Skeleton className="h-6 w-full" />
                         </TableCell>
@@ -369,36 +373,28 @@ export default function MovimentacaoInter() {
                       className="odd:bg-background even:bg-muted/50 hover:bg-muted/80 transition-colors"
                     >
                       <TableCell>{format(new Date(t.date), 'dd/MM/yyyy')}</TableCell>
-                      <TableCell>{t.cLevel}</TableCell>
-                      <TableCell
-                        className={cn(
-                          'font-medium',
-                          t.type === 'Retirada' ? 'text-[#f97316]' : 'text-[#0d9488]',
-                        )}
-                      >
-                        {t.type}
+                      <TableCell className="font-medium">{t.provider}</TableCell>
+                      <TableCell className="text-muted-foreground">{t.identification}</TableCell>
+                      <TableCell className="text-right text-[#dc2626]">
+                        {t.type === 'Débito' ? formatCurrency(t.amount) : '-'}
                       </TableCell>
-                      <TableCell className="text-right font-medium">
-                        {formatCurrency(t.amount)}
+                      <TableCell className="text-right text-[#0d9488]">
+                        {t.type === 'Crédito' ? formatCurrency(t.amount) : '-'}
                       </TableCell>
-                      <TableCell>{t.motive}</TableCell>
                       <TableCell className="text-center">
                         <Badge
                           variant="outline"
                           className={cn(
-                            t.status === 'Pendente Devolução' &&
-                              'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100',
-                            t.status === 'Devolvido' &&
+                            t.status === 'Processado' &&
                               'bg-green-100 text-green-800 border-green-200 hover:bg-green-100',
+                            t.status === 'Pendente' &&
+                              'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100',
                             t.status === 'Cancelado' &&
                               'bg-slate-100 text-slate-800 border-slate-200 hover:bg-slate-100',
                           )}
                         >
                           {t.status}
                         </Badge>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {t.returnDate ? format(new Date(t.returnDate), 'dd/MM/yyyy') : '-'}
                       </TableCell>
                       <TableCell className="text-right">{formatCurrency(t.balance)}</TableCell>
                     </TableRow>
@@ -408,21 +404,16 @@ export default function MovimentacaoInter() {
                 <TableFooter className="bg-slate-100 font-semibold text-slate-800">
                   <TableRow>
                     <TableCell colSpan={3} className="text-right text-brand-navy">
-                      Total Retiradas:
+                      Total:
                     </TableCell>
-                    <TableCell className="text-right text-[#f97316]">
-                      {formatCurrency(tableTotalRetiradas)}
-                    </TableCell>
-                    <TableCell colSpan={3} className="text-right text-brand-navy">
-                      Total Devoluções:
+                    <TableCell className="text-right text-[#dc2626]">
+                      {formatCurrency(tableTotalDebitos)}
                     </TableCell>
                     <TableCell className="text-right text-[#0d9488]">
-                      {formatCurrency(tableTotalDevolucoes)}
+                      {formatCurrency(tableTotalCreditos)}
                     </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-right text-brand-navy">
-                      Saldo Líquido:
+                    <TableCell colSpan={1} className="text-right text-brand-navy">
+                      Saldo Final:
                     </TableCell>
                     <TableCell className="text-right">
                       {formatCurrency(tableSaldoLiquido)}
