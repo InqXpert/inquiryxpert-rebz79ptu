@@ -38,6 +38,9 @@ const NovoCliente = lazy(() => import('./pages/financeiro/NovoCliente'))
 const EditarCliente = lazy(() => import('./pages/financeiro/EditarCliente'))
 const PeriodosFaturamento = lazy(() => import('./pages/financeiro/PeriodosFaturamento'))
 const NotasFiscais = lazy(() => import('./pages/financeiro/NotasFiscais'))
+const ControleOperacionalFinanceiro = lazy(
+  () => import('./pages/financeiro/ControleOperacionalFinanceiro'),
+)
 
 // Gestão de Agentes Module Lazy Loads
 const GestaoAgentesLayout = lazy(() => import('./pages/gestao-agentes/Layout'))
@@ -112,6 +115,7 @@ export default function App() {
                   <Route path="/financeiro/clientes/:id" element={<EditarCliente />} />
                   <Route path="/financeiro/periodos" element={<PeriodosFaturamento />} />
                   <Route path="/financeiro/notas-fiscais" element={<NotasFiscais />} />
+                  <Route path="/financeiro/controle" element={<ControleOperacionalFinanceiro />} />
 
                   {/* Gestão de Agentes Module */}
                   <Route path="/gestao-agentes" element={<GestaoAgentesLayout />}>

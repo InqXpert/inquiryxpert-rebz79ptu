@@ -8,6 +8,7 @@ export function FinanceiroNav() {
     { title: 'Clientes', url: '/financeiro/clientes' },
     { title: 'Períodos', url: '/financeiro/periodos' },
     { title: 'Notas Fiscais', url: '/financeiro/notas-fiscais' },
+    { title: 'Controle', url: '/financeiro/controle' },
   ]
 
   return (
