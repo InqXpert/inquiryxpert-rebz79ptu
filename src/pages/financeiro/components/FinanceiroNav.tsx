@@ -13,6 +13,7 @@ export function FinanceiroNav() {
     { title: 'Metas', url: '/financeiro/metas' },
     { title: 'Inter', url: '/financeiro/movimentacao-inter' },
     { title: 'Itaú', url: '/financeiro/movimentacao-itau' },
+    { title: 'Performance', url: '/financeiro/performance' },
   ]
 
   return (

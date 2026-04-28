@@ -45,6 +45,7 @@ const Adiantamentos = lazy(() => import('./pages/financeiro/Adiantamentos'))
 const MetasFinanceiras = lazy(() => import('./pages/financeiro/MetasFinanceiras'))
 const MovimentacaoInter = lazy(() => import('./pages/financeiro/MovimentacaoInter'))
 const MovimentacaoItau = lazy(() => import('./pages/financeiro/MovimentacaoItau'))
+const RelatorioPerformance = lazy(() => import('./pages/financeiro/RelatorioPerformance'))
 
 // Gestão de Agentes Module Lazy Loads
 const GestaoAgentesLayout = lazy(() => import('./pages/gestao-agentes/Layout'))
@@ -124,6 +125,7 @@ export default function App() {
                   <Route path="/financeiro/metas" element={<MetasFinanceiras />} />
                   <Route path="/financeiro/movimentacao-inter" element={<MovimentacaoInter />} />
                   <Route path="/financeiro/movimentacao-itau" element={<MovimentacaoItau />} />
+                  <Route path="/financeiro/performance" element={<RelatorioPerformance />} />
 
                   {/* Gestão de Agentes Module */}
                   <Route path="/gestao-agentes" element={<GestaoAgentesLayout />}>
