@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FinanceiroNav } from './components/FinanceiroNav'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -31,182 +31,181 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination'
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from '@/components/ui/sheet'
+import {
   ArrowDownRight,
   ArrowUpRight,
   DollarSign,
   AlertCircle,
   PackageOpen,
   RotateCcw,
+  Plus,
 } from 'lucide-react'
-import { format, isSameMonth } from 'date-fns'
+import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
-
-type TransactionType = 'Retirada' | 'Devolução'
-type TransactionStatus = 'Pendente Devolução' | 'Devolvido' | 'Cancelado'
-
-interface Transaction {
-  id: string
-  date: string
-  cLevel: string
-  type: TransactionType
-  amount: number
-  motive: string
-  status: TransactionStatus
-  returnDate?: string
-  balance: number
-}
-
-const mockData: Transaction[] = [
-  {
-    id: '1',
-    date: new Date(Date.now() - 86400000 * 2).toISOString(),
-    cLevel: 'João Silva',
-    type: 'Retirada',
-    amount: 5000,
-    motive: 'Despesa operacional',
-    status: 'Pendente Devolução',
-    balance: 5000,
-  },
-  {
-    id: '2',
-    date: new Date(Date.now() - 86400000 * 5).toISOString(),
-    cLevel: 'Maria Santos',
-    type: 'Retirada',
-    amount: 12000,
-    motive: 'Adiantamento',
-    status: 'Devolvido',
-    returnDate: new Date(Date.now() - 86400000).toISOString(),
-    balance: 0,
-  },
-  {
-    id: '3',
-    date: new Date(Date.now() - 86400000).toISOString(),
-    cLevel: 'Maria Santos',
-    type: 'Devolução',
-    amount: 12000,
-    motive: 'Reembolso',
-    status: 'Devolvido',
-    balance: 0,
-  },
-  {
-    id: '4',
-    date: new Date(Date.now() - 86400000 * 10).toISOString(),
-    cLevel: 'Carlos Oliveira',
-    type: 'Retirada',
-    amount: 3500,
-    motive: 'Viagem',
-    status: 'Pendente Devolução',
-    balance: 3500,
-  },
-  {
-    id: '5',
-    date: new Date(Date.now() - 86400000 * 15).toISOString(),
-    cLevel: 'João Silva',
-    type: 'Retirada',
-    amount: 8000,
-    motive: 'Equipamentos',
-    status: 'Cancelado',
-    balance: 0,
-  },
-  {
-    id: '6',
-    date: new Date(Date.now() - 86400000 * 18).toISOString(),
-    cLevel: 'Carlos Oliveira',
-    type: 'Retirada',
-    amount: 2000,
-    motive: 'Evento',
-    status: 'Devolvido',
-    returnDate: new Date(Date.now() - 86400000 * 12).toISOString(),
-    balance: 0,
-  },
-  {
-    id: '7',
-    date: new Date(Date.now() - 86400000 * 12).toISOString(),
-    cLevel: 'Carlos Oliveira',
-    type: 'Devolução',
-    amount: 2000,
-    motive: 'Reembolso evento',
-    status: 'Devolvido',
-    balance: 0,
-  },
-  {
-    id: '8',
-    date: new Date(Date.now() - 86400000 * 25).toISOString(),
-    cLevel: 'Maria Santos',
-    type: 'Retirada',
-    amount: 4500,
-    motive: 'Adiantamento',
-    status: 'Pendente Devolução',
-    balance: 4500,
-  },
-]
+import pb from '@/lib/pocketbase/client'
+import { useRealtime } from '@/hooks/use-realtime'
+import { toast } from 'sonner'
+import { getErrorMessage } from '@/lib/pocketbase/errors'
+import { useAuth } from '@/hooks/use-auth'
 
 const formatCurrency = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
 
+const statusMapItau = {
+  pendente_devolucao: 'Pendente Devolução',
+  devolvido: 'Devolvido',
+  cancelado: 'Cancelado',
+}
+
 export default function MovimentacaoItau() {
-  const [data, setData] = useState<Transaction[]>([])
+  const { user } = useAuth()
+  const [paginatedData, setPaginatedData] = useState<any[]>([])
+  const [cLevels, setCLevels] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSheetOpen, setIsSheetOpen] = useState(false)
+
+  const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
 
   const [filters, setFilters] = useState({
-    dateFrom: '',
-    dateTo: '',
+    dateFrom: format(startOfMonth, 'yyyy-MM-dd'),
+    dateTo: format(endOfMonth, 'yyyy-MM-dd'),
     cLevel: 'Todos',
     type: 'Todos',
   })
   const [appliedFilters, setAppliedFilters] = useState(filters)
   const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
-  const loadData = () => {
+  const [totals, setTotals] = useState({
+    retiradas: 0,
+    devolucoes: 0,
+    saldoLiquido: 0,
+    pendente: 0,
+  })
+
+  const [formData, setFormData] = useState({
+    data_retirada: format(new Date(), 'yyyy-MM-dd'),
+    c_level_id: '',
+    tipo: 'retirada',
+    valor: '',
+    motivo: '',
+    status: 'pendente_devolucao',
+    data_devolucao: '',
+  })
+
+  useEffect(() => {
+    pb.collection('users')
+      .getFullList({ filter: "role = 'c-level' || role = 'admin'" })
+      .then(setCLevels)
+      .catch(() => {})
+  }, [])
+
+  const loadData = async () => {
     setIsLoading(true)
     setHasError(false)
-    setTimeout(() => {
-      setData(mockData)
+    try {
+      const filterParts = []
+      if (appliedFilters.dateFrom)
+        filterParts.push(`data_retirada >= '${appliedFilters.dateFrom} 00:00:00'`)
+      if (appliedFilters.dateTo)
+        filterParts.push(`data_retirada <= '${appliedFilters.dateTo} 23:59:59'`)
+      if (appliedFilters.cLevel !== 'Todos')
+        filterParts.push(`c_level_id = '${appliedFilters.cLevel}'`)
+      if (appliedFilters.type !== 'Todos')
+        filterParts.push(`tipo = '${appliedFilters.type.toLowerCase()}'`)
+      const filterString = filterParts.join(' && ')
+
+      const [listRes, allRes] = await Promise.all([
+        pb
+          .collection('movimentacao_itau')
+          .getList(page, 25, {
+            filter: filterString,
+            sort: '-data_retirada',
+            expand: 'c_level_id',
+          }),
+        pb
+          .collection('movimentacao_itau')
+          .getFullList({ filter: filterString, fields: 'valor,tipo,status,saldo' }),
+      ])
+
+      setPaginatedData(listRes.items)
+      setTotalPages(Math.ceil(listRes.totalItems / 25) || 1)
+
+      const retiradas = allRes
+        .filter((t: any) => t.tipo === 'retirada' && t.status !== 'cancelado')
+        .reduce((a, c) => a + (c.valor || 0), 0)
+      const devolucoes = allRes
+        .filter((t: any) => t.tipo === 'devolucao')
+        .reduce((a, c) => a + (c.valor || 0), 0)
+      const pendente = allRes
+        .filter((t: any) => t.status === 'pendente_devolucao')
+        .reduce((a, c) => a + (c.saldo || c.valor || 0), 0)
+
+      setTotals({ retiradas, devolucoes, saldoLiquido: retiradas - devolucoes, pendente })
+    } catch (err) {
+      setHasError(true)
+      toast.error('Erro ao carregar movimentações')
+    } finally {
       setIsLoading(false)
-    }, 1000)
+    }
   }
 
   useEffect(() => {
     loadData()
-  }, [])
-  useEffect(() => {
-    setPage(1)
-  }, [appliedFilters])
+  }, [page, appliedFilters])
 
-  const currentMonthData = data.filter((t) => isSameMonth(new Date(t.date), new Date()))
-  const totalRetiradasMonth = currentMonthData
-    .filter((t) => t.type === 'Retirada' && t.status !== 'Cancelado')
-    .reduce((acc, curr) => acc + curr.amount, 0)
-  const totalDevolucoesMonth = currentMonthData
-    .filter((t) => t.type === 'Devolução')
-    .reduce((acc, curr) => acc + curr.amount, 0)
-  const saldoLiquidoMonth = totalRetiradasMonth - totalDevolucoesMonth
-  const saldoPendenteMonth = currentMonthData
-    .filter((t) => t.status === 'Pendente Devolução')
-    .reduce((acc, curr) => acc + curr.balance, 0)
+  useRealtime('movimentacao_itau', () => {
+    loadData()
+  })
 
-  const filteredData = useMemo(() => {
-    return data.filter((t) => {
-      if (appliedFilters.cLevel !== 'Todos' && t.cLevel !== appliedFilters.cLevel) return false
-      if (appliedFilters.type !== 'Todos' && t.type !== appliedFilters.type) return false
-      if (appliedFilters.dateFrom && t.date < appliedFilters.dateFrom) return false
-      if (appliedFilters.dateTo && t.date > appliedFilters.dateTo + 'T23:59:59.999Z') return false
-      return true
-    })
-  }, [data, appliedFilters])
-
-  const tableTotalRetiradas = filteredData
-    .filter((t) => t.type === 'Retirada' && t.status !== 'Cancelado')
-    .reduce((a, c) => a + c.amount, 0)
-  const tableTotalDevolucoes = filteredData
-    .filter((t) => t.type === 'Devolução')
-    .reduce((a, c) => a + c.amount, 0)
-  const tableSaldoLiquido = tableTotalRetiradas - tableTotalDevolucoes
-
-  const ITEMS_PER_PAGE = 25
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE)
-  const paginatedData = filteredData.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (new Date(formData.data_retirada) > new Date()) {
+      toast.error('A data não pode ser no futuro')
+      return
+    }
+    if (Number(formData.valor) <= 0) {
+      toast.error('O valor deve ser maior que zero')
+      return
+    }
+    setIsSubmitting(true)
+    try {
+      const val = Number(formData.valor)
+      await pb.collection('movimentacao_itau').create({
+        user_id: user?.id,
+        c_level_id: formData.c_level_id,
+        data_retirada: new Date(formData.data_retirada + 'T12:00:00').toISOString(),
+        tipo: formData.tipo,
+        valor: val,
+        motivo: formData.motivo,
+        status: formData.status,
+        data_devolucao: formData.data_devolucao
+          ? new Date(formData.data_devolucao + 'T12:00:00').toISOString()
+          : null,
+        saldo: formData.tipo === 'retirada' && formData.status === 'pendente_devolucao' ? val : 0,
+      })
+      setIsSheetOpen(false)
+      setFormData({ ...formData, motivo: '', valor: '' })
+      toast.success('Movimentação registrada com sucesso')
+      setPage(1)
+      loadData()
+    } catch (err) {
+      toast.error(getErrorMessage(err))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   const handleClear = () => {
     const reset = { dateFrom: '', dateTo: '', cLevel: 'Todos', type: 'Todos' }
@@ -216,9 +215,126 @@ export default function MovimentacaoItau() {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Movimentação Bancária — Itaú</h1>
-        <p className="text-muted-foreground mt-2">Controle de retiradas e devoluções de C-Level</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Movimentação Bancária — Itaú</h1>
+          <p className="text-muted-foreground mt-2">
+            Controle de retiradas e devoluções de C-Level
+          </p>
+        </div>
+        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+          <SheetTrigger asChild>
+            <Button>
+              <Plus className="w-4 h-4 mr-2" /> Nova Movimentação
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="overflow-y-auto w-full sm:max-w-md">
+            <SheetHeader>
+              <SheetTitle>Nova Movimentação - Itaú</SheetTitle>
+              <SheetDescription>Registre uma retirada ou devolução de C-Level.</SheetDescription>
+            </SheetHeader>
+            <form onSubmit={handleSubmit} className="space-y-4 mt-6">
+              <div className="space-y-2">
+                <Label>Data</Label>
+                <Input
+                  type="date"
+                  required
+                  value={formData.data_retirada}
+                  onChange={(e) => setFormData({ ...formData, data_retirada: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>C-Level</Label>
+                <Select
+                  required
+                  value={formData.c_level_id}
+                  onValueChange={(v) => setFormData({ ...formData, c_level_id: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cLevels.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name || c.email}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Tipo</Label>
+                <Select
+                  value={formData.tipo}
+                  onValueChange={(v) => setFormData({ ...formData, tipo: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="retirada">Retirada</SelectItem>
+                    <SelectItem value="devolucao">Devolução</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Valor (R$)</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  required
+                  value={formData.valor}
+                  onChange={(e) => setFormData({ ...formData, valor: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Motivo</Label>
+                <Input
+                  required
+                  value={formData.motivo}
+                  onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select
+                  value={formData.status}
+                  onValueChange={(v) => setFormData({ ...formData, status: v })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pendente_devolucao">Pendente Devolução</SelectItem>
+                    <SelectItem value="devolvido">Devolvido</SelectItem>
+                    <SelectItem value="cancelado">Cancelado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {formData.status === 'devolvido' && (
+                <div className="space-y-2">
+                  <Label>Data de Devolução</Label>
+                  <Input
+                    type="date"
+                    value={formData.data_devolucao}
+                    onChange={(e) => setFormData({ ...formData, data_devolucao: e.target.value })}
+                  />
+                </div>
+              )}
+              <div className="pt-4 flex justify-end space-x-2">
+                <SheetClose asChild>
+                  <Button variant="outline" type="button">
+                    Cancelar
+                  </Button>
+                </SheetClose>
+                <Button type="submit" disabled={isSubmitting}>
+                  Salvar
+                </Button>
+              </div>
+            </form>
+          </SheetContent>
+        </Sheet>
       </div>
 
       <FinanceiroNav />
@@ -230,8 +346,8 @@ export default function MovimentacaoItau() {
             <ArrowUpRight className="w-4 h-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalRetiradasMonth)}</div>
-            <p className="text-xs text-muted-foreground">Mês atual</p>
+            <div className="text-2xl font-bold">{formatCurrency(totals.retiradas)}</div>
+            <p className="text-xs text-muted-foreground">Filtro atual</p>
           </CardContent>
         </Card>
         <Card>
@@ -240,8 +356,8 @@ export default function MovimentacaoItau() {
             <ArrowDownRight className="w-4 h-4 text-teal-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(totalDevolucoesMonth)}</div>
-            <p className="text-xs text-muted-foreground">Mês atual</p>
+            <div className="text-2xl font-bold">{formatCurrency(totals.devolucoes)}</div>
+            <p className="text-xs text-muted-foreground">Filtro atual</p>
           </CardContent>
         </Card>
         <Card>
@@ -250,8 +366,8 @@ export default function MovimentacaoItau() {
             <DollarSign className="w-4 h-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(saldoLiquidoMonth)}</div>
-            <p className="text-xs text-muted-foreground">Mês atual</p>
+            <div className="text-2xl font-bold">{formatCurrency(totals.saldoLiquido)}</div>
+            <p className="text-xs text-muted-foreground">Filtro atual</p>
           </CardContent>
         </Card>
         <Card>
@@ -260,8 +376,8 @@ export default function MovimentacaoItau() {
             <AlertCircle className="w-4 h-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(saldoPendenteMonth)}</div>
-            <p className="text-xs text-muted-foreground">Mês atual</p>
+            <div className="text-2xl font-bold">{formatCurrency(totals.pendente)}</div>
+            <p className="text-xs text-muted-foreground">Filtro atual</p>
           </CardContent>
         </Card>
       </div>
@@ -296,9 +412,11 @@ export default function MovimentacaoItau() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Todos">Todos</SelectItem>
-                  <SelectItem value="João Silva">João Silva</SelectItem>
-                  <SelectItem value="Maria Santos">Maria Santos</SelectItem>
-                  <SelectItem value="Carlos Oliveira">Carlos Oliveira</SelectItem>
+                  {cLevels.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.name || c.email}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -368,56 +486,58 @@ export default function MovimentacaoItau() {
                       key={t.id}
                       className="odd:bg-background even:bg-muted/50 hover:bg-muted/80 transition-colors"
                     >
-                      <TableCell>{format(new Date(t.date), 'dd/MM/yyyy')}</TableCell>
-                      <TableCell>{t.cLevel}</TableCell>
+                      <TableCell>{format(new Date(t.data_retirada), 'dd/MM/yyyy')}</TableCell>
+                      <TableCell>
+                        {t.expand?.c_level_id?.name || t.expand?.c_level_id?.email || '-'}
+                      </TableCell>
                       <TableCell
                         className={cn(
                           'font-medium',
-                          t.type === 'Retirada' ? 'text-[#f97316]' : 'text-[#0d9488]',
+                          t.tipo === 'retirada' ? 'text-[#f97316]' : 'text-[#0d9488]',
                         )}
                       >
-                        {t.type}
+                        {t.tipo === 'retirada' ? 'Retirada' : 'Devolução'}
                       </TableCell>
                       <TableCell className="text-right font-medium">
-                        {formatCurrency(t.amount)}
+                        {formatCurrency(t.valor)}
                       </TableCell>
-                      <TableCell>{t.motive}</TableCell>
+                      <TableCell>{t.motivo}</TableCell>
                       <TableCell className="text-center">
                         <Badge
                           variant="outline"
                           className={cn(
-                            t.status === 'Pendente Devolução' &&
-                              'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100',
-                            t.status === 'Devolvido' &&
-                              'bg-green-100 text-green-800 border-green-200 hover:bg-green-100',
-                            t.status === 'Cancelado' &&
-                              'bg-slate-100 text-slate-800 border-slate-200 hover:bg-slate-100',
+                            t.status === 'pendente_devolucao' &&
+                              'bg-yellow-100 text-yellow-800 border-yellow-200',
+                            t.status === 'devolvido' &&
+                              'bg-green-100 text-green-800 border-green-200',
+                            t.status === 'cancelado' &&
+                              'bg-slate-100 text-slate-800 border-slate-200',
                           )}
                         >
-                          {t.status}
+                          {statusMapItau[t.status as keyof typeof statusMapItau] || t.status}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-center">
-                        {t.returnDate ? format(new Date(t.returnDate), 'dd/MM/yyyy') : '-'}
+                        {t.data_devolucao ? format(new Date(t.data_devolucao), 'dd/MM/yyyy') : '-'}
                       </TableCell>
-                      <TableCell className="text-right">{formatCurrency(t.balance)}</TableCell>
+                      <TableCell className="text-right">{formatCurrency(t.saldo || 0)}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>
-              {!isLoading && !hasError && filteredData.length > 0 && (
+              {!isLoading && !hasError && paginatedData.length > 0 && (
                 <TableFooter className="bg-slate-100 font-semibold text-slate-800">
                   <TableRow>
                     <TableCell colSpan={3} className="text-right text-brand-navy">
                       Total Retiradas:
                     </TableCell>
                     <TableCell className="text-right text-[#f97316]">
-                      {formatCurrency(tableTotalRetiradas)}
+                      {formatCurrency(totals.retiradas)}
                     </TableCell>
                     <TableCell colSpan={3} className="text-right text-brand-navy">
                       Total Devoluções:
                     </TableCell>
                     <TableCell className="text-right text-[#0d9488]">
-                      {formatCurrency(tableTotalDevolucoes)}
+                      {formatCurrency(totals.devolucoes)}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -425,7 +545,7 @@ export default function MovimentacaoItau() {
                       Saldo Líquido:
                     </TableCell>
                     <TableCell className="text-right">
-                      {formatCurrency(tableSaldoLiquido)}
+                      {formatCurrency(totals.saldoLiquido)}
                     </TableCell>
                   </TableRow>
                 </TableFooter>
@@ -433,7 +553,7 @@ export default function MovimentacaoItau() {
             </Table>
           </div>
 
-          {!isLoading && !hasError && filteredData.length === 0 && (
+          {!isLoading && !hasError && paginatedData.length === 0 && (
             <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground border border-t-0 rounded-b-md">
               <PackageOpen className="w-12 h-12 mb-4 opacity-50" />
               <p>Nenhuma movimentação neste período</p>

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-28T03:46:17.675Z",
+  "generatedAt": "2026-04-28T03:58:44.432Z",
   "collections": [
     {
       "name": "users",
@@ -2569,6 +2569,170 @@
         }
       ],
       "indexes": []
+    },
+    {
+      "name": "movimentacao_inter",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || user_id = @request.auth.id",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || user_id = @request.auth.id",
+        "create": "@request.auth.id != ''",
+        "update": "user_id = @request.auth.id || @request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "delete": "user_id = @request.auth.id || @request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "data",
+          "type": "date",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "fornecedor",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "identificacao",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "debito",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "credito",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["processado", "pendente", "cancelado"]
+        },
+        {
+          "name": "saldo_atual",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE INDEX idx_mov_inter_data ON movimentacao_inter (data)"]
+    },
+    {
+      "name": "movimentacao_itau",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || user_id = @request.auth.id",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || user_id = @request.auth.id",
+        "create": "@request.auth.id != ''",
+        "update": "user_id = @request.auth.id || @request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "delete": "user_id = @request.auth.id || @request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "data_retirada",
+          "type": "date",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "c_level_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "tipo",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["retirada", "devolucao"]
+        },
+        {
+          "name": "valor",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "motivo",
+          "type": "text",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "status",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["pendente_devolucao", "devolvido", "cancelado"]
+        },
+        {
+          "name": "data_devolucao",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "saldo",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE INDEX idx_mov_itau_data ON movimentacao_itau (data_retirada)"]
     }
   ]
 }
