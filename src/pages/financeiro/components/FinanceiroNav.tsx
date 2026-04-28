@@ -10,6 +10,7 @@ export function FinanceiroNav() {
     { title: 'Notas Fiscais', url: '/financeiro/notas-fiscais' },
     { title: 'Controle', url: '/financeiro/controle' },
     { title: 'Adiantamentos', url: '/financeiro/adiantamentos' },
+    { title: 'Inter', url: '/financeiro/movimentacao-inter' },
   ]
 
   return (
