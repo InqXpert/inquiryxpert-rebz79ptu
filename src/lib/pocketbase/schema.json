@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-28T04:04:15.894Z",
+  "generatedAt": "2026-04-28T04:18:05.341Z",
   "collections": [
     {
       "name": "users",
@@ -2733,6 +2733,151 @@
         }
       ],
       "indexes": ["CREATE INDEX idx_mov_itau_data ON movimentacao_itau (data_retirada)"]
+    },
+    {
+      "name": "metas_gerais",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && user_id = @request.auth.id)",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && user_id = @request.auth.id)",
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "mes",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "ano",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "meta_receita",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "meta_custo_operacional",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "meta_margem_liquida",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "meta_prazo_medio",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "user_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": ["CREATE UNIQUE INDEX idx_metas_gerais_mes_ano ON metas_gerais (mes, ano)"]
+    },
+    {
+      "name": "metas_individuais",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && usuario_id = @request.auth.id)",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || (@request.auth.role = 'supervisor' && usuario_id = @request.auth.id)",
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "usuario_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "users"
+        },
+        {
+          "name": "meta_receita",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "meta_processos",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "meta_margem",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "periodo",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": ["mensal", "trimestral", "anual"]
+        },
+        {
+          "name": "mes_inicio",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "ano_inicio",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_metas_indiv_usr_per ON metas_individuais (usuario_id, periodo, mes_inicio, ano_inicio)"
+      ]
     }
   ]
 }

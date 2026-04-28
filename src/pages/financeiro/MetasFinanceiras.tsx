@@ -6,8 +6,16 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { ShieldAlert } from 'lucide-react'
 import { FinanceiroNav } from './components/FinanceiroNav'
 
+import { useSearchParams } from 'react-router-dom'
+
 export default function MetasFinanceiras() {
   const { user } = useAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tab = searchParams.get('tab') || 'gerais'
+
+  const handleTabChange = (val: string) => {
+    setSearchParams({ tab: val })
+  }
 
   if (user?.role === 'analista' || user?.role === 'agente') {
     return (
@@ -38,7 +46,7 @@ export default function MetasFinanceiras() {
         </div>
       </div>
 
-      <Tabs defaultValue="gerais" className="space-y-4">
+      <Tabs value={tab} onValueChange={handleTabChange} className="space-y-4">
         <TabsList>
           <TabsTrigger value="gerais">Metas Gerais</TabsTrigger>
           <TabsTrigger value="individuais">Metas Individuais</TabsTrigger>

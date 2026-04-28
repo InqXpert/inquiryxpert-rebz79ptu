@@ -5,8 +5,17 @@ import { FinanceiroNav } from '@/pages/financeiro/components/FinanceiroNav'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { DollarSign, TrendingUp, Clock, AlertTriangle, FileWarning } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import {
+  DollarSign,
+  TrendingUp,
+  Clock,
+  AlertTriangle,
+  FileWarning,
+  Target,
+  Users,
+} from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Progress } from '@/components/ui/progress'
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
@@ -29,6 +38,7 @@ const getStatusBadge = (status: string) => {
 export default function DashboardFinanceiro() {
   const { user } = useAuth()
   const { data, loading } = useFinanceiroDashboard()
+  const navigate = useNavigate()
 
   if (user && !['c-level', 'admin'].includes(user.role)) {
     return <Navigate to="/dashboard" replace />
@@ -114,6 +124,81 @@ export default function DashboardFinanceiro() {
                 </div>
               </CardContent>
             </Card>
+
+            <div className="grid gap-4 md:grid-cols-2 lg:col-span-4 mb-4">
+              <Card
+                className="hover:shadow-md transition-shadow border bg-white dark:bg-brand-navy/80 dark:border-brand-cyan/20 cursor-pointer"
+                onClick={() => navigate('/financeiro/metas')}
+              >
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-bold text-brand-navy dark:text-white">
+                    Metas do Mês (Globais)
+                  </CardTitle>
+                  <Target className="h-5 w-5 text-indigo-500" />
+                </CardHeader>
+                <CardContent>
+                  {!data.metasGerais ? (
+                    <div className="text-sm text-muted-foreground mt-4">
+                      Nenhuma meta configurada para este período.
+                    </div>
+                  ) : (
+                    <div className="space-y-4 mt-2">
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span>Receita ({formatCurrency(data.metasGerais.receitaAtual)})</span>
+                          <span>{data.metasGerais.receitaPct.toFixed(1)}%</span>
+                        </div>
+                        <Progress
+                          value={Math.min(data.metasGerais.receitaPct, 100)}
+                          className="h-2"
+                        />
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span>Custo ({formatCurrency(data.metasGerais.custoAtual)})</span>
+                          <span>{data.metasGerais.custoPct.toFixed(1)}%</span>
+                        </div>
+                        <Progress
+                          value={Math.min(data.metasGerais.custoPct, 100)}
+                          className="h-2 bg-secondary"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card
+                className="hover:shadow-md transition-shadow border bg-white dark:bg-brand-navy/80 dark:border-brand-cyan/20 cursor-pointer"
+                onClick={() => navigate('/financeiro/metas?tab=individuais')}
+              >
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-bold text-brand-navy dark:text-white">
+                    Top 3 Metas Individuais
+                  </CardTitle>
+                  <Users className="h-5 w-5 text-purple-500" />
+                </CardHeader>
+                <CardContent>
+                  {data.topIndividuais.length === 0 ? (
+                    <div className="text-sm text-muted-foreground mt-4">
+                      Nenhuma meta individual em andamento.
+                    </div>
+                  ) : (
+                    <div className="space-y-4 mt-2">
+                      {data.topIndividuais.map((ind) => (
+                        <div key={ind.id}>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="font-medium truncate max-w-[120px]">{ind.nome}</span>
+                            <span>{ind.progresso.toFixed(1)}%</span>
+                          </div>
+                          <Progress value={ind.progresso} className="h-1.5" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
 
             <Link
               to="/processos/alertas?tipo=PENDENTE_DOCUMENTOS"

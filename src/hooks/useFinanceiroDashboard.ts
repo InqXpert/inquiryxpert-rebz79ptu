@@ -1,7 +1,14 @@
 import { useState, useEffect } from 'react'
 import { toast } from 'sonner'
+import pb from '@/lib/pocketbase/client'
 import { getDashboardNotasFiscais } from '@/services/dashboardFinanceiro'
 import { useRealtime } from '@/hooks/use-realtime'
+import {
+  getMetasGerais,
+  getActualsGerais,
+  getAllMetasIndividuais,
+  getActualsIndividuais,
+} from '@/services/metasFinanceiras'
 
 export function useFinanceiroDashboard() {
   const [data, setData] = useState({
@@ -14,6 +21,8 @@ export function useFinanceiroDashboard() {
       count: 0,
       avgDays: 0,
     },
+    metasGerais: null as any,
+    topIndividuais: [] as any[],
   })
   const [loading, setLoading] = useState(true)
 
@@ -86,6 +95,59 @@ export function useFinanceiroDashboard() {
         }
       })
 
+      // Metas Financeiras
+      const metaGeralRecord = await getMetasGerais(currentMonth + 1, currentYear)
+      let metasGerais = null
+      if (metaGeralRecord) {
+        const actuals = await getActualsGerais(currentMonth + 1, currentYear)
+        metasGerais = {
+          receitaMeta: metaGeralRecord.meta_receita,
+          receitaAtual: actuals.receita,
+          receitaPct:
+            metaGeralRecord.meta_receita > 0
+              ? (actuals.receita / metaGeralRecord.meta_receita) * 100
+              : 0,
+          custoMeta: metaGeralRecord.meta_custo_operacional,
+          custoAtual: actuals.custo,
+          custoPct:
+            metaGeralRecord.meta_custo_operacional > 0
+              ? (actuals.custo / metaGeralRecord.meta_custo_operacional) * 100
+              : 0,
+          margemMeta: metaGeralRecord.meta_margem_liquida,
+          margemAtual: actuals.margem,
+          margemPct:
+            metaGeralRecord.meta_margem_liquida > 0
+              ? (actuals.margem / metaGeralRecord.meta_margem_liquida) * 100
+              : 0,
+        }
+      }
+
+      const metasInd = await getAllMetasIndividuais()
+      // Filter the ones matching current month/year
+      const activeInd = metasInd.filter(
+        (m) => m.mes_inicio === currentMonth + 1 && m.ano_inicio === currentYear,
+      )
+
+      const topIndividuais = await Promise.all(
+        activeInd.map(async (m) => {
+          const actuals = await getActualsIndividuais(
+            m.usuario_id,
+            m.periodo,
+            m.mes_inicio,
+            m.ano_inicio,
+          )
+          const progresso = m.meta_receita > 0 ? (actuals.receita / m.meta_receita) * 100 : 0
+          return {
+            id: m.id,
+            nome: m.expand?.usuario_id?.name || m.expand?.usuario_id?.email || 'Desconhecido',
+            progresso: Math.min(progresso, 100),
+            receita: actuals.receita,
+            meta: m.meta_receita,
+          }
+        }),
+      )
+      topIndividuais.sort((a, b) => b.progresso - a.progresso)
+
       setData({
         faturadoMes,
         receitaRecebida,
@@ -96,6 +158,8 @@ export function useFinanceiroDashboard() {
           count: pendentesCount,
           avgDays,
         },
+        metasGerais,
+        topIndividuais: topIndividuais.slice(0, 3),
       })
     } catch (error) {
       console.error(error)

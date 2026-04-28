@@ -12,7 +12,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { Plus, Edit2, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { MetaIndividualModal, MetaIndividual } from './MetaIndividualModal'
+import { MetaIndividualModal, MetaIndividualForm } from './MetaIndividualModal'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,60 +23,81 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-
-const MOCK_INDIVIDUAIS: MetaIndividual[] = [
-  {
-    id: '1',
-    nome: 'Ana Silva',
-    role: 'analista',
-    receita: 8000,
-    processos: 20,
-    margem: 65,
-    periodo: 'mensal',
-  },
-  {
-    id: '2',
-    nome: 'Carlos Oliveira',
-    role: 'supervisor',
-    receita: 10000,
-    processos: 25,
-    margem: 70,
-    periodo: 'mensal',
-  },
-  {
-    id: '3',
-    nome: 'Mariana Santos',
-    role: 'analista',
-    receita: 7000,
-    processos: 18,
-    margem: 60,
-    periodo: 'mensal',
-  },
-]
+import {
+  getAllMetasIndividuais,
+  deleteMetaIndividual,
+  getActualsIndividuais,
+  saveMetaIndividual,
+} from '@/services/metasFinanceiras'
 
 interface MetasIndividuaisTabProps {
   canEdit: boolean
 }
 
+export interface IndividualGoalData {
+  id: string
+  usuario_id: string
+  nome: string
+  role: string
+  periodo: string
+  mes_inicio: number
+  ano_inicio: number
+  meta_receita: number
+  meta_processos: number
+  meta_margem: number
+  actual_receita: number
+  actual_processos: number
+  actual_margem: number
+}
+
 export function MetasIndividuaisTab({ canEdit }: MetasIndividuaisTabProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
-  const [goals, setGoals] = useState<MetaIndividual[]>([])
+  const [goals, setGoals] = useState<IndividualGoalData[]>([])
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editingGoal, setEditingGoal] = useState<MetaIndividual | null>(null)
+  const [editingGoal, setEditingGoal] = useState<IndividualGoalData | null>(null)
 
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false)
   const [goalToDelete, setGoalToDelete] = useState<string | null>(null)
 
-  const loadData = () => {
+  const loadData = async () => {
     setLoading(true)
     setError(false)
-    setTimeout(() => {
-      // Simulate successful fetch
-      setGoals(MOCK_INDIVIDUAIS)
+    try {
+      const records = await getAllMetasIndividuais()
+      const data = await Promise.all(
+        records.map(async (r) => {
+          const actuals = await getActualsIndividuais(
+            r.usuario_id,
+            r.periodo,
+            r.mes_inicio,
+            r.ano_inicio,
+          )
+          return {
+            id: r.id,
+            usuario_id: r.usuario_id,
+            nome: r.expand?.usuario_id?.name || r.expand?.usuario_id?.email || 'Desconhecido',
+            role: r.expand?.usuario_id?.role || 'N/A',
+            periodo: r.periodo,
+            mes_inicio: r.mes_inicio,
+            ano_inicio: r.ano_inicio,
+            meta_receita: r.meta_receita,
+            meta_processos: r.meta_processos,
+            meta_margem: r.meta_margem,
+            actual_receita: actuals.receita,
+            actual_processos: actuals.processos,
+            actual_margem: actuals.margem,
+          }
+        }),
+      )
+      setGoals(data)
+    } catch (err) {
+      console.error(err)
+      setError(true)
+    } finally {
       setLoading(false)
-    }, 800)
+    }
   }
 
   useEffect(() => {
@@ -86,21 +107,30 @@ export function MetasIndividuaisTab({ canEdit }: MetasIndividuaisTabProps) {
   const formatCurrency = (val: number) =>
     new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val)
 
-  const handleSaveModal = (meta: MetaIndividual) => {
-    if (editingGoal) {
-      setGoals(goals.map((g) => (g.id === meta.id ? meta : g)))
-      toast.success('Meta individual atualizada com sucesso')
-    } else {
-      setGoals([...goals, meta])
-      toast.success('Meta individual criada com sucesso')
+  const handleSaveModal = async (metaForm: MetaIndividualForm) => {
+    try {
+      await saveMetaIndividual(metaForm, editingGoal?.id)
+      toast.success(
+        editingGoal
+          ? 'Meta individual atualizada com sucesso'
+          : 'Meta individual criada com sucesso',
+      )
+      setIsModalOpen(false)
+      loadData()
+    } catch (err) {
+      toast.error('Erro ao salvar meta individual')
     }
-    setIsModalOpen(false)
   }
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (goalToDelete) {
-      setGoals(goals.filter((g) => g.id !== goalToDelete))
-      toast.success('Meta individual deletada com sucesso')
+      try {
+        await deleteMetaIndividual(goalToDelete)
+        toast.success('Meta individual deletada com sucesso')
+        loadData()
+      } catch (err) {
+        toast.error('Erro ao deletar meta')
+      }
     }
     setIsDeleteAlertOpen(false)
     setGoalToDelete(null)
@@ -125,7 +155,9 @@ export function MetasIndividuaisTab({ canEdit }: MetasIndividuaisTabProps) {
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center p-12 text-center">
-          <p className="text-muted-foreground mb-4">Erro ao carregar metas. Tente novamente.</p>
+          <p className="text-muted-foreground mb-4">
+            Erro ao carregar dados das metas individuais. Tente novamente.
+          </p>
           <Button onClick={loadData}>Tentar Novamente</Button>
         </CardContent>
       </Card>
@@ -153,29 +185,61 @@ export function MetasIndividuaisTab({ canEdit }: MetasIndividuaisTabProps) {
       </CardHeader>
       <CardContent>
         {goals.length === 0 ? (
-          <div className="text-center p-12 text-muted-foreground">Nenhuma meta configurada</div>
+          <div className="text-center p-12 text-muted-foreground">
+            Nenhuma meta configurada para este período
+          </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Usuário</TableHead>
-                <TableHead>Cargo</TableHead>
                 <TableHead>Período</TableHead>
-                <TableHead className="text-right">Meta de Receita</TableHead>
-                <TableHead className="text-right">Meta de Processos</TableHead>
-                <TableHead className="text-right">Meta de Margem</TableHead>
+                <TableHead className="text-right">Receita (Progresso)</TableHead>
+                <TableHead className="text-right">Processos (Progresso)</TableHead>
+                <TableHead className="text-right">Margem (Progresso)</TableHead>
                 {canEdit && <TableHead className="text-center">Ações</TableHead>}
               </TableRow>
             </TableHeader>
             <TableBody>
               {goals.map((g) => (
                 <TableRow key={g.id}>
-                  <TableCell className="font-medium">{g.nome}</TableCell>
-                  <TableCell className="capitalize">{g.role}</TableCell>
-                  <TableCell className="capitalize">{g.periodo}</TableCell>
-                  <TableCell className="text-right">{formatCurrency(g.receita)}</TableCell>
-                  <TableCell className="text-right">{g.processos}</TableCell>
-                  <TableCell className="text-right">{g.margem}%</TableCell>
+                  <TableCell>
+                    <div className="font-medium">{g.nome}</div>
+                    <div className="text-xs text-muted-foreground capitalize">{g.role}</div>
+                  </TableCell>
+                  <TableCell className="capitalize">
+                    {g.periodo}{' '}
+                    <span className="text-xs text-muted-foreground block">
+                      {g.mes_inicio}/{g.ano_inicio}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="font-medium">
+                      {formatCurrency(g.actual_receita)} / {formatCurrency(g.meta_receita)}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {g.meta_receita > 0
+                        ? ((g.actual_receita / g.meta_receita) * 100).toFixed(1)
+                        : 0}
+                      %
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="font-medium">
+                      {g.actual_processos} / {g.meta_processos}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {g.meta_processos > 0
+                        ? ((g.actual_processos / g.meta_processos) * 100).toFixed(1)
+                        : 0}
+                      %
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="font-medium">
+                      {g.actual_margem}% / {g.meta_margem}%
+                    </div>
+                  </TableCell>
                   {canEdit && (
                     <TableCell className="text-center space-x-2">
                       <Button
