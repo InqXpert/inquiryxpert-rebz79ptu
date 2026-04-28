@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-28T04:48:34.826Z",
+  "generatedAt": "2026-04-28T05:00:50.645Z",
   "collections": [
     {
       "name": "users",
@@ -2574,8 +2574,8 @@
       "name": "movimentacao_inter",
       "type": "base",
       "apiRules": {
-        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || user_id = @request.auth.id",
-        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || user_id = @request.auth.id",
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || user_id = @request.auth.id",
         "create": "@request.auth.id != ''",
         "update": "user_id = @request.auth.id || @request.auth.role = 'c-level' || @request.auth.role = 'admin'",
         "delete": "user_id = @request.auth.id || @request.auth.role = 'c-level' || @request.auth.role = 'admin'"
