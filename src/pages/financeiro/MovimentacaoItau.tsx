@@ -37,7 +37,6 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetClose,
 } from '@/components/ui/sheet'
 import {
   ArrowDownRight,
@@ -47,13 +46,13 @@ import {
   PackageOpen,
   RotateCcw,
   Plus,
+  Check,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 import pb from '@/lib/pocketbase/client'
 import { useRealtime } from '@/hooks/use-realtime'
 import { toast } from 'sonner'
-import { getErrorMessage } from '@/lib/pocketbase/errors'
 import { useAuth } from '@/hooks/use-auth'
 
 const formatCurrency = (v: number) =>
@@ -67,12 +66,19 @@ const statusMapItau = {
 
 export default function MovimentacaoItau() {
   const { user } = useAuth()
+  const isSupervisor = user?.role === 'supervisor'
+
   const [paginatedData, setPaginatedData] = useState<any[]>([])
   const [cLevels, setCLevels] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
+
+  const [devolutionItem, setDevolutionItem] = useState<any>(null)
+  const [devolutionDate, setDevolutionDate] = useState(format(new Date(), 'yyyy-MM-dd'))
+  const [devolutionObs, setDevolutionObs] = useState('')
+  const [isDevolutionSubmitting, setIsDevolutionSubmitting] = useState(false)
 
   const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
   const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
@@ -97,11 +103,9 @@ export default function MovimentacaoItau() {
   const [formData, setFormData] = useState({
     data_retirada: format(new Date(), 'yyyy-MM-dd'),
     c_level_id: '',
-    tipo: 'retirada',
     valor: '',
     motivo: '',
     status: 'pendente_devolucao',
-    data_devolucao: '',
   })
 
   useEffect(() => {
@@ -126,19 +130,22 @@ export default function MovimentacaoItau() {
         filterParts.push(`tipo = '${appliedFilters.type.toLowerCase()}'`)
       const filterString = filterParts.join(' && ')
 
-      const [listRes, allRes] = await Promise.all([
-        pb.collection('movimentacao_itau').getList(page, 25, {
-          filter: filterString,
-          sort: '-data_retirada',
-          expand: 'c_level_id',
-        }),
-        pb
-          .collection('movimentacao_itau')
-          .getFullList({ filter: filterString, fields: 'valor,tipo,status,saldo' }),
-      ])
+      const allRes = await pb.collection('movimentacao_itau').getFullList({
+        filter: filterString,
+        sort: '+data_retirada,+created',
+        expand: 'c_level_id',
+      })
 
-      setPaginatedData(listRes.items)
-      setTotalPages(Math.ceil(listRes.totalItems / 25) || 1)
+      let runningSaldo = 0
+      const computedAll = allRes.map((t: any) => {
+        runningSaldo = runningSaldo + (t.tipo === 'retirada' ? t.valor : -t.valor)
+        return { ...t, computedSaldo: runningSaldo }
+      })
+
+      const reversed = computedAll.reverse()
+      const startIndex = (page - 1) * 25
+      setPaginatedData(reversed.slice(startIndex, startIndex + 25))
+      setTotalPages(Math.ceil(reversed.length / 25) || 1)
 
       const retiradas = allRes
         .filter((t: any) => t.tipo === 'retirada' && t.status !== 'cancelado')
@@ -148,12 +155,12 @@ export default function MovimentacaoItau() {
         .reduce((a, c) => a + (c.valor || 0), 0)
       const pendente = allRes
         .filter((t: any) => t.status === 'pendente_devolucao')
-        .reduce((a, c) => a + (c.saldo || c.valor || 0), 0)
+        .reduce((a, c) => a + (c.valor || 0), 0)
 
       setTotals({ retiradas, devolucoes, saldoLiquido: retiradas - devolucoes, pendente })
     } catch (err) {
       setHasError(true)
-      toast.error('Erro ao carregar movimentações')
+      toast.error('Erro ao carregar movimentação. Tente novamente.')
     } finally {
       setIsLoading(false)
     }
@@ -184,24 +191,58 @@ export default function MovimentacaoItau() {
         user_id: user?.id,
         c_level_id: formData.c_level_id,
         data_retirada: new Date(formData.data_retirada + 'T12:00:00').toISOString(),
-        tipo: formData.tipo,
+        tipo: 'retirada',
         valor: val,
         motivo: formData.motivo,
         status: formData.status,
-        data_devolucao: formData.data_devolucao
-          ? new Date(formData.data_devolucao + 'T12:00:00').toISOString()
-          : null,
-        saldo: formData.tipo === 'retirada' && formData.status === 'pendente_devolucao' ? val : 0,
+        data_devolucao: formData.status === 'devolvido' ? new Date().toISOString() : null,
+        saldo: formData.status === 'pendente_devolucao' ? val : 0,
       })
       setIsSheetOpen(false)
-      setFormData({ ...formData, motivo: '', valor: '' })
-      toast.success('Movimentação registrada com sucesso')
+      setFormData({
+        data_retirada: format(new Date(), 'yyyy-MM-dd'),
+        c_level_id: '',
+        valor: '',
+        motivo: '',
+        status: 'pendente_devolucao',
+      })
+      toast.success('Retirada registrada com sucesso')
       setPage(1)
       loadData()
     } catch (err) {
-      toast.error(getErrorMessage(err))
+      toast.error('Erro ao registrar. Tente novamente.')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleDevolutionSubmit = async () => {
+    if (!devolutionItem) return
+    const dRetirada = new Date(devolutionItem.data_retirada)
+    const dDevolucao = new Date(devolutionDate + 'T12:00:00')
+    if (dDevolucao < dRetirada) {
+      toast.error('Data de devolução não pode ser anterior à data de retirada.')
+      return
+    }
+
+    setIsDevolutionSubmitting(true)
+    try {
+      const updatedMotivo = devolutionObs
+        ? `${devolutionItem.motivo} | Obs Devolução: ${devolutionObs}`
+        : devolutionItem.motivo
+
+      await pb.collection('movimentacao_itau').update(devolutionItem.id, {
+        status: 'devolvido',
+        data_devolucao: dDevolucao.toISOString(),
+        motivo: updatedMotivo,
+      })
+      toast.success('Devolução registrada com sucesso')
+      setDevolutionItem(null)
+      loadData()
+    } catch (err) {
+      toast.error('Erro ao registrar. Tente novamente.')
+    } finally {
+      setIsDevolutionSubmitting(false)
     }
   }
 
@@ -220,119 +261,106 @@ export default function MovimentacaoItau() {
             Controle de retiradas e devoluções de C-Level
           </p>
         </div>
-        <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-          <SheetTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" /> Nova Movimentação
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="overflow-y-auto w-full sm:max-w-md">
-            <SheetHeader>
-              <SheetTitle>Nova Movimentação - Itaú</SheetTitle>
-              <SheetDescription>Registre uma retirada ou devolução de C-Level.</SheetDescription>
-            </SheetHeader>
-            <form onSubmit={handleSubmit} className="space-y-4 mt-6">
-              <div className="space-y-2">
-                <Label>Data</Label>
-                <Input
-                  type="date"
-                  required
-                  value={formData.data_retirada}
-                  onChange={(e) => setFormData({ ...formData, data_retirada: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>C-Level</Label>
-                <Select
-                  required
-                  value={formData.c_level_id}
-                  onValueChange={(v) => setFormData({ ...formData, c_level_id: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {cLevels.map((c) => (
-                      <SelectItem key={c.id} value={c.id}>
-                        {c.name || c.email}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Tipo</Label>
-                <Select
-                  value={formData.tipo}
-                  onValueChange={(v) => setFormData({ ...formData, tipo: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="retirada">Retirada</SelectItem>
-                    <SelectItem value="devolucao">Devolução</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Valor (R$)</Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  min="0.01"
-                  required
-                  value={formData.valor}
-                  onChange={(e) => setFormData({ ...formData, valor: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Motivo</Label>
-                <Input
-                  required
-                  value={formData.motivo}
-                  onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Status</Label>
-                <Select
-                  value={formData.status}
-                  onValueChange={(v) => setFormData({ ...formData, status: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pendente_devolucao">Pendente Devolução</SelectItem>
-                    <SelectItem value="devolvido">Devolvido</SelectItem>
-                    <SelectItem value="cancelado">Cancelado</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {formData.status === 'devolvido' && (
+        {!isSupervisor && (
+          <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+            <SheetTrigger asChild>
+              <Button>
+                <Plus className="w-4 h-4 mr-2" /> Nova Movimentação
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="overflow-y-auto w-full sm:max-w-md">
+              <SheetHeader>
+                <SheetTitle>Nova Movimentação - Itaú</SheetTitle>
+                <SheetDescription>Registre uma retirada de C-Level.</SheetDescription>
+              </SheetHeader>
+              <form onSubmit={handleSubmit} className="space-y-4 mt-6">
                 <div className="space-y-2">
-                  <Label>Data de Devolução</Label>
+                  <Label>Data Retirada</Label>
                   <Input
                     type="date"
-                    value={formData.data_devolucao}
-                    onChange={(e) => setFormData({ ...formData, data_devolucao: e.target.value })}
+                    required
+                    value={formData.data_retirada}
+                    onChange={(e) => setFormData({ ...formData, data_retirada: e.target.value })}
                   />
                 </div>
-              )}
-              <div className="pt-4 flex justify-end space-x-2">
-                <SheetClose asChild>
-                  <Button variant="outline" type="button">
-                    Cancelar
+                <div className="space-y-2">
+                  <Label>C-Level</Label>
+                  <Select
+                    required
+                    value={formData.c_level_id}
+                    onValueChange={(v) => setFormData({ ...formData, c_level_id: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {cLevels.map((c) => (
+                        <SelectItem key={c.id} value={c.id}>
+                          {c.name || c.email}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Valor (R$)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    required
+                    value={formData.valor}
+                    onChange={(e) => setFormData({ ...formData, valor: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Motivo</Label>
+                  <Input
+                    required
+                    value={formData.motivo}
+                    onChange={(e) => setFormData({ ...formData, motivo: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Status</Label>
+                  <Select
+                    value={formData.status}
+                    onValueChange={(v) => setFormData({ ...formData, status: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pendente_devolucao">Pendente Devolução</SelectItem>
+                      <SelectItem value="devolvido">Devolvido</SelectItem>
+                      <SelectItem value="cancelado">Cancelado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="pt-4 flex justify-end space-x-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() =>
+                      setFormData({
+                        data_retirada: format(new Date(), 'yyyy-MM-dd'),
+                        c_level_id: '',
+                        valor: '',
+                        motivo: '',
+                        status: 'pendente_devolucao',
+                      })
+                    }
+                  >
+                    Limpar
                   </Button>
-                </SheetClose>
-                <Button type="submit" disabled={isSubmitting}>
-                  Salvar
-                </Button>
-              </div>
-            </form>
-          </SheetContent>
-        </Sheet>
+                  <Button type="submit" disabled={isSubmitting}>
+                    Registrar
+                  </Button>
+                </div>
+              </form>
+            </SheetContent>
+          </Sheet>
+        )}
       </div>
 
       <FinanceiroNav />
@@ -370,7 +398,7 @@ export default function MovimentacaoItau() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-sm font-medium">Pendente Devolução</CardTitle>
+            <CardTitle className="text-sm font-medium">Saldo Pendente de Devolução</CardTitle>
             <AlertCircle className="w-4 h-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
@@ -448,12 +476,10 @@ export default function MovimentacaoItau() {
             <Table className="min-w-[900px]">
               <TableHeader className="bg-slate-100">
                 <TableRow>
-                  <TableHead className="text-brand-navy font-semibold">Data</TableHead>
+                  <TableHead className="text-brand-navy font-semibold">Data Retirada</TableHead>
                   <TableHead className="text-brand-navy font-semibold">C-Level</TableHead>
                   <TableHead className="text-brand-navy font-semibold">Tipo</TableHead>
-                  <TableHead className="text-brand-navy font-semibold text-right">
-                    Valor (R$)
-                  </TableHead>
+                  <TableHead className="text-brand-navy font-semibold text-right">Valor</TableHead>
                   <TableHead className="text-brand-navy font-semibold">Motivo</TableHead>
                   <TableHead className="text-brand-navy font-semibold text-center">
                     Status
@@ -461,9 +487,7 @@ export default function MovimentacaoItau() {
                   <TableHead className="text-brand-navy font-semibold text-center">
                     Data Devolução
                   </TableHead>
-                  <TableHead className="text-brand-navy font-semibold text-right">
-                    Saldo (R$)
-                  </TableHead>
+                  <TableHead className="text-brand-navy font-semibold text-right">Saldo</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -499,7 +523,9 @@ export default function MovimentacaoItau() {
                       <TableCell className="text-right font-medium">
                         {formatCurrency(t.valor)}
                       </TableCell>
-                      <TableCell>{t.motivo}</TableCell>
+                      <TableCell className="max-w-[200px] truncate" title={t.motivo}>
+                        {t.motivo}
+                      </TableCell>
                       <TableCell className="text-center">
                         <Badge
                           variant="outline"
@@ -516,9 +542,28 @@ export default function MovimentacaoItau() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-center">
-                        {t.data_devolucao ? format(new Date(t.data_devolucao), 'dd/MM/yyyy') : '-'}
+                        {t.data_devolucao ? (
+                          format(new Date(t.data_devolucao), 'dd/MM/yyyy')
+                        ) : t.status === 'pendente_devolucao' && !isSupervisor ? (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-7 text-xs px-2 text-green-700 border-green-200 hover:bg-green-50"
+                            onClick={() => {
+                              setDevolutionItem(t)
+                              setDevolutionDate(format(new Date(), 'yyyy-MM-dd'))
+                              setDevolutionObs('')
+                            }}
+                          >
+                            <Check className="w-3 h-3 mr-1" /> Registrar Devolução
+                          </Button>
+                        ) : (
+                          '-'
+                        )}
                       </TableCell>
-                      <TableCell className="text-right">{formatCurrency(t.saldo || 0)}</TableCell>
+                      <TableCell className="text-right font-semibold">
+                        {formatCurrency(t.computedSaldo)}
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>
@@ -554,7 +599,7 @@ export default function MovimentacaoItau() {
           {!isLoading && !hasError && paginatedData.length === 0 && (
             <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground border border-t-0 rounded-b-md">
               <PackageOpen className="w-12 h-12 mb-4 opacity-50" />
-              <p>Nenhuma movimentação neste período</p>
+              <p>Nenhuma movimentação registrada</p>
             </div>
           )}
 
@@ -612,6 +657,43 @@ export default function MovimentacaoItau() {
           )}
         </CardContent>
       </Card>
+
+      <Sheet open={!!devolutionItem} onOpenChange={(open) => !open && setDevolutionItem(null)}>
+        <SheetContent className="overflow-y-auto w-full sm:max-w-md">
+          <SheetHeader>
+            <SheetTitle>Registrar Devolução</SheetTitle>
+            <SheetDescription>
+              Confirme a data e registre a devolução desta retirada.
+            </SheetDescription>
+          </SheetHeader>
+          <div className="space-y-4 mt-6">
+            <div className="space-y-2">
+              <Label>Data de Devolução</Label>
+              <Input
+                type="date"
+                value={devolutionDate}
+                onChange={(e) => setDevolutionDate(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Observações</Label>
+              <Input
+                value={devolutionObs}
+                onChange={(e) => setDevolutionObs(e.target.value)}
+                placeholder="Opcional"
+              />
+            </div>
+            <div className="pt-4 flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setDevolutionItem(null)}>
+                Cancelar
+              </Button>
+              <Button onClick={handleDevolutionSubmit} disabled={isDevolutionSubmitting}>
+                Confirmar Devolução
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
