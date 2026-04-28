@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-28T02:07:59.649Z",
+  "generatedAt": "2026-04-28T02:20:29.784Z",
   "collections": [
     {
       "name": "users",
@@ -2315,6 +2315,163 @@
         }
       ],
       "indexes": []
+    },
+    {
+      "name": "processos_despesas",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "processo_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "processos_operacionais"
+        },
+        {
+          "name": "honorario_agente",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "despesas_agente",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "total_a_pagar",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "adiantamento",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "data_adiantamento",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "saldo_a_pagar",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "data_pagamento",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "honorario_a_receber",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "despesas_a_receber",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "iss",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "total_a_receber",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "despesas_extras",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "data_recebimento",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "despesa_complemento",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "data_recebimento_2",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "iss_20",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "liquido",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "margem",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "nf_numero",
+          "type": "text",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "data_emissao_nf",
+          "type": "date",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
+        }
+      ],
+      "indexes": [
+        "CREATE UNIQUE INDEX idx_proc_desp_processo_id ON processos_despesas (processo_id)"
+      ]
     }
   ]
 }

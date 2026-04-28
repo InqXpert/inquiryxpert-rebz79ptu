@@ -1,16 +1,16 @@
 import { useState, useMemo, useEffect } from 'react'
-import { format, isSameDay, parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { AlertTriangle, PackageOpen, RefreshCcw, Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { FinanceiroNav } from './components/FinanceiroNav'
-import { mockControleData } from '@/mocks/controleOperacionalMockData'
+import pb from '@/lib/pocketbase/client'
 
 const formatDate = (d: string) => (d ? format(parseISO(d), 'dd/MM/yyyy') : '-')
 const formatCurrency = (v: number) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0)
 
 const BLOCK_A = [
   'ID do Processo',
@@ -23,7 +23,7 @@ const BLOCK_A = [
   'Cliente',
   'Placa',
   'Sindicante',
-  'Data',
+  'Data Conclusão',
   'Saída',
   'Complemento',
 ]
@@ -58,28 +58,114 @@ export default function ControleOperacionalFinanceiro() {
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
+  const [data, setData] = useState<any[]>([])
+  const [totalPages, setTotalPages] = useState(1)
   const itemsPerPage = 20
 
   useEffect(() => {
-    setIsLoading(true)
-    const t = setTimeout(() => setIsLoading(false), 800)
-    return () => clearTimeout(t)
-  }, [appliedFilter])
+    let isMounted = true
 
-  const filteredData = useMemo(() => {
-    return mockControleData.filter((item) => {
-      if (item.status !== 'Concluído' && item.status !== 'Pendente de Documentos') return false
-      if (appliedFilter && !isSameDay(parseISO(item.dataConclusao), parseISO(appliedFilter)))
-        return false
-      return true
+    const fetchData = async () => {
+      setIsLoading(true)
+      setIsError(false)
+      try {
+        let filterStr = `(status = 'Concluído' || status ~ 'Pendente de Documentos')`
+
+        if (appliedFilter) {
+          filterStr += ` && data_conclusao >= "${appliedFilter} 00:00:00" && data_conclusao <= "${appliedFilter} 23:59:59"`
+        }
+
+        // Must have total_a_receber > 0 for valid view
+        filterStr += ` && processos_despesas_via_processo_id.total_a_receber > 0`
+
+        const result = await pb
+          .collection('processos_operacionais')
+          .getList(currentPage, itemsPerPage, {
+            filter: filterStr,
+            expand:
+              'agente_id,supervisor_id,solicitante_id,cliente_id,seguradora_id,processos_despesas_via_processo_id',
+            sort: '-data_conclusao',
+          })
+
+        if (isMounted) {
+          setData(result.items)
+          setTotalPages(result.totalPages || 1)
+        }
+      } catch (err) {
+        console.error('Erro ao buscar CONTROLE:', err)
+        if (isMounted) setIsError(true)
+      } finally {
+        if (isMounted) setIsLoading(false)
+      }
+    }
+
+    fetchData()
+    return () => {
+      isMounted = false
+    }
+  }, [currentPage, appliedFilter])
+
+  const mappedData = useMemo(() => {
+    return data.map((proc) => {
+      const despesas = proc.expand?.processos_despesas_via_processo_id?.[0] || {}
+
+      const totalAPagar = despesas.total_a_pagar || 0
+      const totalAReceber = despesas.total_a_receber || 0
+
+      let margem = 100
+      if (totalAPagar > 0 && totalAReceber > 0) {
+        margem = ((totalAReceber - totalAPagar) / totalAReceber) * 100
+      }
+
+      let placa = proc.placas_veiculos || '-'
+      if (
+        proc.placas_veiculos_json &&
+        Array.isArray(proc.placas_veiculos_json) &&
+        proc.placas_veiculos_json.length > 0
+      ) {
+        placa = proc.placas_veiculos_json.join(', ')
+      }
+
+      return {
+        id: proc.numero_processo || proc.numero_controle || proc.id,
+        status: proc.status,
+        tipo: proc.tipo_servico || proc.expand?.tipo_investigacao_id?.nome || '-',
+        cia: proc.expand?.seguradora_id?.nome || proc.cia || '-',
+        revisor: proc.expand?.supervisor_id?.name || proc.revisor || '-',
+        solicitante: proc.expand?.solicitante_id?.name || proc.analista_solicitante || '-',
+        aviso: proc.controle_cia || '-',
+        cliente: proc.expand?.cliente_id?.nome || '-',
+        placa,
+        sindicante: proc.expand?.agente_id?.nomeCompleto || proc.agente_prestador || '-',
+        dataConclusao: proc.data_conclusao,
+        saida: proc.data_saida || '-',
+        complemento: despesas.despesa_complemento || '-',
+
+        honorarioAgente: despesas.honorario_agente || 0,
+        despesasAgente: despesas.despesas_agente || 0,
+        totalAPagarAgente: totalAPagar,
+        adiantamento: despesas.adiantamento || 0,
+        dataAdiantamento: despesas.data_adiantamento,
+        saldoAPagar: despesas.saldo_a_pagar || 0,
+        dataPagamento: despesas.data_pagamento,
+
+        honorarioAReceber: despesas.honorario_a_receber || 0,
+        despesasAReceber: despesas.despesas_a_receber || 0,
+        iss: despesas.iss || 0,
+        totalAReceber: totalAReceber,
+        despesasExtras: despesas.despesas_extras || 0,
+        dataRecebimento: despesas.data_recebimento,
+        despesaComplemento: despesas.despesa_complemento || '-',
+        dataRecebimento2: despesas.data_recebimento_2,
+        iss20: despesas.iss_20 || 0,
+        liquido: despesas.liquido || 0,
+        margem: margem,
+        nf: despesas.nf_numero || '-',
+        dataEmissaoNF: despesas.data_emissao_nf,
+        originalProc: proc,
+      }
     })
-  }, [appliedFilter])
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage)
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  )
+  }, [data])
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -88,7 +174,7 @@ export default function ControleOperacionalFinanceiro() {
           CONTROLE — Operacional + Financeiro
         </h1>
         <p className="text-muted-foreground mt-1">
-          Processos finalizados do dia — Faturamento e Conciliação
+          Processos finalizados — Faturamento e Conciliação
         </p>
       </div>
       <FinanceiroNav />
@@ -96,7 +182,7 @@ export default function ControleOperacionalFinanceiro() {
       <div className="flex flex-wrap items-center gap-3 bg-muted/20 p-4 rounded-lg border border-border">
         <div className="flex items-center gap-2">
           <label className="text-sm font-medium whitespace-nowrap text-muted-foreground">
-            Filtrar por data:
+            Filtrar por data conclusão:
           </label>
           <Input
             type="date"
@@ -132,25 +218,24 @@ export default function ControleOperacionalFinanceiro() {
           ))}
         </div>
       ) : isError ? (
-        <div className="flex flex-col items-center justify-center p-12 text-center">
+        <div className="flex flex-col items-center justify-center p-12 text-center border rounded-md bg-muted/10">
           <AlertTriangle className="h-10 w-10 text-destructive mb-4" />
           <h3 className="text-lg font-semibold">Erro ao carregar CONTROLE. Tente novamente.</h3>
           <Button
             onClick={() => {
-              setIsError(false)
-              setIsLoading(true)
-              setTimeout(() => setIsLoading(false), 500)
+              setCurrentPage(1)
+              setAppliedFilter(appliedFilter) // re-trigger fetch
             }}
             className="mt-4"
             variant="outline"
           >
-            <RefreshCcw className="mr-2 h-4 w-4" /> Retry
+            <RefreshCcw className="mr-2 h-4 w-4" /> Tentar Novamente
           </Button>
         </div>
-      ) : filteredData.length === 0 ? (
+      ) : mappedData.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground bg-muted/10 rounded-lg border border-dashed">
           <PackageOpen className="h-12 w-12 mb-4 opacity-50" />
-          <p>Nenhum processo finalizado nesta data</p>
+          <p>Nenhum processo finalizado nesta data com valores a receber</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -196,14 +281,14 @@ export default function ControleOperacionalFinanceiro() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {paginatedData.map((row) => (
+                {mappedData.map((row) => (
                   <tr
-                    key={row.id}
+                    key={row.originalProc.id}
                     className="even:bg-muted/30 odd:bg-background hover:bg-gray-100/50 transition-colors duration-150"
                   >
                     <td className="px-3 py-2 border-r font-medium text-brand-navy">{row.id}</td>
                     <td className="px-3 py-2 border-r">
-                      {row.status === 'Pendente de Documentos' ? (
+                      {row.status.includes('Pendente de Documentos') ? (
                         <Badge
                           variant="outline"
                           className="bg-yellow-50 text-yellow-700 border-yellow-300 font-normal"
@@ -253,14 +338,14 @@ export default function ControleOperacionalFinanceiro() {
                     </td>
                     <td className="px-3 py-2 border-r">{formatCurrency(row.despesasExtras)}</td>
                     <td className="px-3 py-2 border-r">{formatDate(row.dataRecebimento)}</td>
-                    <td className="px-3 py-2 border-r">{formatCurrency(row.despesaComplemento)}</td>
+                    <td className="px-3 py-2 border-r">{row.despesaComplemento}</td>
                     <td className="px-3 py-2 border-r">{formatDate(row.dataRecebimento2)}</td>
                     <td className="px-3 py-2 border-r">{formatCurrency(row.iss20)}</td>
                     <td className="px-3 py-2 border-r font-semibold text-brand-navy">
                       {formatCurrency(row.liquido)}
                     </td>
-                    <td className="px-3 py-2 border-r">{row.margem}%</td>
-                    <td className="px-3 py-2 border-r">{row.nf || '-'}</td>
+                    <td className="px-3 py-2 border-r">{row.margem.toFixed(2)}%</td>
+                    <td className="px-3 py-2 border-r">{row.nf}</td>
                     <td className="px-3 py-2">{formatDate(row.dataEmissaoNF)}</td>
                   </tr>
                 ))}
@@ -269,8 +354,11 @@ export default function ControleOperacionalFinanceiro() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
-            {paginatedData.map((item) => (
-              <div key={item.id} className="border rounded-lg p-4 bg-card shadow-sm space-y-3">
+            {mappedData.map((item) => (
+              <div
+                key={item.originalProc.id}
+                className="border rounded-lg p-4 bg-card shadow-sm space-y-3"
+              >
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="font-bold text-brand-navy">{item.id}</h4>
@@ -278,7 +366,7 @@ export default function ControleOperacionalFinanceiro() {
                       {item.cliente} • {item.tipo}
                     </p>
                   </div>
-                  {item.status === 'Pendente de Documentos' ? (
+                  {item.status.includes('Pendente de Documentos') ? (
                     <Badge
                       variant="outline"
                       className="bg-yellow-50 text-yellow-700 border-yellow-300"
