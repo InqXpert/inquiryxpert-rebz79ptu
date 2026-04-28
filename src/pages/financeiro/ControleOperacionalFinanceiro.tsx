@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'
 import { AcoesNF } from './components/AcoesNF'
 import { AcoesPagamento } from './components/AcoesPagamento'
+import { EditarRecebiveisModal } from './components/EditarRecebiveisModal'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { FinanceiroNav } from './components/FinanceiroNav'
@@ -53,6 +54,7 @@ const BLOCK_C = [
   'Margem (%)',
   'NF',
   'Data NF',
+  'Editar Rec.',
 ]
 
 export default function ControleOperacionalFinanceiro() {
@@ -262,7 +264,7 @@ export default function ControleOperacionalFinanceiro() {
                     Block B — Valores a Pagar ao Agente
                   </th>
                   <th
-                    colSpan={13}
+                    colSpan={14}
                     className="border-b border-r px-4 py-2 text-center bg-gray-200/60 font-semibold"
                   >
                     Block C — Valores a Receber do Cliente
@@ -367,6 +369,18 @@ export default function ControleOperacionalFinanceiro() {
                     <td className="px-3 py-2 border-r">{row.margem.toFixed(2)}%</td>
                     <td className="px-3 py-2 border-r">{row.nf}</td>
                     <td className="px-3 py-2 border-r">{formatDate(row.dataEmissaoNF)}</td>
+                    <td className="px-3 py-2 border-r text-center">
+                      <EditarRecebiveisModal
+                        despesaId={row.despesaId}
+                        honorario={row.honorarioAReceber}
+                        despesas={row.despesasAReceber}
+                        iss={row.iss}
+                        dataRecebimento={row.dataRecebimento}
+                        totalAPagar={row.totalAPagarAgente}
+                        userRole={user?.role}
+                        onSuccess={() => setRefreshKey((k) => k + 1)}
+                      />
+                    </td>
                     <td className="px-3 py-2 border-r">
                       <AcoesNF
                         despesaId={row.despesaId}
@@ -476,6 +490,16 @@ export default function ControleOperacionalFinanceiro() {
                     totalAReceber={item.totalAReceber}
                     totalAPagar={item.totalAPagarAgente}
                     dataRecebimento={item.dataRecebimento}
+                    userRole={user?.role}
+                    onSuccess={() => setRefreshKey((k) => k + 1)}
+                  />
+                  <EditarRecebiveisModal
+                    despesaId={item.despesaId}
+                    honorario={item.honorarioAReceber}
+                    despesas={item.despesasAReceber}
+                    iss={item.iss}
+                    dataRecebimento={item.dataRecebimento}
+                    totalAPagar={item.totalAPagarAgente}
                     userRole={user?.role}
                     onSuccess={() => setRefreshKey((k) => k + 1)}
                   />
