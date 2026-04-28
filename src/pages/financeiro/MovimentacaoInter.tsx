@@ -1,7 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react'
-import { format, subDays } from 'date-fns'
+import React, { useState, useMemo, useEffect } from 'react'
 import { FinanceiroNav } from './components/FinanceiroNav'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -11,429 +19,480 @@ import {
   TableRow,
   TableFooter,
 } from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
-  Search,
-  RotateCcw,
-  Inbox,
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  DollarSign,
   AlertCircle,
-  ArrowUpCircle,
-  ArrowDownCircle,
-  Wallet,
-  TrendingUp,
+  PackageOpen,
+  RotateCcw,
 } from 'lucide-react'
+import { format, isSameMonth } from 'date-fns'
 import { cn } from '@/lib/utils'
 
-type Transaction = {
+type TransactionType = 'Retirada' | 'Devolução'
+type TransactionStatus = 'Pendente Devolução' | 'Devolvido' | 'Cancelado'
+
+interface Transaction {
   id: string
   date: string
-  description: string
-  identification: string
-  debit: number
-  credit: number
-  status: 'Processado' | 'Pendente' | 'Cancelado'
+  cLevel: string
+  type: TransactionType
+  amount: number
+  motive: string
+  status: TransactionStatus
+  returnDate?: string
+  balance: number
 }
 
-const generateMockData = (): Transaction[] => {
-  const today = new Date()
-  return [
-    {
-      id: '10',
-      date: format(today, 'yyyy-MM-dd'),
-      description: 'Zurich Seguros',
-      identification: 'DOC-991',
-      debit: 0,
-      credit: 15000,
-      status: 'Processado',
-    },
-    {
-      id: '9',
-      date: format(subDays(today, 2), 'yyyy-MM-dd'),
-      description: 'Bradesco Saúde',
-      identification: 'TED-882',
-      debit: 0,
-      credit: 8500,
-      status: 'Processado',
-    },
-    {
-      id: '8',
-      date: format(subDays(today, 3), 'yyyy-MM-dd'),
-      description: 'Pagamento Fornecedor A',
-      identification: 'PIX-123',
-      debit: 1200,
-      credit: 0,
-      status: 'Processado',
-    },
-    {
-      id: '7',
-      date: format(subDays(today, 5), 'yyyy-MM-dd'),
-      description: 'Cooperlink',
-      identification: 'DOC-773',
-      debit: 0,
-      credit: 4200,
-      status: 'Pendente',
-    },
-    {
-      id: '6',
-      date: format(subDays(today, 8), 'yyyy-MM-dd'),
-      description: 'Manutenção Servidor',
-      identification: 'PIX-124',
-      debit: 350,
-      credit: 0,
-      status: 'Processado',
-    },
-    {
-      id: '5',
-      date: format(subDays(today, 12), 'yyyy-MM-dd'),
-      description: 'Allianz',
-      identification: 'TED-664',
-      debit: 0,
-      credit: 11200,
-      status: 'Processado',
-    },
-    {
-      id: '4',
-      date: format(subDays(today, 15), 'yyyy-MM-dd'),
-      description: 'Material de Escritório',
-      identification: 'PIX-125',
-      debit: 800,
-      credit: 0,
-      status: 'Cancelado',
-    },
-    {
-      id: '3',
-      date: format(subDays(today, 18), 'yyyy-MM-dd'),
-      description: 'SulAmérica',
-      identification: 'DOC-555',
-      debit: 0,
-      credit: 6700,
-      status: 'Processado',
-    },
-    {
-      id: '2',
-      date: format(subDays(today, 22), 'yyyy-MM-dd'),
-      description: 'Conta de Luz',
-      identification: 'BOL-111',
-      debit: 450,
-      credit: 0,
-      status: 'Processado',
-    },
-    {
-      id: '1',
-      date: format(subDays(today, 25), 'yyyy-MM-dd'),
-      description: 'Liberty Seguros',
-      identification: 'TED-446',
-      debit: 0,
-      credit: 9300,
-      status: 'Processado',
-    },
-  ]
-}
+const mockData: Transaction[] = [
+  {
+    id: '1',
+    date: new Date(Date.now() - 86400000 * 2).toISOString(),
+    cLevel: 'João Silva',
+    type: 'Retirada',
+    amount: 5000,
+    motive: 'Despesa operacional',
+    status: 'Pendente Devolução',
+    balance: 5000,
+  },
+  {
+    id: '2',
+    date: new Date(Date.now() - 86400000 * 5).toISOString(),
+    cLevel: 'Maria Santos',
+    type: 'Retirada',
+    amount: 12000,
+    motive: 'Adiantamento',
+    status: 'Devolvido',
+    returnDate: new Date(Date.now() - 86400000).toISOString(),
+    balance: 0,
+  },
+  {
+    id: '3',
+    date: new Date(Date.now() - 86400000).toISOString(),
+    cLevel: 'Maria Santos',
+    type: 'Devolução',
+    amount: 12000,
+    motive: 'Reembolso',
+    status: 'Devolvido',
+    balance: 0,
+  },
+  {
+    id: '4',
+    date: new Date(Date.now() - 86400000 * 10).toISOString(),
+    cLevel: 'Carlos Oliveira',
+    type: 'Retirada',
+    amount: 3500,
+    motive: 'Viagem',
+    status: 'Pendente Devolução',
+    balance: 3500,
+  },
+  {
+    id: '5',
+    date: new Date(Date.now() - 86400000 * 15).toISOString(),
+    cLevel: 'João Silva',
+    type: 'Retirada',
+    amount: 8000,
+    motive: 'Equipamentos',
+    status: 'Cancelado',
+    balance: 0,
+  },
+  {
+    id: '6',
+    date: new Date(Date.now() - 86400000 * 18).toISOString(),
+    cLevel: 'Carlos Oliveira',
+    type: 'Retirada',
+    amount: 2000,
+    motive: 'Evento',
+    status: 'Devolvido',
+    returnDate: new Date(Date.now() - 86400000 * 12).toISOString(),
+    balance: 0,
+  },
+  {
+    id: '7',
+    date: new Date(Date.now() - 86400000 * 12).toISOString(),
+    cLevel: 'Carlos Oliveira',
+    type: 'Devolução',
+    amount: 2000,
+    motive: 'Reembolso evento',
+    status: 'Devolvido',
+    balance: 0,
+  },
+  {
+    id: '8',
+    date: new Date(Date.now() - 86400000 * 25).toISOString(),
+    cLevel: 'Maria Santos',
+    type: 'Retirada',
+    amount: 4500,
+    motive: 'Adiantamento',
+    status: 'Pendente Devolução',
+    balance: 4500,
+  },
+]
 
-const formatCurrency = (val: number) =>
-  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val)
-const formatDate = (dateStr: string) => {
-  const [y, m, d] = dateStr.split('-')
-  return `${d}/${m}/${y}`
-}
+const formatCurrency = (v: number) =>
+  new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
 
 export default function MovimentacaoInter() {
   const [data, setData] = useState<Transaction[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
 
-  const [startDate, setStartDate] = useState<string>('')
-  const [endDate, setEndDate] = useState<string>('')
-  const [type, setType] = useState<string>('Todos')
-  const [appliedFilters, setAppliedFilters] = useState({
-    startDate: '',
-    endDate: '',
+  const [filters, setFilters] = useState({
+    dateFrom: '',
+    dateTo: '',
+    cLevel: 'Todos',
     type: 'Todos',
   })
+  const [appliedFilters, setAppliedFilters] = useState(filters)
+  const [page, setPage] = useState(1)
 
-  const fetchData = () => {
-    setLoading(true)
-    setError(false)
+  const loadData = () => {
+    setIsLoading(true)
+    setHasError(false)
     setTimeout(() => {
-      setData(generateMockData())
-      setLoading(false)
+      setData(mockData)
+      setIsLoading(false)
     }, 1000)
   }
 
   useEffect(() => {
-    fetchData()
+    loadData()
   }, [])
+  useEffect(() => {
+    setPage(1)
+  }, [appliedFilters])
 
-  const handleFilter = () => setAppliedFilters({ startDate, endDate, type })
-  const handleClear = () => {
-    setStartDate('')
-    setEndDate('')
-    setType('Todos')
-    setAppliedFilters({ startDate: '', endDate: '', type: 'Todos' })
-  }
+  const currentMonthData = data.filter((t) => isSameMonth(new Date(t.date), new Date()))
+  const totalRetiradasMonth = currentMonthData
+    .filter((t) => t.type === 'Retirada' && t.status !== 'Cancelado')
+    .reduce((acc, curr) => acc + curr.amount, 0)
+  const totalDevolucoesMonth = currentMonthData
+    .filter((t) => t.type === 'Devolução')
+    .reduce((acc, curr) => acc + curr.amount, 0)
+  const saldoLiquidoMonth = totalRetiradasMonth - totalDevolucoesMonth
+  const saldoPendenteMonth = currentMonthData
+    .filter((t) => t.status === 'Pendente Devolução')
+    .reduce((acc, curr) => acc + curr.balance, 0)
 
-  const processedData = useMemo(() => {
-    const sorted = [...data].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-    let currentBalance = 25000 // Mock starting balance
-
-    const withBalance = sorted.map((t) => {
-      if (t.status === 'Processado') currentBalance += t.credit - t.debit
-      return { ...t, balance: currentBalance }
+  const filteredData = useMemo(() => {
+    return data.filter((t) => {
+      if (appliedFilters.cLevel !== 'Todos' && t.cLevel !== appliedFilters.cLevel) return false
+      if (appliedFilters.type !== 'Todos' && t.type !== appliedFilters.type) return false
+      if (appliedFilters.dateFrom && t.date < appliedFilters.dateFrom) return false
+      if (appliedFilters.dateTo && t.date > appliedFilters.dateTo + 'T23:59:59.999Z') return false
+      return true
     })
-
-    return withBalance
-      .filter((t) => {
-        if (appliedFilters.type === 'Crédito' && t.credit === 0) return false
-        if (appliedFilters.type === 'Débito' && t.debit === 0) return false
-        if (appliedFilters.startDate && t.date < appliedFilters.startDate) return false
-        if (appliedFilters.endDate && t.date > appliedFilters.endDate) return false
-        return true
-      })
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }, [data, appliedFilters])
 
-  const totals = useMemo(
-    () =>
-      processedData.reduce(
-        (acc, curr) => ({
-          credits: acc.credits + curr.credit,
-          debits: acc.debits + curr.debit,
-        }),
-        { credits: 0, debits: 0 },
-      ),
-    [processedData],
-  )
+  const tableTotalRetiradas = filteredData
+    .filter((t) => t.type === 'Retirada' && t.status !== 'Cancelado')
+    .reduce((a, c) => a + c.amount, 0)
+  const tableTotalDevolucoes = filteredData
+    .filter((t) => t.type === 'Devolução')
+    .reduce((a, c) => a + c.amount, 0)
+  const tableSaldoLiquido = tableTotalRetiradas - tableTotalDevolucoes
 
-  const currentMonthTotals = useMemo(() => {
-    const today = new Date()
-    const startOfMonthStr = format(new Date(today.getFullYear(), today.getMonth(), 1), 'yyyy-MM-dd')
-    const currentMonthData = data.filter(
-      (t) => t.date >= startOfMonthStr && t.status === 'Processado',
-    )
-    return currentMonthData.reduce(
-      (acc, curr) => ({
-        credits: acc.credits + curr.credit,
-        debits: acc.debits + curr.debit,
-      }),
-      { credits: 0, debits: 0 },
-    )
-  }, [data])
+  const ITEMS_PER_PAGE = 25
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE)
+  const paginatedData = filteredData.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
 
-  const availableBalance = processedData.length > 0 ? processedData[0].balance : 25000
-  const projectedBalance =
-    availableBalance + (currentMonthTotals.credits - currentMonthTotals.debits)
+  const handleClear = () => {
+    const reset = { dateFrom: '', dateTo: '', cLevel: 'Todos', type: 'Todos' }
+    setFilters(reset)
+    setAppliedFilters(reset)
+  }
 
   return (
-    <div className="p-6 max-w-[1600px] mx-auto w-full space-y-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight text-brand-navy">
-          Movimentação Bancária — Inter
-        </h1>
-        <p className="text-muted-foreground">Controle de entradas e saídas da conta principal</p>
+    <div className="space-y-6 animate-fade-in-up">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Movimentação Bancária — Itaú</h1>
+        <p className="text-muted-foreground mt-2">Controle de retiradas e devoluções de C-Level</p>
       </div>
 
       <FinanceiroNav />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Créditos (mês atual)
-            </CardTitle>
-            <ArrowUpCircle className="h-4 w-4 text-[#0d9488]" />
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-sm font-medium">Total Retiradas</CardTitle>
+            <ArrowUpRight className="w-4 h-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-[#0d9488]">
-              {formatCurrency(currentMonthTotals.credits)}
-            </div>
+            <div className="text-2xl font-bold">{formatCurrency(totalRetiradasMonth)}</div>
+            <p className="text-xs text-muted-foreground">Mês atual</p>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Débitos (mês atual)
-            </CardTitle>
-            <ArrowDownCircle className="h-4 w-4 text-[#dc2626]" />
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-sm font-medium">Total Devoluções</CardTitle>
+            <ArrowDownRight className="w-4 h-4 text-teal-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-[#dc2626]">
-              {formatCurrency(currentMonthTotals.debits)}
-            </div>
+            <div className="text-2xl font-bold">{formatCurrency(totalDevolucoesMonth)}</div>
+            <p className="text-xs text-muted-foreground">Mês atual</p>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Saldo Disponível
-            </CardTitle>
-            <Wallet className="h-4 w-4 text-brand-navy" />
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-sm font-medium">Saldo Líquido</CardTitle>
+            <DollarSign className="w-4 h-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-brand-navy">
-              {formatCurrency(availableBalance)}
-            </div>
+            <div className="text-2xl font-bold">{formatCurrency(saldoLiquidoMonth)}</div>
+            <p className="text-xs text-muted-foreground">Mês atual</p>
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Saldo Projetado
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-blue-600" />
+          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <CardTitle className="text-sm font-medium">Pendente Devolução</CardTitle>
+            <AlertCircle className="w-4 h-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">
-              {formatCurrency(projectedBalance)}
-            </div>
+            <div className="text-2xl font-bold">{formatCurrency(saldoPendenteMonth)}</div>
+            <p className="text-xs text-muted-foreground">Mês atual</p>
           </CardContent>
         </Card>
       </div>
 
       <Card>
-        <CardContent className="p-4 flex flex-col md:flex-row gap-4 items-end">
-          <div className="flex-1 w-full">
-            <label className="text-sm font-medium mb-1.5 block text-muted-foreground">De</label>
-            <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end mb-6">
+            <div className="space-y-2">
+              <Label>De</Label>
+              <Input
+                type="date"
+                value={filters.dateFrom}
+                onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Até</Label>
+              <Input
+                type="date"
+                value={filters.dateTo}
+                onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>C-Level</Label>
+              <Select
+                value={filters.cLevel}
+                onValueChange={(v) => setFilters({ ...filters, cLevel: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="C-Level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Todos">Todos</SelectItem>
+                  <SelectItem value="João Silva">João Silva</SelectItem>
+                  <SelectItem value="Maria Santos">Maria Santos</SelectItem>
+                  <SelectItem value="Carlos Oliveira">Carlos Oliveira</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Tipo</Label>
+              <Select
+                value={filters.type}
+                onValueChange={(v) => setFilters({ ...filters, type: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Todos">Todos</SelectItem>
+                  <SelectItem value="Retirada">Retirada</SelectItem>
+                  <SelectItem value="Devolução">Devolução</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex space-x-2">
+              <Button onClick={() => setAppliedFilters(filters)} className="flex-1">
+                Filtrar
+              </Button>
+              <Button onClick={handleClear} variant="outline" className="flex-1">
+                Limpar
+              </Button>
+            </div>
           </div>
-          <div className="flex-1 w-full">
-            <label className="text-sm font-medium mb-1.5 block text-muted-foreground">Até</label>
-            <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
-          </div>
-          <div className="flex-1 w-full">
-            <label className="text-sm font-medium mb-1.5 block text-muted-foreground">Tipo</label>
-            <select
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-            >
-              <option value="Todos">Todos</option>
-              <option value="Crédito">Crédito</option>
-              <option value="Débito">Débito</option>
-            </select>
-          </div>
-          <div className="flex items-center gap-2 w-full md:w-auto">
-            <Button
-              onClick={handleFilter}
-              className="flex-1 md:flex-none bg-brand-navy hover:bg-brand-navy/90 text-white"
-            >
-              <Search className="w-4 h-4 mr-2" /> Filtrar
-            </Button>
-            <Button variant="outline" onClick={handleClear} className="flex-1 md:flex-none">
-              <RotateCcw className="w-4 h-4 mr-2" /> Limpar
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
 
-      <Card className="overflow-hidden border shadow-sm">
-        {loading ? (
-          <div className="space-y-3 p-6">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="h-12 w-full" />
-            ))}
-          </div>
-        ) : error ? (
-          <div className="flex flex-col items-center justify-center p-12 text-center text-red-500">
-            <AlertCircle className="w-12 h-12 mb-4" />
-            <p className="text-lg font-medium mb-4">
-              Erro ao carregar movimentação. Tente novamente.
-            </p>
-            <Button onClick={fetchData} variant="outline">
-              Tentar Novamente
-            </Button>
-          </div>
-        ) : processedData.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-16 text-center text-muted-foreground">
-            <Inbox className="w-12 h-12 mb-4 opacity-20" />
-            <p className="text-lg font-medium">Nenhuma movimentação neste período</p>
-          </div>
-        ) : (
-          <div className="animate-fade-in-up">
-            <Table>
+          <div className="w-full overflow-x-auto rounded-md border border-border">
+            <Table className="min-w-[900px]">
               <TableHeader className="bg-slate-100">
                 <TableRow>
-                  <TableHead className="text-brand-navy font-semibold whitespace-nowrap">
-                    Data
+                  <TableHead className="text-brand-navy font-semibold">Data</TableHead>
+                  <TableHead className="text-brand-navy font-semibold">C-Level</TableHead>
+                  <TableHead className="text-brand-navy font-semibold">Tipo</TableHead>
+                  <TableHead className="text-brand-navy font-semibold text-right">
+                    Valor (R$)
                   </TableHead>
-                  <TableHead className="text-brand-navy font-semibold whitespace-nowrap">
-                    Fornecedor/Descrição
-                  </TableHead>
-                  <TableHead className="text-brand-navy font-semibold whitespace-nowrap">
-                    Identificação
-                  </TableHead>
-                  <TableHead className="text-brand-navy font-semibold text-right whitespace-nowrap">
-                    Débito (R$)
-                  </TableHead>
-                  <TableHead className="text-brand-navy font-semibold text-right whitespace-nowrap">
-                    Crédito (R$)
-                  </TableHead>
-                  <TableHead className="text-brand-navy font-semibold whitespace-nowrap">
+                  <TableHead className="text-brand-navy font-semibold">Motivo</TableHead>
+                  <TableHead className="text-brand-navy font-semibold text-center">
                     Status
                   </TableHead>
-                  <TableHead className="text-brand-navy font-semibold text-right whitespace-nowrap">
-                    Saldo Atual (R$)
+                  <TableHead className="text-brand-navy font-semibold text-center">
+                    Data Devolução
+                  </TableHead>
+                  <TableHead className="text-brand-navy font-semibold text-right">
+                    Saldo (R$)
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {processedData.map((t) => (
-                  <TableRow
-                    key={t.id}
-                    className="even:bg-slate-50 odd:bg-white hover:bg-slate-100 transition-colors group"
-                  >
-                    <TableCell className="whitespace-nowrap">{formatDate(t.date)}</TableCell>
-                    <TableCell className="font-medium text-brand-navy">{t.description}</TableCell>
-                    <TableCell className="text-muted-foreground">{t.identification}</TableCell>
-                    <TableCell className="text-right text-[#dc2626]">
-                      {t.debit > 0 ? formatCurrency(t.debit) : '-'}
-                    </TableCell>
-                    <TableCell className="text-right text-[#0d9488]">
-                      {t.credit > 0 ? formatCurrency(t.credit) : '-'}
-                    </TableCell>
-                    <TableCell>
-                      <span
+                {isLoading &&
+                  Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={i}>
+                      {Array.from({ length: 8 }).map((_, j) => (
+                        <TableCell key={j}>
+                          <Skeleton className="h-6 w-full" />
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+                {!isLoading &&
+                  !hasError &&
+                  paginatedData.map((t) => (
+                    <TableRow
+                      key={t.id}
+                      className="odd:bg-background even:bg-muted/50 hover:bg-muted/80 transition-colors"
+                    >
+                      <TableCell>{format(new Date(t.date), 'dd/MM/yyyy')}</TableCell>
+                      <TableCell>{t.cLevel}</TableCell>
+                      <TableCell
                         className={cn(
-                          'inline-flex items-center rounded-full px-2 py-1 text-xs font-medium',
-                          t.status === 'Processado'
-                            ? 'bg-green-100 text-green-700'
-                            : t.status === 'Pendente'
-                              ? 'bg-yellow-100 text-yellow-700'
-                              : 'bg-red-100 text-red-700',
+                          'font-medium',
+                          t.type === 'Retirada' ? 'text-[#f97316]' : 'text-[#0d9488]',
                         )}
                       >
-                        {t.status}
-                      </span>
+                        {t.type}
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        {formatCurrency(t.amount)}
+                      </TableCell>
+                      <TableCell>{t.motive}</TableCell>
+                      <TableCell className="text-center">
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            t.status === 'Pendente Devolução' &&
+                              'bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-100',
+                            t.status === 'Devolvido' &&
+                              'bg-green-100 text-green-800 border-green-200 hover:bg-green-100',
+                            t.status === 'Cancelado' &&
+                              'bg-slate-100 text-slate-800 border-slate-200 hover:bg-slate-100',
+                          )}
+                        >
+                          {t.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {t.returnDate ? format(new Date(t.returnDate), 'dd/MM/yyyy') : '-'}
+                      </TableCell>
+                      <TableCell className="text-right">{formatCurrency(t.balance)}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+              {!isLoading && !hasError && filteredData.length > 0 && (
+                <TableFooter className="bg-slate-100 font-semibold text-slate-800">
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-right text-brand-navy">
+                      Total Retiradas:
                     </TableCell>
-                    <TableCell className="text-right font-medium">
-                      {formatCurrency(t.balance)}
+                    <TableCell className="text-right text-[#f97316]">
+                      {formatCurrency(tableTotalRetiradas)}
+                    </TableCell>
+                    <TableCell colSpan={3} className="text-right text-brand-navy">
+                      Total Devoluções:
+                    </TableCell>
+                    <TableCell className="text-right text-[#0d9488]">
+                      {formatCurrency(tableTotalDevolucoes)}
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter className="bg-slate-50">
-                <TableRow>
-                  <TableCell colSpan={3} className="font-semibold text-right text-muted-foreground">
-                    Totais no período visível:
-                  </TableCell>
-                  <TableCell className="text-right text-[#dc2626] font-bold">
-                    {formatCurrency(totals.debits)}
-                  </TableCell>
-                  <TableCell className="text-right text-[#0d9488] font-bold">
-                    {formatCurrency(totals.credits)}
-                  </TableCell>
-                  <TableCell className="font-semibold text-right text-muted-foreground">
-                    Saldo Resultante:
-                  </TableCell>
-                  <TableCell className="text-right font-bold text-brand-navy">
-                    {formatCurrency(totals.credits - totals.debits)}
-                  </TableCell>
-                </TableRow>
-              </TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-right text-brand-navy">
+                      Saldo Líquido:
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {formatCurrency(tableSaldoLiquido)}
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              )}
             </Table>
           </div>
-        )}
+
+          {!isLoading && !hasError && filteredData.length === 0 && (
+            <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground border border-t-0 rounded-b-md">
+              <PackageOpen className="w-12 h-12 mb-4 opacity-50" />
+              <p>Nenhuma movimentação neste período</p>
+            </div>
+          )}
+
+          {!isLoading && hasError && (
+            <div className="flex flex-col items-center justify-center p-12 text-center text-destructive border border-t-0 rounded-b-md">
+              <AlertCircle className="w-12 h-12 mb-4 opacity-80" />
+              <p className="mb-4">Erro ao carregar movimentação. Tente novamente.</p>
+              <Button onClick={loadData} variant="outline">
+                <RotateCcw className="w-4 h-4 mr-2" /> Tentar novamente
+              </Button>
+            </div>
+          )}
+
+          {!isLoading && !hasError && totalPages > 1 && (
+            <div className="pt-4 flex justify-end">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setPage((p) => Math.max(1, p - 1))
+                      }}
+                      className={page === 1 ? 'pointer-events-none opacity-50' : ''}
+                    />
+                  </PaginationItem>
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <PaginationItem key={i}>
+                      <PaginationLink
+                        href="#"
+                        isActive={page === i + 1}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setPage(i + 1)
+                        }}
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setPage((p) => Math.min(totalPages, p + 1))
+                      }}
+                      className={page === totalPages ? 'pointer-events-none opacity-50' : ''}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
+        </CardContent>
       </Card>
     </div>
   )
