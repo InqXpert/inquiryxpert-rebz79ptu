@@ -42,6 +42,7 @@ const ControleOperacionalFinanceiro = lazy(
   () => import('./pages/financeiro/ControleOperacionalFinanceiro'),
 )
 const Adiantamentos = lazy(() => import('./pages/financeiro/Adiantamentos'))
+const MetasFinanceiras = lazy(() => import('./pages/financeiro/MetasFinanceiras'))
 const MovimentacaoInter = lazy(() => import('./pages/financeiro/MovimentacaoInter'))
 const MovimentacaoItau = lazy(() => import('./pages/financeiro/MovimentacaoItau'))
 
@@ -120,6 +121,7 @@ export default function App() {
                   <Route path="/financeiro/notas-fiscais" element={<NotasFiscais />} />
                   <Route path="/financeiro/controle" element={<ControleOperacionalFinanceiro />} />
                   <Route path="/financeiro/adiantamentos" element={<Adiantamentos />} />
+                  <Route path="/financeiro/metas" element={<MetasFinanceiras />} />
                   <Route path="/financeiro/movimentacao-inter" element={<MovimentacaoInter />} />
                   <Route path="/financeiro/movimentacao-itau" element={<MovimentacaoItau />} />
 

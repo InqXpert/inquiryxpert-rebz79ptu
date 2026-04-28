@@ -127,13 +127,11 @@ export default function MovimentacaoItau() {
       const filterString = filterParts.join(' && ')
 
       const [listRes, allRes] = await Promise.all([
-        pb
-          .collection('movimentacao_itau')
-          .getList(page, 25, {
-            filter: filterString,
-            sort: '-data_retirada',
-            expand: 'c_level_id',
-          }),
+        pb.collection('movimentacao_itau').getList(page, 25, {
+          filter: filterString,
+          sort: '-data_retirada',
+          expand: 'c_level_id',
+        }),
         pb
           .collection('movimentacao_itau')
           .getFullList({ filter: filterString, fields: 'valor,tipo,status,saldo' }),
