@@ -308,7 +308,8 @@ function StatusBadge({ status }: { status: string }) {
     .toUpperCase()
     .trim()
   let key = s
-  if (s.includes('EXECUCAO') || s.includes('EXECUÇÃO')) key = 'EM_EXECUCAO'
+  if (s.includes('PENDENTE_DOCUMENTOS')) key = 'PENDENTE_DOCUMENTOS'
+  else if (s.includes('EXECUCAO') || s.includes('EXECUÇÃO')) key = 'EM_EXECUCAO'
   else if (s.includes('ELABORACAO') || s.includes('ELABORAÇÃO')) key = 'EM_ELABORACAO'
   else if (s.includes('FINALIZADO') || s.includes('CONCLUIDO')) key = 'FINALIZADO'
   else if (s.includes('CANCELADO')) key = 'CANCELADO'
@@ -320,6 +321,7 @@ function StatusBadge({ status }: { status: string }) {
     FINALIZADO: 'bg-brand-teal text-white',
     CANCELADO: 'bg-brand-coral text-white',
     ANALISE_INICIAL: 'bg-brand-gray text-white',
+    PENDENTE_DOCUMENTOS: 'bg-orange-500 text-white',
   }
 
   const labels: Record<string, string> = {
@@ -328,6 +330,7 @@ function StatusBadge({ status }: { status: string }) {
     FINALIZADO: 'Concluído',
     CANCELADO: 'Cancelado',
     ANALISE_INICIAL: 'Análise',
+    PENDENTE_DOCUMENTOS: 'Pendente Docs',
   }
 
   return (

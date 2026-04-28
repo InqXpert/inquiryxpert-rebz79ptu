@@ -26,11 +26,20 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { toast } from 'sonner'
-import { ArrowLeft, CheckCircle2, Info, Loader2 } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Info, Loader2, AlertCircle } from 'lucide-react'
+import { Checkbox } from '@/components/ui/checkbox'
 import { format } from 'date-fns'
 import pb from '@/lib/pocketbase/client'
+import { cn } from '@/lib/utils'
 
-const STATUSES = ['ANALISE_INICIAL', 'EM_EXECUCAO', 'EM_ELABORACAO', 'FINALIZADO', 'CANCELADO']
+const STATUSES = [
+  'ANALISE_INICIAL',
+  'EM_EXECUCAO',
+  'EM_ELABORACAO',
+  'FINALIZADO',
+  'CANCELADO',
+  'concluido_pendente_documentos',
+]
 
 export default function ProcessoDetalhesPage() {
   const { id } = useParams<{ id: string }>()
@@ -47,6 +56,7 @@ export default function ProcessoDetalhesPage() {
 
   const [isChecking, setIsChecking] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [showPendenciaModal, setShowPendenciaModal] = useState(false)
 
   useEffect(() => {
     if (processo && !newStatus) {
@@ -72,6 +82,8 @@ export default function ProcessoDetalhesPage() {
         )
         toast.success('Processo concluído. Aguardando validação.')
         navigate('/processos')
+      } else if (res.audio_count > 0 && !res.has_despesas_record) {
+        setShowPendenciaModal(true)
       } else {
         setShowModal(true)
       }
@@ -188,9 +200,16 @@ export default function ProcessoDetalhesPage() {
             Processo {processo.numero_controle || processo.id}
             <Badge
               variant="outline"
-              className="border-brand-teal/30 text-brand-navy dark:text-brand-light text-sm bg-white dark:bg-brand-navy/50"
+              className={cn(
+                'border-brand-teal/30 text-sm bg-white dark:bg-brand-navy/50',
+                processo.status === 'concluido_pendente_documentos'
+                  ? 'text-orange-600 border-orange-300 dark:text-orange-400 dark:border-orange-500/50 bg-orange-50 dark:bg-orange-900/20'
+                  : 'text-brand-navy dark:text-brand-light',
+              )}
             >
-              {String(processo.status || 'Sem Status').replace(/_/g, ' ')}
+              {processo.status === 'concluido_pendente_documentos'
+                ? 'Pendente de Documentos'
+                : String(processo.status || 'Sem Status').replace(/_/g, ' ')}
             </Badge>
             {loadingFinanceiro ? (
               <Skeleton className="h-6 w-32 rounded-full" />
@@ -229,11 +248,37 @@ export default function ProcessoDetalhesPage() {
 
       <div className="space-y-6">
         <div className="bg-white dark:bg-brand-navy/80 border border-brand-teal/20 dark:border-brand-cyan/20 rounded-xl p-6 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300 fill-mode-both delay-100">
-          <div className="flex items-center gap-2 mb-4">
-            <Info className="w-5 h-5 text-brand-cyan" />
-            <h2 className="text-[18px] font-bold text-brand-navy dark:text-white">
-              Informações Básicas
-            </h2>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div className="flex items-center gap-2">
+              <Info className="w-5 h-5 text-brand-cyan" />
+              <h2 className="text-[18px] font-bold text-brand-navy dark:text-white">
+                Informações Básicas
+              </h2>
+            </div>
+            {processo.status === 'concluido_pendente_documentos' && (
+              <div className="flex items-center space-x-2 bg-orange-50 dark:bg-orange-900/20 px-4 py-2 rounded-lg border border-orange-200 dark:border-orange-800">
+                <Checkbox
+                  id="doc-recebidos"
+                  checked={processo.documentos_recebidos}
+                  onCheckedChange={async (checked) => {
+                    if (checked) {
+                      await save(
+                        { documentos_recebidos: true, status: 'FINALIZADO' },
+                        'STATUS_ALTERADO',
+                      )
+                      toast.success('Documentos marcados como recebidos!')
+                    }
+                  }}
+                />
+                <label
+                  htmlFor="doc-recebidos"
+                  className="text-sm font-semibold text-orange-800 dark:text-orange-300 flex items-center cursor-pointer"
+                >
+                  <AlertCircle className="w-4 h-4 mr-2" />
+                  Documentos Recebidos?
+                </label>
+              </div>
+            )}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <InfoItem
@@ -313,7 +358,9 @@ export default function ProcessoDetalhesPage() {
                   <SelectContent>
                     {STATUSES.map((s) => (
                       <SelectItem key={s} value={s}>
-                        {s.replace(/_/g, ' ')}
+                        {s === 'concluido_pendente_documentos'
+                          ? 'Pendente de Documentos'
+                          : s.replace(/_/g, ' ')}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -361,6 +408,40 @@ export default function ProcessoDetalhesPage() {
           </div>
         </div>
       </div>
+
+      <AlertDialog open={showPendenciaModal} onOpenChange={setShowPendenciaModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Faltam Despesas</AlertDialogTitle>
+            <AlertDialogDescription>
+              Não constam despesas registradas para este processo. Deseja marcá-lo como 'Pendente de
+              Documentos'?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowPendenciaModal(false)}>
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={async () => {
+                setShowPendenciaModal(false)
+                await save(
+                  {
+                    status: 'concluido_pendente_documentos',
+                    data_entrada_pendencia: new Date().toISOString(),
+                  },
+                  'STATUS_ALTERADO',
+                  { ...processo, status: 'concluido_pendente_documentos' },
+                )
+                toast.success('Processo marcado como Pendente de Documentos.')
+                navigate('/processos')
+              }}
+            >
+              Sim, Pendente
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog open={showModal} onOpenChange={setShowModal}>
         <AlertDialogContent>

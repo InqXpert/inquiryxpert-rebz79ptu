@@ -23,8 +23,9 @@ export const fetchAlertas = async (force: boolean = false) => {
   fetchPromise = pb
     .collection('processos_operacionais')
     .getFullList({
-      filter: "status != 'FINALIZADO' && data_conclusao = ''",
-      expand: 'supervisor_id,seguradora_id',
+      filter:
+        "status != 'FINALIZADO' && (data_conclusao = '' || status = 'concluido_pendente_documentos')",
+      expand: 'supervisor_id,seguradora_id,agente_id',
     })
     .catch((err) => {
       fetchPromise = null
@@ -135,6 +136,51 @@ export const calculateAlertLevel = (
         corBorda: 'border-blue-600 dark:border-blue-500',
         data: p.updated,
       })
+    }
+
+    if (st === 'CONCLUIDO_PENDENTE_DOCUMENTOS' || st === 'PENDENTE_DOCUMENTOS') {
+      const dataPendencia = p.data_entrada_pendencia
+        ? new Date(p.data_entrada_pendencia)
+        : new Date(p.updated)
+      const diffPendencia = differenceInDays(today, dataPendencia)
+
+      if (diffPendencia > 3) {
+        alertas.push({
+          ...baseAlerta,
+          id: `${p.id}-PENDENTE_DOCS_CRITICO`,
+          tipo: 'PENDENTE_DOCUMENTOS',
+          mensagem: `Processo aguardando documentos há ${diffPendencia} dias.`,
+          severidade: 5.5,
+          corTexto: 'text-red-600 dark:text-red-500',
+          corFundo: 'bg-red-50 dark:bg-red-950/20',
+          corBorda: 'border-red-600 dark:border-red-500',
+          data: p.data_entrada_pendencia || p.updated,
+        })
+      } else if (diffPendencia >= 1) {
+        alertas.push({
+          ...baseAlerta,
+          id: `${p.id}-PENDENTE_DOCS_WARN`,
+          tipo: 'PENDENTE_DOCUMENTOS',
+          mensagem: `Processo aguardando documentos.`,
+          severidade: 4.5,
+          corTexto: 'text-orange-600 dark:text-orange-500',
+          corFundo: 'bg-orange-50 dark:bg-orange-950/20',
+          corBorda: 'border-orange-600 dark:border-orange-500',
+          data: p.data_entrada_pendencia || p.updated,
+        })
+      } else {
+        alertas.push({
+          ...baseAlerta,
+          id: `${p.id}-PENDENTE_DOCS`,
+          tipo: 'PENDENTE_DOCUMENTOS',
+          mensagem: `Processo aguardando documentos.`,
+          severidade: 3.5,
+          corTexto: 'text-yellow-600 dark:text-yellow-500',
+          corFundo: 'bg-yellow-50 dark:bg-yellow-950/20',
+          corBorda: 'border-yellow-600 dark:border-yellow-500',
+          data: p.data_entrada_pendencia || p.updated,
+        })
+      }
     }
 
     if (p.prioridade === 'alta') {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-28T03:12:23.820Z",
+  "generatedAt": "2026-04-28T03:18:00.635Z",
   "collections": [
     {
       "name": "users",
@@ -761,6 +761,18 @@
           "required": false,
           "system": false,
           "collectionRef": "users"
+        },
+        {
+          "name": "documentos_recebidos",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "data_entrada_pendencia",
+          "type": "date",
+          "required": false,
+          "system": false
         }
       ],
       "indexes": [

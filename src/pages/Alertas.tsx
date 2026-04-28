@@ -24,6 +24,7 @@ import {
   AlertTriangle,
   ShieldAlert,
   CheckCircle2,
+  FileCheck,
 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
@@ -46,6 +47,8 @@ const AlertIcon = ({ tipo, className }: { tipo: string; className?: string }) =>
       return <Layers className={className} />
     case 'ALTA_PRIORIDADE':
       return <BellRing className={className} />
+    case 'PENDENTE_DOCUMENTOS':
+      return <FileCheck className={className} />
     default:
       return <BellRing className={className} />
   }
@@ -72,6 +75,8 @@ const getActionText = (tipo: string) => {
       return 'Ver Processo Relacionado'
     case 'ALTA_PRIORIDADE':
       return 'Tratar Prioridade'
+    case 'PENDENTE_DOCUMENTOS':
+      return 'Marcar como Recebido'
     default:
       return 'Ver Processo'
   }
@@ -175,6 +180,19 @@ export default function Alertas() {
     )
   }
 
+  const handleMarcarRecebido = async (alerta: any) => {
+    try {
+      await pb.collection('processos_operacionais').update(alerta.processoId, {
+        documentos_recebidos: true,
+        status: 'FINALIZADO',
+      })
+      toast.success('Documentos marcados como recebidos!')
+      refresh()
+    } catch (err) {
+      toast.error('Erro ao atualizar processo.')
+    }
+  }
+
   const handleAction = (alerta: any) => {
     switch (alerta.tipo) {
       case 'VENCIDO':
@@ -190,6 +208,9 @@ export default function Alertas() {
       case 'DUPLICADO':
         if (alerta.relacionadoId) navigate(`/processos/${alerta.relacionadoId}`)
         else navigate(`/processos/${alerta.processoId}`)
+        break
+      case 'PENDENTE_DOCUMENTOS':
+        handleMarcarRecebido(alerta)
         break
       default:
         navigate(`/processos/${alerta.processoId}`)
@@ -304,6 +325,7 @@ export default function Alertas() {
                 <SelectItem value="AGUARDANDO_RELATORIO">Aguardando Relatório</SelectItem>
                 <SelectItem value="DUPLICADO">Placa Duplicada</SelectItem>
                 <SelectItem value="ALTA_PRIORIDADE">Alta Prioridade</SelectItem>
+                <SelectItem value="PENDENTE_DOCUMENTOS">Pendente de Documentos</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -438,6 +460,15 @@ export default function Alertas() {
                         <span className="font-medium">Seguradora:</span>
                         {alerta.expand?.seguradora_id?.nome || 'N/A'}
                       </span>
+                      {alerta.expand?.agente_id && (
+                        <>
+                          <span className="hidden sm:inline">•</span>
+                          <span className="flex items-center gap-1">
+                            <span className="font-medium">Agente:</span>
+                            {alerta.expand?.agente_id?.nomeCompleto || 'N/A'}
+                          </span>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

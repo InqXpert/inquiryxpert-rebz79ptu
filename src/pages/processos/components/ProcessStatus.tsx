@@ -48,7 +48,25 @@ export function ProcessStatus({ processoId, currentStatus }: ProcessStatusProps)
             Pendente de Documentos
           </h4>
           <p className="text-sm text-red-600 dark:text-red-400">
-            Faltam gravações e/ou arquivo de despesas.
+            Faltam gravações e/ou lançamentos financeiros.
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  if (currentStatus === 'concluido_pendente_documentos') {
+    return (
+      <div className="w-full bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-center gap-4 dark:bg-orange-950/30 dark:border-orange-900">
+        <div className="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center text-orange-600 dark:text-orange-400 shrink-0">
+          <AlertCircle className="w-5 h-5" />
+        </div>
+        <div>
+          <h4 className="font-semibold text-sm text-orange-800 dark:text-orange-300">
+            Aguardando Documentos (Financeiro)
+          </h4>
+          <p className="text-sm text-orange-600 dark:text-orange-400">
+            O processo possui despesas, mas aguarda o recebimento físico/digital de documentos.
           </p>
         </div>
       </div>

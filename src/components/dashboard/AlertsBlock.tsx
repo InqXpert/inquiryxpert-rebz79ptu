@@ -4,7 +4,7 @@ import { format } from 'date-fns'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAlertas } from '@/hooks/useAlertas'
 import { Alerta } from '@/types/alerta'
-import { ShieldAlert, Clock, ClipboardList } from 'lucide-react'
+import { ShieldAlert, Clock, ClipboardList, FileWarning } from 'lucide-react'
 import { useHubPage } from '@/contexts/hub-page-context'
 
 export const AlertsBlock = memo(function AlertsBlock() {
@@ -43,10 +43,15 @@ export const AlertsBlock = memo(function AlertsBlock() {
     () => activeAlerts.filter((a) => a.tipo === 'ALTA_PRIORIDADE'),
     [activeAlerts],
   )
+  const pendingDocs = useMemo(
+    () => activeAlerts.filter((a) => a.tipo === 'PENDENTE_DOCUMENTOS'),
+    [activeAlerts],
+  )
 
   const filteredOverdue = useMemo(() => filterByDate(overdue), [overdue, selectedDate])
   const filteredUpcoming = useMemo(() => filterByDate(upcoming), [upcoming, selectedDate])
   const filteredPriority = useMemo(() => filterByDate(priority), [priority, selectedDate])
+  const filteredPendingDocs = useMemo(() => filterByDate(pendingDocs), [pendingDocs, selectedDate])
 
   const dateQuery = selectedDate ? `&date=${format(selectedDate, 'yyyy-MM-dd')}` : ''
 
@@ -67,7 +72,7 @@ export const AlertsBlock = memo(function AlertsBlock() {
   if (loading) {
     return (
       <div className="bg-card rounded-lg p-6 shadow-sm mb-6 border border-border">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="bg-card rounded-lg p-4 border-l-4 border-border">
               <div className="flex items-center mb-3">
@@ -166,6 +171,31 @@ export const AlertsBlock = memo(function AlertsBlock() {
                 className="text-sm text-fuchsia-600 dark:text-fuchsia-500 cursor-pointer hover:underline mt-2 block font-medium"
               >
                 Ver Todos ({filteredPriority.length}) &rarr;
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Pendente Documentos */}
+        <div className="bg-card rounded-lg p-4 border-l-4 border-orange-500 dark:border-orange-400 shadow-sm hover:shadow-md transition-all duration-200">
+          <div className="flex items-center mb-3">
+            <FileWarning className="w-5 h-5 mr-2 text-orange-500 dark:text-orange-400" />
+            <h3 className="text-lg font-semibold text-foreground">Docs Pendentes</h3>
+          </div>
+          {filteredPendingDocs.length === 0 ? (
+            <p className="text-sm text-muted-foreground py-2">Nenhuma pendência</p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              {filteredPendingDocs
+                .slice(0, 3)
+                .map((item) =>
+                  renderItem(item, 'text-orange-500 dark:text-orange-400 font-medium', 'Pendente'),
+                )}
+              <Link
+                to={`/processos/alertas?tipo=PENDENTE_DOCUMENTOS${dateQuery}`}
+                className="text-sm text-orange-600 dark:text-orange-500 cursor-pointer hover:underline mt-2 block font-medium"
+              >
+                Ver Todos ({filteredPendingDocs.length}) &rarr;
               </Link>
             </div>
           )}

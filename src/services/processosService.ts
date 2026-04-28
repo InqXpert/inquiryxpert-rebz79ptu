@@ -51,10 +51,16 @@ export const filterByStatus = (processos: Processo[], status: string) => {
   if (!status || status === 'Todos') return processos
   return processos.filter((p) => {
     const s = (p.status || '').toUpperCase()
+    if (status === 'PENDENTE_DOCUMENTOS' && s.includes('PENDENTE_DOCUMENTOS')) return true
     if (status === 'ANALISE_INICIAL' && s.includes('ANALIS')) return true
     if (status === 'EM_EXECUCAO' && s.includes('EXECU')) return true
     if (status === 'EM_ELABORACAO' && s.includes('ELABORA')) return true
-    if (status === 'FINALIZADO' && (s.includes('FINALIZ') || s.includes('CONCLU'))) return true
+    if (
+      status === 'FINALIZADO' &&
+      (s.includes('FINALIZ') || s.includes('CONCLU')) &&
+      !s.includes('PENDENTE')
+    )
+      return true
     if (status === 'CANCELADO' && s.includes('CANCEL')) return true
     return s === status.toUpperCase()
   })

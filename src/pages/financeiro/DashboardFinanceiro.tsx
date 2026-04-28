@@ -5,7 +5,8 @@ import { FinanceiroNav } from '@/pages/financeiro/components/FinanceiroNav'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { DollarSign, TrendingUp, Clock, AlertTriangle } from 'lucide-react'
+import { DollarSign, TrendingUp, Clock, AlertTriangle, FileWarning } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
@@ -113,6 +114,39 @@ export default function DashboardFinanceiro() {
                 </div>
               </CardContent>
             </Card>
+
+            <Link
+              to="/processos/alertas?tipo=PENDENTE_DOCUMENTOS"
+              className="block md:col-span-2 lg:col-span-4"
+            >
+              <Card className="hover:shadow-md transition-shadow border bg-orange-50 dark:bg-orange-950/20 border-orange-200 dark:border-orange-800 cursor-pointer group">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-bold text-orange-800 dark:text-orange-300">
+                    Processos Pendentes de Documentos
+                  </CardTitle>
+                  <FileWarning className="h-5 w-5 text-orange-600 group-hover:scale-110 transition-transform" />
+                </CardHeader>
+                <CardContent className="flex items-center gap-6">
+                  <div>
+                    <div className="text-3xl font-black text-orange-600 dark:text-orange-400">
+                      {data.pendentesDocumentos.count}
+                    </div>
+                    <p className="text-xs text-orange-700 dark:text-orange-400/80 font-medium">
+                      Aguardando Recebimento
+                    </p>
+                  </div>
+                  <div className="border-l border-orange-200 dark:border-orange-800/50 pl-6">
+                    <div className="text-xl font-bold text-orange-700 dark:text-orange-300">
+                      {data.pendentesDocumentos.avgDays}{' '}
+                      <span className="text-sm font-medium">dias</span>
+                    </div>
+                    <p className="text-xs text-orange-700 dark:text-orange-400/80 font-medium">
+                      Idade Média (Atraso)
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           </>
         )}
       </div>
