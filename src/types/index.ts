@@ -215,3 +215,26 @@ export interface ProcessoDocumento {
   created: string
   url?: string
 }
+
+export interface SolicitacaoAdiantamento {
+  id: string
+  processo_id: string
+  user_id: string
+  status: 'pendente' | 'autorizado' | 'negado'
+  valor_solicitado: number
+  valor_autorizado?: number
+  data_autorizacao?: string
+  motivo_negacao?: string
+  data_negacao?: string
+  observacoes?: string
+  created: string
+  updated: string
+  expand?: {
+    processo_id?: ProcessoOperacional & {
+      expand?: {
+        agente_id?: Agente
+      }
+    }
+    user_id?: User
+  }
+}

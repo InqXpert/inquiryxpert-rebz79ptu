@@ -41,6 +41,7 @@ const NotasFiscais = lazy(() => import('./pages/financeiro/NotasFiscais'))
 const ControleOperacionalFinanceiro = lazy(
   () => import('./pages/financeiro/ControleOperacionalFinanceiro'),
 )
+const Adiantamentos = lazy(() => import('./pages/financeiro/Adiantamentos'))
 
 // Gestão de Agentes Module Lazy Loads
 const GestaoAgentesLayout = lazy(() => import('./pages/gestao-agentes/Layout'))
@@ -116,6 +117,7 @@ export default function App() {
                   <Route path="/financeiro/periodos" element={<PeriodosFaturamento />} />
                   <Route path="/financeiro/notas-fiscais" element={<NotasFiscais />} />
                   <Route path="/financeiro/controle" element={<ControleOperacionalFinanceiro />} />
+                  <Route path="/financeiro/adiantamentos" element={<Adiantamentos />} />
 
                   {/* Gestão de Agentes Module */}
                   <Route path="/gestao-agentes" element={<GestaoAgentesLayout />}>
