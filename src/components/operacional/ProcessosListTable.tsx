@@ -83,7 +83,7 @@ export function ProcessosListTable({
                 {canDelete && <TableHead className="w-[4%]"></TableHead>}
                 <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
                   ID / CONTROLE
-                </TableHead>{' '}
+                </TableHead>
                 <TableHead className="w-[12%] font-bold text-brand-navy dark:text-white text-xs">
                   STATUS
                 </TableHead>
@@ -237,7 +237,7 @@ export function ProcessosListTable({
                 }}
                 canDelete={canDelete}
               />
-            ))}{' '}
+            ))}
           </TableBody>
         </Table>
       </div>
