@@ -160,7 +160,7 @@ export const useNovoProcesso = () => {
         placas_veiculos: sanitized.placas_veiculos || '',
         analista_cliente_id: sanitized.analista_cliente_id || null,
         agente_id: sanitized.agente_id || null,
-        supervisor_id: sanitized.supervisor_id,
+        supervisor_id: sanitized.supervisor_id || null,
         data_entrada: new Date().toLocaleDateString('pt-BR'),
         data_prazo: data_prazo,
         cliente_id: sanitized.cliente_id,

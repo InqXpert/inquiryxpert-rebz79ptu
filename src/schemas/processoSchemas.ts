@@ -23,16 +23,16 @@ export const terceiroSchema = z.object({
 export const novoProcessoSchema = z
   .object({
     cliente_id: z.string().optional(),
-    seguradora: z.string().min(1, 'Preencha todos os campos obrigatorios'),
+    seguradora: z.string().min(1, 'O campo Seguradora é obrigatório'),
     controle_cia: z
       .string()
-      .min(1, 'Preencha todos os campos obrigatorios')
+      .min(1, 'O campo Controle Cia é obrigatório')
       .refine((val) => val === val.toUpperCase(), 'Todos os campos devem estar em MAIUSCULAS'),
-    natureza_sinistro: z.string().min(1, 'Preencha todos os campos obrigatorios'),
-    tipo_investigacao: z.string().min(1, 'Preencha todos os campos obrigatorios'),
+    natureza_sinistro: z.string().min(1, 'O campo Natureza do Sinistro é obrigatório'),
+    tipo_investigacao: z.string().min(1, 'O campo Tipo de Investigação é obrigatório'),
     regiao_sinistro: z
       .string()
-      .min(1, 'Preencha todos os campos obrigatorios')
+      .min(1, 'O campo Região do Sinistro é obrigatório')
       .refine((val) => val === val.toUpperCase(), 'Todos os campos devem estar em MAIUSCULAS')
       .regex(
         /^[A-Z]{2}\s\/\s[A-Z\s]+$/,
@@ -40,7 +40,7 @@ export const novoProcessoSchema = z
       ),
     nome_segurado: z
       .string()
-      .min(1, 'Preencha todos os campos obrigatorios')
+      .min(1, 'O campo Nome do Segurado é obrigatório')
       .refine((val) => val === val.toUpperCase(), 'Todos os campos devem estar em MAIUSCULAS'),
     cpf_segurado: z
       .string()
@@ -68,7 +68,7 @@ export const novoProcessoSchema = z
       }, 'Formato de placa invalido. Use ABC-1234 ou ABC1D34'),
     analista_cliente_id: z.string().optional().or(z.literal('')),
     agente_id: z.string().optional().or(z.literal('')),
-    supervisor_id: z.string().min(1, 'Preencha todos os campos obrigatorios'),
+    supervisor_id: z.string().optional().or(z.literal('')),
     status: z.string().default('ANALISE_INICIAL'),
     dados_terceiros: z.array(terceiroSchema).optional().default([]),
   })

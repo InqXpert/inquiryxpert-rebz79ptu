@@ -93,6 +93,8 @@ export default function NovoProcessoPage() {
   const [warningSupervisor, setWarningSupervisor] = useState('')
   const [suggestedSupervisorId, setSuggestedSupervisorId] = useState<string | null>(null)
 
+  const [successProcesso, setSuccessProcesso] = useState<any | null>(null)
+
   const [isAnalistaModalOpen, setIsAnalistaModalOpen] = useState(false)
   const [novoAnalista, setNovoAnalista] = useState({ nome: '', email: '', telefone: '', cargo: '' })
   const [isCreatingAnalista, setIsCreatingAnalista] = useState(false)
@@ -204,10 +206,15 @@ export default function NovoProcessoPage() {
     }
   }
 
-  const onError = () => {
+  const onError = (formErrors: any) => {
+    const errorMessages = Object.values(formErrors)
+      .map((err: any) => err?.message)
+      .filter(Boolean)
+      .join(' | ')
+
     toast({
       title: 'Erro de validação',
-      description: 'Preencha todos os campos obrigatórios corretamente.',
+      description: errorMessages || 'Preencha todos os campos obrigatórios corretamente.',
       variant: 'destructive',
     })
   }
@@ -245,10 +252,13 @@ export default function NovoProcessoPage() {
   const handleFinalSubmit = async (data: NovoProcessoFormData) => {
     try {
       const created = await submit(data)
-      toast({ title: 'Processo criado com sucesso' })
-      navigate(`/processos/${created.id}`)
-    } catch (err) {
-      toast({ title: 'Erro ao criar processo.', variant: 'destructive' })
+      setSuccessProcesso(created)
+    } catch (err: any) {
+      toast({
+        title: 'Erro ao criar processo',
+        description: err?.message || 'Ocorreu um erro inesperado.',
+        variant: 'destructive',
+      })
     }
   }
 
@@ -729,9 +739,7 @@ export default function NovoProcessoPage() {
 
                   return (
                     <FormItem>
-                      <FormLabel>
-                        Supervisor <span className="text-destructive">*</span>
-                      </FormLabel>
+                      <FormLabel>Supervisor</FormLabel>
                       <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger className={errors.supervisor_id ? 'border-red-500' : ''}>
@@ -871,6 +879,50 @@ export default function NovoProcessoPage() {
                 <Loader2 className="w-4 h-4 mr-2 animate-spin text-brand-navy" />
               ) : null}
               Criar Novo Mesmo Assim
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={!!successProcesso}
+        onOpenChange={(o) => {
+          if (!o) {
+            setSuccessProcesso(null)
+            navigate('/processos')
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md bg-white dark:bg-brand-navy border-brand-teal/20 text-center">
+          <DialogHeader className="flex flex-col items-center gap-2">
+            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-2">
+              <svg
+                className="w-6 h-6 text-green-600 dark:text-green-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <DialogTitle className="text-xl uppercase">
+              PROCESSO REGISTRADO Nº {successProcesso?.numero_controle || successProcesso?.id}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center mt-6">
+            <Button
+              className="bg-brand-cyan text-brand-navy hover:bg-brand-cyan/90 font-bold px-8"
+              onClick={() => {
+                setSuccessProcesso(null)
+                navigate('/processos')
+              }}
+            >
+              OK
             </Button>
           </div>
         </DialogContent>
