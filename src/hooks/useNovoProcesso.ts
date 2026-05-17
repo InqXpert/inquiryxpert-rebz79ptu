@@ -77,14 +77,7 @@ export const useNovoProcesso = () => {
           try {
             contrato = await pb.collection('clientes_contratos').getOne(sanitized.cliente_id)
           } catch (_) {
-            try {
-              const clienteRef = await pb.collection('clientes').getOne(sanitized.cliente_id)
-              contrato = await pb
-                .collection('clientes_contratos')
-                .getFirstListItem(`razao_social = "${clienteRef.nome}"`)
-            } catch (__) {
-              // Ignore if no contract is found by client name
-            }
+            // Ignore if no contract is found
           }
         }
 
@@ -163,8 +156,8 @@ export const useNovoProcesso = () => {
         supervisor_id: sanitized.supervisor_id || null,
         data_entrada: new Date().toLocaleDateString('pt-BR'),
         data_prazo: data_prazo,
-        cliente_id: sanitized.cliente_id,
-        tipo_investigacao_id: sanitized.tipo_investigacao_id,
+        cliente_id: sanitized.cliente_id || null,
+        tipo_investigacao_id: sanitized.tipo_investigacao_id || null,
         dados_terceiros: sanitized.dados_terceiros || [],
         user_id: user?.id,
       }
