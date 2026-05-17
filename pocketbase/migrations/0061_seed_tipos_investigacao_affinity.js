@@ -1,6 +1,12 @@
 migrate(
   (app) => {
     const col = app.findCollectionByNameOrId('tipos_investigacao')
+    const ativoField = col.fields.getByName('ativo')
+    if (ativoField && ativoField.required) {
+      ativoField.required = false
+      app.save(col)
+    }
+
     const TIPOS = [
       { codigo: 'T_AUTO', nome: 'AUTO (SINDICÂNCIA COMPLETA)' },
       { codigo: 'T_BUSCA_BO', nome: 'BUSCA B.O / DOCUMENTOS' },
