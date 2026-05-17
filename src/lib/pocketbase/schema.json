@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-17T00:11:59.665Z",
+  "generatedAt": "2026-05-17T00:16:07.820Z",
   "collections": [
     {
       "name": "users",
@@ -654,13 +654,6 @@
           "system": false
         },
         {
-          "name": "cliente_id",
-          "type": "relation",
-          "required": false,
-          "system": false,
-          "collectionRef": "clientes"
-        },
-        {
           "name": "seguradora_id",
           "type": "relation",
           "required": false,
@@ -797,6 +790,13 @@
           "type": "number",
           "required": false,
           "system": false
+        },
+        {
+          "name": "cliente_id",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "clientes_contratos"
         }
       ],
       "indexes": [
