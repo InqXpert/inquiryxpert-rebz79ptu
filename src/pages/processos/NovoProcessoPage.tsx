@@ -139,7 +139,25 @@ export default function NovoProcessoPage() {
       const client = clientes.find((c) => c.razao_social === watchSeguradora)
       const nat = naturezas?.find((n) => n.nome === watchNatureza)
 
-      const cc = client?.codigo || 'CC'
+      const map: Record<string, string> = {
+        'ZURICH MINAS BRASIL SEGUROS S.A.': '01',
+        'MAPFRE SEGUROS GERAIS S/A.': '02',
+        'SUHAI SEGURADORA S.A.': '03',
+        'BRADESCO AUTO/RE COMPANHIA DE SEGUROS': '04',
+        'NEO SEGURADORA S/A': '05',
+        'SPLIT RISK SEGURADORA S.A.': '06',
+        'COOPERLINK SINAPPE BENEFICIOS E PROTECAO PATRIMONIAL MUTUALISTA': '07',
+        'KOVR SEGURADORA S.A.': '08',
+        'GRUPO MMB - SOMA ASSISTÊNCIA E MONITORAMENTO LTDA': '09',
+        'AUTOINSP VISTORIA VEICULAR E PERÍCIA JUDICIAL LTDA': '10',
+        'SEVEN SEGUROS - SEVEN 7 SERVIÇOS DIGITAIS INSTITUIÇÃO DE PAGAMENTO E INTERMEDIAÇÕES LTDA':
+          '11',
+        'CARDIF DO BRASIL VIDA E PREVIDÊNCIA S.A.': '12',
+        'TOO SEGUROS S.A.': '13',
+        'CHUBB SEGUROS BRASIL S.A.': '14',
+      }
+
+      const cc = (watchSeguradora && map[watchSeguradora]) || client?.codigo || 'CC'
       const nn = nat?.codigo || 'NN'
 
       const mm = String(new Date().getMonth() + 1).padStart(2, '0')

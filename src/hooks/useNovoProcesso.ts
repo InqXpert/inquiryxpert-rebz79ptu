@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react'
 import pb from '@/lib/pocketbase/client'
-import {
-  generateNumeroControle,
-  validateDuplicidade,
-  createProcesso,
-  createAuditLog,
-} from '@/services/processosService'
+import { validateDuplicidade, createAuditLog } from '@/services/processosService'
+import { createProcesso, generateFullNumeroControle } from '@/services/procesosOperacionais'
 import { ClienteContrato, ClienteAnalista } from '@/services/clientes_contratos'
 import { useAuth } from '@/hooks/use-auth'
 import { sanitizeInput } from '@/services/validacaoService'
@@ -66,9 +62,14 @@ export const useNovoProcesso = () => {
     setIsSubmitting(true)
     try {
       const sanitized = sanitizeInput(data)
-      let numControle = await generateNumeroControle(
+      const nat = naturezas.find((n) => n.nome === sanitized.natureza_sinistro)
+      const cli = clientes.find((c) => c.razao_social === sanitized.seguradora)
+
+      let numControle = await generateFullNumeroControle(
         sanitized.seguradora,
         sanitized.natureza_sinistro,
+        nat?.codigo,
+        cli?.codigo,
       )
 
       let data_prazo: string | undefined = undefined

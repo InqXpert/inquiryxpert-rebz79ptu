@@ -123,25 +123,74 @@ export const deleteDocumento = async (documentoId: string): Promise<boolean> => 
   return true
 }
 
-export const getNextNumeroControle = async (): Promise<string> => {
+export const getClientCode = (clientName: string): string => {
+  const map: Record<string, string> = {
+    'ZURICH MINAS BRASIL SEGUROS S.A.': '01',
+    'MAPFRE SEGUROS GERAIS S/A.': '02',
+    'SUHAI SEGURADORA S.A.': '03',
+    'BRADESCO AUTO/RE COMPANHIA DE SEGUROS': '04',
+    'NEO SEGURADORA S/A': '05',
+    'SPLIT RISK SEGURADORA S.A.': '06',
+    'COOPERLINK SINAPPE BENEFICIOS E PROTECAO PATRIMONIAL MUTUALISTA': '07',
+    'KOVR SEGURADORA S.A.': '08',
+    'GRUPO MMB - SOMA ASSISTÊNCIA E MONITORAMENTO LTDA': '09',
+    'AUTOINSP VISTORIA VEICULAR E PERÍCIA JUDICIAL LTDA': '10',
+    'SEVEN SEGUROS - SEVEN 7 SERVIÇOS DIGITAIS INSTITUIÇÃO DE PAGAMENTO E INTERMEDIAÇÕES LTDA':
+      '11',
+    'CARDIF DO BRASIL VIDA E PREVIDÊNCIA S.A.': '12',
+    'TOO SEGUROS S.A.': '13',
+    'CHUBB SEGUROS BRASIL S.A.': '14',
+  }
+  return map[clientName] || 'CC'
+}
+
+export const getNextSequential = async (): Promise<string> => {
   try {
-    const result = await pb.collection('processos_operacionais').getList(1, 1, {
-      sort: '-numero_controle',
+    const result = await pb.collection('processos_operacionais').getList(1, 100, {
+      sort: '-created',
       filter: `numero_controle != ''`,
+      fields: 'numero_controle',
     })
-    if (result.items.length > 0 && result.items[0].numero_controle) {
-      const match = result.items[0].numero_controle.match(/\d+$/)
+
+    let maxSeq = 0
+    for (const item of result.items) {
+      const match = item.numero_controle.match(/\.(\d{5})$/) || item.numero_controle.match(/(\d+)$/)
       if (match) {
-        const lastNum = parseInt(match[0], 10)
-        if (!isNaN(lastNum)) {
-          return String(lastNum + 1).padStart(5, '0')
+        const num = parseInt(match[1], 10)
+        if (!isNaN(num) && num > maxSeq) {
+          maxSeq = num
         }
       }
     }
+
+    if (maxSeq > 0) {
+      return String(maxSeq + 1).padStart(5, '0')
+    }
+
     return '00001'
   } catch (err) {
     return '00001'
   }
+}
+
+export const generateFullNumeroControle = async (
+  seguradora: string,
+  natureza: string,
+  naturezaCodigo?: string,
+  clienteCodigo?: string,
+): Promise<string> => {
+  const mm = String(new Date().getMonth() + 1).padStart(2, '0')
+  const yy = String(new Date().getFullYear()).slice(-2)
+  const cc = getClientCode(seguradora) !== 'CC' ? getClientCode(seguradora) : clienteCodigo || 'CC'
+  const nn = naturezaCodigo || 'NN'
+
+  const seq = await getNextSequential()
+  return `${mm}.${yy}.${cc}.${nn}.${seq}`
+}
+
+export const getNextNumeroControle = async (): Promise<string> => {
+  const seq = await getNextSequential()
+  return `00.00.CC.NN.${seq}`
 }
 
 export const exportToCSV = async (processos: ProcessoOperacional[]): Promise<boolean> => {

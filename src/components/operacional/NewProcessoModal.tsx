@@ -37,9 +37,11 @@ export function NewProcessoModal({ isOpen, onClose, defaultProvider, onCreated }
       setPdfFile(null)
       setIsExtracting(false)
       setIsSaving(false)
-      service
-        .getNextNumeroControle()
-        .then((num) => setFormData((p) => ({ ...p, numero_controle: num })))
+      service.getNextSequential().then((seq) => {
+        const mm = String(new Date().getMonth() + 1).padStart(2, '0')
+        const yy = String(new Date().getFullYear()).slice(-2)
+        setFormData((p) => ({ ...p, numero_controle: `${mm}.${yy}.CC.NN.${seq}` }))
+      })
     }
   }, [isOpen, defaultProvider])
 
@@ -70,8 +72,14 @@ export function NewProcessoModal({ isOpen, onClose, defaultProvider, onCreated }
   const handleSave = async () => {
     setIsSaving(true)
     try {
+      let finalNum = formData.numero_controle
+      if (!finalNum || finalNum.includes('CC') || finalNum.includes('NN')) {
+        finalNum = await service.generateFullNumeroControle(formData.cia || '', '', 'NN', 'CC')
+      }
+
       const created = await service.createProcesso({
         ...formData,
+        numero_controle: finalNum,
         status: 'analise_inicial',
         data_entrada: new Date().toLocaleDateString('pt-BR'),
         user_id: user?.id,
