@@ -63,10 +63,22 @@ export const useNovoProcesso = () => {
     setIsSubmitting(true)
     try {
       const sanitized = sanitizeInput(data)
-      const numControle = await generateNumeroControle(
+      let numControle = await generateNumeroControle(
         sanitized.seguradora,
         sanitized.natureza_sinistro,
       )
+
+      const clienteParaCodigo = clientes.find(
+        (c) => c.id === sanitized.cliente_id || c.razao_social === sanitized.seguradora,
+      )
+      const codigoClient = clienteParaCodigo?.codigo || '00'
+      if (numControle.includes('.')) {
+        numControle = `${codigoClient}.${numControle.substring(numControle.indexOf('.') + 1)}`
+      } else {
+        const year = new Date().getFullYear().toString().slice(-2)
+        const random = Math.floor(1000 + Math.random() * 9000)
+        numControle = `${codigoClient}.${year}.${random}`
+      }
 
       let data_prazo: string | undefined = undefined
 

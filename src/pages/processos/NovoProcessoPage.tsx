@@ -143,6 +143,16 @@ export default function NovoProcessoPage() {
   const watchNomeSegurado = watch('nome_segurado')
   const watchNatureza = watch('natureza_sinistro')
 
+  useEffect(() => {
+    if (watchSeguradora) {
+      const client = clientes.find((c) => c.razao_social === watchSeguradora)
+      const code = client?.codigo || '00'
+      setValue('numero_controle', `${code}.XX.XXXX`, { shouldValidate: false })
+    } else {
+      setValue('numero_controle', '', { shouldValidate: false })
+    }
+  }, [watchSeguradora, clientes, setValue])
+
   const plateValidation = usePlacaValidation(watchPlacas || '')
   const insuredValidation = useInsuredValidation(watchNomeSegurado || '')
 
@@ -207,14 +217,37 @@ export default function NovoProcessoPage() {
   }
 
   const onError = (formErrors: any) => {
-    const errorMessages = Object.values(formErrors)
-      .map((err: any) => err?.message)
-      .filter(Boolean)
-      .join(' | ')
+    const fieldNameMap: Record<string, string> = {
+      seguradora: 'Seguradora',
+      controle_cia: 'Controle Cia',
+      natureza_sinistro: 'Natureza do Sinistro',
+      tipo_investigacao: 'Tipo de Investigação',
+      regiao_sinistro: 'Região do Sinistro',
+      nome_segurado: 'Nome do Segurado',
+      placas_veiculos: 'Placa do Veículo Segurado',
+    }
+
+    const messages: string[] = []
+    Object.keys(formErrors).forEach((key) => {
+      if (key === 'dados_terceiros') {
+        messages.push('Erro: O campo Nome do Terceiro é obrigatório')
+      } else {
+        const fname = fieldNameMap[key] || key
+        messages.push(`Erro: O campo ${fname} é obrigatório`)
+      }
+    })
 
     toast({
       title: 'Erro de validação',
-      description: errorMessages || 'Preencha todos os campos obrigatórios corretamente.',
+      description: (
+        <div className="flex flex-col gap-1">
+          {messages.length > 0 ? (
+            messages.map((msg, idx) => <span key={idx}>{msg}</span>)
+          ) : (
+            <span>Preencha todos os campos obrigatórios corretamente.</span>
+          )}
+        </div>
+      ),
       variant: 'destructive',
     })
   }
@@ -298,6 +331,24 @@ export default function NovoProcessoPage() {
               Dados do Sinistro
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="numero_controle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Número de Controle</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        readOnly
+                        className="bg-brand-gray/5 font-mono font-bold text-brand-navy/60 dark:text-brand-light/60 border-dashed"
+                        placeholder="Automático (Ex: 02.XX.XXXX)"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="seguradora"

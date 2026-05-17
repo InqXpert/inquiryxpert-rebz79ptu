@@ -15,6 +15,7 @@ export interface ClienteContrato {
   retencao_na_fonte: boolean
   aliquota_retencao: number
   status: 'ativo' | 'inativo'
+  codigo?: string
   created: string
   updated: string
 }

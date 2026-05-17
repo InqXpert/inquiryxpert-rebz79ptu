@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-17T00:16:07.820Z",
+  "generatedAt": "2026-05-17T00:43:11.487Z",
   "collections": [
     {
       "name": "users",
@@ -1811,6 +1811,12 @@
         {
           "name": "regras_sla",
           "type": "json",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "codigo",
+          "type": "text",
           "required": false,
           "system": false
         }
