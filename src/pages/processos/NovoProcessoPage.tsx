@@ -38,20 +38,6 @@ import { usePlacaValidation, useInsuredValidation } from '@/hooks/usePlacaValida
 import { PlateValidationUI, InsuredValidationUI } from '@/components/processos/ValidationIndicators'
 import { Separator } from '@/components/ui/separator'
 
-const TIPOS_INV = [
-  'AUTO',
-  'BUSCA B.O DOCS',
-  'PERFIL',
-  'FAST',
-  'PROPERTY RES D.E',
-  'PROPERTY MAQUINAS',
-  'PROPERTY FURTO ROUBO',
-  'PROPERTY RES EQUIP',
-  'REMOTA',
-  'I.E',
-  'VIDA PREGRESSA',
-]
-
 const formatCPF = (value: string) => {
   return value
     .replace(/\D/g, '')
@@ -72,6 +58,7 @@ export default function NovoProcessoPage() {
     clientes,
     analistas,
     naturezas,
+    tiposInvestigacao,
     loadingInitial,
     isSubmitting,
     duplicateFound,
@@ -458,16 +445,23 @@ export default function NovoProcessoPage() {
                     <FormLabel>
                       Tipo de Investigação <span className="text-destructive">*</span>
                     </FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      onValueChange={(val) => {
+                        field.onChange(val)
+                        const t = tiposInvestigacao?.find((x: any) => x.nome === val)
+                        if (t) setValue('tipo_investigacao_id', t.id)
+                      }}
+                      value={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger className={errors.tipo_investigacao ? 'border-red-500' : ''}>
                           <SelectValue placeholder="Selecione..." />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {TIPOS_INV.map((t) => (
-                          <SelectItem key={t} value={t}>
-                            {t}
+                        {tiposInvestigacao?.map((t: any) => (
+                          <SelectItem key={t.nome} value={t.nome}>
+                            {t.nome}
                           </SelectItem>
                         ))}
                       </SelectContent>

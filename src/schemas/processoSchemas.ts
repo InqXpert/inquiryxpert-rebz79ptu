@@ -69,6 +69,7 @@ export const novoProcessoSchema = z
     analista_cliente_id: z.string().optional().or(z.literal('')),
     agente_id: z.string().optional().or(z.literal('')),
     supervisor_id: z.string().optional().or(z.literal('')),
+    tipo_investigacao_id: z.string().optional().or(z.literal('')),
     numero_controle: z.string().optional(),
     status: z.string().default('ANALISE_INICIAL'),
     dados_terceiros: z.array(terceiroSchema).optional().default([]),

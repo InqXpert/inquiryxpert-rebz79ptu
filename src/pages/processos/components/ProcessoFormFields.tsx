@@ -1,45 +1,10 @@
 import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { UseFormReturn } from 'react-hook-form'
+import pb from '@/lib/pocketbase/client'
 import { FormSelect, FormInput, FormCombobox } from './FormHelpers'
 import { determineSupervisor } from '@/services/allocationService'
 
-const SEGURADORAS = [
-  'ZURICH',
-  'MAPFRE',
-  'SUHAI',
-  'BRADESCO',
-  'NEO',
-  'SPLIT RISK',
-  'COOPERLINK',
-  'KVOR',
-  'MAIS BRASIL',
-  'AUTOINSP',
-  'SEVEN',
-  'CARDIF',
-]
-const NATUREZAS = [
-  'COLISAO COM TERCEIRO',
-  'COLISAO SEM TERCEIRO',
-  'INCENDIO',
-  'ROUBO',
-  'FURTO',
-  'ENCHENTE',
-  'PROPERTY',
-  'I.E',
-]
-const TIPOS_INV = [
-  'AUTO',
-  'BUSCA B.O DOCS',
-  'PERFIL',
-  'FAST',
-  'PROPERTY RES D.E',
-  'PROPERTY MAQUINAS',
-  'PROPERTY FURTO ROUBO',
-  'PROPERTY RES EQUIP',
-  'REMOTA',
-  'I.E',
-  'VIDA PREGRESSA',
-]
 const STATUSES = ['ANALISE_INICIAL', 'EM_EXECUCAO', 'EM_ELABORACAO', 'FINALIZADO', 'CANCELADO']
 
 export function ProcessoFormFields({
@@ -54,6 +19,33 @@ export function ProcessoFormFields({
   const watchCia = form.watch('cia')
   const watchTipo = form.watch('tipo_servico')
   const watchStatus = form.watch('status')
+
+  const [seguradoras, setSeguradoras] = useState<string[]>([])
+  const [naturezas, setNaturezas] = useState<string[]>([])
+  const [tiposInv, setTiposInv] = useState<string[]>([])
+
+  useEffect(() => {
+    pb.collection('clientes_contratos')
+      .getFullList({ sort: 'razao_social' })
+      .then((res) => {
+        setSeguradoras(res.map((r) => r.razao_social))
+      })
+      .catch(console.error)
+
+    pb.collection('naturezas_sinistro')
+      .getFullList({ sort: 'nome' })
+      .then((res) => {
+        setNaturezas(res.map((r) => r.nome))
+      })
+      .catch(console.error)
+
+    pb.collection('tipos_investigacao')
+      .getFullList({ sort: 'nome' })
+      .then((res) => {
+        setTiposInv(res.map((r) => r.nome))
+      })
+      .catch(console.error)
+  }, [])
 
   useEffect(() => {
     if (watchCia || watchTipo) {
@@ -87,20 +79,15 @@ export function ProcessoFormFields({
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <FormSelect form={form} name="cia" label="Seguradora" options={SEGURADORAS} />
+      <FormSelect form={form} name="cia" label="Seguradora" options={seguradoras} />
       <FormInput form={form} name="controle_cia" label="Controle Cia" />
       <FormSelect
         form={form}
         name="natureza_sinistro"
         label="Natureza do Sinistro"
-        options={NATUREZAS}
+        options={naturezas}
       />
-      <FormSelect
-        form={form}
-        name="tipo_servico"
-        label="Tipo de Investigação"
-        options={TIPOS_INV}
-      />
+      <FormSelect form={form} name="tipo_servico" label="Tipo de Investigação" options={tiposInv} />
       <FormInput form={form} name="local_sinistro" label="Região do Sinistro (ESTADO / CIDADE)" />
       <FormInput form={form} name="nome_segurado" label="Nome do Segurado" uppercase />
       <FormInput form={form} name="cpf_segurado" label="CPF do Segurado" />

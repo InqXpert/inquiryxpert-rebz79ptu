@@ -15,6 +15,7 @@ export const useNovoProcesso = () => {
   const [clientes, setClientes] = useState<ClienteContrato[]>([])
   const [analistas, setAnalistas] = useState<ClienteAnalista[]>([])
   const [naturezas, setNaturezas] = useState<any[]>([])
+  const [tiposInvestigacao, setTiposInvestigacao] = useState<any[]>([])
   const [loadingInitial, setLoadingInitial] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [duplicateFound, setDuplicateFound] = useState<any | null>(null)
@@ -22,28 +23,37 @@ export const useNovoProcesso = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [agentesRes, usersRes, supervisoresRes, clientesRes, analistasRes, naturezasRes] =
-          await Promise.all([
-            pb.collection('agentes').getFullList({ sort: 'nomeCompleto' }),
-            pb.collection('users').getFullList({ sort: 'name' }),
-            pb.collection('users').getFullList({
-              sort: 'name',
-              filter: "role='c-level' || role='admin' || role='supervisor'",
-            }),
-            pb
-              .collection('clientes_contratos')
-              .getFullList<ClienteContrato>({ sort: 'razao_social' }),
-            pb
-              .collection('clientes_analistas')
-              .getFullList<ClienteAnalista>({ filter: 'ativo = true', sort: 'nome' }),
-            pb.collection('naturezas_sinistro').getFullList({ sort: 'nome' }),
-          ])
+        const [
+          agentesRes,
+          usersRes,
+          supervisoresRes,
+          clientesRes,
+          analistasRes,
+          naturezasRes,
+          tiposRes,
+        ] = await Promise.all([
+          pb.collection('agentes').getFullList({ sort: 'nomeCompleto' }),
+          pb.collection('users').getFullList({ sort: 'name' }),
+          pb.collection('users').getFullList({
+            sort: 'name',
+            filter: "role='c-level' || role='admin' || role='supervisor'",
+          }),
+          pb
+            .collection('clientes_contratos')
+            .getFullList<ClienteContrato>({ sort: 'razao_social' }),
+          pb
+            .collection('clientes_analistas')
+            .getFullList<ClienteAnalista>({ filter: 'ativo = true', sort: 'nome' }),
+          pb.collection('naturezas_sinistro').getFullList({ sort: 'nome' }),
+          pb.collection('tipos_investigacao').getFullList({ sort: 'nome' }),
+        ])
         setAgentes(agentesRes)
         setUsers(usersRes)
         setSupervisores(supervisoresRes)
         setClientes(clientesRes)
         setAnalistas(analistasRes)
         setNaturezas(naturezasRes)
+        setTiposInvestigacao(tiposRes)
       } catch (err) {
         console.error('Failed to load form data dependencies', err)
       } finally {
@@ -195,6 +205,7 @@ export const useNovoProcesso = () => {
     clientes,
     analistas,
     naturezas,
+    tiposInvestigacao,
     loadingInitial,
     isSubmitting,
     duplicateFound,
