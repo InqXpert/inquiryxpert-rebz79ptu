@@ -117,35 +117,43 @@ export const useNovoProcesso = () => {
           }
         }
 
-        if (contrato && contrato.regras_sla && tipo_id) {
+        let regraAplicada: { dias: number; tipo_contagem: string } | null = null
+
+        if (contrato && Array.isArray(contrato.regras_sla) && tipo_id) {
           const regras = contrato.regras_sla as Array<{
             tipo_id: string
             dias: number
             tipo_contagem: string
           }>
-          const regra = regras.find((r) => r.tipo_id === tipo_id)
-
-          if (!regra) {
-            throw new Error('SLA rule missing')
+          const regraEncontrada = regras.find((r) => r.tipo_id === tipo_id)
+          if (regraEncontrada) {
+            regraAplicada = regraEncontrada
           }
+        }
 
-          if (regra && typeof regra.dias === 'number') {
-            const dataAtual = new Date()
-            let diasAdicionados = 0
+        if (!regraAplicada) {
+          regraAplicada = { dias: 5, tipo_contagem: 'uteis' }
+          toast.warning(
+            'Regra de SLA específica não encontrada. Aplicando prazo padrão de 5 dias úteis.',
+          )
+        }
 
-            if (regra.tipo_contagem === 'uteis') {
-              while (diasAdicionados < regra.dias) {
-                dataAtual.setDate(dataAtual.getDate() + 1)
-                const diaSemana = dataAtual.getDay()
-                if (diaSemana !== 0 && diaSemana !== 6) {
-                  diasAdicionados++
-                }
+        if (regraAplicada && typeof regraAplicada.dias === 'number') {
+          const dataAtual = new Date()
+          let diasAdicionados = 0
+
+          if (regraAplicada.tipo_contagem === 'uteis') {
+            while (diasAdicionados < regraAplicada.dias) {
+              dataAtual.setDate(dataAtual.getDate() + 1)
+              const diaSemana = dataAtual.getDay()
+              if (diaSemana !== 0 && diaSemana !== 6) {
+                diasAdicionados++
               }
-            } else {
-              dataAtual.setDate(dataAtual.getDate() + regra.dias)
             }
-            data_prazo = dataAtual.toISOString()
+          } else {
+            dataAtual.setDate(dataAtual.getDate() + regraAplicada.dias)
           }
+          data_prazo = dataAtual.toISOString()
         }
       } catch (e) {
         console.error('Erro ao calcular prazo de SLA', e)

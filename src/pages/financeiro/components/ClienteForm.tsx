@@ -190,7 +190,7 @@ export function ClienteForm({ id }: ClienteFormProps) {
             dia_corte: data.dia_corte || '',
             aliquota_imposto: data.aliquota_imposto || '',
             aliquota_retencao: data.aliquota_retencao || '',
-            regras_sla: data.regras_sla || [],
+            regras_sla: Array.isArray(data.regras_sla) ? data.regras_sla : [],
             analistas: analistasData.map((a) => ({
               id: a.id,
               nome: a.nome,
