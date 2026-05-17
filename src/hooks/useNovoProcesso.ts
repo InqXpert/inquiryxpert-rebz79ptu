@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
 import pb from '@/lib/pocketbase/client'
-import { validateDuplicidade, createAuditLog } from '@/services/processosService'
+import {
+  validateDuplicidade,
+  createAuditLog,
+  checkImeiDuplicate,
+} from '@/services/processosService'
 import { createProcesso, generateFullNumeroControle } from '@/services/procesosOperacionais'
 import { ClienteContrato, ClienteAnalista } from '@/services/clientes_contratos'
 import { useAuth } from '@/hooks/use-auth'
@@ -66,6 +70,11 @@ export const useNovoProcesso = () => {
   const checkDuplicate = async (nomeSegurado: string, placas: string) => {
     if (!nomeSegurado) return null
     return await validateDuplicidade(nomeSegurado, placas || '')
+  }
+
+  const checkImei = async (imei: string) => {
+    if (!imei) return null
+    return await checkImeiDuplicate(imei)
   }
 
   const submit = async (data: any) => {
@@ -182,6 +191,11 @@ export const useNovoProcesso = () => {
         tipo_investigacao_id: sanitized.tipo_investigacao_id || null,
         dados_terceiros: sanitized.dados_terceiros || [],
         user_id: user?.id,
+        imei_1: sanitized.imei_1 ? Number(sanitized.imei_1) : null,
+        imei_2: sanitized.imei_2 ? Number(sanitized.imei_2) : null,
+        bem_reclamado: sanitized.bem_reclamado ? sanitized.bem_reclamado.toUpperCase() : null,
+        valor_prejuizo:
+          typeof sanitized.valor_prejuizo === 'number' ? sanitized.valor_prejuizo : null,
       }
 
       const created = await createProcesso(payload)
@@ -219,6 +233,7 @@ export const useNovoProcesso = () => {
     duplicateFound,
     setDuplicateFound,
     checkDuplicate,
+    checkImei,
     submit,
     createAnalista,
   }

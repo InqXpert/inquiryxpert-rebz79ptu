@@ -14,6 +14,10 @@ export interface Processo {
   cpf_segurado?: string
   nome_condutor?: string
   cpf_condutor?: string
+  imei_1?: number
+  imei_2?: number
+  bem_reclamado?: string
+  valor_prejuizo?: number
   descricao?: string
   lido?: boolean
   is_favorite?: boolean

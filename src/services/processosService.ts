@@ -344,6 +344,19 @@ export const validateDuplicidade = async (nomeSegurado: string, placas: string) 
   }
 }
 
+export const checkImeiDuplicate = async (imei: string) => {
+  if (!imei) return null
+  try {
+    const result = await pb.collection('processos_operacionais').getList(1, 1, {
+      filter: `imei_1 = ${imei} || imei_2 = ${imei}`,
+      sort: '-created',
+    })
+    return result.items.length > 0 ? result.items[0] : null
+  } catch {
+    return null
+  }
+}
+
 export const createProcesso = async (data: any): Promise<Processo> => {
   return await pb.collection('processos_operacionais').create<Processo>(data)
 }

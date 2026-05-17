@@ -73,6 +73,22 @@ export const novoProcessoSchema = z
     numero_controle: z.string().optional(),
     status: z.string().default('ANALISE_INICIAL'),
     dados_terceiros: z.array(terceiroSchema).optional().default([]),
+    imei_1: z
+      .string()
+      .optional()
+      .refine(
+        (val) => !val || /^\d{1,15}$/.test(val),
+        'Deve conter apenas números, até 15 dígitos',
+      ),
+    imei_2: z
+      .string()
+      .optional()
+      .refine(
+        (val) => !val || /^\d{1,15}$/.test(val),
+        'Deve conter apenas números, até 15 dígitos',
+      ),
+    bem_reclamado: z.string().max(500, 'Máximo de 500 caracteres').optional(),
+    valor_prejuizo: z.number().optional().or(z.literal('')),
   })
   .superRefine((data, ctx) => {
     const isProperty =

@@ -64,6 +64,7 @@ export default function NovoProcessoPage() {
     duplicateFound,
     setDuplicateFound,
     checkDuplicate,
+    checkImei,
     submit,
     createAnalista,
   } = useNovoProcesso()
@@ -76,6 +77,8 @@ export default function NovoProcessoPage() {
   const [isAnalistaModalOpen, setIsAnalistaModalOpen] = useState(false)
   const [novoAnalista, setNovoAnalista] = useState({ nome: '', email: '', telefone: '', cargo: '' })
   const [isCreatingAnalista, setIsCreatingAnalista] = useState(false)
+  const [imei1Warning, setImei1Warning] = useState('')
+  const [imei2Warning, setImei2Warning] = useState('')
 
   const form = useForm<NovoProcessoFormData>({
     resolver: zodResolver(novoProcessoSchema),
@@ -96,6 +99,10 @@ export default function NovoProcessoPage() {
       supervisor_id: '',
       status: 'ANALISE_INICIAL',
       dados_terceiros: [],
+      imei_1: '',
+      imei_2: '',
+      bem_reclamado: '',
+      valor_prejuizo: '',
     },
     mode: 'onSubmit',
   })
@@ -120,6 +127,8 @@ export default function NovoProcessoPage() {
   const watchPlacas = watch('placas_veiculos')
   const watchNomeSegurado = watch('nome_segurado')
   const watchNatureza = watch('natureza_sinistro')
+  const watchImei1 = watch('imei_1')
+  const watchImei2 = watch('imei_2')
 
   useEffect(() => {
     if (watchSeguradora || watchNatureza) {
@@ -167,6 +176,40 @@ export default function NovoProcessoPage() {
 
   const selectedCia = clientes.find((c) => c.razao_social === watchSeguradora)
   const analistasFiltrados = analistas.filter((a) => a.cliente_id === selectedCia?.id)
+
+  useEffect(() => {
+    const check = async () => {
+      if (!watchImei1 || watchImei1.length < 5) {
+        setImei1Warning('')
+        return
+      }
+      const dup = await checkImei(watchImei1)
+      if (dup) {
+        setImei1Warning(`IMEI 1 já foi cadastrado no processo ${dup.numero_controle || dup.id}`)
+      } else {
+        setImei1Warning('')
+      }
+    }
+    const timer = setTimeout(check, 500)
+    return () => clearTimeout(timer)
+  }, [watchImei1])
+
+  useEffect(() => {
+    const check = async () => {
+      if (!watchImei2 || watchImei2.length < 5) {
+        setImei2Warning('')
+        return
+      }
+      const dup = await checkImei(watchImei2)
+      if (dup) {
+        setImei2Warning(`IMEI 2 já foi cadastrado no processo ${dup.numero_controle || dup.id}`)
+      } else {
+        setImei2Warning('')
+      }
+    }
+    const timer = setTimeout(check, 500)
+    return () => clearTimeout(timer)
+  }, [watchImei2])
 
   useEffect(() => {
     if (user && !['c-level', 'admin', 'supervisor'].includes(user.role)) {
@@ -218,6 +261,27 @@ export default function NovoProcessoPage() {
     } else {
       handleFinalSubmit(data)
     }
+  }
+
+  const handleCurrencyChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    onChange: (...event: any[]) => void,
+  ) => {
+    let value = e.target.value.replace(/\D/g, '')
+    if (!value) {
+      onChange('')
+      return
+    }
+    const numericValue = Number(value) / 100
+    onChange(numericValue)
+  }
+
+  const formatCurrency = (value: any) => {
+    if (value === undefined || value === null || value === '') return ''
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value)
   }
 
   const onError = (formErrors: any) => {
@@ -527,6 +591,100 @@ export default function NovoProcessoPage() {
                   )}
                 />
               )}
+
+              <FormField
+                control={form.control}
+                name="imei_1"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>IMEI 1</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Digite o IMEI 1"
+                        maxLength={15}
+                        onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
+                        className={errors.imei_1 ? 'border-red-500' : ''}
+                      />
+                    </FormControl>
+                    {imei1Warning && (
+                      <p className="text-[0.8rem] font-medium text-amber-500 dark:text-amber-400 mt-1 flex items-center gap-1">
+                        <AlertTriangle className="w-3.5 h-3.5" />
+                        {imei1Warning}
+                      </p>
+                    )}
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="imei_2"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>IMEI 2</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Digite o IMEI 2"
+                        maxLength={15}
+                        onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
+                        className={errors.imei_2 ? 'border-red-500' : ''}
+                      />
+                    </FormControl>
+                    {imei2Warning && (
+                      <p className="text-[0.8rem] font-medium text-amber-500 dark:text-amber-400 mt-1 flex items-center gap-1">
+                        <AlertTriangle className="w-3.5 h-3.5" />
+                        {imei2Warning}
+                      </p>
+                    )}
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bem_reclamado"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel>BEM RECLAMADO</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Descreva o bem reclamado"
+                        maxLength={500}
+                        onBlur={() => {
+                          field.onBlur()
+                          onBlurUppercase('bem_reclamado')
+                        }}
+                        className={errors.bem_reclamado ? 'border-red-500 uppercase' : 'uppercase'}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="valor_prejuizo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>VALOR PREJUÍZO</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="R$ 0,00"
+                        value={formatCurrency(field.value)}
+                        onChange={(e) => handleCurrencyChange(e, field.onChange)}
+                        className={errors.valor_prejuizo ? 'border-red-500' : ''}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
             </div>
           </section>
 
