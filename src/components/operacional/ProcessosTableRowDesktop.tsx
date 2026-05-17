@@ -66,7 +66,7 @@ export function ProcessosTableRowDesktop({
   if (isDeletedLocally) return null
 
   return (
-    <React.Fragment>
+    <>
       <TableRow
         className={cn(
           'cursor-pointer group animate-in fade-in fill-mode-both duration-300 border-b-brand-teal/10 dark:border-b-brand-cyan/10 h-[64px]',
@@ -309,6 +309,6 @@ export function ProcessosTableRowDesktop({
         description={`Tem certeza que deseja deletar o processo ${p.numero_controle || p.id}?`}
         onConfirm={handleDelete}
       />
-    </React.Fragment>
+    </>
   )
 }
