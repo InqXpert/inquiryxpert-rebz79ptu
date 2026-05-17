@@ -161,7 +161,8 @@ export default function NovoProcessoPage() {
 
   const isProperty =
     watchNatureza === 'PROPERTY' ||
-    (watchTipoInvestigacao && watchTipoInvestigacao.includes('PROPERTY'))
+    (watchTipoInvestigacao && watchTipoInvestigacao.includes('PROPERTY')) ||
+    (watchTipoInvestigacao && watchTipoInvestigacao.includes('AFFINITY'))
   const isColisaoTerceiro = watchNatureza === 'COLISAO COM TERCEIRO'
 
   const selectedCia = clientes.find((c) => c.razao_social === watchSeguradora)

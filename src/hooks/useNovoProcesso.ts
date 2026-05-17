@@ -44,8 +44,8 @@ export const useNovoProcesso = () => {
           pb
             .collection('clientes_analistas')
             .getFullList<ClienteAnalista>({ filter: 'ativo = true', sort: 'nome' }),
-          pb.collection('naturezas_sinistro').getFullList({ sort: 'nome' }),
-          pb.collection('tipos_investigacao').getFullList({ sort: 'nome' }),
+          pb.collection('naturezas_sinistro').getFullList({ filter: 'ativo = true', sort: 'nome' }),
+          pb.collection('tipos_investigacao').getFullList({ filter: 'ativo = true', sort: 'nome' }),
         ])
         setAgentes(agentesRes)
         setUsers(usersRes)

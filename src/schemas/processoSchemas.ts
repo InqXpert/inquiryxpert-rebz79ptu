@@ -77,7 +77,8 @@ export const novoProcessoSchema = z
   .superRefine((data, ctx) => {
     const isProperty =
       data.natureza_sinistro === 'PROPERTY' ||
-      (data.tipo_investigacao && data.tipo_investigacao.includes('PROPERTY'))
+      (data.tipo_investigacao && data.tipo_investigacao.includes('PROPERTY')) ||
+      (data.tipo_investigacao && data.tipo_investigacao.includes('AFFINITY'))
     if (!isProperty && !data.placas_veiculos) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

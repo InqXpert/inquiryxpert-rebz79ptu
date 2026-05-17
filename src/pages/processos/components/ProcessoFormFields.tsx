@@ -32,14 +32,14 @@ export function ProcessoFormFields({
       .catch(console.error)
 
     pb.collection('naturezas_sinistro')
-      .getFullList({ sort: 'nome' })
+      .getFullList({ filter: 'ativo = true', sort: 'nome' })
       .then((res) => {
         setNaturezas(res.map((r) => r.nome))
       })
       .catch(console.error)
 
     pb.collection('tipos_investigacao')
-      .getFullList({ sort: 'nome' })
+      .getFullList({ filter: 'ativo = true', sort: 'nome' })
       .then((res) => {
         setTiposInv(res.map((r) => r.nome))
       })
