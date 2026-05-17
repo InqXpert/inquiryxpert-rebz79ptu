@@ -276,33 +276,36 @@ export const generateNumeroControle = async (cia: string, natureza: string): Pro
   const mm = String(now.getMonth() + 1).padStart(2, '0')
   const yy = String(now.getFullYear()).slice(-2)
 
-  const ciaMap: Record<string, string> = {
-    ZURICH: '01',
-    MAPFRE: '02',
-    SUHAI: '03',
-    BRADESCO: '04',
-    NEO: '05',
-    'SPLIT RISK': '06',
-    COOPERLINK: '07',
-    KVOR: '08',
-    'MAIS BRASIL': '09',
-    AUTOINSP: '10',
-    SEVEN: '11',
+  let cc = '00'
+  let nn = '00'
+
+  try {
+    const clientes = await pb.collection('clientes_contratos').getList(1, 1, {
+      filter: `razao_social = '${cia.replace(/'/g, "\\'")}'`,
+    })
+    if (clientes.items.length > 0 && clientes.items[0].codigo) {
+      cc = clientes.items[0].codigo
+    } else {
+      throw new Error(`Cliente (${cia}) não possui código configurado.`)
+    }
+  } catch (e: any) {
+    if (e.message.includes('não possui')) throw e
+    throw new Error(`Erro ao buscar cliente para geração do número: ${e.message}`)
   }
 
-  const natMap: Record<string, string> = {
-    'COLISAO COM TERCEIRO': '10',
-    'COLISAO SEM TERCEIRO': '16',
-    INCENDIO: '20',
-    ROUBO: '30',
-    FURTO: '31',
-    ENCHENTE: '50',
-    PROPERTY: '03',
-    'I.E': '00',
+  try {
+    const naturezas = await pb.collection('naturezas_sinistro').getList(1, 1, {
+      filter: `nome = '${natureza.replace(/'/g, "\\'")}'`,
+    })
+    if (naturezas.items.length > 0 && naturezas.items[0].codigo) {
+      nn = naturezas.items[0].codigo
+    } else {
+      throw new Error(`Natureza de sinistro (${natureza}) não possui código configurado.`)
+    }
+  } catch (e: any) {
+    if (e.message.includes('não possui')) throw e
+    throw new Error(`Erro ao buscar natureza para geração do número: ${e.message}`)
   }
-
-  const cc = ciaMap[cia] || '00'
-  const nn = natMap[natureza] || '00'
 
   const prefix = `${mm}.${yy}.${cc}.${nn}`
 

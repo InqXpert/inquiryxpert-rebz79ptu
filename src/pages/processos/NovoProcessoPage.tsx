@@ -38,16 +38,6 @@ import { usePlacaValidation, useInsuredValidation } from '@/hooks/usePlacaValida
 import { PlateValidationUI, InsuredValidationUI } from '@/components/processos/ValidationIndicators'
 import { Separator } from '@/components/ui/separator'
 
-const NATUREZAS = [
-  'COLISAO COM TERCEIRO',
-  'COLISAO SEM TERCEIRO',
-  'INCENDIO',
-  'ROUBO',
-  'FURTO',
-  'ENCHENTE',
-  'PROPERTY',
-  'I.E',
-]
 const TIPOS_INV = [
   'AUTO',
   'BUSCA B.O DOCS',
@@ -81,6 +71,7 @@ export default function NovoProcessoPage() {
     supervisores,
     clientes,
     analistas,
+    naturezas,
     loadingInitial,
     isSubmitting,
     duplicateFound,
@@ -144,14 +135,21 @@ export default function NovoProcessoPage() {
   const watchNatureza = watch('natureza_sinistro')
 
   useEffect(() => {
-    if (watchSeguradora) {
+    if (watchSeguradora || watchNatureza) {
       const client = clientes.find((c) => c.razao_social === watchSeguradora)
-      const code = client?.codigo || '00'
-      setValue('numero_controle', `${code}.XX.XXXX`, { shouldValidate: false })
+      const nat = naturezas?.find((n) => n.nome === watchNatureza)
+
+      const cc = client?.codigo || 'CC'
+      const nn = nat?.codigo || 'NN'
+
+      const mm = String(new Date().getMonth() + 1).padStart(2, '0')
+      const yy = String(new Date().getFullYear()).slice(-2)
+
+      setValue('numero_controle', `${mm}.${yy}.${cc}.${nn}.XXXXX`, { shouldValidate: false })
     } else {
       setValue('numero_controle', '', { shouldValidate: false })
     }
-  }, [watchSeguradora, clientes, setValue])
+  }, [watchSeguradora, watchNatureza, clientes, naturezas, setValue])
 
   const plateValidation = usePlacaValidation(watchPlacas || '')
   const insuredValidation = useInsuredValidation(watchNomeSegurado || '')
@@ -342,7 +340,7 @@ export default function NovoProcessoPage() {
                         {...field}
                         readOnly
                         className="bg-brand-gray/5 font-mono font-bold text-brand-navy/60 dark:text-brand-light/60 border-dashed"
-                        placeholder="Automático (Ex: 02.XX.XXXX)"
+                        placeholder="Automático (Ex: 05.26.02.16.XXXXX)"
                       />
                     </FormControl>
                   </FormItem>
@@ -422,9 +420,9 @@ export default function NovoProcessoPage() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {NATUREZAS.map((n) => (
-                          <SelectItem key={n} value={n}>
-                            {n}
+                        {naturezas?.map((n: any) => (
+                          <SelectItem key={n.nome} value={n.nome}>
+                            {n.nome}
                           </SelectItem>
                         ))}
                       </SelectContent>

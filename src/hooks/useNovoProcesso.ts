@@ -18,6 +18,7 @@ export const useNovoProcesso = () => {
   const [supervisores, setSupervisores] = useState<any[]>([])
   const [clientes, setClientes] = useState<ClienteContrato[]>([])
   const [analistas, setAnalistas] = useState<ClienteAnalista[]>([])
+  const [naturezas, setNaturezas] = useState<any[]>([])
   const [loadingInitial, setLoadingInitial] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [duplicateFound, setDuplicateFound] = useState<any | null>(null)
@@ -25,7 +26,7 @@ export const useNovoProcesso = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [agentesRes, usersRes, supervisoresRes, clientesRes, analistasRes] =
+        const [agentesRes, usersRes, supervisoresRes, clientesRes, analistasRes, naturezasRes] =
           await Promise.all([
             pb.collection('agentes').getFullList({ sort: 'nomeCompleto' }),
             pb.collection('users').getFullList({ sort: 'name' }),
@@ -39,12 +40,14 @@ export const useNovoProcesso = () => {
             pb
               .collection('clientes_analistas')
               .getFullList<ClienteAnalista>({ filter: 'ativo = true', sort: 'nome' }),
+            pb.collection('naturezas_sinistro').getFullList({ sort: 'nome' }),
           ])
         setAgentes(agentesRes)
         setUsers(usersRes)
         setSupervisores(supervisoresRes)
         setClientes(clientesRes)
         setAnalistas(analistasRes)
+        setNaturezas(naturezasRes)
       } catch (err) {
         console.error('Failed to load form data dependencies', err)
       } finally {
@@ -67,18 +70,6 @@ export const useNovoProcesso = () => {
         sanitized.seguradora,
         sanitized.natureza_sinistro,
       )
-
-      const clienteParaCodigo = clientes.find(
-        (c) => c.id === sanitized.cliente_id || c.razao_social === sanitized.seguradora,
-      )
-      const codigoClient = clienteParaCodigo?.codigo || '00'
-      if (numControle.includes('.')) {
-        numControle = `${codigoClient}.${numControle.substring(numControle.indexOf('.') + 1)}`
-      } else {
-        const year = new Date().getFullYear().toString().slice(-2)
-        const random = Math.floor(1000 + Math.random() * 9000)
-        numControle = `${codigoClient}.${year}.${random}`
-      }
 
       let data_prazo: string | undefined = undefined
 
@@ -202,6 +193,7 @@ export const useNovoProcesso = () => {
     supervisores,
     clientes,
     analistas,
+    naturezas,
     loadingInitial,
     isSubmitting,
     duplicateFound,
