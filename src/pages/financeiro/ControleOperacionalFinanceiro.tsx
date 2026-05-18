@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
-import { AlertTriangle, PackageOpen, RefreshCcw, Search, X } from 'lucide-react'
+import { AlertTriangle, PackageOpen, RefreshCcw, Search, X, Edit2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'

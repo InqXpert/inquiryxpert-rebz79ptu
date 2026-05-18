@@ -33,9 +33,9 @@ const schema = z
     honorario_valor: z
       .number({
         required_error: 'Informe o valor de honorário',
-        invalid_type_error: 'Informe um valor de honorário',
+        invalid_type_error: 'Informe o valor de honorário',
       })
-      .positive('Informe um valor de honorário válido'),
+      .positive('Informe o valor de honorário'),
     despesas_recebidas: z.enum(['SIM', 'NAO'], {
       required_error: 'Selecione se as despesas foram recebidas',
     }),
@@ -198,6 +198,7 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
           { status: prevStatus },
           { status: 'FINALIZADO', finalizacao: payload },
         )
+        toast.success('Processo finalizado com sucesso!')
       } else {
         await pb.collection('processos_operacionais').update(processo.id, {
           tags: filteredTags,
@@ -209,9 +210,9 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
           { acao: 'Edição de Faturamento' },
           payload,
         )
+        toast.success('Informações atualizadas com sucesso!')
       }
 
-      toast.success('Informações sincronizadas com sucesso!')
       onOpenChange(false)
       onSuccess()
     } catch (error: any) {
