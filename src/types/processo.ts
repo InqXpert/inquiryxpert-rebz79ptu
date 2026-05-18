@@ -4,6 +4,7 @@ export interface Processo {
   numero_controle?: string
   status: string
   prioridade?: 'baixa' | 'media' | 'alta' | ''
+  status_finalizacao?: 'PENDENTE' | 'FINALIZADO'
   data_entrada?: string
   data_prazo?: string
   created: string

@@ -14,6 +14,7 @@ import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
 import { softDeleteProcesso, updateProcesso, createAuditLog } from '@/services/processosService'
 import { useAuth } from '@/hooks/use-auth'
 import { toast } from 'sonner'
+import { FinalizarProcessoModal } from './FinalizarProcessoModal'
 
 interface Props {
   processo: Processo
@@ -53,12 +54,18 @@ export function ProcessosTableRowDesktop({
 
   const [localStatus, setLocalStatus] = useState(p.status)
   const [isChangingStatus, setIsChangingStatus] = useState(false)
+  const [finalizarModalOpen, setFinalizarModalOpen] = useState(false)
 
   useEffect(() => {
     setLocalStatus(p.status)
   }, [p.status])
 
   const handleStatusChange = async (newStatus: string) => {
+    if (newStatus === 'FINALIZADO') {
+      setFinalizarModalOpen(true)
+      return
+    }
+
     setIsChangingStatus(true)
     try {
       await updateProcesso(p.id, { status: newStatus })
@@ -393,6 +400,12 @@ export function ProcessosTableRowDesktop({
         title="Deletar Processo"
         description={`Tem certeza que deseja deletar o processo ${p.numero_controle || p.id}?`}
         onConfirm={handleDelete}
+      />
+      <FinalizarProcessoModal
+        processo={p}
+        open={finalizarModalOpen}
+        onOpenChange={setFinalizarModalOpen}
+        onSuccess={() => setLocalStatus('FINALIZADO')}
       />
     </>
   )

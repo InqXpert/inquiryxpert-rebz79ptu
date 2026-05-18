@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-18T00:03:38.854Z",
+  "generatedAt": "2026-05-18T02:21:50.111Z",
   "collections": [
     {
       "name": "users",
@@ -797,6 +797,13 @@
           "required": false,
           "system": false,
           "collectionRef": "clientes_contratos"
+        },
+        {
+          "name": "status_finalizacao",
+          "type": "select",
+          "required": false,
+          "system": false,
+          "selectValues": ["PENDENTE", "FINALIZADO"]
         }
       ],
       "indexes": [
@@ -3092,6 +3099,78 @@
           "type": "text",
           "required": false,
           "system": false
+        }
+      ],
+      "indexes": []
+    },
+    {
+      "name": "processos_finalizacao",
+      "type": "base",
+      "apiRules": {
+        "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor'",
+        "create": "@request.auth.id != ''",
+        "update": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
+        "delete": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'"
+      },
+      "fields": [
+        {
+          "name": "processo_id",
+          "type": "relation",
+          "required": true,
+          "system": false,
+          "collectionRef": "processos_operacionais"
+        },
+        {
+          "name": "honorario_valor",
+          "type": "number",
+          "required": true,
+          "system": false
+        },
+        {
+          "name": "despesas_valor",
+          "type": "number",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "despesas_recebidas",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "gravacoes_recebidas",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "status_pagamento",
+          "type": "select",
+          "required": true,
+          "system": false,
+          "selectValues": ["AUTORIZADO", "NAO_AUTORIZADO"]
+        },
+        {
+          "name": "flag_bloqueio",
+          "type": "bool",
+          "required": false,
+          "system": false
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate"]
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "required": false,
+          "system": false,
+          "autodateTriggers": ["onCreate", "onUpdate"]
         }
       ],
       "indexes": []
