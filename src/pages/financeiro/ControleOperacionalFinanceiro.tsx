@@ -7,10 +7,12 @@ import { useAuth } from '@/hooks/use-auth'
 import { AcoesNF } from './components/AcoesNF'
 import { AcoesPagamento } from './components/AcoesPagamento'
 import { EditarRecebiveisModal } from './components/EditarRecebiveisModal'
+import { FinalizarProcessoModal } from '@/components/operacional/FinalizarProcessoModal'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { FinanceiroNav } from './components/FinanceiroNav'
 import pb from '@/lib/pocketbase/client'
+import { Processo } from '@/types/processo'
 
 const formatDate = (d: string) => (d ? format(parseISO(d), 'dd/MM/yyyy') : '-')
 const formatCurrency = (v: number) =>
@@ -23,7 +25,7 @@ const BLOCK_A = [
   'CIA',
   'Revisor',
   'Solicitante',
-  'Aviso',
+  'Controle Cia',
   'Cliente',
   'Placa',
   'Sindicante',
@@ -32,6 +34,7 @@ const BLOCK_A = [
   'Complemento',
 ]
 const BLOCK_B = [
+  'Aviso Pgto.',
   'Honorário Agente',
   'Despesas Agente',
   'Total a Pagar',
@@ -39,6 +42,7 @@ const BLOCK_B = [
   'Data Adt.',
   'Saldo a Pagar',
   'Data Pag.',
+  'Editar Fat.',
 ]
 const BLOCK_C = [
   'Honorário a Rec.',
@@ -66,6 +70,10 @@ export default function ControleOperacionalFinanceiro() {
   const [data, setData] = useState<any[]>([])
   const [totalPages, setTotalPages] = useState(1)
   const [refreshKey, setRefreshKey] = useState(0)
+
+  const [selectedProcessoForFat, setSelectedProcessoForFat] = useState<Processo | null>(null)
+  const [isModalFatOpen, setIsModalFatOpen] = useState(false)
+
   const { user } = useAuth()
   const itemsPerPage = 20
 
@@ -90,7 +98,7 @@ export default function ControleOperacionalFinanceiro() {
           .getList(currentPage, itemsPerPage, {
             filter: filterStr,
             expand:
-              'agente_id,supervisor_id,solicitante_id,cliente_id,seguradora_id,processos_despesas_via_processo_id',
+              'agente_id,supervisor_id,solicitante_id,cliente_id,seguradora_id,processos_despesas_via_processo_id,processos_finalizacao_via_processo_id,controle_operacional_financeiro_via_processo_id',
             sort: '-data_conclusao',
           })
 
@@ -115,6 +123,10 @@ export default function ControleOperacionalFinanceiro() {
   const mappedData = useMemo(() => {
     return data.map((proc) => {
       const despesas = proc.expand?.processos_despesas_via_processo_id?.[0] || {}
+      const finalizacao =
+        proc.expand?.processos_finalizacao_via_processo_id?.[0] ||
+        proc.expand?.controle_operacional_financeiro_via_processo_id?.[0] ||
+        {}
 
       const totalAPagar = despesas.total_a_pagar || 0
       const totalAReceber = despesas.total_a_receber || 0
@@ -141,6 +153,7 @@ export default function ControleOperacionalFinanceiro() {
         revisor: proc.expand?.supervisor_id?.name || proc.revisor || '-',
         solicitante: proc.expand?.solicitante_id?.name || proc.analista_solicitante || '-',
         aviso: proc.controle_cia || '-',
+        avisoPagamento: finalizacao.aviso || '-',
         cliente: proc.expand?.cliente_id?.nome || '-',
         placa,
         sindicante: proc.expand?.agente_id?.nomeCompleto || proc.agente_prestador || '-',
@@ -258,7 +271,7 @@ export default function ControleOperacionalFinanceiro() {
                     Block A — Identificação
                   </th>
                   <th
-                    colSpan={7}
+                    colSpan={9}
                     className="border-b border-r px-4 py-2 text-center bg-gray-200/60 font-semibold"
                   >
                     Block B — Valores a Pagar ao Agente
@@ -340,6 +353,15 @@ export default function ControleOperacionalFinanceiro() {
                     <td className="px-3 py-2 border-r">{row.saida}</td>
                     <td className="px-3 py-2 border-r">{row.complemento}</td>
 
+                    <td className="px-3 py-2 border-r font-bold">
+                      {row.avisoPagamento === 'PAGAMENTO AUTORIZADO' ? (
+                        <span className="text-green-600">{row.avisoPagamento}</span>
+                      ) : row.avisoPagamento === 'PAGAMENTO NÃO AUTORIZADO' ? (
+                        <span className="text-red-600">{row.avisoPagamento}</span>
+                      ) : (
+                        row.avisoPagamento
+                      )}
+                    </td>
                     <td className="px-3 py-2 border-r">{formatCurrency(row.honorarioAgente)}</td>
                     <td className="px-3 py-2 border-r">{formatCurrency(row.despesasAgente)}</td>
                     <td className="px-3 py-2 border-r font-semibold">
@@ -351,6 +373,19 @@ export default function ControleOperacionalFinanceiro() {
                       {formatCurrency(row.saldoAPagar)}
                     </td>
                     <td className="px-3 py-2 border-r">{formatDate(row.dataPagamento)}</td>
+                    <td className="px-3 py-2 border-r text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        title="Editar Informações de Faturamento"
+                        onClick={() => {
+                          setSelectedProcessoForFat(row.originalProc)
+                          setIsModalFatOpen(true)
+                        }}
+                      >
+                        <Edit2 className="w-4 h-4 text-brand-navy" />
+                      </Button>
+                    </td>
 
                     <td className="px-3 py-2 border-r">{formatCurrency(row.honorarioAReceber)}</td>
                     <td className="px-3 py-2 border-r">{formatCurrency(row.despesasAReceber)}</td>
@@ -503,10 +538,28 @@ export default function ControleOperacionalFinanceiro() {
                     userRole={user?.role}
                     onSuccess={() => setRefreshKey((k) => k + 1)}
                   />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => {
+                      setSelectedProcessoForFat(item.originalProc)
+                      setIsModalFatOpen(true)
+                    }}
+                  >
+                    <Edit2 className="w-4 h-4 mr-2" /> Editar Fat.
+                  </Button>
                 </div>
               </div>
             ))}
           </div>
+
+          <FinalizarProcessoModal
+            processo={selectedProcessoForFat}
+            open={isModalFatOpen}
+            onOpenChange={setIsModalFatOpen}
+            onSuccess={() => setRefreshKey((k) => k + 1)}
+          />
 
           {totalPages > 1 && (
             <div className="flex items-center justify-end space-x-2 py-4">

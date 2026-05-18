@@ -305,13 +305,19 @@ export function ProcessosTableRowDesktop({
                     'EM EXECUÇÃO',
                     'EM ELABORAÇÃO',
                     'EM COMPLEMENTO',
-                    'FINALIZADO',
+                    localStatus?.toUpperCase() === 'FINALIZADO'
+                      ? 'Editar Informações de Faturamento'
+                      : 'FINALIZADO',
                     'CANCELADO',
-                  ].map((status) => {
-                    const isActive = localStatus?.toUpperCase() === status.toUpperCase()
+                  ].map((statusOption) => {
+                    const isEditMode = statusOption === 'Editar Informações de Faturamento'
+                    const isFinalizadoBase = statusOption === 'FINALIZADO'
+                    const isActive =
+                      !isEditMode && localStatus?.toUpperCase() === statusOption.toUpperCase()
+
                     return (
                       <Button
-                        key={status}
+                        key={statusOption}
                         size="sm"
                         variant={isActive ? 'default' : 'outline'}
                         className={cn(
@@ -323,10 +329,14 @@ export function ProcessosTableRowDesktop({
                         disabled={isActive || isChangingStatus}
                         onClick={(e) => {
                           e.stopPropagation()
-                          handleStatusChange(status)
+                          if (isEditMode || isFinalizadoBase) {
+                            setFinalizarModalOpen(true)
+                          } else {
+                            handleStatusChange(statusOption)
+                          }
                         }}
                       >
-                        {status}
+                        {statusOption}
                       </Button>
                     )
                   })}

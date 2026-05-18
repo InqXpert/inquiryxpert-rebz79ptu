@@ -72,6 +72,8 @@ interface Props {
 export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess }: Props) {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [existingId, setExistingId] = useState<string | null>(null)
+  const [isEditMode, setIsEditMode] = useState(false)
   const { user } = useAuth()
 
   const form = useForm<FormData>({
@@ -86,6 +88,9 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
 
   useEffect(() => {
     if (open && processo) {
+      setLoading(true)
+      setIsEditMode(false)
+      setExistingId(null)
       form.reset({
         despesas_valor: undefined,
         honorario_valor: undefined,
@@ -93,22 +98,38 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
         gravacoes_recebidas: undefined,
       })
 
-      if (processo.agente_id) {
-        setLoading(true)
-        pb.collection('agentes')
-          .getOne(processo.agente_id)
-          .then((agente) => {
-            if (agente.valorHonorario) {
-              form.setValue('honorario_valor', Number(agente.valorHonorario))
-            }
+      pb.collection('processos_finalizacao')
+        .getFirstListItem(`processo_id="${processo.id}"`)
+        .then((finalizacao) => {
+          setIsEditMode(true)
+          setExistingId(finalizacao.id)
+          form.reset({
+            honorario_valor: finalizacao.honorario_valor,
+            despesas_valor: finalizacao.despesas_valor,
+            despesas_recebidas: finalizacao.despesas_recebidas ? 'SIM' : 'NAO',
+            gravacoes_recebidas: finalizacao.gravacoes_recebidas ? 'SIM' : 'NAO',
           })
-          .catch((err) => {
-            console.error('Failed to load agent info:', err)
-          })
-          .finally(() => {
+          setLoading(false)
+        })
+        .catch(() => {
+          if (processo.agente_id) {
+            pb.collection('agentes')
+              .getOne(processo.agente_id)
+              .then((agente) => {
+                if (agente.valorHonorario) {
+                  form.setValue('honorario_valor', Number(agente.valorHonorario))
+                }
+              })
+              .catch((err) => {
+                console.error('Failed to load agent info:', err)
+              })
+              .finally(() => {
+                setLoading(false)
+              })
+          } else {
             setLoading(false)
-          })
-      }
+          }
+        })
     }
   }, [open, processo, form])
 
@@ -117,6 +138,7 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
     setSaving(true)
     try {
       const autorizado = data.despesas_recebidas === 'SIM' && data.gravacoes_recebidas === 'SIM'
+      const aviso = autorizado ? 'PAGAMENTO AUTORIZADO' : 'PAGAMENTO NÃO AUTORIZADO'
 
       const payload = {
         processo_id: processo.id,
@@ -126,40 +148,79 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
         gravacoes_recebidas: data.gravacoes_recebidas === 'SIM',
         status_pagamento: autorizado ? 'AUTORIZADO' : 'NAO_AUTORIZADO',
         flag_bloqueio: !autorizado,
+        aviso,
       }
 
-      await pb.collection('processos_finalizacao').create(payload)
+      if (isEditMode && existingId) {
+        await pb.collection('processos_finalizacao').update(existingId, payload)
+        toast.success('Informações atualizadas com sucesso!')
+      } else {
+        await pb.collection('processos_finalizacao').create(payload)
+        toast.success('Processo finalizado com sucesso!')
+      }
 
-      const prevStatus = processo.status
-      await pb.collection('processos_operacionais').update(processo.id, {
-        status: 'FINALIZADO',
-        status_finalizacao: 'FINALIZADO',
-      })
+      const syncPayload = {
+        ...payload,
+        numero_processo: processo.numero_controle || processo.id,
+      }
+      try {
+        const ctrl = await pb
+          .collection('controle_operacional_financeiro')
+          .getFirstListItem(`processo_id="${processo.id}"`)
+        await pb.collection('controle_operacional_financeiro').update(ctrl.id, {
+          ...syncPayload,
+          data_finalizacao: ctrl.data_finalizacao || new Date().toISOString(),
+        })
+      } catch (err) {
+        await pb.collection('controle_operacional_financeiro').create({
+          ...syncPayload,
+          data_finalizacao: new Date().toISOString(),
+        })
+      }
 
-      await createAuditLog(
-        processo.id,
-        'STATUS_ALTERADO',
-        user?.id,
-        { status: prevStatus },
-        { status: 'FINALIZADO', finalizacao: payload },
-      )
+      if (!isEditMode) {
+        const prevStatus = processo.status
+        await pb.collection('processos_operacionais').update(processo.id, {
+          status: 'FINALIZADO',
+          status_finalizacao: 'FINALIZADO',
+        })
 
-      toast.success('Processo finalizado com sucesso!')
+        await createAuditLog(
+          processo.id,
+          'STATUS_ALTERADO',
+          user?.id,
+          { status: prevStatus },
+          { status: 'FINALIZADO', finalizacao: payload },
+        )
+      } else {
+        await createAuditLog(
+          processo.id,
+          'EDITADO',
+          user?.id,
+          { acao: 'Edição de Faturamento' },
+          payload,
+        )
+      }
+
       onOpenChange(false)
       onSuccess()
     } catch (error: any) {
       console.error(error)
-      toast.error(error.message || 'Erro ao finalizar o processo')
+      toast.error(error.message || 'Erro ao salvar alterações')
     } finally {
       setSaving(false)
     }
   }
 
+  const title = isEditMode
+    ? `Editar Informações de Faturamento - Processo ${processo?.numero_controle || processo?.id}`
+    : `Finalizar Processo ${processo?.numero_controle || processo?.id}`
+
   return (
     <Dialog open={open} onOpenChange={(val) => !saving && onOpenChange(val)}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Finalizar Processo {processo?.numero_controle || processo?.id}</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
             Preencha os detalhes financeiros e de documentação para finalizar o processo.
           </DialogDescription>
@@ -294,7 +355,7 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
                 </Button>
                 <Button type="submit" disabled={saving}>
                   {saving && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                  Finalizar Processo
+                  {isEditMode ? 'Salvar Alterações' : 'Finalizar Processo'}
                 </Button>
               </DialogFooter>
             </form>

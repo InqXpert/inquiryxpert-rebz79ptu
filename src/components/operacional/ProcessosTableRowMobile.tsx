@@ -247,31 +247,45 @@ export function ProcessosTableRowMobile({
               Alterar Status
             </h4>
             <div className="flex flex-wrap gap-2">
-              {['EM EXECUÇÃO', 'EM ELABORAÇÃO', 'EM COMPLEMENTO', 'FINALIZADO', 'CANCELADO'].map(
-                (status) => {
-                  const isActive = localStatus?.toUpperCase() === status.toUpperCase()
-                  return (
-                    <Button
-                      key={status}
-                      size="sm"
-                      variant={isActive ? 'default' : 'outline'}
-                      className={cn(
-                        'text-[11px] font-bold h-8 transition-colors flex-1 min-w-[120px]',
-                        isActive
-                          ? 'bg-brand-teal text-white dark:bg-brand-cyan dark:text-brand-navy border-transparent shadow-sm pointer-events-none'
-                          : 'border-brand-teal/20 dark:border-brand-cyan/20 text-brand-navy dark:text-white bg-white dark:bg-brand-navy hover:bg-brand-teal/10 dark:hover:bg-brand-cyan/10',
-                      )}
-                      disabled={isActive || isChangingStatus}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleStatusChange(status)
-                      }}
-                    >
-                      {status}
-                    </Button>
-                  )
-                },
-              )}
+              {[
+                'EM EXECUÇÃO',
+                'EM ELABORAÇÃO',
+                'EM COMPLEMENTO',
+                localStatus?.toUpperCase() === 'FINALIZADO'
+                  ? 'Editar Informações de Faturamento'
+                  : 'FINALIZADO',
+                'CANCELADO',
+              ].map((statusOption) => {
+                const isEditMode = statusOption === 'Editar Informações de Faturamento'
+                const isFinalizadoBase = statusOption === 'FINALIZADO'
+                const isActive =
+                  !isEditMode && localStatus?.toUpperCase() === statusOption.toUpperCase()
+
+                return (
+                  <Button
+                    key={statusOption}
+                    size="sm"
+                    variant={isActive ? 'default' : 'outline'}
+                    className={cn(
+                      'text-[11px] font-bold h-8 transition-colors flex-1 min-w-[120px]',
+                      isActive
+                        ? 'bg-brand-teal text-white dark:bg-brand-cyan dark:text-brand-navy border-transparent shadow-sm pointer-events-none'
+                        : 'border-brand-teal/20 dark:border-brand-cyan/20 text-brand-navy dark:text-white bg-white dark:bg-brand-navy hover:bg-brand-teal/10 dark:hover:bg-brand-cyan/10',
+                    )}
+                    disabled={isActive || isChangingStatus}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      if (isEditMode || isFinalizadoBase) {
+                        setFinalizarModalOpen(true)
+                      } else {
+                        handleStatusChange(statusOption)
+                      }
+                    }}
+                  >
+                    {statusOption}
+                  </Button>
+                )
+              })}
             </div>
           </div>
 
