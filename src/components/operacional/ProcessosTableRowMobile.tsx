@@ -200,6 +200,7 @@ export function ProcessosTableRowMobile({
           {Array.isArray(p.tags) &&
             p.tags
               .filter((t): t is string => typeof t === 'string' && t.trim() !== '')
+              .sort((a, b) => (a.includes('PAGAMENTO') ? -1 : b.includes('PAGAMENTO') ? 1 : 0))
               .map((tag: string, idx: number) => (
                 <Badge
                   key={`tag-${idx}`}

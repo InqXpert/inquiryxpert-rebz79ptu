@@ -3,6 +3,10 @@ import type { Processo } from '@/types/processo'
 
 export const getTagColor = (tag: string) => {
   const t = tag.toUpperCase()
+  if (t === 'PAGAMENTO AUTORIZADO')
+    return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800'
+  if (t === 'PAGAMENTO NÃO AUTORIZADO')
+    return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800'
   if (t === 'URGENTE') return 'bg-red-500 hover:bg-red-600 text-white border-transparent'
   if (t === 'DOCUMENTAÇÃO PENDENTE')
     return 'bg-amber-500 hover:bg-amber-600 text-white border-transparent'

@@ -196,6 +196,7 @@ export function ProcessosTableRowDesktop({
             p.tags.filter((t) => typeof t === 'string' && t.trim() !== '').length > 0 ? (
               p.tags
                 .filter((t): t is string => typeof t === 'string' && t.trim() !== '')
+                .sort((a, b) => (a.includes('PAGAMENTO') ? -1 : b.includes('PAGAMENTO') ? 1 : 0))
                 .slice(0, 2)
                 .map((tag: string, idx: number) => (
                   <Badge
@@ -206,7 +207,7 @@ export function ProcessosTableRowDesktop({
                     )}
                     title={tag}
                   >
-                    {tag.length > 15 ? tag.substring(0, 15) + '...' : tag}
+                    {tag.length > 25 ? tag.substring(0, 25) + '...' : tag}
                   </Badge>
                 ))
             ) : (
@@ -218,6 +219,9 @@ export function ProcessosTableRowDesktop({
                   className="text-[9px] px-1.5 py-0 rounded-[4px] bg-brand-light text-brand-gray dark:bg-black/50 dark:text-brand-light border-transparent leading-tight"
                   title={p.tags
                     .filter((t) => typeof t === 'string' && t.trim() !== '')
+                    .sort((a, b) =>
+                      a.includes('PAGAMENTO') ? -1 : b.includes('PAGAMENTO') ? 1 : 0,
+                    )
                     .slice(2)
                     .join(', ')}
                 >

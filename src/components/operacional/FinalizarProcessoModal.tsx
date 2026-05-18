@@ -153,10 +153,8 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
 
       if (isEditMode && existingId) {
         await pb.collection('processos_finalizacao').update(existingId, payload)
-        toast.success('Informações atualizadas com sucesso!')
       } else {
         await pb.collection('processos_finalizacao').create(payload)
-        toast.success('Processo finalizado com sucesso!')
       }
 
       const syncPayload = {
@@ -178,11 +176,19 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
         })
       }
 
+      // Update tags on processos_operacionais
+      const currentTags: string[] = Array.isArray(processo.tags) ? processo.tags : []
+      const filteredTags = currentTags.filter(
+        (t) => t !== 'PAGAMENTO AUTORIZADO' && t !== 'PAGAMENTO NÃO AUTORIZADO',
+      )
+      filteredTags.push(aviso)
+
       if (!isEditMode) {
         const prevStatus = processo.status
         await pb.collection('processos_operacionais').update(processo.id, {
           status: 'FINALIZADO',
           status_finalizacao: 'FINALIZADO',
+          tags: filteredTags,
         })
 
         await createAuditLog(
@@ -193,6 +199,9 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
           { status: 'FINALIZADO', finalizacao: payload },
         )
       } else {
+        await pb.collection('processos_operacionais').update(processo.id, {
+          tags: filteredTags,
+        })
         await createAuditLog(
           processo.id,
           'EDITADO',
@@ -202,11 +211,12 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
         )
       }
 
+      toast.success('Informações sincronizadas com sucesso!')
       onOpenChange(false)
       onSuccess()
     } catch (error: any) {
       console.error(error)
-      toast.error(error.message || 'Erro ao salvar alterações')
+      toast.error('Erro ao sincronizar dados com o financeiro')
     } finally {
       setSaving(false)
     }
