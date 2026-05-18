@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TableCell, TableRow } from '@/components/ui/table'
 import { Processo } from '@/types/processo'
 import { calculateDayColor, calculateTags, getTagColor } from '@/services/processosService'
@@ -11,7 +11,7 @@ import { ProcessoTimeline } from './ProcessoTimeline'
 import { Checkbox } from '@/components/ui/checkbox'
 
 import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
-import { softDeleteProcesso } from '@/services/processosService'
+import { softDeleteProcesso, updateProcesso, createAuditLog } from '@/services/processosService'
 import { useAuth } from '@/hooks/use-auth'
 import { toast } from 'sonner'
 
@@ -50,6 +50,33 @@ export function ProcessosTableRowDesktop({
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isDeletedLocally, setIsDeletedLocally] = useState(false)
+
+  const [localStatus, setLocalStatus] = useState(p.status)
+  const [isChangingStatus, setIsChangingStatus] = useState(false)
+
+  useEffect(() => {
+    setLocalStatus(p.status)
+  }, [p.status])
+
+  const handleStatusChange = async (newStatus: string) => {
+    setIsChangingStatus(true)
+    try {
+      await updateProcesso(p.id, { status: newStatus })
+      await createAuditLog(
+        p.id,
+        'STATUS_ALTERADO',
+        user?.id,
+        { status: localStatus },
+        { status: newStatus },
+      )
+      toast.success(`Status alterado para ${newStatus}`)
+      setLocalStatus(newStatus)
+    } catch (e) {
+      toast.error('Erro ao alterar status')
+    } finally {
+      setIsChangingStatus(false)
+    }
+  }
 
   const handleDelete = async () => {
     setIsDeleting(true)
@@ -96,9 +123,9 @@ export function ProcessosTableRowDesktop({
           <div className="flex flex-col gap-1.5 items-start">
             <span
               className="font-bold text-xs uppercase truncate w-full text-brand-navy dark:text-white flex items-center gap-1"
-              title={p.status?.replace(/_/g, ' ')}
+              title={localStatus?.replace(/_/g, ' ')}
             >
-              {p.status ? p.status.replace(/_/g, ' ') : '-'}
+              {localStatus ? localStatus.replace(/_/g, ' ') : '-'}
               {p.prioridade && (
                 <span
                   className={cn(
@@ -231,6 +258,74 @@ export function ProcessosTableRowDesktop({
             className="p-0 border-t border-brand-teal/10 dark:border-brand-cyan/10"
           >
             <div className="p-4 md:p-6 animate-in slide-in-from-top-2 fade-in duration-200">
+              {/* Summary Header */}
+              <div className="bg-brand-light/40 dark:bg-brand-navy/40 p-4 rounded-xl mb-5 border border-brand-teal/10 dark:border-brand-cyan/10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <span className="text-[10px] font-bold text-brand-gray dark:text-brand-light uppercase tracking-wider block mb-1">
+                      Nome do Segurado
+                    </span>
+                    <p className="text-[13px] font-bold text-brand-navy dark:text-white">
+                      {p.nome_segurado || '-'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold text-brand-gray dark:text-brand-light uppercase tracking-wider block mb-1">
+                      Analista da Seguradora
+                    </span>
+                    <p className="text-[13px] font-bold text-brand-navy dark:text-white">
+                      {p.expand?.analista_cliente_id?.nome || p.analista_solicitante || '-'}
+                    </p>
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-bold text-brand-gray dark:text-brand-light uppercase tracking-wider block mb-1">
+                      Placa / Bem Reclamado
+                    </span>
+                    <p className="text-[13px] font-bold text-brand-navy dark:text-white">
+                      {p.placas_veiculos || p.bem_reclamado || '-'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Actions */}
+              <div className="mb-6">
+                <h4 className="text-[12px] font-bold text-brand-gray dark:text-brand-light mb-3 ml-1 uppercase tracking-wider">
+                  Alterar Status
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    'EM EXECUÇÃO',
+                    'EM ELABORAÇÃO',
+                    'EM COMPLEMENTO',
+                    'FINALIZADO',
+                    'CANCELADO',
+                  ].map((status) => {
+                    const isActive = localStatus?.toUpperCase() === status.toUpperCase()
+                    return (
+                      <Button
+                        key={status}
+                        size="sm"
+                        variant={isActive ? 'default' : 'outline'}
+                        className={cn(
+                          'text-[11px] font-bold h-8 transition-colors',
+                          isActive
+                            ? 'bg-brand-teal text-white dark:bg-brand-cyan dark:text-brand-navy hover:bg-brand-teal/90 dark:hover:bg-brand-cyan/90 border-transparent shadow-sm pointer-events-none'
+                            : 'border-brand-teal/20 dark:border-brand-cyan/20 text-brand-navy dark:text-white bg-white dark:bg-brand-navy hover:bg-brand-teal/10 dark:hover:bg-brand-cyan/10',
+                        )}
+                        disabled={isActive || isChangingStatus}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleStatusChange(status)
+                        }}
+                      >
+                        {status}
+                      </Button>
+                    )
+                  })}
+                </div>
+              </div>
+
               <div className="flex flex-wrap gap-3 mb-6">
                 <Button
                   size="sm"
@@ -257,17 +352,7 @@ export function ProcessosTableRowDesktop({
                   <Send className="w-4 h-4 sm:mr-2" />
                   <span className="hidden sm:inline">Encaminhar Sindicância</span>
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-brand-teal/20 dark:border-brand-cyan/20 font-bold text-brand-navy dark:text-white bg-white dark:bg-brand-navy min-h-[44px]"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    onOpenModal('history', p)
-                  }}
-                >
-                  <History className="w-4 h-4 mr-2" /> Histórico
-                </Button>
+
                 <Button
                   variant="outline"
                   size="sm"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Processo } from '@/types/processo'
 import { calculateDayColor, calculateTags, getTagColor } from '@/services/processosService'
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,7 @@ import { ProcessoTimeline } from './ProcessoTimeline'
 import { Checkbox } from '@/components/ui/checkbox'
 
 import { DoubleConfirmDialog } from '@/components/DoubleConfirmDialog'
-import { softDeleteProcesso } from '@/services/processosService'
+import { softDeleteProcesso, updateProcesso, createAuditLog } from '@/services/processosService'
 import { useAuth } from '@/hooks/use-auth'
 import { toast } from 'sonner'
 
@@ -43,6 +43,33 @@ export function ProcessosTableRowMobile({
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isDeletedLocally, setIsDeletedLocally] = useState(false)
+
+  const [localStatus, setLocalStatus] = useState(p.status)
+  const [isChangingStatus, setIsChangingStatus] = useState(false)
+
+  useEffect(() => {
+    setLocalStatus(p.status)
+  }, [p.status])
+
+  const handleStatusChange = async (newStatus: string) => {
+    setIsChangingStatus(true)
+    try {
+      await updateProcesso(p.id, { status: newStatus })
+      await createAuditLog(
+        p.id,
+        'STATUS_ALTERADO',
+        user?.id,
+        { status: localStatus },
+        { status: newStatus },
+      )
+      toast.success(`Status alterado para ${newStatus}`)
+      setLocalStatus(newStatus)
+    } catch (e) {
+      toast.error('Erro ao alterar status')
+    } finally {
+      setIsChangingStatus(false)
+    }
+  }
 
   const handleDelete = async () => {
     setIsDeleting(true)
@@ -85,7 +112,7 @@ export function ProcessosTableRowMobile({
               {p.numero_controle || p.id || '-'}
             </p>
             <p className="font-bold text-xs uppercase text-brand-gray dark:text-brand-light">
-              {p.status ? p.status.replace(/_/g, ' ') : '-'}
+              {localStatus ? localStatus.replace(/_/g, ' ') : '-'}
             </p>
           </div>
         </div>
@@ -179,6 +206,68 @@ export function ProcessosTableRowMobile({
 
       {expanded && (
         <div className="mt-4 pt-4 border-t border-brand-teal/10 dark:border-brand-cyan/10 animate-in fade-in slide-in-from-top-2">
+          {/* Summary Header */}
+          <div className="bg-brand-light/40 dark:bg-brand-navy/40 p-4 rounded-xl mb-4 border border-brand-teal/10 dark:border-brand-cyan/10 flex flex-col gap-3">
+            <div>
+              <span className="text-[10px] font-bold text-brand-gray dark:text-brand-light uppercase tracking-wider block mb-1">
+                Nome do Segurado
+              </span>
+              <p className="text-[13px] font-bold text-brand-navy dark:text-white">
+                {p.nome_segurado || '-'}
+              </p>
+            </div>
+            <div>
+              <span className="text-[10px] font-bold text-brand-gray dark:text-brand-light uppercase tracking-wider block mb-1">
+                Analista da Seguradora
+              </span>
+              <p className="text-[13px] font-bold text-brand-navy dark:text-white">
+                {p.expand?.analista_cliente_id?.nome || p.analista_solicitante || '-'}
+              </p>
+            </div>
+            <div>
+              <span className="text-[10px] font-bold text-brand-gray dark:text-brand-light uppercase tracking-wider block mb-1">
+                Placa / Bem Reclamado
+              </span>
+              <p className="text-[13px] font-bold text-brand-navy dark:text-white">
+                {p.placas_veiculos || p.bem_reclamado || '-'}
+              </p>
+            </div>
+          </div>
+
+          {/* Status Actions */}
+          <div className="mb-5">
+            <h4 className="text-[12px] font-bold text-brand-gray dark:text-brand-light mb-2 uppercase tracking-wider">
+              Alterar Status
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {['EM EXECUÇÃO', 'EM ELABORAÇÃO', 'EM COMPLEMENTO', 'FINALIZADO', 'CANCELADO'].map(
+                (status) => {
+                  const isActive = localStatus?.toUpperCase() === status.toUpperCase()
+                  return (
+                    <Button
+                      key={status}
+                      size="sm"
+                      variant={isActive ? 'default' : 'outline'}
+                      className={cn(
+                        'text-[11px] font-bold h-8 transition-colors flex-1 min-w-[120px]',
+                        isActive
+                          ? 'bg-brand-teal text-white dark:bg-brand-cyan dark:text-brand-navy border-transparent shadow-sm pointer-events-none'
+                          : 'border-brand-teal/20 dark:border-brand-cyan/20 text-brand-navy dark:text-white bg-white dark:bg-brand-navy hover:bg-brand-teal/10 dark:hover:bg-brand-cyan/10',
+                      )}
+                      disabled={isActive || isChangingStatus}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleStatusChange(status)
+                      }}
+                    >
+                      {status}
+                    </Button>
+                  )
+                },
+              )}
+            </div>
+          </div>
+
           <div className="flex flex-col gap-2 mb-4">
             <Button
               size="sm"
@@ -190,30 +279,17 @@ export function ProcessosTableRowMobile({
             >
               <Edit2 className="w-4 h-4 mr-2" /> Editar Processo
             </Button>
-            <div className="grid grid-cols-2 gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full bg-white dark:bg-brand-navy border-brand-teal/20 dark:border-brand-cyan/20 min-h-[44px]"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onOpenModal('history', p)
-                }}
-              >
-                <History className="w-4 h-4 mr-2" /> Histórico
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="w-full bg-white dark:bg-brand-navy border-brand-teal/20 dark:border-brand-cyan/20 min-h-[44px]"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onOpenModal('obs', p)
-                }}
-              >
-                <MessageSquare className="w-4 h-4 mr-2" /> Obs
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full bg-white dark:bg-brand-navy border-brand-teal/20 dark:border-brand-cyan/20 min-h-[44px]"
+              onClick={(e) => {
+                e.stopPropagation()
+                onOpenModal('obs', p)
+              }}
+            >
+              <MessageSquare className="w-4 h-4 mr-2" /> Obs
+            </Button>
             <Button
               variant="outline"
               size="sm"
