@@ -1,6 +1,17 @@
-import { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
-import { AlertTriangle, PackageOpen, RefreshCcw, Search, X, Edit2 } from 'lucide-react'
+import {
+  AlertTriangle,
+  PackageOpen,
+  RefreshCcw,
+  Search,
+  X,
+  Edit2,
+  ChevronDown,
+  ChevronUp,
+  UserCheck,
+  Building2,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/hooks/use-auth'
@@ -18,49 +29,6 @@ const formatDate = (d: string) => (d ? format(parseISO(d), 'dd/MM/yyyy') : '-')
 const formatCurrency = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v || 0)
 
-const BLOCK_A = [
-  'ID do Processo',
-  'Status',
-  'Tipo',
-  'CIA',
-  'Revisor',
-  'Solicitante',
-  'Controle Cia',
-  'Cliente',
-  'Placa',
-  'Sindicante',
-  'Data Conclusão',
-  'Saída',
-  'Complemento',
-]
-const BLOCK_B = [
-  'Aviso Pgto.',
-  'Honorário Agente',
-  'Despesas Agente',
-  'Total a Pagar',
-  'Adiantamento',
-  'Data Adt.',
-  'Saldo a Pagar',
-  'Data Pag.',
-  'Editar Fat.',
-]
-const BLOCK_C = [
-  'Honorário a Rec.',
-  'Despesas a Rec.',
-  'ISS',
-  'Total a Receber',
-  'Despesas Extras',
-  'Data Rec.',
-  'Desp. Comp.',
-  'Data Rec. 2',
-  'ISS 20%',
-  'Líquido',
-  'Margem (%)',
-  'NF',
-  'Data NF',
-  'Editar Rec.',
-]
-
 export default function ControleOperacionalFinanceiro() {
   const [dateFilter, setDateFilter] = useState('')
   const [appliedFilter, setAppliedFilter] = useState('')
@@ -71,11 +39,13 @@ export default function ControleOperacionalFinanceiro() {
   const [totalPages, setTotalPages] = useState(1)
   const [refreshKey, setRefreshKey] = useState(0)
 
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({})
+
   const [selectedProcessoForFat, setSelectedProcessoForFat] = useState<Processo | null>(null)
   const [isModalFatOpen, setIsModalFatOpen] = useState(false)
 
   const { user } = useAuth()
-  const itemsPerPage = 20
+  const itemsPerPage = 10
 
   useEffect(() => {
     let isMounted = true
@@ -133,30 +103,15 @@ export default function ControleOperacionalFinanceiro() {
         margem = ((totalAReceber - totalAPagar) / totalAReceber) * 100
       }
 
-      let placa = proc.placas_veiculos || '-'
-      if (
-        proc.placas_veiculos_json &&
-        Array.isArray(proc.placas_veiculos_json) &&
-        proc.placas_veiculos_json.length > 0
-      ) {
-        placa = proc.placas_veiculos_json.join(', ')
-      }
-
       return {
         id: proc.numero_processo || proc.numero_controle || proc.id,
         status: proc.status,
         tipo: proc.tipo_servico || proc.expand?.tipo_investigacao_id?.nome || '-',
         cia: proc.expand?.seguradora_id?.nome || proc.cia || '-',
         revisor: proc.expand?.supervisor_id?.name || proc.revisor || '-',
-        solicitante: proc.expand?.solicitante_id?.name || proc.analista_solicitante || '-',
-        aviso: proc.controle_cia || '-',
-        avisoPagamento: finalizacao.aviso || '-',
-        cliente: proc.expand?.cliente_id?.nome || '-',
-        placa,
         sindicante: proc.expand?.agente_id?.nomeCompleto || proc.agente_prestador || '-',
+        avisoPagamento: finalizacao.aviso || '-',
         dataConclusao: proc.data_conclusao,
-        saida: proc.data_saida || '-',
-        complemento: despesas.despesa_complemento || '-',
 
         honorarioAgente: despesas.honorario_agente || 0,
         despesasAgente: despesas.despesas_agente || 0,
@@ -185,6 +140,13 @@ export default function ControleOperacionalFinanceiro() {
     })
   }, [data])
 
+  const toggleRow = (id: string) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }))
+  }
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       <div>
@@ -192,7 +154,7 @@ export default function ControleOperacionalFinanceiro() {
           CONTROLE — Operacional + Financeiro
         </h1>
         <p className="text-muted-foreground mt-1">
-          Processos finalizados — Faturamento e Conciliação
+          Gerenciamento financeiro condensado com linhas expansíveis
         </p>
       </div>
       <FinanceiroNav />
@@ -232,7 +194,7 @@ export default function ControleOperacionalFinanceiro() {
       {isLoading ? (
         <div className="space-y-4">
           {[1, 2, 3, 4, 5].map((i) => (
-            <Skeleton key={i} className="h-12 w-full" />
+            <Skeleton key={i} className="h-14 w-full" />
           ))}
         </div>
       ) : isError ? (
@@ -242,7 +204,7 @@ export default function ControleOperacionalFinanceiro() {
           <Button
             onClick={() => {
               setCurrentPage(1)
-              setAppliedFilter(appliedFilter) // re-trigger fetch
+              setAppliedFilter(appliedFilter)
             }}
             className="mt-4"
             variant="outline"
@@ -257,308 +219,309 @@ export default function ControleOperacionalFinanceiro() {
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="hidden lg:block overflow-x-auto border border-border rounded-md shadow-sm no-scrollbar bg-background">
-            <table className="w-full text-sm text-left whitespace-nowrap">
-              <thead className="bg-gray-100 text-brand-navy sticky top-0 z-10 text-xs uppercase tracking-wider">
+          <div className="overflow-x-auto border border-border rounded-md shadow-sm bg-background">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-muted text-brand-navy sticky top-0 z-10 text-xs uppercase tracking-wider border-b">
                 <tr>
-                  <th
-                    colSpan={13}
-                    className="border-b border-r px-4 py-2 text-center bg-gray-200/60 font-semibold"
-                  >
-                    Block A — Identificação
-                  </th>
-                  <th
-                    colSpan={9}
-                    className="border-b border-r px-4 py-2 text-center bg-gray-200/60 font-semibold"
-                  >
-                    Block B — Valores a Pagar ao Agente
-                  </th>
-                  <th
-                    colSpan={14}
-                    className="border-b border-r px-4 py-2 text-center bg-gray-200/60 font-semibold"
-                  >
-                    Block C — Valores a Receber do Cliente
-                  </th>
-                  <th
-                    colSpan={1}
-                    rowSpan={2}
-                    className="border-b border-r px-4 py-2 text-center bg-gray-200/60 font-semibold align-middle"
-                  >
-                    Ações
-                  </th>
-                  <th
-                    colSpan={1}
-                    rowSpan={2}
-                    className="border-b px-4 py-2 text-center bg-gray-200/60 font-semibold align-middle"
-                  >
-                    Pagamento
-                  </th>
-                </tr>
-                <tr className="bg-gray-50 text-gray-600">
-                  {BLOCK_A.map((h) => (
-                    <th key={h} className="px-3 py-2 border-r border-b">
-                      {h}
-                    </th>
-                  ))}
-                  {BLOCK_B.map((h) => (
-                    <th key={h} className="px-3 py-2 border-r border-b">
-                      {h}
-                    </th>
-                  ))}
-                  {BLOCK_C.map((h) => (
-                    <th key={h} className="px-3 py-2 border-r border-b">
-                      {h}
-                    </th>
-                  ))}
+                  <th className="px-4 py-3 font-semibold text-left">ID / Controle</th>
+                  <th className="px-4 py-3 font-semibold text-left">Supervisor</th>
+                  <th className="px-4 py-3 font-semibold text-left">Seguradora</th>
+                  <th className="px-4 py-3 font-semibold text-left">Tipo</th>
+                  <th className="px-4 py-3 font-semibold text-left">Agente</th>
+                  <th className="px-4 py-3 font-semibold text-center">Status Pagamento</th>
+                  <th className="px-4 py-3 font-semibold text-center">Data Conclusão</th>
+                  <th className="px-4 py-3 font-semibold text-right w-16"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {mappedData.map((row) => (
-                  <tr
-                    key={row.originalProc.id}
-                    className="even:bg-muted/30 odd:bg-background hover:bg-gray-100/50 transition-colors duration-150"
-                  >
-                    <td className="px-3 py-2 border-r font-medium text-brand-navy">{row.id}</td>
-                    <td className="px-3 py-2 border-r">
-                      {row.status.includes('Pendente de Documentos') ? (
-                        <Badge
-                          variant="outline"
-                          className="bg-yellow-50 text-yellow-700 border-yellow-300 font-normal"
-                        >
-                          <AlertTriangle className="w-3 h-3 mr-1" /> Pendente Doc.
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="bg-green-50 text-green-700 border-green-300 font-normal"
-                        >
-                          Concluído
-                        </Badge>
-                      )}
-                    </td>
-                    <td className="px-3 py-2 border-r">{row.tipo}</td>
-                    <td className="px-3 py-2 border-r">{row.cia}</td>
-                    <td className="px-3 py-2 border-r">{row.revisor}</td>
-                    <td className="px-3 py-2 border-r">{row.solicitante}</td>
-                    <td className="px-3 py-2 border-r">{row.aviso}</td>
-                    <td className="px-3 py-2 border-r truncate max-w-[150px]" title={row.cliente}>
-                      {row.cliente}
-                    </td>
-                    <td className="px-3 py-2 border-r">{row.placa}</td>
-                    <td className="px-3 py-2 border-r">{row.sindicante}</td>
-                    <td className="px-3 py-2 border-r">{formatDate(row.dataConclusao)}</td>
-                    <td className="px-3 py-2 border-r">{row.saida}</td>
-                    <td className="px-3 py-2 border-r">{row.complemento}</td>
-
-                    <td className="px-3 py-2 border-r font-bold">
-                      {row.avisoPagamento === 'PAGAMENTO AUTORIZADO' ? (
-                        <Badge
-                          variant="outline"
-                          className="bg-green-50 text-green-700 border-green-300 font-normal"
-                        >
-                          {row.avisoPagamento}
-                        </Badge>
-                      ) : row.avisoPagamento === 'PAGAMENTO NÃO AUTORIZADO' ? (
-                        <Badge
-                          variant="outline"
-                          className="bg-red-50 text-red-700 border-red-300 font-normal"
-                        >
-                          {row.avisoPagamento}
-                        </Badge>
-                      ) : (
-                        row.avisoPagamento
-                      )}
-                    </td>
-                    <td className="px-3 py-2 border-r">{formatCurrency(row.honorarioAgente)}</td>
-                    <td className="px-3 py-2 border-r">{formatCurrency(row.despesasAgente)}</td>
-                    <td className="px-3 py-2 border-r font-semibold">
-                      {formatCurrency(row.totalAPagarAgente)}
-                    </td>
-                    <td className="px-3 py-2 border-r">{formatCurrency(row.adiantamento)}</td>
-                    <td className="px-3 py-2 border-r">{formatDate(row.dataAdiantamento)}</td>
-                    <td className="px-3 py-2 border-r text-red-600 font-medium">
-                      {formatCurrency(row.saldoAPagar)}
-                    </td>
-                    <td className="px-3 py-2 border-r">{formatDate(row.dataPagamento)}</td>
-                    <td className="px-3 py-2 border-r text-center">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        title="Editar Informações de Faturamento"
-                        onClick={() => {
-                          setSelectedProcessoForFat(row.originalProc)
-                          setIsModalFatOpen(true)
-                        }}
+                  <React.Fragment key={row.originalProc.id}>
+                    <tr
+                      className="transition-colors hover:bg-muted/50 cursor-pointer bg-background"
+                      onClick={() => toggleRow(row.id)}
+                    >
+                      <td className="px-4 py-3 font-medium text-brand-navy whitespace-nowrap">
+                        {row.id}
+                      </td>
+                      <td
+                        className="px-4 py-3 whitespace-nowrap truncate max-w-[140px]"
+                        title={row.revisor}
                       >
-                        <Edit2 className="w-4 h-4 text-brand-navy" />
-                      </Button>
-                    </td>
+                        {row.revisor}
+                      </td>
+                      <td
+                        className="px-4 py-3 whitespace-nowrap truncate max-w-[140px]"
+                        title={row.cia}
+                      >
+                        {row.cia}
+                      </td>
+                      <td
+                        className="px-4 py-3 whitespace-nowrap truncate max-w-[140px]"
+                        title={row.tipo}
+                      >
+                        {row.tipo}
+                      </td>
+                      <td
+                        className="px-4 py-3 whitespace-nowrap truncate max-w-[140px]"
+                        title={row.sindicante}
+                      >
+                        {row.sindicante}
+                      </td>
+                      <td className="px-4 py-3 text-center whitespace-nowrap">
+                        {row.avisoPagamento === 'PAGAMENTO AUTORIZADO' ? (
+                          <Badge
+                            variant="outline"
+                            className="bg-green-50 text-green-700 border-green-300 font-normal"
+                          >
+                            AUTORIZADO
+                          </Badge>
+                        ) : row.avisoPagamento === 'PAGAMENTO NÃO AUTORIZADO' ? (
+                          <Badge
+                            variant="outline"
+                            className="bg-red-50 text-red-700 border-red-300 font-normal"
+                          >
+                            NÃO AUTORIZADO
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="font-normal">
+                            {row.avisoPagamento}
+                          </Badge>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-center whitespace-nowrap">
+                        {formatDate(row.dataConclusao)}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            toggleRow(row.id)
+                          }}
+                        >
+                          {expandedRows[row.id] ? (
+                            <ChevronUp className="h-4 w-4" />
+                          ) : (
+                            <ChevronDown className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </td>
+                    </tr>
 
-                    <td className="px-3 py-2 border-r">{formatCurrency(row.honorarioAReceber)}</td>
-                    <td className="px-3 py-2 border-r">{formatCurrency(row.despesasAReceber)}</td>
-                    <td className="px-3 py-2 border-r">{formatCurrency(row.iss)}</td>
-                    <td className="px-3 py-2 border-r font-bold text-green-700">
-                      {formatCurrency(row.totalAReceber)}
-                    </td>
-                    <td className="px-3 py-2 border-r">{formatCurrency(row.despesasExtras)}</td>
-                    <td className="px-3 py-2 border-r">{formatDate(row.dataRecebimento)}</td>
-                    <td className="px-3 py-2 border-r">{row.despesaComplemento}</td>
-                    <td className="px-3 py-2 border-r">{formatDate(row.dataRecebimento2)}</td>
-                    <td className="px-3 py-2 border-r">{formatCurrency(row.iss20)}</td>
-                    <td className="px-3 py-2 border-r font-semibold text-brand-navy">
-                      {formatCurrency(row.liquido)}
-                    </td>
-                    <td className="px-3 py-2 border-r">{row.margem.toFixed(2)}%</td>
-                    <td className="px-3 py-2 border-r">{row.nf}</td>
-                    <td className="px-3 py-2 border-r">{formatDate(row.dataEmissaoNF)}</td>
-                    <td className="px-3 py-2 border-r text-center">
-                      <EditarRecebiveisModal
-                        despesaId={row.despesaId}
-                        honorario={row.honorarioAReceber}
-                        despesas={row.despesasAReceber}
-                        iss={row.iss}
-                        dataRecebimento={row.dataRecebimento}
-                        totalAPagar={row.totalAPagarAgente}
-                        userRole={user?.role}
-                        onSuccess={() => setRefreshKey((k) => k + 1)}
-                      />
-                    </td>
-                    <td className="px-3 py-2 border-r">
-                      <AcoesNF
-                        despesaId={row.despesaId}
-                        nfNumero={row.nf !== '-' ? row.nf : ''}
-                        dataEmissao={row.dataEmissaoNF}
-                        issValue={row.iss}
-                        totalAReceber={row.totalAReceber}
-                        totalAPagar={row.totalAPagarAgente}
-                        dataRecebimento={row.dataRecebimento}
-                        userRole={user?.role}
-                        onSuccess={() => setRefreshKey((k) => k + 1)}
-                      />
-                    </td>
-                    <td className="px-3 py-2">
-                      <AcoesPagamento
-                        despesaId={row.despesaId}
-                        nfNumero={row.nf !== '-' ? row.nf : ''}
-                        dataRecebimento={row.dataRecebimento}
-                        totalAReceber={row.totalAReceber}
-                        totalAPagar={row.totalAPagarAgente}
-                        iss20={row.iss20}
-                        liquido={row.liquido}
-                        despesaComplemento={
-                          row.despesaComplemento !== '-' ? row.despesaComplemento : ''
-                        }
-                        userRole={user?.role}
-                        onSuccess={() => setRefreshKey((k) => k + 1)}
-                      />
-                    </td>
-                  </tr>
+                    {expandedRows[row.id] && (
+                      <tr className="bg-muted/20 border-b">
+                        <td colSpan={8} className="p-0">
+                          <div className="p-4 sm:p-6 grid grid-cols-1 xl:grid-cols-2 gap-6 animate-fade-in-down">
+                            {/* Block B */}
+                            <div className="bg-background border rounded-lg shadow-sm overflow-hidden h-fit">
+                              <div className="p-4 border-b bg-muted/40 flex justify-between items-center">
+                                <h3 className="font-semibold flex items-center text-brand-navy text-sm md:text-base">
+                                  <UserCheck className="w-4 h-4 mr-2 text-muted-foreground" />
+                                  Valores a Pagar ao Agente (Bloco B)
+                                </h3>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedProcessoForFat(row.originalProc)
+                                    setIsModalFatOpen(true)
+                                  }}
+                                >
+                                  <Edit2 className="w-4 h-4 mr-2" /> Editar
+                                </Button>
+                              </div>
+                              <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+                                <div>
+                                  <p className="text-muted-foreground text-xs mb-1">Honorário</p>
+                                  <p className="font-medium">
+                                    {formatCurrency(row.honorarioAgente)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground text-xs mb-1">Despesas</p>
+                                  <p className="font-medium">
+                                    {formatCurrency(row.despesasAgente)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground text-xs mb-1">Adiantamento</p>
+                                  <p className="font-medium text-amber-600">
+                                    {formatCurrency(row.adiantamento)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground text-xs mb-1">
+                                    Data Adiantamento
+                                  </p>
+                                  <p className="font-medium">{formatDate(row.dataAdiantamento)}</p>
+                                </div>
+                                <div className="col-span-2 sm:col-span-4 grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 border-t mt-2">
+                                  <div>
+                                    <p className="text-muted-foreground text-xs mb-1">
+                                      Total a Pagar
+                                    </p>
+                                    <p className="font-semibold text-brand-navy text-base">
+                                      {formatCurrency(row.totalAPagarAgente)}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-muted-foreground text-xs mb-1">
+                                      Saldo a Pagar
+                                    </p>
+                                    <p className="font-bold text-red-600 text-base">
+                                      {formatCurrency(row.saldoAPagar)}
+                                    </p>
+                                  </div>
+                                  <div className="col-span-2 sm:col-span-1">
+                                    <p className="text-muted-foreground text-xs mb-1">
+                                      Data Pagamento
+                                    </p>
+                                    <p className="font-medium">{formatDate(row.dataPagamento)}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Block C */}
+                            <div className="bg-background border rounded-lg shadow-sm overflow-hidden h-fit">
+                              <div className="p-4 border-b bg-muted/40 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                                <h3 className="font-semibold flex items-center text-brand-navy text-sm md:text-base">
+                                  <Building2 className="w-4 h-4 mr-2 text-muted-foreground" />
+                                  Valores a Receber (Bloco C)
+                                </h3>
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <div className="border bg-background rounded px-1 flex items-center shadow-sm">
+                                    <EditarRecebiveisModal
+                                      despesaId={row.despesaId}
+                                      honorario={row.honorarioAReceber}
+                                      despesas={row.despesasAReceber}
+                                      iss={row.iss}
+                                      dataRecebimento={row.dataRecebimento}
+                                      totalAPagar={row.totalAPagarAgente}
+                                      userRole={user?.role}
+                                      onSuccess={() => setRefreshKey((k) => k + 1)}
+                                    />
+                                  </div>
+                                  <AcoesNF
+                                    despesaId={row.despesaId}
+                                    nfNumero={row.nf !== '-' ? row.nf : ''}
+                                    dataEmissao={row.dataEmissaoNF}
+                                    issValue={row.iss}
+                                    totalAReceber={row.totalAReceber}
+                                    totalAPagar={row.totalAPagarAgente}
+                                    dataRecebimento={row.dataRecebimento}
+                                    userRole={user?.role}
+                                    onSuccess={() => setRefreshKey((k) => k + 1)}
+                                  />
+                                  <AcoesPagamento
+                                    despesaId={row.despesaId}
+                                    nfNumero={row.nf !== '-' ? row.nf : ''}
+                                    dataRecebimento={row.dataRecebimento}
+                                    totalAReceber={row.totalAReceber}
+                                    totalAPagar={row.totalAPagarAgente}
+                                    iss20={row.iss20}
+                                    liquido={row.liquido}
+                                    despesaComplemento={
+                                      row.despesaComplemento !== '-' ? row.despesaComplemento : ''
+                                    }
+                                    userRole={user?.role}
+                                    onSuccess={() => setRefreshKey((k) => k + 1)}
+                                  />
+                                </div>
+                              </div>
+                              <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+                                <div>
+                                  <p className="text-muted-foreground text-xs mb-1">Honorário</p>
+                                  <p className="font-medium">
+                                    {formatCurrency(row.honorarioAReceber)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground text-xs mb-1">Despesas</p>
+                                  <p className="font-medium">
+                                    {formatCurrency(row.despesasAReceber)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground text-xs mb-1">Desp. Extras</p>
+                                  <p className="font-medium">
+                                    {formatCurrency(row.despesasExtras)}
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground text-xs mb-1">ISS</p>
+                                  <p className="font-medium">{formatCurrency(row.iss)}</p>
+                                </div>
+
+                                <div className="col-span-2 sm:col-span-4 grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t mt-2">
+                                  <div>
+                                    <p className="text-muted-foreground text-xs mb-1">NF nº</p>
+                                    <p className="font-medium">{row.nf}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-muted-foreground text-xs mb-1">
+                                      Data Emissão NF
+                                    </p>
+                                    <p className="font-medium">{formatDate(row.dataEmissaoNF)}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-muted-foreground text-xs mb-1">Data Rec.</p>
+                                    <p className="font-medium">{formatDate(row.dataRecebimento)}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-muted-foreground text-xs mb-1">
+                                      Total a Receber
+                                    </p>
+                                    <p className="font-bold text-green-700 text-base">
+                                      {formatCurrency(row.totalAReceber)}
+                                    </p>
+                                  </div>
+                                </div>
+
+                                <div className="col-span-2 sm:col-span-4 grid grid-cols-1 sm:grid-cols-4 gap-4 pt-4 border-t mt-2 bg-muted/30 p-3 rounded-md">
+                                  <div className="col-span-1 sm:col-span-2">
+                                    <p className="text-muted-foreground text-xs mb-1">
+                                      Desp. Complementares
+                                    </p>
+                                    <p
+                                      className="font-medium truncate"
+                                      title={row.despesaComplemento}
+                                    >
+                                      {row.despesaComplemento}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-muted-foreground text-xs mb-1">
+                                      Data Rec. Comp.
+                                    </p>
+                                    <p className="font-medium">
+                                      {formatDate(row.dataRecebimento2)}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-muted-foreground text-xs mb-1">
+                                      Líquido / Margem
+                                    </p>
+                                    <p className="font-semibold text-brand-navy">
+                                      {formatCurrency(row.liquido)}{' '}
+                                      <span className="text-xs font-normal text-muted-foreground ml-1">
+                                        ({row.margem.toFixed(1)}%)
+                                      </span>
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
-            {mappedData.map((item) => (
-              <div
-                key={item.originalProc.id}
-                className="border rounded-lg p-4 bg-card shadow-sm space-y-3"
-              >
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h4 className="font-bold text-brand-navy">{item.id}</h4>
-                    <p className="text-xs text-muted-foreground">
-                      {item.cliente} • {item.tipo}
-                    </p>
-                  </div>
-                  {item.status.includes('Pendente de Documentos') ? (
-                    <Badge
-                      variant="outline"
-                      className="bg-yellow-50 text-yellow-700 border-yellow-300"
-                    >
-                      Pendente
-                    </Badge>
-                  ) : (
-                    <Badge
-                      variant="outline"
-                      className="bg-green-50 text-green-700 border-green-300"
-                    >
-                      Concluído
-                    </Badge>
-                  )}
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-sm border-t pt-2">
-                  <div>
-                    <span className="text-muted-foreground block text-xs">Data Conclusão</span>
-                    <span className="font-medium">{formatDate(item.dataConclusao)}</span>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground block text-xs">Seguradora</span>
-                    <span className="font-medium">{item.cia}</span>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground block text-xs">Pagar (Agente)</span>
-                    <span className="font-semibold text-red-600">
-                      {formatCurrency(item.totalAPagarAgente)}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground block text-xs">Receber (Cia)</span>
-                    <span className="font-semibold text-green-600">
-                      {formatCurrency(item.totalAReceber)}
-                    </span>
-                  </div>
-                </div>
-                <div className="border-t pt-3 flex justify-between items-center gap-2 flex-wrap">
-                  <AcoesPagamento
-                    despesaId={item.despesaId}
-                    nfNumero={item.nf !== '-' ? item.nf : ''}
-                    dataRecebimento={item.dataRecebimento}
-                    totalAReceber={item.totalAReceber}
-                    totalAPagar={item.totalAPagarAgente}
-                    iss20={item.iss20}
-                    liquido={item.liquido}
-                    despesaComplemento={
-                      item.despesaComplemento !== '-' ? item.despesaComplemento : ''
-                    }
-                    userRole={user?.role}
-                    onSuccess={() => setRefreshKey((k) => k + 1)}
-                  />
-                  <AcoesNF
-                    despesaId={item.despesaId}
-                    nfNumero={item.nf !== '-' ? item.nf : ''}
-                    dataEmissao={item.dataEmissaoNF}
-                    issValue={item.iss}
-                    totalAReceber={item.totalAReceber}
-                    totalAPagar={item.totalAPagarAgente}
-                    dataRecebimento={item.dataRecebimento}
-                    userRole={user?.role}
-                    onSuccess={() => setRefreshKey((k) => k + 1)}
-                  />
-                  <EditarRecebiveisModal
-                    despesaId={item.despesaId}
-                    honorario={item.honorarioAReceber}
-                    despesas={item.despesasAReceber}
-                    iss={item.iss}
-                    dataRecebimento={item.dataRecebimento}
-                    totalAPagar={item.totalAPagarAgente}
-                    userRole={user?.role}
-                    onSuccess={() => setRefreshKey((k) => k + 1)}
-                  />
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex-1"
-                    onClick={() => {
-                      setSelectedProcessoForFat(item.originalProc)
-                      setIsModalFatOpen(true)
-                    }}
-                  >
-                    <Edit2 className="w-4 h-4 mr-2" /> Editar Fat.
-                  </Button>
-                </div>
-              </div>
-            ))}
           </div>
 
           <FinalizarProcessoModal
