@@ -53,7 +53,11 @@ export function EditarRecebiveisModal({
   const liquido = totalAReceber - totalAReceber * 0.2
   const margem = totalAReceber > 0 ? ((totalAReceber - totalAPagar) / totalAReceber) * 100 : 0
 
-  const canEdit = userRole === 'c-level' || userRole === 'admin'
+  const canEdit =
+    userRole === 'c-level' ||
+    userRole === 'admin' ||
+    userRole === 'analista' ||
+    userRole === 'supervisor'
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -132,7 +136,7 @@ export function EditarRecebiveisModal({
           size="sm"
           disabled={!canEdit}
           className="h-8 px-2"
-          title={!canEdit ? 'Apenas C-Level e Admin podem editar' : 'Editar Valores'}
+          title={!canEdit ? 'Sem permissão para editar' : 'Editar Valores'}
         >
           <Pencil className="w-4 h-4 text-blue-600" />
         </Button>

@@ -157,25 +157,6 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
         await pb.collection('processos_finalizacao').create(payload)
       }
 
-      const syncPayload = {
-        ...payload,
-        numero_processo: processo.numero_controle || processo.id,
-      }
-      try {
-        const ctrl = await pb
-          .collection('controle_operacional_financeiro')
-          .getFirstListItem(`processo_id="${processo.id}"`)
-        await pb.collection('controle_operacional_financeiro').update(ctrl.id, {
-          ...syncPayload,
-          data_finalizacao: ctrl.data_finalizacao || new Date().toISOString(),
-        })
-      } catch (err) {
-        await pb.collection('controle_operacional_financeiro').create({
-          ...syncPayload,
-          data_finalizacao: new Date().toISOString(),
-        })
-      }
-
       // Update tags on processos_operacionais
       const currentTags: string[] = Array.isArray(processo.tags) ? processo.tags : []
       const filteredTags = currentTags.filter(

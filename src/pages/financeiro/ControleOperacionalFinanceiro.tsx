@@ -84,14 +84,11 @@ export default function ControleOperacionalFinanceiro() {
       setIsLoading(true)
       setIsError(false)
       try {
-        let filterStr = `(status = 'Concluído' || status ~ 'Pendente de Documentos')`
+        let filterStr = `(status = 'Concluído' || status ~ 'Pendente de Documentos' || status = 'FINALIZADO')`
 
         if (appliedFilter) {
           filterStr += ` && data_conclusao >= "${appliedFilter} 00:00:00" && data_conclusao <= "${appliedFilter} 23:59:59"`
         }
-
-        // Must have total_a_receber > 0 for valid view
-        filterStr += ` && processos_despesas_via_processo_id.total_a_receber > 0`
 
         const result = await pb
           .collection('processos_operacionais')
@@ -256,7 +253,7 @@ export default function ControleOperacionalFinanceiro() {
       ) : mappedData.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-12 text-center text-muted-foreground bg-muted/10 rounded-lg border border-dashed">
           <PackageOpen className="h-12 w-12 mb-4 opacity-50" />
-          <p>Nenhum processo finalizado nesta data com valores a receber</p>
+          <p>Nenhum processo finalizado para exibir</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -355,9 +352,19 @@ export default function ControleOperacionalFinanceiro() {
 
                     <td className="px-3 py-2 border-r font-bold">
                       {row.avisoPagamento === 'PAGAMENTO AUTORIZADO' ? (
-                        <span className="text-green-600">{row.avisoPagamento}</span>
+                        <Badge
+                          variant="outline"
+                          className="bg-green-50 text-green-700 border-green-300 font-normal"
+                        >
+                          {row.avisoPagamento}
+                        </Badge>
                       ) : row.avisoPagamento === 'PAGAMENTO NÃO AUTORIZADO' ? (
-                        <span className="text-red-600">{row.avisoPagamento}</span>
+                        <Badge
+                          variant="outline"
+                          className="bg-red-50 text-red-700 border-red-300 font-normal"
+                        >
+                          {row.avisoPagamento}
+                        </Badge>
                       ) : (
                         row.avisoPagamento
                       )}

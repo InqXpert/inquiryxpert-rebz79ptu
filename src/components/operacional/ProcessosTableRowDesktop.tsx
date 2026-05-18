@@ -198,18 +198,25 @@ export function ProcessosTableRowDesktop({
                 .filter((t): t is string => typeof t === 'string' && t.trim() !== '')
                 .sort((a, b) => (a.includes('PAGAMENTO') ? -1 : b.includes('PAGAMENTO') ? 1 : 0))
                 .slice(0, 2)
-                .map((tag: string, idx: number) => (
-                  <Badge
-                    key={`${tag}-${idx}`}
-                    className={cn(
-                      'text-[9px] px-1.5 py-0 rounded-[4px] leading-tight whitespace-nowrap',
-                      getTagColor(tag),
-                    )}
-                    title={tag}
-                  >
-                    {tag.length > 25 ? tag.substring(0, 25) + '...' : tag}
-                  </Badge>
-                ))
+                .map((tag: string, idx: number) => {
+                  let badgeClass = getTagColor(tag)
+                  if (tag === 'PAGAMENTO AUTORIZADO')
+                    badgeClass = 'bg-green-100 text-green-800 border-green-300'
+                  if (tag === 'PAGAMENTO NÃO AUTORIZADO')
+                    badgeClass = 'bg-red-100 text-red-800 border-red-300'
+                  return (
+                    <Badge
+                      key={`${tag}-${idx}`}
+                      className={cn(
+                        'text-[9px] px-1.5 py-0 rounded-[4px] leading-tight whitespace-nowrap',
+                        badgeClass,
+                      )}
+                      title={tag}
+                    >
+                      {tag.length > 25 ? tag.substring(0, 25) + '...' : tag}
+                    </Badge>
+                  )
+                })
             ) : (
               <span className="text-xs text-brand-gray/50">-</span>
             )}

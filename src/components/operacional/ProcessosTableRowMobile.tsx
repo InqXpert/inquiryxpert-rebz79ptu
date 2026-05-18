@@ -201,14 +201,21 @@ export function ProcessosTableRowMobile({
             p.tags
               .filter((t): t is string => typeof t === 'string' && t.trim() !== '')
               .sort((a, b) => (a.includes('PAGAMENTO') ? -1 : b.includes('PAGAMENTO') ? 1 : 0))
-              .map((tag: string, idx: number) => (
-                <Badge
-                  key={`tag-${idx}`}
-                  className={cn('text-[10px] px-2 py-0.5 rounded-[4px]', getTagColor(tag))}
-                >
-                  {tag}
-                </Badge>
-              ))}
+              .map((tag: string, idx: number) => {
+                let badgeClass = getTagColor(tag)
+                if (tag === 'PAGAMENTO AUTORIZADO')
+                  badgeClass = 'bg-green-100 text-green-800 border-green-300'
+                if (tag === 'PAGAMENTO NÃO AUTORIZADO')
+                  badgeClass = 'bg-red-100 text-red-800 border-red-300'
+                return (
+                  <Badge
+                    key={`tag-${idx}`}
+                    className={cn('text-[10px] px-2 py-0.5 rounded-[4px]', badgeClass)}
+                  >
+                    {tag}
+                  </Badge>
+                )
+              })}
         </div>
       )}
 
