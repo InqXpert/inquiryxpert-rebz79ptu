@@ -1,0 +1,1 @@
+import{t as e,u as t}from"./schemas-BOUF_2zu.js";function n(n){return t(e,n)}export{n as t};
