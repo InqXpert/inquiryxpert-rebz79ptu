@@ -24,6 +24,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { FinanceiroNav } from './components/FinanceiroNav'
 import pb from '@/lib/pocketbase/client'
 import { Processo } from '@/types/processo'
+import { useRealtime } from '@/hooks/use-realtime'
 
 const formatDate = (d: string) => (d ? format(parseISO(d), 'dd/MM/yyyy') : '-')
 const formatCurrency = (v: number) =>
@@ -54,19 +55,19 @@ export default function ControleOperacionalFinanceiro() {
       setIsLoading(true)
       setIsError(false)
       try {
-        let filterStr = `(status = 'Concluído' || status ~ 'Pendente de Documentos' || status = 'FINALIZADO') && data_conclusao != ""`
+        let filterStr = ''
 
         if (appliedFilter) {
-          filterStr += ` && data_conclusao >= "${appliedFilter} 00:00:00" && data_conclusao <= "${appliedFilter} 23:59:59"`
+          filterStr = `data_finalizacao >= "${appliedFilter} 00:00:00" && data_finalizacao <= "${appliedFilter} 23:59:59"`
         }
 
         const result = await pb
-          .collection('processos_operacionais')
+          .collection('controle_operacional_financeiro')
           .getList(currentPage, itemsPerPage, {
             filter: filterStr,
             expand:
-              'agente_id,supervisor_id,solicitante_id,cliente_id,seguradora_id,processos_despesas_via_processo_id,processos_finalizacao_via_processo_id,controle_operacional_financeiro_via_processo_id',
-            sort: '-data_conclusao,-created',
+              'processo_id,processo_id.agente_id,processo_id.supervisor_id,processo_id.solicitante_id,processo_id.cliente_id,processo_id.seguradora_id,processo_id.processos_despesas_via_processo_id,processo_id.tipo_investigacao_id',
+            sort: '-data_finalizacao,-created',
           })
 
         if (isMounted) {
@@ -87,13 +88,14 @@ export default function ControleOperacionalFinanceiro() {
     }
   }, [currentPage, appliedFilter, refreshKey])
 
+  useRealtime('controle_operacional_financeiro', () => {
+    setRefreshKey((k) => k + 1)
+  })
+
   const mappedData = useMemo(() => {
-    return data.map((proc) => {
+    return data.map((ctrl) => {
+      const proc = ctrl.expand?.processo_id || {}
       const despesas = proc.expand?.processos_despesas_via_processo_id?.[0] || {}
-      const finalizacao =
-        proc.expand?.processos_finalizacao_via_processo_id?.[0] ||
-        proc.expand?.controle_operacional_financeiro_via_processo_id?.[0] ||
-        {}
 
       const totalAPagar = despesas.total_a_pagar || 0
       const totalAReceber = despesas.total_a_receber || 0
@@ -104,18 +106,18 @@ export default function ControleOperacionalFinanceiro() {
       }
 
       return {
-        id: proc.numero_processo || proc.numero_controle || proc.id,
-        status: proc.status,
+        id: ctrl.numero_processo || proc.numero_controle || proc.id,
+        status: proc.status || 'FINALIZADO',
         tipo: proc.tipo_servico || proc.expand?.tipo_investigacao_id?.nome || '-',
         cia: proc.expand?.seguradora_id?.nome || proc.cia || '-',
         revisor: proc.expand?.supervisor_id?.name || proc.revisor || '-',
         sindicante: proc.expand?.agente_id?.nomeCompleto || proc.agente_prestador || '-',
-        avisoPagamento: finalizacao.aviso || '-',
-        dataConclusao: proc.data_conclusao,
+        avisoPagamento: ctrl.aviso || '-',
+        dataConclusao: ctrl.data_finalizacao || proc.data_conclusao,
 
-        honorarioAgente: despesas.honorario_agente || 0,
-        despesasAgente: despesas.despesas_agente || 0,
-        totalAPagarAgente: totalAPagar,
+        honorarioAgente: despesas.honorario_agente || ctrl.honorario_valor || 0,
+        despesasAgente: despesas.despesas_agente || ctrl.despesas_valor || 0,
+        totalAPagarAgente: totalAPagar || ctrl.honorario_valor + ctrl.despesas_valor || 0,
         adiantamento: despesas.adiantamento || 0,
         dataAdiantamento: despesas.data_adiantamento,
         saldoAPagar: despesas.saldo_a_pagar || 0,
@@ -135,7 +137,8 @@ export default function ControleOperacionalFinanceiro() {
         despesaId: despesas.id,
         nf: despesas.nf_numero || '-',
         dataEmissaoNF: despesas.data_emissao_nf,
-        originalProc: proc,
+        originalProc: proc.id ? proc : { ...proc, id: ctrl.processo_id },
+        ctrlId: ctrl.id,
       }
     })
   }, [data])
@@ -237,9 +240,9 @@ export default function ControleOperacionalFinanceiro() {
                 {mappedData.flatMap((row) => {
                   const rows = [
                     <tr
-                      key={row.originalProc.id}
+                      key={row.ctrlId}
                       className="transition-colors hover:bg-muted/50 cursor-pointer bg-background"
-                      onClick={() => toggleRow(row.id)}
+                      onClick={() => toggleRow(row.ctrlId)}
                     >
                       <td className="px-4 py-3 font-medium text-brand-navy whitespace-nowrap">
                         {row.id}
@@ -299,10 +302,10 @@ export default function ControleOperacionalFinanceiro() {
                           className="h-8 w-8 p-0"
                           onClick={(e) => {
                             e.stopPropagation()
-                            toggleRow(row.id)
+                            toggleRow(row.ctrlId)
                           }}
                         >
-                          {expandedRows[row.id] ? (
+                          {expandedRows[row.ctrlId] ? (
                             <ChevronUp className="h-4 w-4" />
                           ) : (
                             <ChevronDown className="h-4 w-4" />
@@ -312,9 +315,9 @@ export default function ControleOperacionalFinanceiro() {
                     </tr>,
                   ]
 
-                  if (expandedRows[row.id]) {
+                  if (expandedRows[row.ctrlId]) {
                     rows.push(
-                      <tr key={`${row.originalProc.id}-expanded`} className="bg-muted/20 border-b">
+                      <tr key={`${row.ctrlId}-expanded`} className="bg-muted/20 border-b">
                         <td colSpan={8} className="p-0">
                           <div className="p-4 sm:p-6 grid grid-cols-1 xl:grid-cols-2 gap-6 animate-fade-in-down">
                             {/* Block B */}
