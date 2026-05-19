@@ -47,6 +47,21 @@ onRecordAfterCreateSuccess((e) => {
       ctrl.set('flag_bloqueio', rec.get('flag_bloqueio'))
       ctrl.set('aviso', rec.get('aviso'))
       $app.saveNoValidate(ctrl)
+
+      try {
+        const histCol = $app.findCollectionByNameOrId('processos_historico')
+        const hist = new Record(histCol)
+        hist.set('processo_id', processoId)
+        hist.set('tipo_evento', 'FINANCEIRO_SYNC')
+        hist.set('descricao', 'Valores atualizados no controle financeiro a partir da finalização')
+        hist.set(
+          'data_novos',
+          JSON.stringify({ honorario_valor: honorario, despesas_valor: despesas }),
+        )
+        $app.saveNoValidate(hist)
+      } catch (errHist) {
+        console.error('Error saving history', errHist)
+      }
     } catch (_) {
       const col = $app.findCollectionByNameOrId('controle_operacional_financeiro')
       const newCtrl = new Record(col)
@@ -61,6 +76,21 @@ onRecordAfterCreateSuccess((e) => {
       newCtrl.set('aviso', rec.get('aviso'))
       newCtrl.set('data_finalizacao', new Date().toISOString())
       $app.saveNoValidate(newCtrl)
+
+      try {
+        const histCol = $app.findCollectionByNameOrId('processos_historico')
+        const hist = new Record(histCol)
+        hist.set('processo_id', processoId)
+        hist.set('tipo_evento', 'FINANCEIRO_SYNC')
+        hist.set('descricao', 'Criado registro no controle financeiro a partir da finalização')
+        hist.set(
+          'data_novos',
+          JSON.stringify({ honorario_valor: honorario, despesas_valor: despesas }),
+        )
+        $app.saveNoValidate(hist)
+      } catch (errHist) {
+        console.error('Error saving history', errHist)
+      }
     }
   } catch (err) {
     console.error('Error syncing controle_operacional_financeiro', err)
@@ -118,6 +148,24 @@ onRecordAfterUpdateSuccess((e) => {
       ctrl.set('flag_bloqueio', rec.get('flag_bloqueio'))
       ctrl.set('aviso', rec.get('aviso'))
       $app.saveNoValidate(ctrl)
+
+      try {
+        const histCol = $app.findCollectionByNameOrId('processos_historico')
+        const hist = new Record(histCol)
+        hist.set('processo_id', processoId)
+        hist.set('tipo_evento', 'FINANCEIRO_SYNC')
+        hist.set(
+          'descricao',
+          'Valores atualizados no controle financeiro a partir da edição de finalização',
+        )
+        hist.set(
+          'data_novos',
+          JSON.stringify({ honorario_valor: honorario, despesas_valor: despesas }),
+        )
+        $app.saveNoValidate(hist)
+      } catch (errHist) {
+        console.error('Error saving history', errHist)
+      }
     } catch (_) {
       const col = $app.findCollectionByNameOrId('controle_operacional_financeiro')
       const newCtrl = new Record(col)
@@ -132,6 +180,24 @@ onRecordAfterUpdateSuccess((e) => {
       newCtrl.set('aviso', rec.get('aviso'))
       newCtrl.set('data_finalizacao', new Date().toISOString())
       $app.saveNoValidate(newCtrl)
+
+      try {
+        const histCol = $app.findCollectionByNameOrId('processos_historico')
+        const hist = new Record(histCol)
+        hist.set('processo_id', processoId)
+        hist.set('tipo_evento', 'FINANCEIRO_SYNC')
+        hist.set(
+          'descricao',
+          'Criado registro no controle financeiro a partir da edição de finalização',
+        )
+        hist.set(
+          'data_novos',
+          JSON.stringify({ honorario_valor: honorario, despesas_valor: despesas }),
+        )
+        $app.saveNoValidate(hist)
+      } catch (errHist) {
+        console.error('Error saving history', errHist)
+      }
     }
   } catch (err) {
     console.error('Error syncing controle_operacional_financeiro', err)
