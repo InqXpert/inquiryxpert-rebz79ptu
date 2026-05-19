@@ -66,7 +66,7 @@ export default function ControleOperacionalFinanceiro() {
             filter: filterStr,
             expand:
               'agente_id,supervisor_id,solicitante_id,cliente_id,seguradora_id,processos_despesas_via_processo_id,processos_finalizacao_via_processo_id,controle_operacional_financeiro_via_processo_id',
-            sort: '-data_conclusao',
+            sort: '-data_conclusao,-created',
           })
 
         if (isMounted) {

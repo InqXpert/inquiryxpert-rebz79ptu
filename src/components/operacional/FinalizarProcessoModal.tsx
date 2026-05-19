@@ -35,7 +35,7 @@ const schema = z
         required_error: 'Informe o valor de honorário',
         invalid_type_error: 'Informe o valor de honorário',
       })
-      .positive('Informe o valor de honorário'),
+      .min(0, 'Informe o valor de honorário'),
     despesas_recebidas: z.enum(['SIM', 'NAO'], {
       required_error: 'Selecione se as despesas foram recebidas',
     }),

@@ -3,12 +3,17 @@ onRecordAfterCreateSuccess((e) => {
   const processoId = rec.get('processo_id')
   const honorario = rec.get('honorario_valor') || 0
   const despesas = rec.get('despesas_valor') || 0
+  const total = honorario + despesas
 
   try {
     const despesasRec = $app.findFirstRecordByData('processos_despesas', 'processo_id', processoId)
     despesasRec.set('honorario_agente', honorario)
     despesasRec.set('despesas_agente', despesas)
-    despesasRec.set('total_a_pagar', honorario + despesas)
+    despesasRec.set('total_a_pagar', total)
+
+    const adiantamento = despesasRec.get('adiantamento') || 0
+    despesasRec.set('saldo_a_pagar', total - adiantamento)
+
     $app.saveNoValidate(despesasRec)
   } catch (_) {
     try {
@@ -17,7 +22,8 @@ onRecordAfterCreateSuccess((e) => {
       newDespesas.set('processo_id', processoId)
       newDespesas.set('honorario_agente', honorario)
       newDespesas.set('despesas_agente', despesas)
-      newDespesas.set('total_a_pagar', honorario + despesas)
+      newDespesas.set('total_a_pagar', total)
+      newDespesas.set('saldo_a_pagar', total)
       newDespesas.set('total_a_receber', 0)
       $app.saveNoValidate(newDespesas)
     } catch (err) {
@@ -68,12 +74,17 @@ onRecordAfterUpdateSuccess((e) => {
   const processoId = rec.get('processo_id')
   const honorario = rec.get('honorario_valor') || 0
   const despesas = rec.get('despesas_valor') || 0
+  const total = honorario + despesas
 
   try {
     const despesasRec = $app.findFirstRecordByData('processos_despesas', 'processo_id', processoId)
     despesasRec.set('honorario_agente', honorario)
     despesasRec.set('despesas_agente', despesas)
-    despesasRec.set('total_a_pagar', honorario + despesas)
+    despesasRec.set('total_a_pagar', total)
+
+    const adiantamento = despesasRec.get('adiantamento') || 0
+    despesasRec.set('saldo_a_pagar', total - adiantamento)
+
     $app.saveNoValidate(despesasRec)
   } catch (_) {
     try {
@@ -82,7 +93,8 @@ onRecordAfterUpdateSuccess((e) => {
       newDespesas.set('processo_id', processoId)
       newDespesas.set('honorario_agente', honorario)
       newDespesas.set('despesas_agente', despesas)
-      newDespesas.set('total_a_pagar', honorario + despesas)
+      newDespesas.set('total_a_pagar', total)
+      newDespesas.set('saldo_a_pagar', total)
       newDespesas.set('total_a_receber', 0)
       $app.saveNoValidate(newDespesas)
     } catch (err) {
