@@ -234,9 +234,10 @@ export default function ControleOperacionalFinanceiro() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
-                {mappedData.map((row) => (
-                  <React.Fragment key={row.originalProc.id}>
+                {mappedData.flatMap((row) => {
+                  const rows = [
                     <tr
+                      key={row.originalProc.id}
                       className="transition-colors hover:bg-muted/50 cursor-pointer bg-background"
                       onClick={() => toggleRow(row.id)}
                     >
@@ -308,10 +309,12 @@ export default function ControleOperacionalFinanceiro() {
                           )}
                         </Button>
                       </td>
-                    </tr>
+                    </tr>,
+                  ]
 
-                    {expandedRows[row.id] && (
-                      <tr className="bg-muted/20 border-b">
+                  if (expandedRows[row.id]) {
+                    rows.push(
+                      <tr key={`${row.originalProc.id}-expanded`} className="bg-muted/20 border-b">
                         <td colSpan={8} className="p-0">
                           <div className="p-4 sm:p-6 grid grid-cols-1 xl:grid-cols-2 gap-6 animate-fade-in-down">
                             {/* Block B */}
@@ -516,10 +519,12 @@ export default function ControleOperacionalFinanceiro() {
                             </div>
                           </div>
                         </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
-                ))}
+                      </tr>,
+                    )
+                  }
+
+                  return rows
+                })}
               </tbody>
             </table>
           </div>
