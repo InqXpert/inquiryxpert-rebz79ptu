@@ -54,7 +54,7 @@ export default function ControleOperacionalFinanceiro() {
       setIsLoading(true)
       setIsError(false)
       try {
-        let filterStr = `(status = 'Concluído' || status ~ 'Pendente de Documentos' || status = 'FINALIZADO')`
+        let filterStr = `(status = 'Concluído' || status ~ 'Pendente de Documentos' || status = 'FINALIZADO') && data_conclusao != ""`
 
         if (appliedFilter) {
           filterStr += ` && data_conclusao >= "${appliedFilter} 00:00:00" && data_conclusao <= "${appliedFilter} 23:59:59"`

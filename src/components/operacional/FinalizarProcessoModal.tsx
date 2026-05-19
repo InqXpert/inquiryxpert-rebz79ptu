@@ -166,31 +166,51 @@ export function FinalizarProcessoModal({ processo, open, onOpenChange, onSuccess
 
       if (!isEditMode) {
         const prevStatus = processo.status
-        await pb.collection('processos_operacionais').update(processo.id, {
-          status: 'FINALIZADO',
-          status_finalizacao: 'FINALIZADO',
-          tags: filteredTags,
-        })
 
-        await createAuditLog(
-          processo.id,
-          'STATUS_ALTERADO',
-          user?.id,
-          { status: prevStatus },
-          { status: 'FINALIZADO', finalizacao: payload },
-        )
+        try {
+          await pb.collection('processos_operacionais').update(processo.id, {
+            status: 'FINALIZADO',
+            status_finalizacao: 'FINALIZADO',
+            data_conclusao: new Date().toISOString(),
+            tags: filteredTags,
+          })
+        } catch (opError) {
+          console.error('Failed to update processo com data de conclusão:', opError)
+          toast.error('Erro ao atualizar data de conclusão e finalizar o processo no sistema.')
+          setSaving(false)
+          return
+        }
+
+        try {
+          await createAuditLog(
+            processo.id,
+            'STATUS_ALTERADO',
+            user?.id,
+            { status: prevStatus },
+            { status: 'FINALIZADO', finalizacao: payload },
+          )
+        } catch (auditError) {
+          console.error('Failed to create audit log:', auditError)
+        }
+
         toast.success('Processo finalizado com sucesso!')
       } else {
         await pb.collection('processos_operacionais').update(processo.id, {
           tags: filteredTags,
         })
-        await createAuditLog(
-          processo.id,
-          'EDITADO',
-          user?.id,
-          { acao: 'Edição de Faturamento' },
-          payload,
-        )
+
+        try {
+          await createAuditLog(
+            processo.id,
+            'EDITADO',
+            user?.id,
+            { acao: 'Edição de Faturamento' },
+            payload,
+          )
+        } catch (auditError) {
+          console.error('Failed to create audit log:', auditError)
+        }
+
         toast.success('Informações atualizadas com sucesso!')
       }
 
