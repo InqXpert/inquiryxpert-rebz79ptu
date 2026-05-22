@@ -22,7 +22,9 @@ export function useCurrentUser() {
     setUser((prev: any) => {
       if (!prev) return authUser
       const hasImageChanged =
-        prev.foto_perfil !== authUser.foto_perfil || prev.avatar !== authUser.avatar
+        prev.foto_url !== authUser.foto_url ||
+        prev.foto_perfil !== authUser.foto_perfil ||
+        prev.avatar !== authUser.avatar
       return {
         ...prev,
         ...authUser,
@@ -34,12 +36,14 @@ export function useCurrentUser() {
       try {
         // Fetch specific fields per acceptance criteria
         const record = await pb.collection('users').getOne(authUser.id, {
-          fields: 'id,name,email,foto_perfil,avatar,role',
+          fields: 'id,name,email,foto_url,foto_perfil,avatar,role',
         })
 
         let finalAvatarUrl: string | undefined = undefined
 
-        if (record.foto_perfil) {
+        if (record.foto_url) {
+          finalAvatarUrl = pb.files.getUrl(record, record.foto_url)
+        } else if (record.foto_perfil) {
           finalAvatarUrl = pb.files.getUrl(record, record.foto_perfil)
         } else if (record.avatar) {
           finalAvatarUrl = pb.files.getUrl(record, record.avatar)
@@ -78,7 +82,9 @@ export function useCurrentUser() {
         setUser((prev: any) => {
           if (!prev) return prev
           let newAvatarUrl = prev.computedAvatarUrl
-          if (e.record.foto_perfil) {
+          if (e.record.foto_url) {
+            newAvatarUrl = pb.files.getUrl(e.record, e.record.foto_url)
+          } else if (e.record.foto_perfil) {
             newAvatarUrl = pb.files.getUrl(e.record, e.record.foto_perfil)
           } else if (e.record.avatar) {
             newAvatarUrl = pb.files.getUrl(e.record, e.record.avatar)
@@ -92,7 +98,9 @@ export function useCurrentUser() {
 
   let avatarUrl = user?.computedAvatarUrl
   if (!avatarUrl && user) {
-    if (user.foto_perfil) {
+    if (user.foto_url) {
+      avatarUrl = pb.files.getUrl(user, user.foto_url)
+    } else if (user.foto_perfil) {
       avatarUrl = pb.files.getUrl(user, user.foto_perfil)
     } else if (user.avatar) {
       avatarUrl = pb.files.getUrl(user, user.avatar)

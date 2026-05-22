@@ -15,6 +15,7 @@ export interface User {
   ultimo_login?: string
   tempo_uso_total?: number
   foto_perfil?: string
+  foto_url?: string
   two_fa_enabled?: boolean
   two_fa_secret?: string
   [key: string]: any

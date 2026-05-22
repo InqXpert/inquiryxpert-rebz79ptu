@@ -30,11 +30,13 @@ export const UserGreeting = memo(function UserGreeting() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3 bg-card rounded-lg p-6 shadow-sm mb-6 border border-gray-200 dark:border-gray-800">
-        <Skeleton className="h-6 w-48" />
-        <Skeleton className="w-24 h-24 md:w-32 md:h-32 rounded-full" />
-        <Skeleton className="h-4 w-40" />
-        <Skeleton className="h-8 w-20" />
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 bg-card rounded-lg p-6 shadow-sm mb-6 border border-gray-200 dark:border-gray-800">
+        <Skeleton className="w-24 h-24 md:w-28 md:h-28 rounded-full shrink-0" />
+        <div className="flex flex-col items-center sm:items-start justify-center gap-3 w-full">
+          <Skeleton className="h-6 w-48" />
+          <Skeleton className="h-4 w-40" />
+          <Skeleton className="h-8 w-24 mt-2" />
+        </div>
       </div>
     )
   }
@@ -58,6 +60,7 @@ export const UserGreeting = memo(function UserGreeting() {
 
   const fullName = user?.name || user?.nome || 'Usuário'
   const firstName = fullName.trim().split(' ')[0].toUpperCase()
+  const initials = firstName.substring(0, 2)
 
   const handleAvatarClick = () => {
     if (isUploading) return
@@ -104,16 +107,29 @@ export const UserGreeting = memo(function UserGreeting() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 bg-card rounded-lg p-6 shadow-sm mb-6 border border-gray-200 dark:border-gray-800">
-      <h1 className="font-semibold text-foreground text-center tracking-tight text-lg md:text-xl">
-        {saudacao}, <span className="font-bold uppercase">{firstName}</span>
-      </h1>
-
+    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 bg-card rounded-lg p-6 shadow-sm mb-6 border border-gray-200 dark:border-gray-800">
       <div
-        className="relative group cursor-pointer rounded-full overflow-hidden"
+        className="relative group cursor-pointer rounded-full shrink-0 flex items-center justify-center border-0 ring-0 shadow-none w-24 h-24 md:w-28 md:h-28"
         onClick={handleAvatarClick}
         title="Alterar foto de perfil"
       >
+        <Avatar className="w-full h-full border-0 ring-0">
+          <AvatarImage
+            src={localAvatarUrl || undefined}
+            alt={fullName}
+            className="object-cover border-0 ring-0"
+          />
+          <AvatarFallback className="bg-muted text-muted-foreground text-2xl font-bold uppercase border-0 ring-0">
+            {initials}
+          </AvatarFallback>
+        </Avatar>
+
+        {/* Overlay on hover */}
+        <div className="absolute inset-0 bg-black/40 text-white opacity-0 group-hover:opacity-100 rounded-full flex flex-col items-center justify-center transition-opacity duration-200 border-0 ring-0">
+          <Camera className="w-6 h-6 mb-1" />
+          <span className="text-[10px] font-medium leading-tight">Alterar</span>
+        </div>
+
         <input
           type="file"
           ref={fileInputRef}
@@ -123,12 +139,18 @@ export const UserGreeting = memo(function UserGreeting() {
         />
       </div>
 
-      <p className="text-muted-foreground text-xs md:text-sm text-center font-medium m-0 mt-1">
-        {formattedDate}
-      </p>
+      <div className="flex flex-col items-center sm:items-start justify-center gap-1 mt-2 sm:mt-0 flex-1">
+        <h1 className="font-semibold text-foreground text-center sm:text-left tracking-tight text-lg md:text-xl">
+          {saudacao}, <span className="font-bold uppercase">{firstName}</span>
+        </h1>
 
-      <div className="font-bold text-foreground tracking-tight text-3xl md:text-4xl">
-        {hours}:{minutes}
+        <p className="text-muted-foreground text-xs md:text-sm text-center sm:text-left font-medium m-0">
+          {formattedDate}
+        </p>
+
+        <div className="font-bold text-foreground tracking-tight text-3xl md:text-4xl mt-2 sm:mt-4">
+          {hours}:{minutes}
+        </div>
       </div>
     </div>
   )
