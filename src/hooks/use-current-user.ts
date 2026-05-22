@@ -21,10 +21,7 @@ export function useCurrentUser() {
     // Set initial user data from auth cache and clear stale computed url if image changed
     setUser((prev: any) => {
       if (!prev) return authUser
-      const hasImageChanged =
-        prev.foto_url !== authUser.foto_url ||
-        prev.foto_perfil !== authUser.foto_perfil ||
-        prev.avatar !== authUser.avatar
+      const hasImageChanged = prev.foto_url !== authUser.foto_url
       return {
         ...prev,
         ...authUser,
@@ -34,28 +31,24 @@ export function useCurrentUser() {
 
     const fetchUser = async () => {
       try {
-        // Fetch specific fields per acceptance criteria
+        // Fetch specific fields per acceptance criteria (only fields that exist in schema)
         const record = await pb.collection('users').getOne(authUser.id, {
-          fields: 'id,name,email,foto_url,foto_perfil,avatar,role',
+          fields: 'id,name,email,foto_url,role',
         })
 
         let finalAvatarUrl: string | undefined = undefined
 
         if (record.foto_url) {
           finalAvatarUrl = pb.files.getUrl(record, record.foto_url)
-        } else if (record.foto_perfil) {
-          finalAvatarUrl = pb.files.getUrl(record, record.foto_perfil)
-        } else if (record.avatar) {
-          finalAvatarUrl = pb.files.getUrl(record, record.avatar)
         } else if (record.role === 'agente') {
           try {
             const agenteRecord = await pb
               .collection('agentes')
               .getFirstListItem(`user_id="${record.id}"`, {
-                fields: 'id,foto_perfil',
+                fields: 'id,foto_url',
               })
-            if (agenteRecord?.foto_perfil) {
-              finalAvatarUrl = pb.files.getUrl(agenteRecord, agenteRecord.foto_perfil)
+            if (agenteRecord?.foto_url) {
+              finalAvatarUrl = pb.files.getUrl(agenteRecord, agenteRecord.foto_url)
             }
           } catch (e) {
             // Not found or error
@@ -84,10 +77,8 @@ export function useCurrentUser() {
           let newAvatarUrl = prev.computedAvatarUrl
           if (e.record.foto_url) {
             newAvatarUrl = pb.files.getUrl(e.record, e.record.foto_url)
-          } else if (e.record.foto_perfil) {
-            newAvatarUrl = pb.files.getUrl(e.record, e.record.foto_perfil)
-          } else if (e.record.avatar) {
-            newAvatarUrl = pb.files.getUrl(e.record, e.record.avatar)
+          } else {
+            newAvatarUrl = undefined
           }
           return { ...prev, ...e.record, computedAvatarUrl: newAvatarUrl }
         })
@@ -100,10 +91,6 @@ export function useCurrentUser() {
   if (!avatarUrl && user) {
     if (user.foto_url) {
       avatarUrl = pb.files.getUrl(user, user.foto_url)
-    } else if (user.foto_perfil) {
-      avatarUrl = pb.files.getUrl(user, user.foto_perfil)
-    } else if (user.avatar) {
-      avatarUrl = pb.files.getUrl(user, user.avatar)
     }
   }
 
