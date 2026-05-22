@@ -33,22 +33,24 @@ export function useCurrentUser() {
       try {
         // Fetch specific fields per acceptance criteria (only fields that exist in schema)
         const record = await pb.collection('users').getOne(authUser.id, {
-          fields: 'id,name,email,foto_url,role',
+          fields: 'id,collectionId,collectionName,name,email,foto_url,role',
         })
 
         let finalAvatarUrl: string | undefined = undefined
 
         if (record.foto_url) {
-          finalAvatarUrl = pb.files.getUrl(record, record.foto_url)
+          finalAvatarUrl = pb.files.getUrl(record, record.foto_url, { token: pb.authStore.token })
         } else if (record.role === 'agente') {
           try {
             const agenteRecord = await pb
               .collection('agentes')
               .getFirstListItem(`user_id="${record.id}"`, {
-                fields: 'id,foto_url',
+                fields: 'id,collectionId,collectionName,foto_url',
               })
             if (agenteRecord?.foto_url) {
-              finalAvatarUrl = pb.files.getUrl(agenteRecord, agenteRecord.foto_url)
+              finalAvatarUrl = pb.files.getUrl(agenteRecord, agenteRecord.foto_url, {
+                token: pb.authStore.token,
+              })
             }
           } catch (e) {
             // Not found or error
@@ -76,7 +78,9 @@ export function useCurrentUser() {
           if (!prev) return prev
           let newAvatarUrl = prev.computedAvatarUrl
           if (e.record.foto_url) {
-            newAvatarUrl = pb.files.getUrl(e.record, e.record.foto_url)
+            newAvatarUrl = pb.files.getUrl(e.record, e.record.foto_url, {
+              token: pb.authStore.token,
+            })
           } else {
             newAvatarUrl = undefined
           }
@@ -90,7 +94,7 @@ export function useCurrentUser() {
   let avatarUrl = user?.computedAvatarUrl
   if (!avatarUrl && user) {
     if (user.foto_url) {
-      avatarUrl = pb.files.getUrl(user, user.foto_url)
+      avatarUrl = pb.files.getUrl(user, user.foto_url, { token: pb.authStore.token })
     }
   }
 

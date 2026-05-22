@@ -109,7 +109,7 @@ export const UserGreeting = memo(function UserGreeting() {
   return (
     <div className="flex flex-row items-center gap-4 sm:gap-6 bg-card rounded-lg p-6 shadow-sm mb-6 border-none">
       <div
-        className="relative group cursor-pointer rounded-full shrink-0 flex items-center justify-center border-none outline-none ring-0 shadow-none w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 overflow-hidden"
+        className="relative group cursor-pointer rounded-full shrink-0 flex items-center justify-center border-none outline-none ring-0 shadow-none w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 overflow-hidden bg-transparent"
         onClick={handleAvatarClick}
         title="Alterar foto de perfil"
       >

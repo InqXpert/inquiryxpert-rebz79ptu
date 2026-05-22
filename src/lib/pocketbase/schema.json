@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-05-22T22:58:00.185Z",
+  "generatedAt": "2026-05-22T23:04:41.541Z",
   "collections": [
     {
       "name": "users",
       "type": "auth",
       "apiRules": {
         "list": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || id = @request.auth.id",
-        "view": "@request.auth.role = 'c-level' || @request.auth.role = 'admin' || @request.auth.role = 'supervisor' || id = @request.auth.id",
+        "view": "@request.auth.id != ''",
         "create": "@request.auth.role = 'c-level' || @request.auth.role = 'admin'",
         "update": "@request.auth.role = 'c-level' || (@request.auth.role = 'admin' && role != 'c-level') || id = @request.auth.id",
         "delete": "@request.auth.role = 'c-level' || (@request.auth.role = 'admin' && role != 'c-level')"
